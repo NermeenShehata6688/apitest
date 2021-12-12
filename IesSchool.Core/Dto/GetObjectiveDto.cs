@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IesSchool.Core.Dto
 {
-    public class ObjectiveDto
+    public class GetObjectiveDto
     {
         public int? GoalId { get; set; }
         public int Id { get; set; }
@@ -26,8 +26,6 @@ namespace IesSchool.Core.Dto
         public string? InstructionPractice { get; set; }
         public string? Evaluation { get; set; }
 
-        public virtual ICollection<ActivityDto> Activities { get; set; }
-        public virtual ICollection<ObjectiveSkillDto>? ObjectiveSkills { get; set; }
-        public virtual ICollection<ObjectiveEvaluationProcessDto>? ObjectiveEvaluationProcesses { get; set; }
+        public string?[] EvaluationProcessName { get; set; }
     }
 }

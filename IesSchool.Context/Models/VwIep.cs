@@ -32,12 +32,11 @@ namespace IesSchool.Context.Models
         public int? RoomNumber { get; set; }
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
-        public string? NameAr { get; set; }
-        public string? Name { get; set; }
-        public int? Code { get; set; }
+        public string? StudentNameAr { get; set; }
+        public string? StudentName { get; set; }
+        public int? StudentCode { get; set; }
         public string? DepartmentName { get; set; }
         public string? TeacherName { get; set; }
-        public int? Expr1 { get; set; }
         public int? DepartmentId { get; set; }
         public string? TermName { get; set; }
         public string? AcadmicYearName { get; set; }

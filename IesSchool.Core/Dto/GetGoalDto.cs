@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IesSchool.Core.Dto
 {
-    public class GoalDto
+    public class GetGoalDto
     {
         public int Id { get; set; }
         public int? AreaId { get; set; }
@@ -24,7 +24,6 @@ namespace IesSchool.Core.Dto
         public string? CreatedBy { get; set; }
         public string? AreaName { get; set; }
         public string? StrandName { get; set; }
-
-
+        public virtual ICollection<ObjectiveDto>? Objectives { get; set; }
     }
 }

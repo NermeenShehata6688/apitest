@@ -31,11 +31,11 @@ namespace IesSchool.Controllers
         }
         // GET: api/<IepsController>
         [HttpGet]
-        public IActionResult GetIeps()
+        public IActionResult GetIeps([FromQuery] IepSearchDto iepSearchDto)
         {
             try
             {
-                var all = _iepService.GetIeps();
+                var all = _iepService.GetIeps(iepSearchDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -92,6 +92,32 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iepService.DeleteIep(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult IepStatus(int iepId, int status)
+        {
+            try
+            {
+                var all = _iepService.IepStatus(iepId, status);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult IepIsPublished(int iepId, bool isPublished)
+        {
+            try
+            {
+                var all = _iepService.IepIsPublished(iepId, isPublished);
                 return Ok(all);
             }
             catch (Exception)
@@ -175,11 +201,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetIepParamedicalServices()
+        public IActionResult GetObjectives()
         {
             try
             {
-                var all = _iepService.GetIepParamedicalServices();
+                var all = _iepService.GetObjectives();
                 return Ok(all);
             }
             catch (Exception)
@@ -188,6 +214,144 @@ namespace IesSchool.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetObjectiveById(int objectiveId)
+        {
+            try
+            {
+                var all = _iepService.GetObjectiveById(objectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public IActionResult PostObjective(ObjectiveDto objectiveDto)
+        {
+            try
+            {
+                var all = _iepService.AddObjective(objectiveDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutObjective(ObjectiveDto objectiveDto)
+        {
+            try
+            {
+                var all = _iepService.EditObjective(objectiveDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteObjective(int objectiveId)
+        {
+            try
+            {
+                var all = _iepService.DeleteObjective(objectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult ObjectiveIsMasterd(int objectiveId, bool isMasterd)
+        {
+            try
+            {
+                var all = _iepService.ObjectiveIsMasterd(objectiveId, isMasterd);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetActivities()
+        {
+            try
+            {
+                var all = _iepService.GetActivities();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetActivityById(int activityId)
+        {
+            try
+            {
+                var all = _iepService.GetActivityById(activityId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public IActionResult PostActivity(ActivityDto activityDto)
+        {
+            try
+            {
+                var all = _iepService.AddActivity(activityDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutActivity(ActivityDto activityDto)
+        {
+            try
+            {
+                var all = _iepService.EditActivity(activityDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteActivity(int activityId)
+        {
+            try
+            {
+                var all = _iepService.DeleteActivity(activityId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        
         [HttpGet]
         public IActionResult GetIepParamedicalServiceById(int iepParamedicalServiceId)
         {
@@ -236,6 +400,62 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iepService.DeleteIepParamedicalService(iepParamedicalServiceId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetIepExtraCurricularById(int iepExtraCurricularId)
+        {
+            try
+            {
+                var all = _iepService.GetIepExtraCurricularById(iepExtraCurricularId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public IActionResult PostIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
+        {
+            try
+            {
+                var all = _iepService.AddIepExtraCurricular(iepExtraCurricularDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
+        {
+            try
+            {
+                var all = _iepService.EditIepExtraCurricular(iepExtraCurricularDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteIepExtraCurricular(int iepExtraCurricularId)
+        {
+            try
+            {
+                var all = _iepService.DeleteIepExtraCurricular(iepExtraCurricularId);
                 return Ok(all);
             }
             catch (Exception)

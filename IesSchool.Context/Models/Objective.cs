@@ -26,6 +26,9 @@ namespace IesSchool.Context.Models
         public string? CreatedBy { get; set; }
         public bool? IsMasterd { get; set; }
         public int? IepId { get; set; }
+        public string? Entry { get; set; }
+        public string? InstructionPractice { get; set; }
+        public string? Evaluation { get; set; }
 
         public virtual Goal? Goal { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }

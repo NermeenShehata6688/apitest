@@ -1175,9 +1175,9 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
 
-                entity.Property(e => e.Name).HasMaxLength(500);
+                entity.Property(e => e.StudentName).HasMaxLength(500);
 
-                entity.Property(e => e.NameAr).HasMaxLength(500);
+                entity.Property(e => e.StudentNameAr).HasMaxLength(500);
 
                 entity.Property(e => e.TeacherName).HasMaxLength(1000);
 

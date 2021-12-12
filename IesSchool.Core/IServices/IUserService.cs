@@ -14,7 +14,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetAllTeachers();
         public ResponseDto GetAllTherapists();
         public ResponseDto GetTeacherAssignedStudents(int teacherId); 
-        public ResponseDto GeTherapistAssignedStudents(int therapistId);
+        public ResponseDto GetTherapistAssignedStudents(int therapistId);
+        public ResponseDto GetTherapistParamedicalServices(int therapistId);
         public ResponseDto GetUsersHelper();
         public ResponseDto GetUserById(int userId);
         public ResponseDto AddUser(UserDto userDto);

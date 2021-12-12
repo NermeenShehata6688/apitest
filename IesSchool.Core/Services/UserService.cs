@@ -128,19 +128,31 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        
-        public ResponseDto GeTherapistAssignedStudents(int therapistId)
+        public ResponseDto GetTherapistAssignedStudents(int therapistId)
         {
             try
             {
-                var therapistAssignedStudents = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == therapistId);
-                var mapper = _mapper.Map<PaginateDto<StudentDto>>(therapistAssignedStudents);
+                var therapistAssignedStudents = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == therapistId , null, x => x.Include(x => x.Student));
+                var mapper = _mapper.Map<PaginateDto<StudentTherapistDto>>(therapistAssignedStudents);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             } 
+        }
+        public ResponseDto GetTherapistParamedicalServices(int therapistId)
+        {
+            try
+            {
+                var therapistParamedicalServics = _uow.GetRepository<TherapistParamedicalService>().GetList(x => x.UserId == therapistId, null, x => x.Include(x => x.ParamedicalService));
+                var mapper = _mapper.Map<PaginateDto<TherapistParamedicalServiceDto>>(therapistParamedicalServics);
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
         }
         public ResponseDto GetAllTeachers()
         {
@@ -219,6 +231,8 @@ namespace IesSchool.Core.Services
             try
             {
                 var allUserAssistant = _uow.GetRepository<UserAssistant>().GetList(x => x.UserId == userDto.Id);
+                var allTherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(x => x.UserId == userDto.Id);
+                var allStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == userDto.Id);
                 var cmd = $"delete from User_Assistant where UserId={userDto.Id}" +
                     $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
                     $" delete from Student_Therapist where TherapistId={ userDto.Id}";
@@ -239,6 +253,8 @@ namespace IesSchool.Core.Services
                 catch (Exception)
                 {
                     _uow.GetRepository<UserAssistant>().Add(allUserAssistant.Items);
+                    _uow.GetRepository<TherapistParamedicalService>().Add(allTherapistParamedicalService.Items);
+                    _uow.GetRepository<StudentTherapist>().Add(allStudentTherapist.Items);
                     _uow.SaveChanges();
                     throw;
                 }

@@ -82,11 +82,24 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GeTherapistAssignedStudents(int therapistId)
+        public IActionResult GetTherapistAssignedStudents(int therapistId)
         {
             try
             {
-                var all = _userService.GeTherapistAssignedStudents(therapistId);
+                var all = _userService.GetTherapistAssignedStudents(therapistId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetTherapistParamedicalServices(int therapistId)
+        {
+            try
+            {
+                var all = _userService.GetTherapistParamedicalServices(therapistId);
                 return Ok(all);
             }
             catch (Exception)
