@@ -1,0 +1,443 @@
+﻿using AutoMapper;
+using IesSchool.Context.Models;
+using IesSchool.Core.Dto;
+using IesSchool.Core.IServices;
+using IesSchool.InfraStructure;
+using IesSchool.InfraStructure.Paging;
+using Microsoft.EntityFrameworkCore;
+
+namespace IesSchool.Core.Services
+{
+    internal class StudentService : IStudentService
+    {
+        private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
+        private iesContext _iesContext;
+        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
+        {
+            _uow = unitOfWork;
+            _mapper = mapper;
+            _iesContext = iesContext;
+        }
+        public ResponseDto GetStudents(StudentSearchDto studentSearchDto)
+        {
+            try
+            {
+                var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted != 1");
+
+                if (studentSearchDto.NameAr != null) {
+                    allStudents = allStudents.Where(x => x.NameAr.Contains(studentSearchDto.NameAr));
+                }
+                if (studentSearchDto.Name != null)
+                {
+                    allStudents = allStudents.Where(x => x.Name.Contains(studentSearchDto.Name));
+                }
+                if (studentSearchDto.Code != null)
+                {
+                    allStudents = allStudents.Where(x => x.Code.ToString().Contains(studentSearchDto.Code.ToString()));
+                }
+                if (studentSearchDto.CivilId != null)
+                {
+                    allStudents = allStudents.Where(x => x.CivilId.ToString().Contains(studentSearchDto.CivilId.ToString()));
+                }
+                if (studentSearchDto.NationalityId != null)
+                {
+                    allStudents = allStudents.Where(x => x.NationalityId== studentSearchDto.NationalityId);
+                }
+                if (studentSearchDto.PassportNumber != null)
+                {
+                    allStudents = allStudents.Where(x => x.PassportNumber.ToString().Contains(studentSearchDto.PassportNumber.ToString()));
+                }
+                if (studentSearchDto.Email != null)
+                {
+                    allStudents = allStudents.Where(x => x.Email.Contains(studentSearchDto.Email));
+                }
+                if (studentSearchDto.DepartmentId != null)
+                {
+                    allStudents = allStudents.Where(x => x.DepartmentId == studentSearchDto.DepartmentId);
+                }
+                if (studentSearchDto.TeacherId != null)
+                {
+                    allStudents = allStudents.Where(x => x.TeacherId == studentSearchDto.TeacherId);
+                }
+                if (studentSearchDto.StateId != null)
+                {
+                    allStudents = allStudents.Where(x => x.StateId == studentSearchDto.StateId);
+                }
+                if (studentSearchDto.CityId != null)
+                {
+                    allStudents = allStudents.Where(x => x.CityId == studentSearchDto.CityId);
+                }
+                if (studentSearchDto.IsSuspended != null)
+                {
+                    allStudents = allStudents.Where(x => x.IsSuspended == studentSearchDto.IsSuspended);
+                }
+                if (studentSearchDto.HomePhone != null)
+                {
+                    allStudents = allStudents.Where(x => x.HomePhone == studentSearchDto.HomePhone);
+                }
+
+                var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
+                var mapper = new PaginateDto<VwStudentDto> { Count= allStudents.Count(),Items= lstStudentDto, Index = studentSearchDto.Index, Pages = studentSearchDto.PageSize };
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentHelper()
+        {
+            try
+            {
+                StudentHelper studentHelper = new StudentHelper()
+                {
+                    AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
+                    AllTeachers = _uow.GetRepository<VwUser>().GetList(x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllTherapists = _uow.GetRepository<VwUser>().GetList(x => x.IsDeleted != true && x.IsTherapist == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true,  null, null, 0, 1000000, true),
+                    AllStates = _uow.GetRepository<State>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
+                    AllAreas = _uow.GetRepository<City>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
+                    AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true , x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.Strand).ThenInclude(x => x.Area).Include(x=>x.SkillAlowedDepartments ).ThenInclude(x => x.Department), 0, 1000000, true),
+                    AllWorkCategorys = _uow.GetRepository<WorkCategory>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllAttachmentTypes = _uow.GetRepository<AttachmentType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+
+                };
+                var mapper = _mapper.Map<StudentHelperDto>(studentHelper);
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentById(int studentId)
+        {
+            try
+            {
+                var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true,null, x => x.Include(x => x.Phones).Include(x=> x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
+                var mapper = _mapper.Map<StudentDetailsDto>(student);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto AddStudent(StudentDto studentDto)
+        {
+            try
+            {
+               
+                var mapper = _mapper.Map< Student> (studentDto);
+                mapper.IsDeleted = false;
+                mapper.CreatedOn = DateTime.Now;
+                mapper.IsSuspended = false;
+                _uow.GetRepository< Student> ().Add(mapper);
+                _uow.SaveChanges();
+                studentDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditStudent(StudentDto studentDto)
+        {
+            try
+            {
+                var allStudentTherapists = _uow.GetRepository<StudentTherapist>().GetList(x => x.StudentId == studentDto.Id);
+                var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                var mapper = _mapper.Map<Student>(studentDto);
+
+                try
+                {
+                    _uow.GetRepository<Student>().Update(mapper);
+                    _uow.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    _uow.GetRepository<StudentTherapist>().Add(allStudentTherapists.Items);
+                    _uow.SaveChanges();
+                    throw;
+                }
+                studentDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = studentDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteStudent(int studentId)
+        {
+            try
+            {
+                Student oStudent = _uow.GetRepository<Student>().Single(x => x.Id == studentId);
+                oStudent.IsDeleted = true;
+                oStudent.DeletedOn = DateTime.Now;
+
+                _uow.GetRepository<Student>().Update(oStudent);
+                _uow.SaveChanges();
+                return new ResponseDto { Status = 1, Message = "Student Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetStudentTherapistsById(int studentTherapistId)
+        {
+            try
+            {
+                var studentTherapist = _uow.GetRepository<StudentTherapist>().Single();
+                var mapper = _mapper.Map<StudentTherapistDto>(studentTherapist);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto AddStudentTherapist(StudentTherapistDto studentTherapistDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<StudentTherapist>(studentTherapistDto);
+                _uow.GetRepository<StudentTherapist>().Add(mapper);
+                _uow.SaveChanges();
+                studentTherapistDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Therapist Added  Seccessfuly", Data = studentTherapistDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditStudentTherapist(StudentTherapistDto studentTherapistDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<StudentTherapist>(studentTherapistDto);
+                _uow.GetRepository<StudentTherapist>().Update(mapper);
+                _uow.SaveChanges();
+                studentTherapistDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Therapist Updated Seccessfuly", Data = studentTherapistDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteStudentTherapist(int studentTherapistId)
+        {
+            try
+            {
+                StudentTherapist oStudentTherapist = _uow.GetRepository<StudentTherapist>().Single(x => x.Id == studentTherapistId);
+                _uow.GetRepository<StudentTherapist>().Delete(oStudentTherapist);
+                _uow.SaveChanges();
+                return new ResponseDto { Status = 1, Message = "Student Therapist Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetStudentHistoricalSkillsById(int studentHistoricalSkillId)
+        {
+            try
+            {
+                var studentHistoricalSkill = _uow.GetRepository<StudentHistoricalSkill>().Single();
+                var mapper = _mapper.Map<StudentHistoricalSkillDto>(studentHistoricalSkill);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto AddStudentHistoricalSkill(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)
+        {
+            try
+            {
+                //var mapper = _mapper.Map<List<StudentHistoricalSkill>>(studentHistoricalSkillDto);
+                List < StudentHistoricalSkill > historicalSkill = new List<StudentHistoricalSkill>();
+                foreach (var item in studentHistoricalSkillDto)
+                    historicalSkill.Add(new StudentHistoricalSkill { HistoricalSkilld=item.HistoricalSkilld,StudentId=item.StudentId});
+
+                _uow.GetRepository<StudentHistoricalSkill>().Add(historicalSkill);
+                _uow.SaveChanges();
+                return new ResponseDto { Status = 1, Message = "Student Historical Skill Added  Seccessfuly", Data = historicalSkill };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditStudentHistoricalSkill(StudentHistoricalSkillDto studentHistoricalSkillDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<StudentHistoricalSkill>(studentHistoricalSkillDto);
+                _uow.GetRepository<StudentHistoricalSkill>().Update(mapper);
+                _uow.SaveChanges();
+                studentHistoricalSkillDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Historical Skill Updated Seccessfuly", Data = studentHistoricalSkillDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteStudentHistoricalSkill(int studentHistoricalSkillId)
+        {
+            try
+            {
+                var cmd = $"delete from StudentHistoricalSkills where Id={studentHistoricalSkillId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                 return new ResponseDto { Status = 1, Message = "Student Historical Skill Seccessfuly Deleted" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetStudentAttachmentsById(int studentAttachmentId)
+        {
+            try
+            {
+                var studentAttachment = _uow.GetRepository<StudentAttachment>().Single();
+                var mapper = _mapper.Map<StudentAttachmentDto>(studentAttachment);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto AddStudentAttachment(StudentAttachmentDto studentAttachmentDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
+                mapper.Student = null;
+                _uow.GetRepository<StudentAttachment>().Add(mapper);
+                _uow.SaveChanges();
+                studentAttachmentDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Attachment Added  Seccessfuly", Data = studentAttachmentDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditStudentAttachment(StudentAttachmentDto studentAttachmentDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
+                _uow.GetRepository<StudentAttachment>().Update(mapper);
+                _uow.SaveChanges();
+                studentAttachmentDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Attachment Updated Seccessfuly", Data = studentAttachmentDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteStudentAttachment(int studentAttachmentId)
+        {
+            try
+            {
+                var cmd = $"delete from StudentAttachment where Id={studentAttachmentId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                return new ResponseDto { Status = 1, Message = "Student Attachment Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetStudentPhonesById(int phoneId)
+        {
+            try
+            {
+                var phone = _uow.GetRepository<Phone>().Single();
+                var mapper = _mapper.Map<PhoneDto>(phone);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto AddStudentPhone(PhoneDto phoneDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<Phone>(phoneDto);
+                _uow.GetRepository<Phone>().Add(mapper);
+                _uow.SaveChanges();
+                phoneDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Phone Added  Seccessfuly", Data = phoneDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditStudentPhone(PhoneDto phoneDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<Phone>(phoneDto);
+                _uow.GetRepository<Phone>().Update(mapper);
+                _uow.SaveChanges();
+                phoneDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Student Phone Updated Seccessfuly", Data = phoneDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteStudentPhone(int phoneId)
+        {
+            try
+            {
+                var cmd = $"delete from Phone where Id={phoneId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                return new ResponseDto { Status = 1, Message = "Student Phone Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto IsSuspended(int studentId,bool isSuspended)
+        {
+            try
+            {
+                Student oStudent = _uow.GetRepository<Student>().Single(x => x.Id == studentId);
+                oStudent.IsSuspended = isSuspended;
+                _uow.GetRepository<Student>().Update(oStudent);
+                _uow.SaveChanges();
+                return new ResponseDto { Status = 1, Message = "Student Is Suspended State Has Changed" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+    }
+}
