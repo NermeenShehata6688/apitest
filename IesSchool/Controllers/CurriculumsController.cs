@@ -154,11 +154,11 @@ namespace IesSchool.Controllers
 
         // DELETE api/<CurriculumsController>/5
         [HttpDelete]
-        public IActionResult DeleteStrand(int skillId)
+        public IActionResult DeleteStrand(int strandId)
         {
             try
             {
-                var all = _curriculumService.DeleteStrand(skillId);
+                var all = _curriculumService.DeleteStrand(strandId);
                 return Ok(all);
             }
             catch (Exception)

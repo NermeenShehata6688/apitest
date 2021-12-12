@@ -194,7 +194,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var skill = _uow.GetRepository<Skill>().Single(x => x.Id == skillId && x.IsDeleted != true, null, x => x.Include(x => x.SkillAlowedDepartments));
+                var skill = _uow.GetRepository<Skill>().Single(x => x.Id == skillId && x.IsDeleted != true, null, x => x.Include(s => s.SkillAlowedDepartments).ThenInclude(x => x.Department).Include(s => s.Strand).Include(s => s.Strand.Area));
                 var mapper = _mapper.Map<SkillDto>(skill);
                 return new ResponseDto { Status = 1, Errormessage = " Seccess", Data = mapper };
             }
