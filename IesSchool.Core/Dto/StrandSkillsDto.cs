@@ -21,8 +21,8 @@ namespace IesSchool.Core.Dto
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
         public int? SkillsCount { get; set; }
-
-
+        public string? AreaName { get; set; }
+        
         public virtual ICollection<SkillDto> Skills { get; set; }
     }
 }

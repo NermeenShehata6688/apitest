@@ -120,8 +120,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true,null,x=> x.Include(s=> s.IepAssistants).Include(s => s.IepParamedicalServices).Include(s => s.IepExtraCurriculars));
-                var mapper = _mapper.Map<IepDto>(iep);
+                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true,null,x=> x.Include(s=> s.IepAssistants).Include(s => s.IepParamedicalServices).Include(s => s.IepExtraCurriculars).Include(s => s.Goals));
+                var mapper = _mapper.Map<GetIepDto>(iep);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -226,8 +226,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allGoals = _uow.GetRepository<Goal>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=> s.Area).Include(s => s.Strand), 0, 100000, true);
-                var mapper = _mapper.Map<PaginateDto<GoalDto>>(allGoals);
+                var allGoals = _uow.GetRepository<Goal>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=> s.Strand).Include(s => s.Area), 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<GetGoalDto>>(allGoals);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
@@ -239,7 +239,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Area).Include(s => s.Strand).Include(s => s.Objectives));
+                var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills));
                 var mapper = _mapper.Map<GetGoalDto>(goal);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -269,9 +269,27 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                using var transaction = _iesContext.Database.BeginTransaction();
+
                 var mapper = _mapper.Map<Goal>(goalDto);
+                _iesContext.Entry(mapper).State = EntityState.Modified;
+                foreach (var item in mapper.Objectives)
+                {
+                    _iesContext.Entry(item).State = EntityState.Modified;
+                    foreach (var objEvl in item.ObjectiveEvaluationProcesses)
+                    {
+                        _iesContext.Entry(objEvl).State = EntityState.Modified;
+                    }
+                    foreach (var objSkl in item.ObjectiveSkills)
+                    {
+                        _iesContext.Entry(objSkl).State = EntityState.Modified;
+                    }
+                }
+                
                 _uow.GetRepository<Goal>().Update(mapper);
                 _uow.SaveChanges();
+                transaction.Commit();
+
                 goalDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
             }
@@ -284,6 +302,17 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true&& x.GoalId== goalId);
+                
+                    foreach (var item in allObjectives.Items)
+                    {
+                        item.IsDeleted = true;
+                        item.DeletedOn = DateTime.Now;
+
+                        _uow.GetRepository<Objective>().Update(item);
+                    }
+                        _uow.SaveChanges();
+                
                 Goal oGoal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId);
                 oGoal.IsDeleted = true;
                 oGoal.DeletedOn = DateTime.Now;
@@ -302,7 +331,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=>s.ObjectiveEvaluationProcesses).ThenInclude(x=> x.SkillEvaluation), 0, 100000, true);
+                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=>s.ObjectiveSkills).Include(s => s.ObjectiveEvaluationProcesses).ThenInclude(x=> x.SkillEvaluation), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<GetObjectiveDto>>(allObjectives);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -345,25 +374,19 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allObjectiveEvaluationProcess = _uow.GetRepository<ObjectiveEvaluationProcess>().GetList(x => x.ObjectiveId == objectiveDto.Id);
-                var allObjectiveSkill = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId == objectiveDto.Id);
+                using var transaction = _iesContext.Database.BeginTransaction();
+
                 var cmd = $"delete from Objective_EvaluationProcess where ObjectiveId ={objectiveDto.Id}" +
                     $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 var mapper = _mapper.Map<Objective>(objectiveDto);
-                try
-                {
-                    _uow.GetRepository<Objective>().Update(mapper);
-                    _uow.SaveChanges();
-                    objectiveDto.Id = mapper.Id;
-                }
-                catch (Exception)
-                {
-                    _uow.GetRepository<ObjectiveEvaluationProcess>().Add(allObjectiveEvaluationProcess.Items);
-                    _uow.GetRepository<ObjectiveSkill>().Add(allObjectiveSkill.Items);
-                    _uow.SaveChanges();
-                    throw;
-                }
+
+                _uow.GetRepository<Objective>().Update(mapper);
+                _uow.SaveChanges();
+                objectiveDto.Id = mapper.Id;
+
+                transaction.Commit();
+
                 return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveDto };
             }
             catch (Exception ex)

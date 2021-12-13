@@ -24,6 +24,6 @@ namespace IesSchool.Core.Dto
         public string? CreatedBy { get; set; }
         public string? AreaName { get; set; }
         public string? StrandName { get; set; }
-        public virtual ICollection<ObjectiveDto>? Objectives { get; set; }
+        public virtual ICollection<GetObjectiveDto>? Objectives { get; set; }
     }
 }

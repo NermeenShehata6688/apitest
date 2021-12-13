@@ -26,7 +26,7 @@ namespace IesSchool.Core.Dto
         public string? InstructionPractice { get; set; }
         public string? Evaluation { get; set; }
 
-        public virtual ICollection<ActivityDto> Activities { get; set; }
+        public virtual ICollection<ActivityDto>? Activities { get; set; }
         public virtual ICollection<ObjectiveSkillDto>? ObjectiveSkills { get; set; }
         public virtual ICollection<ObjectiveEvaluationProcessDto>? ObjectiveEvaluationProcesses { get; set; }
     }

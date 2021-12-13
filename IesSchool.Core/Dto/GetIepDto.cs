@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IesSchool.Core.Dto
 {
-    public class IepDto
+    public class GetIepDto
     {
         public int Id { get; set; }
         public int StudentId { get; set; }
@@ -33,6 +33,8 @@ namespace IesSchool.Core.Dto
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
         public virtual ICollection<IepAssistantDto>? IepAssistants { get; set; }
-
+        public virtual ICollection<IepExtraCurricularDto>? IepExtraCurriculars { get; set; }
+        public virtual ICollection<IepParamedicalServiceDto>? IepParamedicalServices { get; set; }
+        public virtual ICollection<GoalDto>? Goals { get; set; }
     }
 }

@@ -118,7 +118,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var strand = _uow.GetRepository<Strand>().Single(x => x.Id == strandId && x.IsDeleted != true,null, x => x.Include(n => n.Skills.Where(s => s.IsDeleted != true)));
+                var strand = _uow.GetRepository<Strand>().Single(x => x.Id == strandId && x.IsDeleted != true,null, x => x.Include(n => n.Skills.Where(s => s.IsDeleted != true)).Include(n => n.Area));
                 var mapper = _mapper.Map<StrandSkillsDto>(strand);
                 return new ResponseDto { Status = 1, Errormessage = " Seccess", Data = mapper };
             }
