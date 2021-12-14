@@ -283,39 +283,52 @@ namespace IesSchool.Core.Services
                             {
                                 var cmd = $"delete from Objective where Id={oldObjective.Id}";
                                 _iesContext.Database.ExecuteSqlRaw(cmd);
+                                goto dontCheck;
                             }
                             //// delete old Objective_Skill Ids which are not in edited goal
 
-                            //if (oldObjective.ObjectiveSkills!=null)
-                            //{
-                            //    foreach (var oldSkill in oldObjective.ObjectiveSkills)
-                            //    {
-                            //        for (int i = 0; i < goalDto.Objectives.Count(); i++)
-                            //        {
-                            //            if (!goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
-                            //            {
-                            //                var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
-                            //                _iesContext.Database.ExecuteSqlRaw(cmd);
-                            //            }
-                            //        }
-                            //    }
-                            //}
-                            //// delete old Objective_EvaluationProcess Ids which are not in edited goal
-
-                            if (oldObjective.ObjectiveEvaluationProcesses != null)
+                            if (oldObjective.ObjectiveSkills!=null&& oldObjective.ObjectiveSkills.Count()>0)
                             {
-                                foreach (var oldEvalProcesses in oldObjective.ObjectiveEvaluationProcesses)
+                                foreach (var oldSkill in oldObjective.ObjectiveSkills)
                                 {
+                                    bool isExisted=false;
                                     for (int i = 0; i < goalDto.Objectives.Count(); i++)
                                     {
-                                        if (!goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldEvalProcesses.Id))
+                                        
+                                        if (goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
                                         {
-                                            var cmd = $"delete from Objective_EvaluationProcess where Id={oldEvalProcesses.Id}";
-                                            _iesContext.Database.ExecuteSqlRaw(cmd);
+                                            isExisted = true;
                                         }
+                                    }
+                                    if (isExisted==false)
+                                    {
+                                        var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
+                                        _iesContext.Database.ExecuteSqlRaw(cmd);
                                     }
                                 }
                             }
+                            //// delete old Objective_EvaluationProcess Ids which are not in edited goal
+                            if (oldObjective.ObjectiveEvaluationProcesses != null && oldObjective.ObjectiveEvaluationProcesses.Count()>0)
+                            {
+                                foreach (var oldEvalProcesses in oldObjective.ObjectiveEvaluationProcesses)
+                                {
+                                    bool isExisted = false;
+                                    for (int i = 0; i < goalDto.Objectives.Count(); i++)
+                                    {
+
+                                        if (goalDto.Objectives.ToList()[i].ObjectiveEvaluationProcesses.Any(x => x.Id == oldEvalProcesses.Id))
+                                        {
+                                            isExisted = true;
+                                        }
+                                    }
+                                    if (isExisted == false)
+                                    {
+                                        var cmd = $"delete from Objective_EvaluationProcess where Id={oldEvalProcesses.Id}";
+                                        _iesContext.Database.ExecuteSqlRaw(cmd);
+                                    }
+                                }
+                            }
+                        dontCheck:;
                         }
                     }
                 }
