@@ -286,20 +286,20 @@ namespace IesSchool.Core.Services
                             }
                             //// delete old Objective_Skill Ids which are not in edited goal
 
-                            if (oldObjective.ObjectiveSkills!=null)
-                            {
-                                foreach (var oldSkill in oldObjective.ObjectiveSkills)
-                                {
-                                    for (int i = 0; i < goalDto.Objectives.Count(); i++)
-                                    {
-                                        if (!goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
-                                        {
-                                            var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
-                                            _iesContext.Database.ExecuteSqlRaw(cmd);
-                                        }
-                                    }
-                                }
-                            }
+                            //if (oldObjective.ObjectiveSkills!=null)
+                            //{
+                            //    foreach (var oldSkill in oldObjective.ObjectiveSkills)
+                            //    {
+                            //        for (int i = 0; i < goalDto.Objectives.Count(); i++)
+                            //        {
+                            //            if (!goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
+                            //            {
+                            //                var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
+                            //                _iesContext.Database.ExecuteSqlRaw(cmd);
+                            //            }
+                            //        }
+                            //    }
+                            //}
                             //// delete old Objective_EvaluationProcess Ids which are not in edited goal
 
                             if (oldObjective.ObjectiveEvaluationProcesses != null)

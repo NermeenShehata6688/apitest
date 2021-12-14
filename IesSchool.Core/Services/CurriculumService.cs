@@ -215,7 +215,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allSlills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strand), 0, 100000, true);
+                var allSlills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strand).ThenInclude(n => n.Area), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<SkillDto>>(allSlills);
                 var mapperData = mapper.Items.GroupBy(x => x.StrandName)
                                               .OrderByDescending(x => x.Key)
