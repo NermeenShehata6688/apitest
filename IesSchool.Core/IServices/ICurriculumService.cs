@@ -16,6 +16,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteArea(int areaId);
 
         public ResponseDto GetStrands();
+        public ResponseDto GetStrandsGroupByArea();
         public ResponseDto GetStrandById(int strandId);
         public ResponseDto AddStrand(StrandDto strandDto);
         public ResponseDto EditStrand(StrandDto strandDto);

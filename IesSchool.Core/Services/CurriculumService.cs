@@ -105,10 +105,24 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allStrands = _uow.GetRepository<Strand>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder),x=>x.Include(n => n.Skills.Where(s => s.IsDeleted != true)).Include(n => n.Area), 0, 100000, true);
+                var allStrands = _uow.GetRepository<Strand>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder),x=>x.Include(n => n.Skills.Where(s => s.IsDeleted != true)), 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<StrandDto>>(allStrands);
+               
+                return new ResponseDto { Status = 1, Errormessage = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStrandsGroupByArea()
+        {
+            try
+            {
+                var allStrands = _uow.GetRepository<Strand>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Skills.Where(s => s.IsDeleted != true)).Include(n => n.Area), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<StrandDto>>(allStrands);
                 var mapperData = mapper.Items.GroupBy(x => x.AreaName)
-                                              .OrderByDescending(x=>x.Key)
+                                              .OrderByDescending(x => x.Key)
                                               .Select(std => new
                                               {
                                                   AreaName = std.Key,

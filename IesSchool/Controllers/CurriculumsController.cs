@@ -106,6 +106,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetStrandsGroupByArea()
+        {
+            try
+            {
+                var all = _curriculumService.GetStrandsGroupByArea();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         // GET api/<CurriculumsController>/5
         [HttpGet]
