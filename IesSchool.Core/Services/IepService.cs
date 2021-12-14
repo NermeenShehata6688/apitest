@@ -272,24 +272,26 @@ namespace IesSchool.Core.Services
                 using var transaction = _iesContext.Database.BeginTransaction();
 
                 var mapper = _mapper.Map<Goal>(goalDto);
-                _iesContext.Entry(mapper).State = EntityState.Modified;
-                foreach (var item in mapper.Objectives)
-                {
-                    _iesContext.Entry(item).State = EntityState.Modified;
-                    foreach (var objEvl in item.ObjectiveEvaluationProcesses)
-                    {
-                        _iesContext.Entry(objEvl).State = EntityState.Modified;
-                    }
-                    foreach (var objSkl in item.ObjectiveSkills)
-                    {
-                        _iesContext.Entry(objSkl).State = EntityState.Modified;
-                    }
-                }
-                
+                //_iesContext.Entry(mapper).State = EntityState.Modified;
+                //foreach (var item in mapper.Objectives)
+                //{
+                //    _iesContext.Entry(item).State = EntityState.Modified;
+                //    foreach (var objEvl in item.ObjectiveEvaluationProcesses)
+                //    {
+                //        _iesContext.Entry(objEvl).State = EntityState.Modified;
+                //    }
+                //    foreach (var objSkl in item.ObjectiveSkills)
+                //    {
+                //        _iesContext.Entry(objSkl).State = EntityState.Modified;
+                //    }
+                //}
+
+                //_uow.GetRepository<Goal>().Update(mapper);
+                //_uow.SaveChanges(
+                //);
+                //transaction.Commit();
                 _uow.GetRepository<Goal>().Update(mapper);
                 _uow.SaveChanges();
-                transaction.Commit();
-
                 goalDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
             }

@@ -37,7 +37,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Area, AreaDetailsDto>().ReverseMap();
 
             CreateMap<Strand, StrandDto>()
-           .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Skills.Count())).ReverseMap()
+           .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Skills.Count()))
+            .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Area == null ? "" : c.Area.Name))
+            .ReverseMap()
             .ForMember(x => x.Skills, op => op.Ignore())
             .ForMember(x => x.Area, op => op.Ignore()).ReverseMap();
 
