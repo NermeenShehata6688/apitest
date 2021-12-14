@@ -267,31 +267,64 @@ namespace IesSchool.Core.Services
         }
         public ResponseDto EditGoal(GoalDto goalDto)
         {
+
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
+                if (goalDto.Id!=0 && goalDto.Objectives!=null)
+                {
+                    var objective = _uow.GetRepository<Objective>().GetList(x => x.GoalId == goalDto.Id && x.IsDeleted != true,null, x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills));
+                    if (objective!=null)///.items>0
+                    {
+                        foreach (var oldObjective in objective.Items)
+                        {
+                            //// delete old Objectives Ids which are not in edited goal
+                            if (!goalDto.Objectives.Any(x=> x.Id== oldObjective.Id))
+                            {
+                                var cmd = $"delete from Objective where Id={oldObjective.Id}";
+                                _iesContext.Database.ExecuteSqlRaw(cmd);
+                            }
+                            //// delete old Objective_Skill Ids which are not in edited goal
 
+                            if (oldObjective.ObjectiveSkills!=null)
+                            {
+                                foreach (var oldSkill in oldObjective.ObjectiveSkills)
+                                {
+                                    for (int i = 0; i < goalDto.Objectives.Count(); i++)
+                                    {
+                                        if (!goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
+                                        {
+                                            var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
+                                            _iesContext.Database.ExecuteSqlRaw(cmd);
+                                        }
+                                    }
+                                }
+                            }
+                            //// delete old Objective_EvaluationProcess Ids which are not in edited goal
+
+                            if (oldObjective.ObjectiveEvaluationProcesses != null)
+                            {
+                                foreach (var oldEvalProcesses in oldObjective.ObjectiveEvaluationProcesses)
+                                {
+                                    for (int i = 0; i < goalDto.Objectives.Count(); i++)
+                                    {
+                                        if (!goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldEvalProcesses.Id))
+                                        {
+                                            var cmd = $"delete from Objective_EvaluationProcess where Id={oldEvalProcesses.Id}";
+                                            _iesContext.Database.ExecuteSqlRaw(cmd);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 var mapper = _mapper.Map<Goal>(goalDto);
-                //_iesContext.Entry(mapper).State = EntityState.Modified;
-                //foreach (var item in mapper.Objectives)
-                //{
-                //    _iesContext.Entry(item).State = EntityState.Modified;
-                //    foreach (var objEvl in item.ObjectiveEvaluationProcesses)
-                //    {
-                //        _iesContext.Entry(objEvl).State = EntityState.Modified;
-                //    }
-                //    foreach (var objSkl in item.ObjectiveSkills)
-                //    {
-                //        _iesContext.Entry(objSkl).State = EntityState.Modified;
-                //    }
-                //}
-
-                //_uow.GetRepository<Goal>().Update(mapper);
-                //_uow.SaveChanges(
-                //);
-                //transaction.Commit();
                 _uow.GetRepository<Goal>().Update(mapper);
                 _uow.SaveChanges();
+
+                transaction.Commit();
+               
                 goalDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
             }
@@ -362,10 +395,11 @@ namespace IesSchool.Core.Services
                 objectiveDto.IsDeleted = false;
                 objectiveDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<Objective>(objectiveDto);
+                mapper.IsMasterd = ObjectiveIsMasterd(mapper);
                 _uow.GetRepository<Objective>().Add(mapper);
                 _uow.SaveChanges();
                 objectiveDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Extra Curricular Added  Seccessfuly", Data = objectiveDto };
+                return new ResponseDto { Status = 1, Message = "Objective Added  Seccessfuly", Data = objectiveDto };
             }
             catch (Exception ex)
             {
@@ -382,6 +416,7 @@ namespace IesSchool.Core.Services
                     $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 var mapper = _mapper.Map<Objective>(objectiveDto);
+                mapper.IsMasterd = ObjectiveIsMasterd(mapper);
 
                 _uow.GetRepository<Objective>().Update(mapper);
                 _uow.SaveChanges();
@@ -413,19 +448,73 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto ObjectiveIsMasterd(int objectiveId, bool isMasterd)
+        public bool ObjectiveIsMasterd(Objective objective)
         {
             try
             {
-                Objective objective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId);
-                objective.IsMasterd = isMasterd;
-                _uow.GetRepository<Objective>().Update(objective);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Objective Is Masterd State Has Changed" };
+                //// add new Objective
+                if (objective.Id == 0 && objective.Activities != null && objective.Activities.Any(x => x.Evaluation == 3) && objective.Activities.Count() >= 2)
+                {
+                    int eval = 0;
+                    for (int i = 0; i < objective.Activities.Count(); i++)
+                    {
+                        if (objective.Activities.ToList()[i].Evaluation == 3)
+                        {
+                            eval++;
+                            if(eval==3)
+                                return true;
+                        }
+                        else
+                            eval = 0;
+                    }
+                    if (eval >= 3)
+                        return true;
+                    else
+                        return false;
+                }
+                //// edit Objective
+                if (objective.Id != 0 && objective.Activities != null && objective.Activities.Any(x => x.Evaluation == 3))
+                {
+                    //if Activities.Count() >= 2
+                    if (objective.Activities.Count() >= 2)
+                    {
+                        int eval = 0;
+                        for (int i = 0; i < objective.Activities.Count(); i++)
+                        {
+                            if (objective.Activities.ToList()[i].Evaluation == 3)
+                            {
+                                eval++;
+                                if (eval == 3)
+                                    return true;
+                            }
+                            else
+                                eval = 0;
+                        }
+                    }
+                    var activity = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objective.Id, x => x.OrderBy(s => s.Date));
+
+                    // if last 2 of old Evaluation == 3 and new first Evaluation == 3
+                    if (activity.Items.Last().Evaluation == 3 && activity.Items[activity.Items.Count() -2].Evaluation == 3)
+                    {
+                        if (objective.Activities.First().Evaluation == 3)
+                            return true;
+                        else
+                            return false;
+                    }
+
+                    // if last 1 of old Evaluation == 3 and  first & second of new Evaluation == 3
+                    if (activity.Items.Last().Evaluation == 3 && activity.Items[activity.Items.Count() - 2].Evaluation != 3 
+                        && objective.Activities.First().Evaluation == 3
+                        && objective.Activities.ToList()[1].Evaluation == 3)
+                        return true;
+                    else
+                        return false;
+                }
+                return false;
             }
             catch (Exception ex)
             {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+                return false;
             }
         }
 
@@ -640,3 +729,4 @@ namespace IesSchool.Core.Services
         }
     }
 }
+

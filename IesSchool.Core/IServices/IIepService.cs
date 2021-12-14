@@ -30,7 +30,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddObjective(ObjectiveDto objectiveDto);
         public ResponseDto EditObjective(ObjectiveDto objectiveDto);
         public ResponseDto DeleteObjective(int objectiveId);
-        public ResponseDto ObjectiveIsMasterd(int objectiveId, bool isMasterd);
+        public bool ObjectiveIsMasterd(Objective objective);
 
         public ResponseDto GetActivities();
         public ResponseDto GetActivityById(int activityId);

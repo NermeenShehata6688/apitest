@@ -194,6 +194,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetSkillsGroupByStrand()
+        {
+            try
+            {
+                var all = _curriculumService.GetSkillsGroupByStrand();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         // GET api/<CurriculumsController>/5
         [HttpGet]

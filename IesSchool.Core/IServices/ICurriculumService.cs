@@ -23,6 +23,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteStrand(int strandId);
 
         public ResponseDto GetSkills();
+        public ResponseDto GetSkillsGroupByStrand();
         public ResponseDto GetSkillById(int skillId);
         public ResponseDto AddSkill(SkillDto skillDto);
         public ResponseDto EditSkill(SkillDto skillDto);

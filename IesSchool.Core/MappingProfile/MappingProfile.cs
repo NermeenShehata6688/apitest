@@ -129,10 +129,10 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.Objectives, op => op.Ignore());
 
 
-            CreateMap<Objective, ObjectiveDto>().ReverseMap()
+            CreateMap<Objective, ObjectiveDto>().ReverseMap();
             //.ForMember(x => x.ObjectiveEvaluationProcesses, op => op.Ignore())
             //.ForMember(x => x.ObjectiveSkills, op => op.Ignore())
-            .ForMember(x => x.Activities, op => op.Ignore());
+            //.ForMember(x => x.Activities, op => op.Ignore());
 
             CreateMap<Objective, GetObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation.Name).Distinct()))

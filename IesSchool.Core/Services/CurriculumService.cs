@@ -211,6 +211,26 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        public ResponseDto GetSkillsGroupByStrand()
+        {
+            try
+            {
+                var allSlills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strand), 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<SkillDto>>(allSlills);
+                var mapperData = mapper.Items.GroupBy(x => x.StrandName)
+                                              .OrderByDescending(x => x.Key)
+                                              .Select(std => new
+                                              {
+                                                  StrandName = std.Key,
+                                                  Skills = std.OrderBy(x => x.Name)
+                                              });
+                return new ResponseDto { Status = 1, Errormessage = "Success", Data = mapperData };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto GetSkillById(int skillId)
         {
             try

@@ -269,19 +269,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
-        public IActionResult ObjectiveIsMasterd(int objectiveId, bool isMasterd)
-        {
-            try
-            {
-                var all = _iepService.ObjectiveIsMasterd(objectiveId, isMasterd);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //[HttpPut]
+        //public IActionResult ObjectiveIsMasterd(int objectiveId, bool isMasterd)
+        //{
+        //    try
+        //    {
+        //        var all = _iepService.ObjectiveIsMasterd(objectiveId, isMasterd);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         [HttpGet]
         public IActionResult GetActivities()
         {
