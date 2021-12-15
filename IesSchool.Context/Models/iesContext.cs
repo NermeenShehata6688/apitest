@@ -82,7 +82,7 @@ namespace IesSchool.Context.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=192.168.8.155\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
+                optionsBuilder.UseSqlServer("Server=192.168.8.165\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
             }
         }
 
@@ -110,6 +110,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Objective)
                     .WithMany(p => p.Activities)
                     .HasForeignKey(d => d.ObjectiveId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Activities_Objective");
             });
 
@@ -664,6 +665,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Goal)
                     .WithMany(p => p.Objectives)
                     .HasForeignKey(d => d.GoalId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Objective_Goals");
             });
 
@@ -674,6 +676,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Objective)
                     .WithMany(p => p.ObjectiveEvaluationProcesses)
                     .HasForeignKey(d => d.ObjectiveId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Objective_EvaluationProcess_Objective");
 
                 entity.HasOne(d => d.SkillEvaluation)
@@ -689,6 +692,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Objective)
                     .WithMany(p => p.ObjectiveSkills)
                     .HasForeignKey(d => d.ObjectiveId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Objective_Skill_Objective");
 
                 entity.HasOne(d => d.Skill)

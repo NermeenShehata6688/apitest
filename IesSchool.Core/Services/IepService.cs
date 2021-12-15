@@ -254,6 +254,14 @@ namespace IesSchool.Core.Services
             {
                 goalDto.IsDeleted = false;
                 goalDto.CreatedOn = DateTime.Now;
+                if (goalDto.Objectives.Count()>0 || goalDto.Objectives!=null)
+                {
+                    foreach (var objective in goalDto.Objectives)
+                    {
+                        objective.IsDeleted = false;
+                        objective.CreatedOn = DateTime.Now;
+                    }
+                }
                 var mapper = _mapper.Map<Goal>(goalDto);
                 _uow.GetRepository<Goal>().Add(mapper);
                 _uow.SaveChanges();
@@ -267,19 +275,18 @@ namespace IesSchool.Core.Services
         }
         public ResponseDto EditGoal(GoalDto goalDto)
         {
-
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
-                if (goalDto.Id!=0 && goalDto.Objectives!=null)
+                if (goalDto.Id != 0 && goalDto.Objectives != null)
                 {
-                    var objective = _uow.GetRepository<Objective>().GetList(x => x.GoalId == goalDto.Id && x.IsDeleted != true,null, x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills));
-                    if (objective!=null)///.items>0
+                    var objective = _uow.GetRepository<Objective>().GetList(x => x.GoalId == goalDto.Id && x.IsDeleted != true, null, x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills));
+                    if (objective != null)///.items>0
                     {
                         foreach (var oldObjective in objective.Items)
                         {
                             //// delete old Objectives Ids which are not in edited goal
-                            if (!goalDto.Objectives.Any(x=> x.Id== oldObjective.Id))
+                            if (!goalDto.Objectives.Any(x => x.Id == oldObjective.Id))
                             {
                                 var cmd = $"delete from Objective where Id={oldObjective.Id}";
                                 _iesContext.Database.ExecuteSqlRaw(cmd);
@@ -287,20 +294,20 @@ namespace IesSchool.Core.Services
                             }
                             //// delete old Objective_Skill Ids which are not in edited goal
 
-                            if (oldObjective.ObjectiveSkills!=null&& oldObjective.ObjectiveSkills.Count()>0)
+                            if (oldObjective.ObjectiveSkills != null && oldObjective.ObjectiveSkills.Count() > 0)
                             {
                                 foreach (var oldSkill in oldObjective.ObjectiveSkills)
                                 {
-                                    bool isExisted=false;
+                                    bool isExisted = false;
                                     for (int i = 0; i < goalDto.Objectives.Count(); i++)
                                     {
-                                        
+
                                         if (goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
                                         {
                                             isExisted = true;
                                         }
                                     }
-                                    if (isExisted==false)
+                                    if (isExisted == false)
                                     {
                                         var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
                                         _iesContext.Database.ExecuteSqlRaw(cmd);
@@ -308,14 +315,13 @@ namespace IesSchool.Core.Services
                                 }
                             }
                             //// delete old Objective_EvaluationProcess Ids which are not in edited goal
-                            if (oldObjective.ObjectiveEvaluationProcesses != null && oldObjective.ObjectiveEvaluationProcesses.Count()>0)
+                            if (oldObjective.ObjectiveEvaluationProcesses != null && oldObjective.ObjectiveEvaluationProcesses.Count() > 0)
                             {
                                 foreach (var oldEvalProcesses in oldObjective.ObjectiveEvaluationProcesses)
                                 {
                                     bool isExisted = false;
                                     for (int i = 0; i < goalDto.Objectives.Count(); i++)
                                     {
-
                                         if (goalDto.Objectives.ToList()[i].ObjectiveEvaluationProcesses.Any(x => x.Id == oldEvalProcesses.Id))
                                         {
                                             isExisted = true;
@@ -337,7 +343,7 @@ namespace IesSchool.Core.Services
                 _uow.SaveChanges();
 
                 transaction.Commit();
-               
+
                 goalDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
             }
@@ -350,23 +356,11 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true&& x.GoalId== goalId);
-                
-                    foreach (var item in allObjectives.Items)
-                    {
-                        item.IsDeleted = true;
-                        item.DeletedOn = DateTime.Now;
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from Goals where Id={goalId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                transaction.Commit();
 
-                        _uow.GetRepository<Objective>().Update(item);
-                    }
-                        _uow.SaveChanges();
-                
-                Goal oGoal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId);
-                oGoal.IsDeleted = true;
-                oGoal.DeletedOn = DateTime.Now;
-
-                _uow.GetRepository<Goal>().Update(oGoal);
-                _uow.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "Goal Deleted Seccessfuly" };
             }
             catch (Exception ex)
@@ -424,10 +418,14 @@ namespace IesSchool.Core.Services
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
-
                 var cmd = $"delete from Objective_EvaluationProcess where ObjectiveId ={objectiveDto.Id}" +
                     $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
+
+                var listint = objectiveDto.Activities.Select(x => x.Id);
+                _iesContext.Activities.RemoveRange(_iesContext.Activities.Where(x => !listint.Contains(x.Id) && x.ObjectiveId == objectiveDto.Id));
+                _uow.SaveChanges();
+
                 var mapper = _mapper.Map<Objective>(objectiveDto);
                 mapper.IsMasterd = ObjectiveIsMasterd(mapper);
 
@@ -448,13 +446,12 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                Objective oObjective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId);
-                oObjective.IsDeleted = true;
-                oObjective.DeletedOn = DateTime.Now;
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from Objective where Id={objectiveId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                transaction.Commit();
 
-                _uow.GetRepository<Objective>().Update(oObjective);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Extra Curricular Deleted Seccessfuly" };
+                return new ResponseDto { Status = 1, Message = "Objective Deleted Seccessfuly" };
             }
             catch (Exception ex)
             {
