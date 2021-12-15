@@ -5,8 +5,8 @@ namespace IesSchool.Context.Models
 {
     public partial class ApplicationGroupRole
     {
-        public string ApplicationGroupId { get; set; } = null!;
-        public string ApplicationRoleId { get; set; } = null!;
+        public int ApplicationGroupId { get; set; }
+        public int ApplicationRoleId { get; set; }
         public int? Code { get; set; }
 
         public virtual ApplicationGroup ApplicationGroup { get; set; } = null!;

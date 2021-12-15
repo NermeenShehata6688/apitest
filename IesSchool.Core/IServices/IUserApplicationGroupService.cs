@@ -5,16 +5,16 @@ namespace IesSchool.Core.IServices
 {
     public interface IUserApplicationGroupService
     {
-        ResponseDto DeleteRoleFromGroup(string roleId, string groupId);
-        ResponseDto AddRoleToGroup(string[] roleId, string groupId);
-        ResponseDto AddGroupToUser(string[] groupIds, string userid);
-        ResponseDto DeleteGroup(string id);
+        ResponseDto DeleteRoleFromGroup(int roleId, int groupId);
+        ResponseDto AddRoleToGroup(int[] roleId, int groupId);
+        ResponseDto AddGroupToUser(int[] groupIds, int userid);
+        ResponseDto DeleteGroup(int id);
         IEnumerable<ApplicationGroup> GetGroups();
-        ApplicationGroup FindGroup(string id);
+        ApplicationGroup FindGroup(int id);
         ResponseDto UpdateGroup(ApplicationGroup model);
         ResponseDto Add(ApplicationGroup model);
-        ResponseDto DeleteGroupFromUser(string userId);
-        IEnumerable<ApplicationGroup> GetGroups(string id);
-        IEnumerable<ApplicationGroup> GetGroupsDetails(string id);
+        ResponseDto DeleteGroupFromUser(int userId);
+        IEnumerable<ApplicationGroup> GetGroups(int id);
+        IEnumerable<ApplicationGroup> GetGroupsDetails(int id);
     }
 }

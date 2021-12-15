@@ -19,7 +19,7 @@ namespace IesSchool.Core.Services
 
 
         [Obsolete]
-        public ResponseDto AddRoleToGroup(string[] roleId, string groupId)
+        public ResponseDto AddRoleToGroup(int[] roleId, int groupId)
         {
             foreach (var item in roleId)
             {
@@ -37,7 +37,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                newrecord.Id = Guid.NewGuid().ToString();
+                //newrecord.Id = Guid.NewGuid().ToString();
                 _context.ApplicationGroups.Add(newrecord);
                 _context.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
@@ -54,7 +54,7 @@ namespace IesSchool.Core.Services
 
 
         }
-        public ResponseDto AddGroupToUser(string[] groupIds, int userid)
+        public ResponseDto AddGroupToUser(int[] groupIds, int userid)
         {
             using (var context = _context.Database.BeginTransaction())
             {
@@ -109,7 +109,7 @@ namespace IesSchool.Core.Services
         }
 
         [Obsolete]
-        public ResponseDto DeleteGroup(string groupId)
+        public ResponseDto DeleteGroup(int groupId)
         {
             using (var context = _context.Database.BeginTransaction())
             {
@@ -148,7 +148,7 @@ namespace IesSchool.Core.Services
             return res;
         }
 
-        public ApplicationGroup FindGroup(string id)
+        public ApplicationGroup FindGroup(int id)
         {
             var res = _context.ApplicationGroups.AsNoTracking().Where(x => x.Id == id).Include(x => x.ApplicationUserGroups).Include(x => x.ApplicationGroupRoles).ThenInclude(c => c.ApplicationRole).FirstOrDefault();
             return res;
@@ -184,7 +184,7 @@ namespace IesSchool.Core.Services
                     }
                     _context.ApplicationGroupRoles.AddRange(model.ApplicationGroupRoles);
                     _context.SaveChanges();
-                    string[] groupid = { group.Id };
+                    int[] groupid = { group.Id };
                     foreach (var item in group.ApplicationUserGroups)
                     {
                         //_context.ApplicationUserGroup.Add(new ApplicationUserGroup
@@ -248,6 +248,26 @@ namespace IesSchool.Core.Services
         }
 
         public IEnumerable<ApplicationGroup> GetGroups(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResponseDto DeleteRoleFromGroup(int roleId, int groupId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResponseDto DeleteGroupFromUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ApplicationGroup> GetGroups(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ApplicationGroup> GetGroupsDetails(int id)
         {
             throw new NotImplementedException();
         }

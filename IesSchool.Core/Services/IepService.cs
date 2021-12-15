@@ -150,22 +150,16 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allIepAssistants = _uow.GetRepository<IepAssistant>().GetList(x => x.AssistantId == iepDto.Id);
+                using var transaction = _iesContext.Database.BeginTransaction();
                 var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 var mapper = _mapper.Map<Iep>(iepDto);
 
-                try
-                {
-                    _uow.GetRepository<Iep>().Update(mapper);
-                    _uow.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    _uow.GetRepository<IepAssistant>().Add(allIepAssistants.Items);
-                    _uow.SaveChanges();
-                    throw;
-                }
+                _uow.GetRepository<Iep>().Update(mapper);
+                _uow.SaveChanges();
+
+                transaction.Commit();
+
                 iepDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Iep Updated Seccessfuly", Data = iepDto };
             }
@@ -278,63 +272,32 @@ namespace IesSchool.Core.Services
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
-                if (goalDto.Id != 0 && goalDto.Objectives != null)
+                if (goalDto.Id != 0 && goalDto.Objectives != null)///count>0
                 {
-                    var objective = _uow.GetRepository<Objective>().GetList(x => x.GoalId == goalDto.Id && x.IsDeleted != true, null, x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills));
-                    if (objective != null)///.items>0
+                     //// delete old Objectives Ids which are not in edited goal
+                    var newObjInt = goalDto.Objectives.Select(x => x.Id);
+                    if (newObjInt.Count() > 0 || newObjInt != null)
                     {
-                        foreach (var oldObjective in objective.Items)
+                        _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == goalDto.Id));
+                        _uow.SaveChanges();
+
+                        //// delete old ObjectiveSkills 
+                        var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == goalDto.Id).Select(x => x.Id);
+                        var newObjSkillsInt = goalDto.Objectives.SelectMany(c => c.ObjectiveSkills.Select(o => o.Id));
+                        if (oldObjAfterDel != null)
                         {
-                            //// delete old Objectives Ids which are not in edited goal
-                            if (!goalDto.Objectives.Any(x => x.Id == oldObjective.Id))
-                            {
-                                var cmd = $"delete from Objective where Id={oldObjective.Id}";
-                                _iesContext.Database.ExecuteSqlRaw(cmd);
-                                goto dontCheck;
-                            }
-                            //// delete old Objective_Skill Ids which are not in edited goal
+                            var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && oldObjAfterDel.Contains(x.ObjectiveId ?? 0));
+                            //var listofobskills = _iesContext.ObjectiveSkills.Where(x => oldObjAfterDel.Contains(x.ObjectiveId ??0) );
+                            _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
+                            _uow.SaveChanges();
+                        }
 
-                            if (oldObjective.ObjectiveSkills != null && oldObjective.ObjectiveSkills.Count() > 0)
-                            {
-                                foreach (var oldSkill in oldObjective.ObjectiveSkills)
-                                {
-                                    bool isExisted = false;
-                                    for (int i = 0; i < goalDto.Objectives.Count(); i++)
-                                    {
-
-                                        if (goalDto.Objectives.ToList()[i].ObjectiveSkills.Any(x => x.Id == oldSkill.Id))
-                                        {
-                                            isExisted = true;
-                                        }
-                                    }
-                                    if (isExisted == false)
-                                    {
-                                        var cmd = $"delete from Objective_Skill where Id={oldSkill.Id}";
-                                        _iesContext.Database.ExecuteSqlRaw(cmd);
-                                    }
-                                }
-                            }
-                            //// delete old Objective_EvaluationProcess Ids which are not in edited goal
-                            if (oldObjective.ObjectiveEvaluationProcesses != null && oldObjective.ObjectiveEvaluationProcesses.Count() > 0)
-                            {
-                                foreach (var oldEvalProcesses in oldObjective.ObjectiveEvaluationProcesses)
-                                {
-                                    bool isExisted = false;
-                                    for (int i = 0; i < goalDto.Objectives.Count(); i++)
-                                    {
-                                        if (goalDto.Objectives.ToList()[i].ObjectiveEvaluationProcesses.Any(x => x.Id == oldEvalProcesses.Id))
-                                        {
-                                            isExisted = true;
-                                        }
-                                    }
-                                    if (isExisted == false)
-                                    {
-                                        var cmd = $"delete from Objective_EvaluationProcess where Id={oldEvalProcesses.Id}";
-                                        _iesContext.Database.ExecuteSqlRaw(cmd);
-                                    }
-                                }
-                            }
-                        dontCheck:;
+                        //// delete old ObjectiveEvaluationProcesses 
+                        var newObjEvalInt = goalDto.Objectives.SelectMany(c => c.ObjectiveEvaluationProcesses.Select(o => o.Id));
+                        if (newObjEvalInt != null)
+                        {
+                            _iesContext.ObjectiveEvaluationProcesses.RemoveRange(_iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalInt.Contains(x.Id) && oldObjAfterDel.Contains(x.ObjectiveId ?? 0)));
+                            _uow.SaveChanges();
                         }
                     }
                 }
@@ -427,14 +390,20 @@ namespace IesSchool.Core.Services
                 _uow.SaveChanges();
 
                 var mapper = _mapper.Map<Objective>(objectiveDto);
-                mapper.IsMasterd = ObjectiveIsMasterd(mapper);
-
+               
                 _uow.GetRepository<Objective>().Update(mapper);
                 _uow.SaveChanges();
                 objectiveDto.Id = mapper.Id;
-
                 transaction.Commit();
 
+                //check if object isMasterd
+                var newObjective = _uow.GetRepository<Objective>().Single(x => x.Id == mapper.Id && x.IsDeleted != true, null, x => x.Include(s => s.Activities));
+                if (objectiveDto.Activities != null || objectiveDto.Activities.Count() > 0|| newObjective!=null)
+                {
+                    newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
+                    _uow.GetRepository<Objective>().Update(mapper);
+                    _uow.SaveChanges();
+                }
                 return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveDto };
             }
             catch (Exception ex)
@@ -463,7 +432,7 @@ namespace IesSchool.Core.Services
             try
             {
                 //// add new Objective
-                if (objective.Id == 0 && objective.Activities != null && objective.Activities.Any(x => x.Evaluation == 3) && objective.Activities.Count() >= 2)
+                if (objective.Id == 0 || objective.Activities != null  || objective.Activities.Any(x => x.Evaluation == 3))
                 {
                     int eval = 0;
                     for (int i = 0; i < objective.Activities.Count(); i++)
@@ -483,43 +452,25 @@ namespace IesSchool.Core.Services
                         return false;
                 }
                 //// edit Objective
-                if (objective.Id != 0 && objective.Activities != null && objective.Activities.Any(x => x.Evaluation == 3))
-                {
-                    //if Activities.Count() >= 2
-                    if (objective.Activities.Count() >= 2)
-                    {
-                        int eval = 0;
-                        for (int i = 0; i < objective.Activities.Count(); i++)
-                        {
-                            if (objective.Activities.ToList()[i].Evaluation == 3)
-                            {
-                                eval++;
-                                if (eval == 3)
-                                    return true;
-                            }
-                            else
-                                eval = 0;
-                        }
-                    }
-                    var activity = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objective.Id, x => x.OrderBy(s => s.Date));
-
-                    // if last 2 of old Evaluation == 3 and new first Evaluation == 3
-                    if (activity.Items.Last().Evaluation == 3 && activity.Items[activity.Items.Count() -2].Evaluation == 3)
-                    {
-                        if (objective.Activities.First().Evaluation == 3)
-                            return true;
-                        else
-                            return false;
-                    }
-
-                    // if last 1 of old Evaluation == 3 and  first & second of new Evaluation == 3
-                    if (activity.Items.Last().Evaluation == 3 && activity.Items[activity.Items.Count() - 2].Evaluation != 3 
-                        && objective.Activities.First().Evaluation == 3
-                        && objective.Activities.ToList()[1].Evaluation == 3)
-                        return true;
-                    else
-                        return false;
-                }
+                //if (objective.Id != 0 || objective.Activities != null || objective.Activities.Count() >= 2 || objective.Activities.Any(x => x.Evaluation == 3))
+                //{
+                //    //if Activities.Count() >= 2
+                //    if (objective.Activities.Count() >= 2)
+                //    {
+                //        int eval = 0;
+                //        for (int i = 0; i < objective.Activities.Count(); i++)
+                //        {
+                //            if (objective.Activities.ToList()[i].Evaluation == 3)
+                //            {
+                //                eval++;
+                //                if (eval == 3)
+                //                    return true;
+                //            }
+                //            else
+                //                eval = 0;
+                //        }
+                //    }
+                //}
                 return false;
             }
             catch (Exception ex)

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
-    public partial class AspNetRoleClaim
+    public partial class AspNetUserClaim
     {
         public int Id { get; set; }
-        public int RoleId { get; set; }
+        public int UserId { get; set; }
         public string? ClaimType { get; set; }
         public string? ClaimValue { get; set; }
 
-        public virtual AspNetRole Role { get; set; } = null!;
+        public virtual AspNetUser User { get; set; } = null!;
     }
 }
