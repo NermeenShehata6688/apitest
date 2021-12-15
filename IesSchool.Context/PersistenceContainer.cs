@@ -12,6 +12,8 @@ namespace RealEstate.Context
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services , string conection)
         {
             services.AddDbContext<iesContext>(options =>
+                options.UseSqlServer(conection)); 
+            services.AddDbContext<iesIdentityContext>(options =>
                 options.UseSqlServer(conection));
 
             //services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));

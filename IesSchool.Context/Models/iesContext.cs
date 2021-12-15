@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -1298,4 +1300,18 @@ namespace IesSchool.Context.Models
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
-}
+
+
+
+    public partial class iesIdentityContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    {
+        public iesIdentityContext()
+        {
+        }
+
+        public iesIdentityContext(DbContextOptions<iesIdentityContext> options)
+            : base(options)
+        {
+        }
+    }
+    }

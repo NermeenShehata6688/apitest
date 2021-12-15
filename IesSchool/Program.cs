@@ -1,7 +1,14 @@
+using IesSchool.Context.Models;
 using IesSchool.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using RealEstate.Context;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -19,9 +26,89 @@ builder.Services.AddCors(options =>
                           builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                       });
 });
+
+/// <summary>
+/// identity
+/// </summary>
+///
+
+builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = false;
+                config.User.RequireUniqueEmail = false;
+                //Password requirements
+                config.Password.RequireDigit = false;
+                config.Password.RequiredLength = 6;
+                config.Password.RequiredUniqueChars = 0;
+                config.Password.RequireLowercase = false;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<iesIdentityContext>()
+             .AddDefaultTokenProviders();
+//services.Configure<ApplicationDbContext>(o =>
+//{
+//  o.Database.Migrate();
+//});
+
+// Add JWT Authentication 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    })
+
+    .AddJwtBearer(cfg =>
+    {
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+
+        //cfg.TokenValidationParameters = new TokenValidationParameters
+        //{
+        //    ValidIssuer = Configuration["JwtIssuer"],
+        //    ValidAudience = Configuration["JwtIssuer"],
+        //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+        //    ClockSkew = TimeSpan.Zero, // remove delay of token when expire
+        //                ValidateIssuerSigningKey = true,
+        //    ValidateLifetime = true,
+        //};
+    });
+
+builder.Services.Configure<IdentityOptions>(options =>
+options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
+builder.Services.AddHttpContextAccessor();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

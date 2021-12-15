@@ -12,6 +12,7 @@ namespace IesSchool.Core
     {
         public static IServiceCollection ServiceInjection(this IServiceCollection services)
         {
+            services.AddScoped<IUserApplicationGroupService, UserApplicationGroupService>();
             services.AddScoped<ILocationService, LocationServices>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ILocationService, LocationServices>();
