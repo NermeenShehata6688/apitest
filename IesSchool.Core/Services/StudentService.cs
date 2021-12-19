@@ -149,23 +149,16 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allStudentTherapists = _uow.GetRepository<StudentTherapist>().GetList(x => x.StudentId == studentDto.Id);
+                using var transaction = _iesContext.Database.BeginTransaction();
                 var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 var mapper = _mapper.Map<Student>(studentDto);
 
-                try
-                {
-                    _uow.GetRepository<Student>().Update(mapper);
-                    _uow.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    _uow.GetRepository<StudentTherapist>().Add(allStudentTherapists.Items);
-                    _uow.SaveChanges();
-                    throw;
-                }
+                _uow.GetRepository<Student>().Update(mapper);
+                _uow.SaveChanges();
+
                 studentDto.Id = mapper.Id;
+                transaction.Commit();
                 return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = studentDto };
             }
             catch (Exception ex)

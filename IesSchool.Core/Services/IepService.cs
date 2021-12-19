@@ -215,6 +215,31 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public decimal IepObjectiveMasterdPercentage(int iepId)
+        {
+            try
+            {
+                decimal iepMasterdPercentage = 0M;
+                if (iepId!=0)
+                {
+                    var iepObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true&& x.IepId== iepId );
+                    if ( iepObjectives.Items.Count()>0)
+                    {
+                        var iepMasterdObjectives = iepObjectives.Items.Where(x => x.IsMasterd == true).ToList();
+                        if (iepMasterdObjectives.Count() >0)
+                        {
+                             iepMasterdPercentage = ((decimal)(iepMasterdObjectives.Count()) /((decimal)iepObjectives.Items.Count()))*100;
+                            return iepMasterdPercentage;
+                        }
+                    }
+                }
+                return iepMasterdPercentage;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
 
         public ResponseDto GetGoals()
         {
@@ -248,12 +273,18 @@ namespace IesSchool.Core.Services
             {
                 goalDto.IsDeleted = false;
                 goalDto.CreatedOn = DateTime.Now;
-                if (goalDto.Objectives.Count()>0 || goalDto.Objectives!=null)
+                if (goalDto.Objectives!=null)
                 {
                     foreach (var objective in goalDto.Objectives)
                     {
                         objective.IsDeleted = false;
                         objective.CreatedOn = DateTime.Now;
+
+                        if (objective.Activities != null && objective.Activities.Count() > 2)
+                        {
+                            var obj = _mapper.Map<Objective>(objective);
+                            objective.IsMasterd = ObjectiveIsMasterd(obj);
+                        }
                     }
                 }
                 var mapper = _mapper.Map<Goal>(goalDto);
@@ -271,39 +302,70 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                var mapper = _mapper.Map<Goal>(goalDto);
+                //_uow.GetRepository<Goal>().Update(mapper);
+
+
                 using var transaction = _iesContext.Database.BeginTransaction();
-                if (goalDto.Id != 0 && goalDto.Objectives != null)///count>0
+                if (mapper.Id != 0 && mapper.Objectives != null || _iesContext.Objectives.Where(x => x.GoalId == mapper.Id) != null)///count>0
                 {
-                     //// delete old Objectives Ids which are not in edited goal
-                    var newObjInt = goalDto.Objectives.Select(x => x.Id);
-                    if (newObjInt.Count() > 0 || newObjInt != null)
+                    if (mapper.Objectives != null)
                     {
-                        _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == goalDto.Id));
+                    //// delete old Objectives Ids which are not in edited goal
+                        var newObjInt = mapper.Objectives.Select(x => x.Id);
+                        _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == mapper.Id));
                         _uow.SaveChanges();
-
-                        //// delete old ObjectiveSkills 
-                        var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == goalDto.Id).Select(x => x.Id);
-                        var newObjSkillsInt = goalDto.Objectives.SelectMany(c => c.ObjectiveSkills.Select(o => o.Id));
-                        if (oldObjAfterDel != null)
+                        var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == mapper.Id).ToList();
+                        if (oldObjAfterDel.Count()>0)
                         {
-                            var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && oldObjAfterDel.Contains(x.ObjectiveId ?? 0));
-                            //var listofobskills = _iesContext.ObjectiveSkills.Where(x => oldObjAfterDel.Contains(x.ObjectiveId ??0) );
-                            _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
-                            _uow.SaveChanges();
-                        }
-
-                        //// delete old ObjectiveEvaluationProcesses 
-                        var newObjEvalInt = goalDto.Objectives.SelectMany(c => c.ObjectiveEvaluationProcesses.Select(o => o.Id));
-                        if (newObjEvalInt != null)
-                        {
-                            _iesContext.ObjectiveEvaluationProcesses.RemoveRange(_iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalInt.Contains(x.Id) && oldObjAfterDel.Contains(x.ObjectiveId ?? 0)));
-                            _uow.SaveChanges();
+                            foreach (var newObj in mapper.Objectives.ToList())
+                            {
+                                if (newObj.ObjectiveSkills == null && newObj.Id != 0)  /// deit obj  and delete all skills
+                                {
+                                    var listofobskills = _iesContext.ObjectiveSkills.Where(x => x.ObjectiveId == newObj.Id);
+                                    _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
+                                    _uow.SaveChanges();
+                                }
+                                if (newObj.ObjectiveSkills != null && newObj.Id != 0)  /// deit obj  and edit all skills
+                                {
+                                    var newObjSkillsInt = newObj.ObjectiveSkills.Select(o => o.Id).ToList();
+                                    if (newObjSkillsInt.Count() > 0)
+                                    {
+                                        var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && x.ObjectiveId == newObj.Id);
+                                        _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
+                                        _uow.SaveChanges();
+                                    }
+                                }
+                                if (newObj.ObjectiveEvaluationProcesses == null && newObj.Id != 0)  /// deit obj  and delete all Evaluation
+                                {
+                                    var lisObEvaluationProcesses = _iesContext.ObjectiveEvaluationProcesses.Where(x => x.ObjectiveId == newObj.Id);
+                                    _iesContext.ObjectiveEvaluationProcesses.RemoveRange(lisObEvaluationProcesses);
+                                    _uow.SaveChanges();
+                                }
+                                if (newObj.ObjectiveEvaluationProcesses != null && newObj.Id != 0)  /// deit obj  and edit all Evaluation
+                                {
+                                    var newObjEvalProcessesInt = newObj.ObjectiveEvaluationProcesses.Select(o => o.Id).ToList();
+                                    if (newObjEvalProcessesInt.Count() > 0)
+                                    {
+                                        var listofEvaluations = _iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalProcessesInt.Contains(x.Id) && x.ObjectiveId == newObj.Id);
+                                        _iesContext.ObjectiveEvaluationProcesses.RemoveRange(listofEvaluations);
+                                        _uow.SaveChanges();
+                                    }
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => x.GoalId == mapper.Id));
+                        _uow.SaveChanges();
+                    }
                 }
-                var mapper = _mapper.Map<Goal>(goalDto);
-                _uow.GetRepository<Goal>().Update(mapper);
+                _uow.GetRepositoryAsync<Goal>().UpdateAsync(mapper);
                 _uow.SaveChanges();
+
+
+
 
                 transaction.Commit();
 
@@ -365,7 +427,10 @@ namespace IesSchool.Core.Services
                 objectiveDto.IsDeleted = false;
                 objectiveDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<Objective>(objectiveDto);
-                mapper.IsMasterd = ObjectiveIsMasterd(mapper);
+                if (objectiveDto.Activities != null && objectiveDto.Activities.Count() > 2)
+                {
+                    mapper.IsMasterd = ObjectiveIsMasterd(mapper);
+                }
                 _uow.GetRepository<Objective>().Add(mapper);
                 _uow.SaveChanges();
                 objectiveDto.Id = mapper.Id;
@@ -385,10 +450,13 @@ namespace IesSchool.Core.Services
                     $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
 
-                var listint = objectiveDto.Activities.Select(x => x.Id);
-                _iesContext.Activities.RemoveRange(_iesContext.Activities.Where(x => !listint.Contains(x.Id) && x.ObjectiveId == objectiveDto.Id));
-                _uow.SaveChanges();
-
+                if (objectiveDto.Activities!=null)
+                {
+                    var listint = objectiveDto.Activities.Select(x => x.Id);
+                    _iesContext.Activities.RemoveRange(_iesContext.Activities.Where(x => !listint.Contains(x.Id) && x.ObjectiveId == objectiveDto.Id));
+                    _uow.SaveChanges();
+                }
+               
                 var mapper = _mapper.Map<Objective>(objectiveDto);
                
                 _uow.GetRepository<Objective>().Update(mapper);
@@ -398,7 +466,7 @@ namespace IesSchool.Core.Services
 
                 //check if object isMasterd
                 var newObjective = _uow.GetRepository<Objective>().Single(x => x.Id == mapper.Id && x.IsDeleted != true, null, x => x.Include(s => s.Activities));
-                if (objectiveDto.Activities != null || objectiveDto.Activities.Count() > 0|| newObjective!=null)
+                if (newObjective!=null && newObjective.Activities.Count()>2)
                 {
                     newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
                     _uow.GetRepository<Objective>().Update(mapper);
@@ -478,6 +546,7 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
+       
 
         public ResponseDto GetActivities()
         {

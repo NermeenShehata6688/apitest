@@ -125,6 +125,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpPut]
+        public IActionResult IepObjectiveMasterdPercentage(int iepId)
+        {
+            try
+            {
+                var all = _iepService.IepObjectiveMasterdPercentage(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         // GET: api/<IepsController>
         [HttpGet]
