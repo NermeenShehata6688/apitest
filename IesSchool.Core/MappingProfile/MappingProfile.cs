@@ -148,6 +148,7 @@ namespace IesSchool.Core.MappingProfile
              .ReverseMap()
              .ForMember(x => x.Objective, op => op.Ignore());
 
+            CreateMap<Event, EventDto>().ReverseMap();
 
             CreateMap<Setting, SettingDto>().ReverseMap();
 

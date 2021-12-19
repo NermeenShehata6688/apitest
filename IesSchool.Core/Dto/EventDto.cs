@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace IesSchool.Context.Modelss
+namespace IesSchool.Core.Dto
 {
-    public partial class Event
+    public class EventDto
     {
-        public Event()
-        {
-            EventAttachements = new HashSet<EventAttachement>();
-            EventStudents = new HashSet<EventStudent>();
-            EventTeachers = new HashSet<EventTeacher>();
-        }
-
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
@@ -26,11 +22,5 @@ namespace IesSchool.Context.Modelss
         public int? DepartmentId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
-
-        public virtual Department? Department { get; set; }
-        public virtual EventType? EventType { get; set; }
-        public virtual ICollection<EventAttachement> EventAttachements { get; set; }
-        public virtual ICollection<EventStudent> EventStudents { get; set; }
-        public virtual ICollection<EventTeacher> EventTeachers { get; set; }
     }
 }

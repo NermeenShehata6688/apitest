@@ -60,7 +60,7 @@ namespace IesSchool.Core.Services
 
                 if (iepSearchDto.AcadmicYearId != null)
                 {
-                    allIeps = allIeps.Where(x => x.AcadmicYearId== iepSearchDto.AcadmicYearId);
+                    allIeps = allIeps.Where(x => x.AcadmicYearId == iepSearchDto.AcadmicYearId);
                 }
                 if (iepSearchDto.TermId != null)
                 {
@@ -108,7 +108,7 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstIepDto = _mapper.Map<List<VwIepDto>>(allIeps);
-                var mapper = new PaginateDto<VwIepDto> { Count = allIeps.Count(), Items = lstIepDto, Index = iepSearchDto.Index, Pages = iepSearchDto.PageSize };
+                var mapper = new PaginateDto<VwIepDto> { Count = allIeps.Count(), Items = lstIepDto != null ? lstIepDto.Skip(iepSearchDto.Index ??= 0).Take(iepSearchDto.PageSize ??= 20).ToList() : lstIepDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
@@ -229,7 +229,7 @@ namespace IesSchool.Core.Services
                         if (iepMasterdObjectives.Count() >0)
                         {
                              iepMasterdPercentage = ((decimal)(iepMasterdObjectives.Count()) /((decimal)iepObjectives.Items.Count()))*100;
-                            return iepMasterdPercentage;
+                            return Math.Round( iepMasterdPercentage);
                         }
                     }
                 }
@@ -303,8 +303,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var mapper = _mapper.Map<Goal>(goalDto);
-                //_uow.GetRepository<Goal>().Update(mapper);
-
+                _uow.GetRepository<Goal>().Update(mapper);
 
                 using var transaction = _iesContext.Database.BeginTransaction();
                 if (mapper.Id != 0 && mapper.Objectives != null || _iesContext.Objectives.Where(x => x.GoalId == mapper.Id) != null)///count>0
@@ -314,59 +313,55 @@ namespace IesSchool.Core.Services
                     //// delete old Objectives Ids which are not in edited goal
                         var newObjInt = mapper.Objectives.Select(x => x.Id);
                         _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == mapper.Id));
-                        _uow.SaveChanges();
+                        _iesContext.SaveChanges();
                         var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == mapper.Id).ToList();
                         if (oldObjAfterDel.Count()>0)
                         {
                             foreach (var newObj in mapper.Objectives.ToList())
                             {
-                                if (newObj.ObjectiveSkills == null && newObj.Id != 0)  /// deit obj  and delete all skills
+                                if ((newObj.ObjectiveSkills == null|| newObj.ObjectiveSkills.Count==0) && newObj.Id != 0)  /// deit obj  and delete all skills
                                 {
                                     var listofobskills = _iesContext.ObjectiveSkills.Where(x => x.ObjectiveId == newObj.Id);
                                     _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
-                                    _uow.SaveChanges();
+                                    _iesContext.SaveChanges();
                                 }
-                                if (newObj.ObjectiveSkills != null && newObj.Id != 0)  /// deit obj  and edit all skills
+                                if ((newObj.ObjectiveSkills != null|| newObj.ObjectiveSkills.Count!=0) && newObj.Id != 0)  /// deit obj  and edit all skills
                                 {
                                     var newObjSkillsInt = newObj.ObjectiveSkills.Select(o => o.Id).ToList();
                                     if (newObjSkillsInt.Count() > 0)
                                     {
-                                        var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && x.ObjectiveId == newObj.Id);
+                                        var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
                                         _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
-                                        _uow.SaveChanges();
+                                        _iesContext.SaveChanges();
                                     }
                                 }
-                                if (newObj.ObjectiveEvaluationProcesses == null && newObj.Id != 0)  /// deit obj  and delete all Evaluation
+                                if ((newObj.ObjectiveEvaluationProcesses == null|| newObj.ObjectiveEvaluationProcesses.Count==0) && newObj.Id != 0)  /// deit obj  and delete all Evaluation
                                 {
-                                    var lisObEvaluationProcesses = _iesContext.ObjectiveEvaluationProcesses.Where(x => x.ObjectiveId == newObj.Id);
+                                    var lisObEvaluationProcesses = _iesContext.ObjectiveEvaluationProcesses.Where(x => x.ObjectiveId == newObj.Id).ToList();
                                     _iesContext.ObjectiveEvaluationProcesses.RemoveRange(lisObEvaluationProcesses);
-                                    _uow.SaveChanges();
+                                    _iesContext.SaveChanges();
                                 }
-                                if (newObj.ObjectiveEvaluationProcesses != null && newObj.Id != 0)  /// deit obj  and edit all Evaluation
+                                if ((newObj.ObjectiveEvaluationProcesses != null|| newObj.ObjectiveEvaluationProcesses.Count()!=0) && newObj.Id != 0)  /// deit obj  and edit all Evaluation
                                 {
                                     var newObjEvalProcessesInt = newObj.ObjectiveEvaluationProcesses.Select(o => o.Id).ToList();
                                     if (newObjEvalProcessesInt.Count() > 0)
                                     {
-                                        var listofEvaluations = _iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalProcessesInt.Contains(x.Id) && x.ObjectiveId == newObj.Id);
+                                        var listofEvaluations = _iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalProcessesInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
                                         _iesContext.ObjectiveEvaluationProcesses.RemoveRange(listofEvaluations);
-                                        _uow.SaveChanges();
+                                        _iesContext.SaveChanges();
                                     }
-                                }
+                                 }
                             }
                         }
                     }
                     else
                     {
                         _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => x.GoalId == mapper.Id));
-                        _uow.SaveChanges();
+                        _iesContext.SaveChanges();
                     }
                 }
-                _uow.GetRepositoryAsync<Goal>().UpdateAsync(mapper);
+                //_uow.GetRepositoryAsync<Goal>().UpdateAsync(mapper);
                 _uow.SaveChanges();
-
-
-
-
                 transaction.Commit();
 
                 goalDto.Id = mapper.Id;

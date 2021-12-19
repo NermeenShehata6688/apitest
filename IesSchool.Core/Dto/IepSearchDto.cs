@@ -20,7 +20,7 @@ namespace IesSchool.Core.Dto
         public string? StudentName { get; set; }
         public int? StudentCode { get; set; }
         public int? DepartmentId { get; set; }
-        public int Index { get; set; }
-        public int PageSize { get; set; }
+        public int? Index { get; set; }
+        public int? PageSize { get; set; }
     }
 }
