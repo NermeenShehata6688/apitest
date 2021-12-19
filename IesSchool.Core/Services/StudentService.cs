@@ -74,7 +74,7 @@ namespace IesSchool.Core.Services
                 }
                 if (studentSearchDto.HomePhone != null)
                 {
-                    allStudents = allStudents.Where(x => x.HomePhone == studentSearchDto.HomePhone);
+                    allStudents = allStudents.Where(x => x.HomePhone.Contains(studentSearchDto.HomePhone));
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
