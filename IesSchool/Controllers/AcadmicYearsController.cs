@@ -16,6 +16,7 @@ namespace IesSchool.Controllers
             _acadmicYearsService = acadmicYearsService;
         }
 
+
         // GET: api/<AcadmicYearsController>
         [HttpGet]
         public IActionResult GetAcadmicYears()

@@ -18,6 +18,7 @@ builder.Services.AddApplicationServices();
 builder.Services.ServiceInjection();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "Iespolice",

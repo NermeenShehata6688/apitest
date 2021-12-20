@@ -84,7 +84,6 @@ namespace IesSchool.Core.Services
                     AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true , x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.Strand).ThenInclude(x => x.Area).Include(x=>x.SkillAlowedDepartments ).ThenInclude(x => x.Department), 0, 1000000, true),
                     AllWorkCategorys = _uow.GetRepository<WorkCategory>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllAttachmentTypes = _uow.GetRepository<AttachmentType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-
                 };
                 var mapper = _mapper.Map<StudentHelperDto>(studentHelper);
 

@@ -4,6 +4,7 @@ using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,29 +18,37 @@ namespace IesSchool.Core.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
+        private IMemoryCache _memoryCache;
 
-        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IMemoryCache memoryCache)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
+            _memoryCache = memoryCache;
         }
         public ResponseDto GetEventHelper()
         {
             try
 
             {
-                var annomus = _uow.GetReadOnlyRepository<User>().GetList((x => new { Id = x.Id, Name = x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 1000000, true);
-
                 EventHelper eventHelper = new EventHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
                     AllTeachers = _uow.GetReadOnlyRepository<User>().GetList((x => new User  {Id=  x.Id ,Name= x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null,null, 0, 1000000, true),
-                    AllStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllEventTypes = _uow.GetRepository<EventType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllEvents = _uow.GetRepository<Event>().GetList(x=> x.IsDeleted!=true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<EventHelperDto>(eventHelper);
+                var test = new EventHelperDto();
+                //List<Department> AllDepartments;
+                
+                //if (!_memoryCache.TryGetValue("EventHelper",out test))
+                //{
+                //    _memoryCache.Set("EventHelper", mapper);
+                //}
+                //test = _memoryCache.Get("EventHelper") as EventHelperDto;
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

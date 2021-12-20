@@ -31,6 +31,8 @@ namespace IesSchool.Controllers
             }
         }
         // GET: api/<EventsController>
+     
+        [ResponseCache( Duration = 150)]
         [HttpGet]
         public IActionResult GetEventHelper()
         {
@@ -43,8 +45,7 @@ namespace IesSchool.Controllers
             {
                 throw;
             }
-        }
-
+        }      
         // GET api/<EventsController>/5
         [HttpGet]
         public IActionResult GetEventById(int eventId)
