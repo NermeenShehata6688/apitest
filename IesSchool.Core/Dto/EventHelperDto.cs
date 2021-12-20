@@ -14,6 +14,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<User> AllTeachers { get; set; }
         public IPaginate<Student> AllStudents { get; set; }
         public IPaginate<EventType> AllEventTypes { get; set; }
+        public IPaginate<Event> AllEvents { get; set; }
 
     }
     public class EventHelperDto
@@ -22,5 +23,6 @@ namespace IesSchool.Core.Dto
         public PaginateDto<UserDto> AllTeachers { get; set; }
         public PaginateDto<StudentDto> AllStudents { get; set; }
         public PaginateDto<EventTypeDto> AllEventTypes { get; set; }
+        public PaginateDto<EventDto> AllEvents { get; set; }
     }
 }

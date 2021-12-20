@@ -76,8 +76,8 @@ namespace IesSchool.Core.Services
                 StudentHelper studentHelper = new StudentHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllTeachers = _uow.GetRepository<VwUser>().GetList(x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllTherapists = _uow.GetRepository<VwUser>().GetList(x => x.IsDeleted != true && x.IsTherapist == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllTeachers = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber=x.RoomNumber }), x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllTherapists = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTherapist == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true,  null, null, 0, 1000000, true),
                     AllStates = _uow.GetRepository<State>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<City>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),

@@ -27,13 +27,17 @@ namespace IesSchool.Core.Services
         public ResponseDto GetEventHelper()
         {
             try
+
             {
+                var annomus = _uow.GetReadOnlyRepository<User>().GetList((x => new { Id = x.Id, Name = x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 1000000, true);
+
                 EventHelper eventHelper = new EventHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllTeachers = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllTeachers = _uow.GetReadOnlyRepository<User>().GetList((x => new User  {Id=  x.Id ,Name= x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null,null, 0, 1000000, true),
                     AllStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllEventTypes = _uow.GetRepository<EventType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllEvents = _uow.GetRepository<Event>().GetList(x=> x.IsDeleted!=true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<EventHelperDto>(eventHelper);
 
@@ -62,8 +66,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true, null);
-                var mapper = _mapper.Map<EventDto>(oEvent);
+                var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true, null, x=> x.Include(x=> x.EventTeachers).ThenInclude(x => x.Teacher).Include(x => x.EventStudents).ThenInclude(x => x.Student).Include(x => x.EventAttachements));
+                var mapper = _mapper.Map<EventGetDto>(oEvent);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -358,6 +362,143 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from Event_Teacher where Id={eventTeacherId}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 return new ResponseDto { Status = 1, Message = "Event Teacher Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto AddEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        {
+            try
+            {
+                List<EventAttachement> eventAttachement = new List<EventAttachement>();
+                foreach (var item in eventAttachementDto)
+                    eventAttachement.Add(new EventAttachement { 
+                        EventId = item.EventId,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Date = item.Date,
+                        IsPublished = item.IsPublished,
+                        FileName = item.FileName,
+                    });
+
+                _uow.GetRepository<EventAttachement>().Add(eventAttachement);
+                return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventAttachementDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        {
+            try
+            {
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from EventAttachement where EventId={eventAttachementDto.FirstOrDefault().EventId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                List<EventAttachement> eventAttachement = new List<EventAttachement>();
+
+                foreach (var item in eventAttachementDto)
+                    eventAttachement.Add(new EventAttachement
+                    {
+                        EventId = item.EventId,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Date = item.Date,
+                        IsPublished = item.IsPublished,
+                        FileName = item.FileName,
+                    });
+
+                _uow.GetRepository<EventAttachement>().Update(eventAttachement);
+                _uow.SaveChanges();
+                transaction.Commit();
+                return new ResponseDto { Status = 1, Message = "Event Attachement Updated Seccessfuly", Data = eventAttachementDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteEventAttachement(int eventAttachementId)
+        {
+            try
+            {
+                var cmd = $"delete from EventAttachement where Id={eventAttachementId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                return new ResponseDto { Status = 1, Message = "Event Attachement Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto AddEventStudentFiles(List<EventStudentFileDto> eventStudentFileDto)
+        {
+            try
+            {
+                List<EventStudentFile> eventStudentFile = new List<EventStudentFile>();
+                foreach (var item in eventStudentFileDto)
+                    eventStudentFile.Add(new EventStudentFile
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Date = item.Date,
+                        EventStudentId=item.EventStudentId,
+                        IsPublished = item.IsPublished,
+                        FileName = item.FileName,
+                    });
+
+                _uow.GetRepository<EventStudentFile>().Add(eventStudentFile);
+                return new ResponseDto { Status = 1, Message = "Event Student File Added  Seccessfuly", Data = eventStudentFileDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto EditEventStudentFiles(List<EventStudentFileDto> eventStudentFileDto)
+        {
+            try
+            {
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from EventStudentFiles where EventStudentId={eventStudentFileDto.FirstOrDefault().EventStudentId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                List<EventStudentFile> eventStudentFile = new List<EventStudentFile>();
+
+                foreach (var item in eventStudentFileDto)
+                    eventStudentFile.Add(new EventStudentFile
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Date = item.Date,
+                        EventStudentId = item.EventStudentId,
+                        IsPublished = item.IsPublished,
+                        FileName = item.FileName,
+                    });
+
+                _uow.GetRepository<EventStudentFile>().Update(eventStudentFile);
+                _uow.SaveChanges();
+                transaction.Commit();
+                return new ResponseDto { Status = 1, Message = "Event Student File Updated Seccessfuly", Data = eventStudentFileDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteEventStudentFile(int eventStudentFileId)
+        {
+            try
+            {
+                var cmd = $"delete from EventStudentFiles where Id={eventStudentFileId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                return new ResponseDto { Status = 1, Message = "Event Student File Deleted Seccessfuly" };
             }
             catch (Exception ex)
             {

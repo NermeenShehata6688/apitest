@@ -35,5 +35,13 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditEventTeacher(List<EventTeacherDto> eventTeacherDto);
         public ResponseDto DeleteEventTeacher(int eventTeacherId);
 
+        public ResponseDto AddEventAttachement(List<EventAttachementDto> eventAttachementDto);
+        public ResponseDto EditEventAttachement(List<EventAttachementDto> eventAttachementDto);
+        public ResponseDto DeleteEventAttachement(int eventAttachementId);
+
+        public ResponseDto AddEventStudentFiles(List<EventStudentFileDto> eventStudentFiles);
+        public ResponseDto EditEventStudentFiles(List<EventStudentFileDto> eventStudentFiles);
+        public ResponseDto DeleteEventStudentFile(int eventStudentFileId);
+
     }
 }

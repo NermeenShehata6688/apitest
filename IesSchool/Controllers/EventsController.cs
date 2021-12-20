@@ -187,33 +187,6 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpGet]
-        public IActionResult GetEventStudents()
-        {
-            try
-            {
-                var all = _eventService.GetEventStudents();
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetEventStudentById(int eventStudentId)
-        {
-            try
-            {
-                var all = _eventService.GetEventStudentById(eventStudentId);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
         [HttpPost]
         public IActionResult PostEventStudent(List<EventStudentDto> eventStudentDto)
@@ -256,34 +229,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpGet]
-        public IActionResult GetEventTeachers()
-        {
-            try
-            {
-                var all = _eventService.GetEventTeachers();
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetEventTeacherById(int eventTeacherId)
-        {
-            try
-            {
-                var all = _eventService.GetEventTeacherById(eventTeacherId);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
+        
         [HttpPost]
         public IActionResult PostEventTeacher(List<EventTeacherDto> eventTeacherDto)
         {
@@ -318,6 +264,88 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _eventService.DeleteEventTeacher(eventTeacherId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public IActionResult PostEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        {
+            try
+            {
+                var all = _eventService.AddEventAttachement(eventAttachementDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        {
+            try
+            {
+                var all = _eventService.EditEventAttachement(eventAttachementDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteEventAttachement(int eventAttachementId)
+        {
+            try
+            {
+                var all = _eventService.DeleteEventAttachement(eventAttachementId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public IActionResult PostEventStudentFiles(List<EventStudentFileDto> eventStudentFilesDto)
+        {
+            try
+            {
+                var all = _eventService.AddEventStudentFiles(eventStudentFilesDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutEventStudentFiles(List<EventStudentFileDto> eventStudentFileDtoDto)
+        {
+            try
+            {
+                var all = _eventService.EditEventStudentFiles(eventStudentFileDtoDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
+        {
+            try
+            {
+                var all = _eventService.DeleteEventStudentFile(eventStudentFileId);
                 return Ok(all);
             }
             catch (Exception)
