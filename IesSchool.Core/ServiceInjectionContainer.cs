@@ -28,6 +28,7 @@ namespace IesSchool.Core
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAttachmentTypeService, AttachmentTypeService>();
             services.AddScoped<IIepService, IepService>();
+            services.AddScoped<IEventService, EventService>();
 
             return services; 
         }

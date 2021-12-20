@@ -25,32 +25,19 @@ namespace IesSchool.Core.Services
             {
                 var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted != 1");
 
-                if (studentSearchDto.NameAr != null) {
-                    allStudents = allStudents.Where(x => x.NameAr.Contains(studentSearchDto.NameAr));
-                }
-                if (studentSearchDto.Name != null)
+                if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {
-                    allStudents = allStudents.Where(x => x.Name.Contains(studentSearchDto.Name));
-                }
-                if (studentSearchDto.Code != null)
-                {
-                    allStudents = allStudents.Where(x => x.Code.ToString().Contains(studentSearchDto.Code.ToString()));
-                }
-                if (studentSearchDto.CivilId != null)
-                {
-                    allStudents = allStudents.Where(x => x.CivilId.ToString().Contains(studentSearchDto.CivilId.ToString()));
+                    allStudents = allStudents.Where(x => x.NameAr.Contains(studentSearchDto.StringSearch ) 
+                        || x.Name.Contains(studentSearchDto.StringSearch)
+                        ||  x.Code.ToString().Contains(studentSearchDto.StringSearch.ToString())
+                        || x.CivilId.ToString().Contains(studentSearchDto.StringSearch.ToString())
+                        || x.PassportNumber.ToString().Contains(studentSearchDto.StringSearch.ToString())
+                        || x.Email.Contains(studentSearchDto.StringSearch)
+                        || x.HomePhone.Contains(studentSearchDto.StringSearch));
                 }
                 if (studentSearchDto.NationalityId != null)
                 {
                     allStudents = allStudents.Where(x => x.NationalityId== studentSearchDto.NationalityId);
-                }
-                if (studentSearchDto.PassportNumber != null)
-                {
-                    allStudents = allStudents.Where(x => x.PassportNumber.ToString().Contains(studentSearchDto.PassportNumber.ToString()));
-                }
-                if (studentSearchDto.Email != null)
-                {
-                    allStudents = allStudents.Where(x => x.Email.Contains(studentSearchDto.Email));
                 }
                 if (studentSearchDto.DepartmentId != null)
                 {
@@ -71,10 +58,6 @@ namespace IesSchool.Core.Services
                 if (studentSearchDto.IsSuspended != null)
                 {
                     allStudents = allStudents.Where(x => x.IsSuspended == studentSearchDto.IsSuspended);
-                }
-                if (studentSearchDto.HomePhone != null)
-                {
-                    allStudents = allStudents.Where(x => x.HomePhone.Contains(studentSearchDto.HomePhone));
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);

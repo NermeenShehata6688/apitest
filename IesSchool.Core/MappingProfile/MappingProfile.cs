@@ -148,10 +148,29 @@ namespace IesSchool.Core.MappingProfile
              .ReverseMap()
              .ForMember(x => x.Objective, op => op.Ignore());
 
-            CreateMap<Event, EventDto>().ReverseMap();
+            CreateMap<Event, EventDto>().ReverseMap()
+            .ForMember(x => x.Department, op => op.Ignore());
+            CreateMap<EventAttachement, EventAttachementDto>().ReverseMap()
+             .ForMember(x => x.Event, op => op.Ignore());
+
+            CreateMap<EventTeacher, EventTeacherDto>().ReverseMap()
+             .ForMember(x => x.Event, op => op.Ignore());
+
+            CreateMap<EventStudent, EventStudentDto>()
+            .ForMember(dist => dist.EventName, opt => opt.MapFrom(c => c.Event == null ? "" : c.Event.Name))
+            .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
+            .ForMember(dist => dist.StudentNameAr, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.NameAr))
+                .ReverseMap()
+             .ForMember(x => x.Event, op => op.Ignore())
+             .ForMember(x => x.EventStudentFiles, op => op.Ignore()).ReverseMap();
+
+            CreateMap< List<EventStudent>, List<EventStudentDto>>().ReverseMap();
+
+            CreateMap<EventHelper, EventHelperDto>().ReverseMap();
+            CreateMap<EventType, EventTypeDto>().ReverseMap();
+            CreateMap<EventStudentFile, EventStudentFileDto>().ReverseMap();
 
             CreateMap<Setting, SettingDto>().ReverseMap();
-
         }
     }
 }
