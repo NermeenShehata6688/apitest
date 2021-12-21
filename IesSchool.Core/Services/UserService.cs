@@ -301,16 +301,25 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var userAttachmentFile = _ifileService.UploadFile(file);
+                //change File to binary
 
-                UserAttachment userAttachment=new UserAttachment();
-                userAttachment.Name = userAttachmentFile.Name;
-                userAttachment.FileName = userAttachmentFile.FileName;
-                userAttachment.IssuedIn = userAttachmentDto.IssuedIn;
-                userAttachment.ValidTill = userAttachmentDto.ValidTill;
-                userAttachment.UserId = userAttachmentDto.UserId;
+                MemoryStream ms = new MemoryStream();
+                file.CopyTo(ms);
+                UserAttachmentBinary userAttachmentBinary = new UserAttachmentBinary();
+                userAttachmentBinary.FileBinary = ms.ToArray();
+                ms.Close();
+                ms.Dispose();
 
-                _uow.GetRepository<UserAttachment>().Add(userAttachment);
+                //upload file in local directory
+
+                var result = _ifileService.UploadFile(file);
+
+                userAttachmentDto.FileName = result.FileName;
+
+                //saving to DataBase
+                var mapper = _mapper.Map<UserAttachment>(userAttachmentDto);
+                mapper.UserAttachmentBinary = userAttachmentBinary;
+                _uow.GetRepository<UserAttachment>().Add(mapper);
                 _uow.SaveChanges();
 
                 return new ResponseDto { Status = 1, Message = "User Attachment Added  Seccessfuly", Data = userAttachmentDto };
