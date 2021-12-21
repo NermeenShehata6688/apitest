@@ -4,6 +4,7 @@ using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using IesSchool.InfraStructure.Paging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace IesSchool.Core.Services
@@ -13,11 +14,14 @@ namespace IesSchool.Core.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
-        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
+        private IFileService _ifileService;
+
+        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
+            _ifileService = ifileService;
         }
         public ResponseDto GetStudents(StudentSearchDto studentSearchDto)
         {
@@ -61,7 +65,7 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
-                var mapper = new PaginateDto<VwStudentDto> { Count= allStudents.Count(),Items= lstStudentDto, Index = studentSearchDto.Index, Pages = studentSearchDto.PageSize };
+                var mapper = new PaginateDto<VwStudentDto> { Count= allStudents.Count(),Items= lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index ??= 0).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
@@ -297,15 +301,28 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddStudentAttachment(StudentAttachmentDto studentAttachmentDto)
+        public ResponseDto AddStudentAttachment(IFormFile file,StudentAttachmentDto studentAttachmentDto)
         {
             try
             {
+                //change File to binary
+                MemoryStream ms = new MemoryStream();
+                file.CopyTo(ms);
+                StudentAttachmentBinary studentAttachmentBinary = new StudentAttachmentBinary();
+                studentAttachmentBinary.FileBinary = ms.ToArray();
+                ms.Close();
+                ms.Dispose();
+
+                //upload file in local directory
+
+                var result = _ifileService.UploadFile(file);
+                studentAttachmentDto.FileName = result.FileName;
+
+                //saving to DataBase
                 var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
-                mapper.Student = null;
+                mapper.StudentAttachmentBinary = studentAttachmentBinary;
                 _uow.GetRepository<StudentAttachment>().Add(mapper);
                 _uow.SaveChanges();
-                studentAttachmentDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Student Attachment Added  Seccessfuly", Data = studentAttachmentDto };
             }
             catch (Exception ex)

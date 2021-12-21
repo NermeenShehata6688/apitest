@@ -134,11 +134,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudentAttachment(StudentAttachmentDto studentAttachmentDto)
+        public IActionResult AddStudentAttachment(IFormFile file, [FromForm] StudentAttachmentDto studentAttachmentDto)
         {
             try
             {
-                var all = _studentService.AddStudentAttachment(studentAttachmentDto);
+                var all = _studentService.AddStudentAttachment(file,studentAttachmentDto);
                 return Ok(all);
             }
             catch (Exception)
