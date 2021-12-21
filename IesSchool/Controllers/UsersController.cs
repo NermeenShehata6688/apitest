@@ -15,6 +15,7 @@ namespace IesSchool.Controllers
         {
             _userService = userService;
         }
+        [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetUserHelper()
         {

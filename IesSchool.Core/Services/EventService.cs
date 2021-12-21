@@ -41,15 +41,6 @@ namespace IesSchool.Core.Services
                     AllEvents = _uow.GetRepository<Event>().GetList(x=> x.IsDeleted!=true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<EventHelperDto>(eventHelper);
-                var test = new EventHelperDto();
-                //List<Department> AllDepartments;
-                
-                //if (!_memoryCache.TryGetValue("EventHelper",out test))
-                //{
-                //    _memoryCache.Set("EventHelper", mapper);
-                //}
-                //test = _memoryCache.Get("EventHelper") as EventHelperDto;
-
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
 

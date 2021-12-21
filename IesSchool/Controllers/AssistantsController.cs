@@ -16,6 +16,7 @@ namespace IesSchool.Controllers
             _assistantService = assistantService;
         }
         // GET: api/<AssistantsController>
+        [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetAssistantHelper()
         {
