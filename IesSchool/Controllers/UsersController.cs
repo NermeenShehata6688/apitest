@@ -187,30 +187,8 @@ namespace IesSchool.Controllers
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult AddUserAttachment([FromForm]  UserAttachmentDto userAttachmentDto)
         {
-
-            var file = Request.Form.Files[0];
-
-            //changeFile to binary
-            MemoryStream ms = new MemoryStream();
-            file.CopyTo(ms);
-            UserAttachmentBinaryDto userAttachmentBinaryDto = new UserAttachmentBinaryDto();
-            userAttachmentBinaryDto.FileBinary = ms.ToArray();
-            ms.Close();
-            ms.Dispose();
-
-            var result= _fileService.UploadFile(file);
-            //complateFilePat to save it local
-            //var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
-            ////var uploadPathWithfileName = Path.Combine(uploadPath, fileName);
-            //using (var fileStream = new FileStream(uploadPathWithfileName, FileMode.Create))
-            //{
-            //    file.CopyTo(fileStream);
-            //    userAttachmentDto.FileName = fileName;
-            //}
-
-            userAttachmentDto.FileName = result.FileName;
-
-            //userAttachmentDto.Name 
+            //get file From Request
+           var file = Request.Form.Files[0];
 
             try
             {
