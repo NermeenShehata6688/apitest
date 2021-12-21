@@ -32,6 +32,6 @@ namespace IesSchool.Core.Dto
         public int? RoomNumber { get; set; }
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
-        public virtual ICollection<GoalDto> Goals { get; set; }
+        public virtual ICollection<ObjectiveDto> ObjectiveDtos { get; set; }
     }
 }

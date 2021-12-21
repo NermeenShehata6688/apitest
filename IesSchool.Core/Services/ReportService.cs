@@ -28,7 +28,7 @@ namespace IesSchool.Core.Services
                 if (iepId != null || iepId != 0)
                 {
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x.Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.Activities));
-                    var mapper = _mapper.Map<GetIepDto>(iep);
+                    var mapper = _mapper.Map<IepLPReportDto>(iep);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
                 else
