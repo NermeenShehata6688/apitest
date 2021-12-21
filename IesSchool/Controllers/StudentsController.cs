@@ -63,11 +63,11 @@ namespace IesSchool.Controllers
 
         // POST api/<StudentsController>
         [HttpPost]
-        public IActionResult PostStudent(StudentDto studentDto)
+        public IActionResult PostStudent(IFormFile file, [FromForm] StudentDto studentDto)
         {
             try
             {
-                var all = _studentService.AddStudent(studentDto);
+                var all = _studentService.AddStudent(file,studentDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -107,7 +107,7 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudentHistoricalSkills(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)
+        public IActionResult PostStudentHistoricalSkills(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudentAttachment(IFormFile file, [FromForm] StudentAttachmentDto studentAttachmentDto)
+        public IActionResult PostStudentAttachment(IFormFile file, [FromForm] StudentAttachmentDto studentAttachmentDto)
         {
             try
             {
@@ -187,7 +187,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddStudentPhone(PhoneDto PhoneDto)
+        public IActionResult PostStudentPhone(PhoneDto PhoneDto)
         {
             try
             {
