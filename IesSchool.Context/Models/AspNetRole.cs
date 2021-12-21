@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace IesSchool.Context.Models
 {
@@ -15,8 +16,11 @@ namespace IesSchool.Context.Models
         public string? Name { get; set; }
         public string? NormalizedName { get; set; }
         public string? ConcurrencyStamp { get; set; }
+        [JsonIgnore]
 
         public virtual ICollection<ApplicationGroupRole> ApplicationGroupRoles { get; set; }
+        [JsonIgnore]
+
         public virtual ICollection<AspNetRoleClaim> AspNetRoleClaims { get; set; }
     }
 }

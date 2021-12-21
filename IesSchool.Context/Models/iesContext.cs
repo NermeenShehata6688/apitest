@@ -120,7 +120,7 @@ namespace IesSchool.Context.Models
             {
                 entity.ToTable("ApplicationGroup");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                //entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Name).HasMaxLength(128);
             });

@@ -10,8 +10,8 @@ namespace IesSchool.Core.Dto
     public class UserAttachmentDto
     {
         public int Id { get; set; }
-        //public string? Name { get; set; }
-        //public string? FileName { get; set; }
+        public string? Name { get; set; }
+        public string? FileName { get; set; }
         public DateTime? IssuedIn { get; set; }
         public DateTime? ValidTill { get; set; }
         public int? AttachmentTypeId { get; set; }

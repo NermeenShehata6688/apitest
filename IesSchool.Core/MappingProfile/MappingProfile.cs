@@ -2,6 +2,7 @@
 using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.InfraStructure.Paging;
+using static IesSchool.Core.Dto.MembershipDto;
 
 namespace IesSchool.Core.MappingProfile
 {
@@ -173,8 +174,20 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<EventHelper, EventHelperDto>().ReverseMap();
             CreateMap<EventType, EventTypeDto>().ReverseMap();
             CreateMap<EventStudentFile, EventStudentFileDto>().ReverseMap();
-
             CreateMap<Setting, SettingDto>().ReverseMap();
+
+
+
+
+            CreateMap<ApplicationGroup, ApplicationGroupDto>().ReverseMap();
+            CreateMap<ApplicationGroupRole, ApplicationGroupRoleDto>().ReverseMap();
+            CreateMap<ApplicationUserGroup, ApplicationUserGroupDto>().ReverseMap();
+
+
+
+            
+
+
         }
     }
 }
