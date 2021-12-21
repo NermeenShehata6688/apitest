@@ -11,9 +11,11 @@ namespace IesSchool.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        public UsersController(IUserService userService)
+        private IFileService _fileService;
+        public UsersController(IUserService userService, IFileService fileService)
         {
             _userService = userService;
+            _fileService = fileService;
         }
         [HttpGet]
         public IActionResult GetUserHelper()
@@ -181,9 +183,34 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPost]
-        public IActionResult AddUserAttachment([FromForm] IFormFile file, UserAttachmentDto userAttachmentDto)
+        [HttpPost, DisableRequestSizeLimit]
+        public IActionResult AddUserAttachment([FromForm]  UserAttachmentDto userAttachmentDto)
         {
+
+            var file = Request.Form.Files[0];
+
+            //changeFile to binary
+            MemoryStream ms = new MemoryStream();
+            file.CopyTo(ms);
+            UserAttachmentBinaryDto userAttachmentBinaryDto = new UserAttachmentBinaryDto();
+            userAttachmentBinaryDto.FileBinary = ms.ToArray();
+            ms.Close();
+            ms.Dispose();
+
+            var result= _fileService.UploadFile(file);
+            //complateFilePat to save it local
+            //var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+            ////var uploadPathWithfileName = Path.Combine(uploadPath, fileName);
+            //using (var fileStream = new FileStream(uploadPathWithfileName, FileMode.Create))
+            //{
+            //    file.CopyTo(fileStream);
+            //    userAttachmentDto.FileName = fileName;
+            //}
+
+            userAttachmentDto.FileName = result.FileName;
+
+            //userAttachmentDto.Name 
+
             try
             {
                 var all = _userService.AddUserAttachment(file ,userAttachmentDto);

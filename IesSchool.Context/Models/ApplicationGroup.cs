@@ -15,7 +15,7 @@ namespace IesSchool.Context.Models
         public string? Name { get; set; }
         public string? Description { get; set; }
 
-        public virtual ICollection<ApplicationGroupRole> ApplicationGroupRoles { get; set; }
-        public virtual ICollection<ApplicationUserGroup> ApplicationUserGroups { get; set; }
+        public virtual ICollection<ApplicationGroupRole> ApplicationGroupRoles { get; set; } = null;
+        public virtual ICollection<ApplicationUserGroup> ApplicationUserGroups { get; set; } = null;
     }
 }
