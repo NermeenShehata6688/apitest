@@ -10,7 +10,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetStudentById(int studentId);
         public ResponseDto AddStudent(IFormFile file, StudentDto studentDto);
         public ResponseDto EditStudent(IFormFile file, StudentDto studentDto);
-        public ResponseDto DeleteStudent(int studentId);
+        public ResponseDto DeleteStudent(int studentId); 
+        public ResponseDto GetStudentIeps(int studentId);
 
         public ResponseDto GetStudentTherapistsById(int studentTherapistId);
         public ResponseDto AddStudentTherapist(StudentTherapistDto studentTherapistDto);

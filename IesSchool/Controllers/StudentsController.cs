@@ -105,6 +105,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetStudentIeps(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetStudentIeps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpPost]
         public IActionResult PostStudentHistoricalSkills(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)

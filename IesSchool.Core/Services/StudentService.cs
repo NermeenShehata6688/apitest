@@ -206,6 +206,19 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto GetStudentIeps(int studentId)
+        {
+            try
+            {
+                var allStudentIeps = _uow.GetRepository<VwIep>().GetList(x => x.IsDeleted != true&& x.StudentId== studentId, null, null, 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<VwIepDto>>(allStudentIeps);
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
 
         public ResponseDto GetStudentTherapistsById(int studentTherapistId)
         {
