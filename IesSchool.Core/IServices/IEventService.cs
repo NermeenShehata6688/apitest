@@ -1,4 +1,5 @@
 ﻿using IesSchool.Core.Dto;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditEventAttachement(List<EventAttachementDto> eventAttachementDto);
         public ResponseDto DeleteEventAttachement(int eventAttachementId);
 
-        public ResponseDto AddEventStudentFiles(List<EventStudentFileDto> eventStudentFiles);
+        public ResponseDto AddEventStudentFiles(IFormFile file, List<EventStudentFileDto> eventStudentFiles);
         public ResponseDto EditEventStudentFiles(List<EventStudentFileDto> eventStudentFiles);
         public ResponseDto DeleteEventStudentFile(int eventStudentFileId);
 

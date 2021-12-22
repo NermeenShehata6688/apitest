@@ -16,10 +16,18 @@ namespace IesSchool.Controllers
         }
 
         // GET api/<ReportsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        public IActionResult IepLpReport(int iepId)
         {
-            return "value";
+            try
+            {
+                var all = _reportService.IepLpReport(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         
     }

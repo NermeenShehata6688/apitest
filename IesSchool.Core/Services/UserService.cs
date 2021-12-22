@@ -302,7 +302,6 @@ namespace IesSchool.Core.Services
             try
             {
                 //change File to binary
-
                 MemoryStream ms = new MemoryStream();
                 file.CopyTo(ms);
                 UserAttachmentBinary userAttachmentBinary = new UserAttachmentBinary();
@@ -311,9 +310,7 @@ namespace IesSchool.Core.Services
                 ms.Dispose();
 
                 //upload file in local directory
-
                 var result = _ifileService.UploadFile(file);
-
                 userAttachmentDto.FileName = result.FileName;
 
                 //saving to DataBase

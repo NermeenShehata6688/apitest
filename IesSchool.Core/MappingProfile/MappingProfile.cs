@@ -110,7 +110,10 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<IepAssistant, IepAssistantDto>().ReverseMap();
             CreateMap<IepExtraCurricular, IepExtraCurricularDto>().ReverseMap();
             CreateMap<IepParamedicalService, IepParamedicalServiceDto>().ReverseMap();
-            CreateMap<Iep, IepLPReportDto>().ReverseMap();
+            CreateMap<VwIep, IepLPReportDto>().ReverseMap();
+            CreateMap<Paginate<Objective>, Paginate<ObjectiveDto>>().ReverseMap();
+
+
 
 
             CreateMap<Goal, GoalDto>()

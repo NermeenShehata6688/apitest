@@ -273,25 +273,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPost]
-        public IActionResult PostEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        public IActionResult PostEventAttachement( [FromForm]  List<EventAttachementDto> eventAttachementDto)
         {
             try
             {
                 var all = _eventService.AddEventAttachement(eventAttachementDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpPut]
-        public IActionResult PutEventAttachement(List<EventAttachementDto> eventAttachementDto)
-        {
-            try
-            {
-                var all = _eventService.EditEventAttachement(eventAttachementDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -313,26 +299,13 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPost]
-        public IActionResult PostEventStudentFiles(List<EventStudentFileDto> eventStudentFilesDto)
-        {
-            try
-            {
-                var all = _eventService.AddEventStudentFiles(eventStudentFilesDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
-        [HttpPut]
-        public IActionResult PutEventStudentFiles(List<EventStudentFileDto> eventStudentFileDtoDto)
+        [HttpPost]
+        public IActionResult PostEventStudentFiles(IFormFile file, [FromForm] List<EventStudentFileDto> eventStudentFileDtoDto)
         {
             try
             {
-                var all = _eventService.EditEventStudentFiles(eventStudentFileDtoDto);
+                var all = _eventService.AddEventStudentFiles(file,eventStudentFileDtoDto);
                 return Ok(all);
             }
             catch (Exception)
