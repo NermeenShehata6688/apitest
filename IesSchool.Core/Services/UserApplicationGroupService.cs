@@ -161,6 +161,7 @@ namespace IesSchool.Core.Services
                 using (var context = _context.Database.BeginTransaction())
                 {
                     var cmd = "";
+                    _context.ApplicationGroups.Update(model);
 
                     var group = FindGroup(model.Id);
                     group.Name = model.Name;
