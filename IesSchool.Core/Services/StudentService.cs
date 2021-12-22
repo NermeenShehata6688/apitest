@@ -342,25 +342,30 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                //change File to binary
-                MemoryStream ms = new MemoryStream();
-                file.CopyTo(ms);
-                StudentAttachmentBinary studentAttachmentBinary = new StudentAttachmentBinary();
-                studentAttachmentBinary.FileBinary = ms.ToArray();
-                ms.Close();
-                ms.Dispose();
+                if (file != null)
+                {
+                    //change File to binary
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    StudentAttachmentBinary studentAttachmentBinary = new StudentAttachmentBinary();
+                    studentAttachmentBinary.FileBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
 
-                //upload file in local directory
+                    //upload file in local directory
 
-                var result = _ifileService.UploadFile(file);
-                studentAttachmentDto.FileName = result.FileName;
+                    var result = _ifileService.UploadFile(file);
+                    studentAttachmentDto.FileName = result.FileName;
 
-                //saving to DataBase
-                var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
-                mapper.StudentAttachmentBinary = studentAttachmentBinary;
-                _uow.GetRepository<StudentAttachment>().Add(mapper);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Student Attachment Added  Seccessfuly", Data = studentAttachmentDto };
+                    //saving to DataBase
+                    var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
+                    mapper.StudentAttachmentBinary = studentAttachmentBinary;
+                    _uow.GetRepository<StudentAttachment>().Add(mapper);
+                    _uow.SaveChanges();
+                    return new ResponseDto { Status = 1, Message = "Student Attachment Added  Seccessfuly", Data = studentAttachmentDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null"};
             }
             catch (Exception ex)
             {
