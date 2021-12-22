@@ -86,6 +86,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Student, StudentDetailsDto>().ReverseMap();
             CreateMap<StudentAttachmentBinary, StudentAttachmentBinaryDto>().ReverseMap();
             CreateMap<Phone, PhoneDto>().ReverseMap();
+            CreateMap<Religion, ReligionDto>().ReverseMap();
 
 
             CreateMap<User, UserDto>().ReverseMap()

@@ -34,6 +34,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditStudentPhone(PhoneDto phoneDto);
         public ResponseDto DeleteStudentPhone(int phoneId);
         public ResponseDto IsSuspended(int studentId, bool isSuspended);
+        public ResponseDto IsActive(int studentId, bool isActive);
 
     }
 }

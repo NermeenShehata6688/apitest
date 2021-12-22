@@ -63,6 +63,8 @@ namespace IesSchool.Core.Dto
         public DateTime? DateOfBirth { get; set; }
         public int? Boulevard { get; set; }
         public bool? Gender { get; set; }
+        public bool? IsActive { get; set; }
+        public string? InactiveReason { get; set; }
         public string? FullPath { get; set; }
 
 
