@@ -1,4 +1,5 @@
 ﻿using IesSchool.Core.Dto;
+using Microsoft.AspNetCore.Http;
 
 namespace IesSchool.Core.IServices
 {
@@ -7,9 +8,10 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetStudentHelper();
         public ResponseDto GetStudents(StudentSearchDto studentSearchHelperDto);
         public ResponseDto GetStudentById(int studentId);
-        public ResponseDto AddStudent(StudentDto studentDto);
-        public ResponseDto EditStudent(StudentDto studentDto);
-        public ResponseDto DeleteStudent(int studentId);
+        public ResponseDto AddStudent(IFormFile file, StudentDto studentDto);
+        public ResponseDto EditStudent(IFormFile file, StudentDto studentDto);
+        public ResponseDto DeleteStudent(int studentId); 
+        public ResponseDto GetStudentIeps(int studentId);
 
         public ResponseDto GetStudentTherapistsById(int studentTherapistId);
         public ResponseDto AddStudentTherapist(StudentTherapistDto studentTherapistDto);
@@ -23,7 +25,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteStudentHistoricalSkill(int studentHistoricalSkillId);
 
         public ResponseDto GetStudentAttachmentsById(int studentAttachmentId);
-        public ResponseDto AddStudentAttachment(StudentAttachmentDto studentAttachmentDto);
+        public ResponseDto AddStudentAttachment(IFormFile file, StudentAttachmentDto studentAttachmentDto);
         public ResponseDto EditStudentAttachment(StudentAttachmentDto studentAttachmentDto);
         public ResponseDto DeleteStudentAttachment(int studentAttachmentId);
 

@@ -1,4 +1,5 @@
 ﻿using IesSchool.Core.Dto;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace IesSchool.Core.IServices
 {
     public interface IReportService
     {
-        public ResponseDto IepLpReport(int iepId);
+        
+        public string IepLpReport(int iepId);
+        public ResponseDto GetReporstHelper();
     }
 }

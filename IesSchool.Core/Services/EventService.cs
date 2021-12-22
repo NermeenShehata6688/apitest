@@ -3,6 +3,7 @@ using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -19,13 +20,15 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private iesContext _iesContext;
         private IMemoryCache _memoryCache;
+        private IFileService _ifileService;
 
-        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IMemoryCache memoryCache)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IMemoryCache memoryCache, IFileService ifileService)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
             _memoryCache = memoryCache;
+            _ifileService = ifileService;
         }
         public ResponseDto GetEventHelper()
         {
@@ -373,18 +376,35 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                //change File to binary
+                using var transaction = _iesContext.Database.BeginTransaction();
                 List<EventAttachement> eventAttachement = new List<EventAttachement>();
                 foreach (var item in eventAttachementDto)
-                    eventAttachement.Add(new EventAttachement { 
+                {
+                    MemoryStream ms = new MemoryStream();
+                    //file.CopyTo(ms);
+                    EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
+                    eventAttachmentBinary.FileBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+
+                    //upload file in local directory
+                    //var result = _ifileService.UploadFile(file);
+                    eventAttachement.Add(new EventAttachement
+                    {
                         EventId = item.EventId,
                         Name = item.Name,
                         Description = item.Description,
                         Date = item.Date,
                         IsPublished = item.IsPublished,
                         FileName = item.FileName,
-                    });
-
+                        EventAttachmentBinary = eventAttachmentBinary
+                    }) ;
+                }
                 _uow.GetRepository<EventAttachement>().Add(eventAttachement);
+                _uow.SaveChanges();
+                transaction.Commit();
+
                 return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventAttachementDto };
             }
             catch (Exception ex)
@@ -436,7 +456,7 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto AddEventStudentFiles(List<EventStudentFileDto> eventStudentFileDto)
+        public ResponseDto AddEventStudentFiles(IFormFile file, List<EventStudentFileDto> eventStudentFileDto)
         {
             try
             {

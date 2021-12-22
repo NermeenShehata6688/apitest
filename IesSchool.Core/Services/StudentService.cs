@@ -4,6 +4,8 @@ using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using IesSchool.InfraStructure.Paging;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace IesSchool.Core.Services
@@ -13,11 +15,17 @@ namespace IesSchool.Core.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
-        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
+        private IFileService _ifileService; private IHostingEnvironment _hostingEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
+            _ifileService = ifileService; 
+            _hostingEnvironment = hostingEnvironment;
+            _httpContextAccessor = httpContextAccessor;
         }
         public ResponseDto GetStudents(StudentSearchDto studentSearchDto)
         {
@@ -27,9 +35,9 @@ namespace IesSchool.Core.Services
 
                 if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {
-                    allStudents = allStudents.Where(x => x.NameAr.Contains(studentSearchDto.StringSearch ) 
+                    allStudents = allStudents.Where(x => x.NameAr.Contains(studentSearchDto.StringSearch)
                         || x.Name.Contains(studentSearchDto.StringSearch)
-                        ||  x.Code.ToString().Contains(studentSearchDto.StringSearch.ToString())
+                        || x.Code.ToString().Contains(studentSearchDto.StringSearch.ToString())
                         || x.CivilId.ToString().Contains(studentSearchDto.StringSearch.ToString())
                         || x.PassportNumber.ToString().Contains(studentSearchDto.StringSearch.ToString())
                         || x.Email.Contains(studentSearchDto.StringSearch)
@@ -37,7 +45,7 @@ namespace IesSchool.Core.Services
                 }
                 if (studentSearchDto.NationalityId != null)
                 {
-                    allStudents = allStudents.Where(x => x.NationalityId== studentSearchDto.NationalityId);
+                    allStudents = allStudents.Where(x => x.NationalityId == studentSearchDto.NationalityId);
                 }
                 if (studentSearchDto.DepartmentId != null)
                 {
@@ -61,7 +69,12 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
-                var mapper = new PaginateDto<VwStudentDto> { Count= allStudents.Count(),Items= lstStudentDto, Index = studentSearchDto.Index, Pages = studentSearchDto.PageSize };
+                var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/";
+                lstStudentDto.ForEach(item => { item.FullPath = fullpath + item.Image; });
+
+                var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
@@ -76,12 +89,12 @@ namespace IesSchool.Core.Services
                 StudentHelper studentHelper = new StudentHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllTeachers = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber=x.RoomNumber }), x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllTeachers = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllTherapists = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTherapist == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true,  null, null, 0, 1000000, true),
+                    AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllStates = _uow.GetRepository<State>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<City>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
-                    AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true , x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.Strand).ThenInclude(x => x.Area).Include(x=>x.SkillAlowedDepartments ).ThenInclude(x => x.Department), 0, 1000000, true),
+                    AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.Strand).ThenInclude(x => x.Area).Include(x => x.SkillAlowedDepartments).ThenInclude(x => x.Department), 0, 1000000, true),
                     AllWorkCategorys = _uow.GetRepository<WorkCategory>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllAttachmentTypes = _uow.GetRepository<AttachmentType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
@@ -89,7 +102,7 @@ namespace IesSchool.Core.Services
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
-            
+
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
@@ -99,7 +112,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true,null, x => x.Include(x => x.Phones).Include(x=> x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
+                var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones).Include(x => x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
                 var mapper = _mapper.Map<StudentDetailsDto>(student);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -108,39 +121,67 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddStudent(StudentDto studentDto)
+        public ResponseDto AddStudent(IFormFile file ,StudentDto studentDto)
         {
             try
             {
-               
-                var mapper = _mapper.Map< Student> (studentDto);
-                mapper.IsDeleted = false;
-                mapper.CreatedOn = DateTime.Now;
-                mapper.IsSuspended = false;
-                _uow.GetRepository< Student> ().Add(mapper);
-                _uow.SaveChanges();
-                studentDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
+                //change image to binary
+                if (studentDto != null)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    studentDto.ImageBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+                    //upload file in local directory
+                    var result = _ifileService.UploadFile(file);
+                    studentDto.Image = result.FileName;
+                    var mapper = _mapper.Map<Student>(studentDto);
+                    mapper.IsDeleted = false;
+                    mapper.CreatedOn = DateTime.Now;
+                    mapper.IsSuspended = false;
+                    _uow.GetRepository<Student>().Add(mapper);
+                    _uow.SaveChanges();
+                    studentDto.Id = mapper.Id;
+                    studentDto.ImageBinary = null;
+                    studentDto.FullPath = result.virtualPath;
+                    return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditStudent(StudentDto studentDto)
+        public ResponseDto EditStudent(IFormFile file, StudentDto studentDto)
         {
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
                 var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
+                //change image to binary
+                MemoryStream ms = new MemoryStream();
+                file.CopyTo(ms);
+                studentDto.ImageBinary = ms.ToArray();
+                ms.Close();
+                ms.Dispose();
+
+                //upload file in local directory
+                var result = _ifileService.UploadFile(file);
+
+                studentDto.Image = result.FileName;
                 var mapper = _mapper.Map<Student>(studentDto);
 
                 _uow.GetRepository<Student>().Update(mapper);
                 _uow.SaveChanges();
+                transaction.Commit();
 
                 studentDto.Id = mapper.Id;
-                transaction.Commit();
+                studentDto.ImageBinary = null;
+                studentDto.FullPath = result.virtualPath;
                 return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = studentDto };
             }
             catch (Exception ex)
@@ -163,6 +204,19 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto GetStudentIeps(int studentId)
+        {
+            try
+            {
+                var allStudentIeps = _uow.GetRepository<VwIep>().GetList(x => x.IsDeleted != true&& x.StudentId== studentId, null, null, 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<VwIepDto>>(allStudentIeps);
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
 
@@ -242,9 +296,9 @@ namespace IesSchool.Core.Services
             try
             {
                 //var mapper = _mapper.Map<List<StudentHistoricalSkill>>(studentHistoricalSkillDto);
-                List < StudentHistoricalSkill > historicalSkill = new List<StudentHistoricalSkill>();
+                List<StudentHistoricalSkill> historicalSkill = new List<StudentHistoricalSkill>();
                 foreach (var item in studentHistoricalSkillDto)
-                    historicalSkill.Add(new StudentHistoricalSkill { HistoricalSkilld=item.HistoricalSkilld,StudentId=item.StudentId});
+                    historicalSkill.Add(new StudentHistoricalSkill { HistoricalSkilld = item.HistoricalSkilld, StudentId = item.StudentId });
 
                 _uow.GetRepository<StudentHistoricalSkill>().Add(historicalSkill);
                 _uow.SaveChanges();
@@ -276,7 +330,7 @@ namespace IesSchool.Core.Services
             {
                 var cmd = $"delete from StudentHistoricalSkills where Id={studentHistoricalSkillId}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
-                 return new ResponseDto { Status = 1, Message = "Student Historical Skill Seccessfuly Deleted" };
+                return new ResponseDto { Status = 1, Message = "Student Historical Skill Seccessfuly Deleted" };
             }
             catch (Exception ex)
             {
@@ -297,16 +351,34 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddStudentAttachment(StudentAttachmentDto studentAttachmentDto)
+        public ResponseDto AddStudentAttachment(IFormFile file, StudentAttachmentDto studentAttachmentDto)
         {
             try
             {
-                var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
-                mapper.Student = null;
-                _uow.GetRepository<StudentAttachment>().Add(mapper);
-                _uow.SaveChanges();
-                studentAttachmentDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Student Attachment Added  Seccessfuly", Data = studentAttachmentDto };
+                if (file != null)
+                {
+                    //change File to binary
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    StudentAttachmentBinary studentAttachmentBinary = new StudentAttachmentBinary();
+                    studentAttachmentBinary.FileBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+
+                    //upload file in local directory
+
+                    var result = _ifileService.UploadFile(file);
+                    studentAttachmentDto.FileName = result.FileName;
+
+                    //saving to DataBase
+                    var mapper = _mapper.Map<StudentAttachment>(studentAttachmentDto);
+                    mapper.StudentAttachmentBinary = studentAttachmentBinary;
+                    _uow.GetRepository<StudentAttachment>().Add(mapper);
+                    _uow.SaveChanges();
+                    return new ResponseDto { Status = 1, Message = "Student Attachment Added  Seccessfuly", Data = studentAttachmentDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null"};
             }
             catch (Exception ex)
             {
@@ -399,7 +471,7 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto IsSuspended(int studentId,bool isSuspended)
+        public ResponseDto IsSuspended(int studentId, bool isSuspended)
         {
             try
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IesSchool.Context.Models
 {
@@ -21,6 +22,7 @@ namespace IesSchool.Context.Models
         public int? Code { get; set; }
         public int? CivilId { get; set; }
         public string? Image { get; set; }
+        [NotMapped]
         public byte[]? ImageBinary { get; set; }
         public int? NationalityId { get; set; }
         public int? PassportNumber { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,6 @@ namespace IesSchool.Core.Dto
         public int? EventId { get; set; }
         public bool? IsPublished { get; set; }
         public string? FileName { get; set; }
+        public IFormFile? file { get; set; }
     }
 }

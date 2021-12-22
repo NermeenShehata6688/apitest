@@ -1,6 +1,7 @@
 ﻿using IesSchool.Context.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,8 @@ namespace IesSchool.Core.Dto
         public int? Code { get; set; }
         public int? CivilId { get; set; }
         public string? Image { get; set; }
-        //public byte[]? ImageBinary { get; set; }
+        [NotMapped]
+        public byte[]? ImageBinary { get; set; }
         public int? NationalityId { get; set; }
         public int? PassportNumber { get; set; }
         public int? ReligionId { get; set; }
@@ -61,6 +63,8 @@ namespace IesSchool.Core.Dto
         public DateTime? DateOfBirth { get; set; }
         public int? Boulevard { get; set; }
         public bool? Gender { get; set; }
+        public string? FullPath { get; set; }
+
 
 
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }

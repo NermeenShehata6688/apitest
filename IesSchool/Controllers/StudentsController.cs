@@ -63,11 +63,11 @@ namespace IesSchool.Controllers
 
         // POST api/<StudentsController>
         [HttpPost]
-        public IActionResult PostStudent(StudentDto studentDto)
+        public IActionResult PostStudent(IFormFile file, [FromForm] StudentDto studentDto)
         {
             try
             {
-                var all = _studentService.AddStudent(studentDto);
+                var all = _studentService.AddStudent(file,studentDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -78,11 +78,11 @@ namespace IesSchool.Controllers
 
         // PUT api/<StudentsController>/5
         [HttpPut]
-        public IActionResult PutStudent(StudentDto studentDtoe)
+        public IActionResult PutStudent(IFormFile file, [FromForm] StudentDto studentDtoe)
         {
             try
             {
-                var all = _studentService.EditStudent(studentDtoe);
+                var all = _studentService.EditStudent(file, studentDtoe);
                 return Ok(all);
             }
             catch (Exception)
@@ -105,9 +105,22 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetStudentIeps(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetStudentIeps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpPost]
-        public IActionResult AddStudentHistoricalSkills(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)
+        public IActionResult PostStudentHistoricalSkills(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)
         {
             try
             {
@@ -134,11 +147,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudentAttachment(StudentAttachmentDto studentAttachmentDto)
+        public IActionResult PostStudentAttachment(IFormFile file, [FromForm] StudentAttachmentDto studentAttachmentDto)
         {
             try
             {
-                var all = _studentService.AddStudentAttachment(studentAttachmentDto);
+                var all = _studentService.AddStudentAttachment(file,studentAttachmentDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -146,19 +159,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
-        public IActionResult PutStudentAttachment(StudentAttachmentDto studentAttachmentDto)
-        {
-            try
-            {
-                var all = _studentService.EditStudentAttachment(studentAttachmentDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        
         [HttpDelete]
         public IActionResult DeleteStudentAttachment(int studentAttachmentId)
         {
@@ -187,7 +188,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddStudentPhone(PhoneDto PhoneDto)
+        public IActionResult PostStudentPhone(PhoneDto PhoneDto)
         {
             try
             {

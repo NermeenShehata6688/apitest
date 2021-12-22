@@ -186,10 +186,10 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult AddUserAttachment([FromForm]  UserAttachmentDto userAttachmentDto)
+        public IActionResult AddUserAttachment( IFormFile file, [FromForm] UserAttachmentDto userAttachmentDto)
         {
             //get file From Request
-           var file = Request.Form.Files[0];
+            //var file = Request.Form.Files[0];
 
             try
             {
