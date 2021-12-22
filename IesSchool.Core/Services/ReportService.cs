@@ -9,6 +9,8 @@ using Syncfusion.XlsIO;
 using System.IO;
 using Syncfusion.Drawing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace IesSchool.Core.Services
 {
@@ -16,12 +18,20 @@ namespace IesSchool.Core.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public ReportService(IUnitOfWork unitOfWork, IMapper mapper)
-        {
+		private IHostingEnvironment _hostingEnvironment;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public ReportService(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+
+		{
             _uow = unitOfWork;
             _mapper = mapper;
-        }
-        public ResponseDto GetReporstHelper()
+			_hostingEnvironment = hostingEnvironment;
+			_httpContextAccessor = httpContextAccessor;
+		}
+	
+
+
+		public ResponseDto GetReporstHelper()
         {
             try
             {
@@ -40,7 +50,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-		public string IepLpReport(int iepId)
+		public FileStreamResult IepLpReport(int iepId)
         {
            
                
@@ -69,7 +79,7 @@ namespace IesSchool.Core.Services
 						//IPictureShape shape = worksheet.Pictures.AddPicture(1, 1, imageStream);
 
 						//Disable gridlines in the worksheet
-						worksheet.IsGridLinesVisible = false;
+						worksheet.IsGridLinesVisible = true;
 
 						//Enter values to the cells from A3 to A5
 						worksheet.Range["A3"].Text = "46036 Michigan Ave";
@@ -234,20 +244,35 @@ namespace IesSchool.Core.Services
 						//Set the position as '0'.
 						stream.Position = 0;
 
+
 						//Download the Excel file in the browser
 						FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
-						 return fileStreamResult.FileDownloadName = "Output.xlsx";
-
-						//return new ResponseDto { Status = 1, Message = " Seccess", Data = fileStreamResult };
-
-					
+						 fileStreamResult.FileDownloadName = "Output.xlsx";
 				
 
-					//return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
-				}
 			
-		
-        }
+
+
+
+
+
+				return fileStreamResult;
+
+
+
+
+
+
+				//return new ResponseDto { Status = 1, Message = " Seccess", Data = fileStreamResult };
+
+
+
+
+				//return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+			}
+
+
+		}
     }
 }
