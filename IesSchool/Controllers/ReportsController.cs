@@ -31,12 +31,12 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult IepLpReport(int iepId)
+        public FileStreamResult IepLpReport(int iepId)
         {
             try
             {
                 var all = _reportService.IepLpReport(iepId);
-                return Ok(all);
+                return all;
             }
             catch (Exception)
             {
