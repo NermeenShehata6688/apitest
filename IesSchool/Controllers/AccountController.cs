@@ -521,9 +521,11 @@ namespace IesSchool.Controllers
 
         [HttpPost]
         //[Route("UpdateGroup")]
-        public IActionResult UpdateGroup([FromBody] ApplicationGroup model)
+        public IActionResult UpdateGroup([FromBody] ApplicationGroupDto model)
         {
-            var res = _iaplicationGroupService.UpdateGroup(model);
+            var mapper = _mapper.Map<ApplicationGroup>(model);
+
+            var res = _iaplicationGroupService.UpdateGroup(mapper);
             return Ok(res);
         }
         [HttpGet]
