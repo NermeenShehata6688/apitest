@@ -16,13 +16,13 @@ namespace IesSchool.Context.Models
             StudentHistoricalSkills = new HashSet<StudentHistoricalSkill>();
             StudentTherapists = new HashSet<StudentTherapist>();
         }
+
         public int Id { get; set; }
         public string? NameAr { get; set; }
         public string? Name { get; set; }
         public int? Code { get; set; }
         public int? CivilId { get; set; }
         public string? Image { get; set; }
-        [NotMapped]
         public byte[]? ImageBinary { get; set; }
         public int? NationalityId { get; set; }
         public int? PassportNumber { get; set; }
@@ -69,6 +69,8 @@ namespace IesSchool.Context.Models
         public DateTime? DateOfBirth { get; set; }
         public int? Boulevard { get; set; }
         public bool? Gender { get; set; }
+        public bool? IsActive { get; set; }
+        public string? InactiveReason { get; set; }
 
         public virtual Country? BirthCountry { get; set; }
         public virtual City? City { get; set; }

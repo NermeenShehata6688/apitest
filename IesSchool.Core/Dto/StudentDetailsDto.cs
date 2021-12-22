@@ -61,8 +61,10 @@ namespace IesSchool.Core.Dto
         public DateTime? DateOfBirth { get; set; }
         public int? Boulevard { get; set; }
         public bool? Gender { get; set; }
+        public bool? IsActive { get; set; }
+        public string? InactiveReason { get; set; }
 
-       
+
         public virtual ICollection<PhoneDto> Phones { get; set; }
         public virtual ICollection<StudentAttachmentDto> StudentAttachments { get; set; }
         public virtual ICollection<StudentHistoricalSkillDto> StudentHistoricalSkills { get; set; }

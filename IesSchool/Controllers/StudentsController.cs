@@ -31,7 +31,7 @@ namespace IesSchool.Controllers
             }
         }
         // GET: api/<StudentsController>
-        [ResponseCache(Duration = 800)]
+        //[ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetStudentHelper()
         {
@@ -232,6 +232,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _studentService.IsSuspended(studentId, isSuspended);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult IsActive(int studentId, bool isActive)
+        {
+            try
+            {
+                var all = _studentService.IsActive(studentId, isActive);
                 return Ok(all);
             }
             catch (Exception)

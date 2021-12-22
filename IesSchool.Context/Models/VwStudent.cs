@@ -64,5 +64,8 @@ namespace IesSchool.Context.Models
         public string? StateName { get; set; }
         public string? CityName { get; set; }
         public string? NationalityName { get; set; }
+        public bool? Gender { get; set; }
+        public bool? IsActive { get; set; }
+        public string? InactiveReason { get; set; }
     }
 }

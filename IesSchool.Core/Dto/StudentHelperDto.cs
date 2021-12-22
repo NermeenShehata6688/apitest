@@ -19,6 +19,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<Skill> AllSkills { get; set; }
         public IPaginate<AttachmentType> AllAttachmentTypes { get; set; }
         public IPaginate<WorkCategory> AllWorkCategorys { get; set; }
+        public IPaginate<Religion> AllReligions { get; set; }
 
     }
 
@@ -33,6 +34,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<SkillDto> AllSkills { get; set; }
         public PaginateDto<AttachmentTypeDto> AllAttachmentTypes { get; set; }
         public PaginateDto<WorkCategoryDto> AllWorkCategorys { get; set; }
+        public PaginateDto<ReligionDto> AllReligions { get; set; }
 
 
     }

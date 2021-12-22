@@ -67,6 +67,10 @@ namespace IesSchool.Core.Services
                 {
                     allStudents = allStudents.Where(x => x.IsSuspended == studentSearchDto.IsSuspended);
                 }
+                if (studentSearchDto.IsActive != null)
+                {
+                    allStudents = allStudents.Where(x => x.IsActive == studentSearchDto.IsActive);
+                }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
                 var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
@@ -89,14 +93,15 @@ namespace IesSchool.Core.Services
                 StudentHelper studentHelper = new StudentHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllTeachers = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllTherapists = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTherapist == true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllTeachers = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 1000000, true),
+                    AllTherapists = _uow.GetRepository<VwUser>().GetList((x => new VwUser { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber }), x => x.IsDeleted != true && x.IsTherapist == true, null, null, 0, 1000000, true),
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllStates = _uow.GetRepository<State>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<City>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 1000000, true),
                     AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.Strand).ThenInclude(x => x.Area).Include(x => x.SkillAlowedDepartments).ThenInclude(x => x.Department), 0, 1000000, true),
-                    AllWorkCategorys = _uow.GetRepository<WorkCategory>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllAttachmentTypes = _uow.GetRepository<AttachmentType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllWorkCategorys = _uow.GetRepository<WorkCategory>().GetList(null, null, null, 0, 1000000, true),
+                    AllAttachmentTypes = _uow.GetRepository<AttachmentType>().GetList(null, null, null, 0, 1000000, true),
+                    AllReligions = _uow.GetRepository<Religion>().GetList(null, null, null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<StudentHelperDto>(studentHelper);
 
@@ -480,6 +485,21 @@ namespace IesSchool.Core.Services
                 _uow.GetRepository<Student>().Update(oStudent);
                 _uow.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "Student Is Suspended State Has Changed" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto IsActive(int studentId, bool isActive)
+        {
+            try
+            {
+                Student oStudent = _uow.GetRepository<Student>().Single(x => x.Id == studentId);
+                oStudent.IsActive = isActive;
+                _uow.GetRepository<Student>().Update(oStudent);
+                _uow.SaveChanges();
+                return new ResponseDto { Status = 1, Message = "Student Is Active State Has Changed" };
             }
             catch (Exception ex)
             {

@@ -15,6 +15,7 @@ namespace IesSchool.Core.Dto
         public int? CityId { get; set; }
         public int? StateId { get; set; }
         public bool? IsSuspended { get; set; }
+        public bool? IsActive { get; set; }
         public int? Index { get; set; }
         public int? PageSize { get; set; }
     }
