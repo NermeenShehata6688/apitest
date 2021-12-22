@@ -67,5 +67,6 @@ namespace IesSchool.Core.Dto
         public string? DepartmentName { get; set; }
         public string? TeacherName { get; set; }
         public string? StateName { get; set; }
+        public string? FullPath { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using IesSchool.InfraStructure.Paging;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,14 +15,17 @@ namespace IesSchool.Core.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
-        private IFileService _ifileService;
+        private IFileService _ifileService; private IHostingEnvironment _hostingEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService)
+        public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
-            _ifileService = ifileService;
+            _ifileService = ifileService; 
+            _hostingEnvironment = hostingEnvironment;
+            _httpContextAccessor = httpContextAccessor;
         }
         public ResponseDto GetStudents(StudentSearchDto studentSearchDto)
         {
@@ -65,6 +69,10 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
+                var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/";
+                lstStudentDto.ForEach(item => { item.FullPath = fullpath + item.Image; });
 
                 var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
@@ -118,47 +126,62 @@ namespace IesSchool.Core.Services
             try
             {
                 //change image to binary
-
-                MemoryStream ms = new MemoryStream();
-                file.CopyTo(ms);
-                studentDto.ImageBinary= ms.ToArray();   
-                //UserAttachmentBinary userAttachmentBinary = new UserAttachmentBinary();
-                //userAttachmentBinary.FileBinary = ms.ToArray();
-                ms.Close();
-                ms.Dispose();
-                //upload file in local directory
-
-                var result = _ifileService.UploadFile(file);
-
-                studentDto.Image = result.FileName;
-                var mapper = _mapper.Map<Student>(studentDto);
-                mapper.IsDeleted = false;
-                mapper.CreatedOn = DateTime.Now;
-                mapper.IsSuspended = false;
-                _uow.GetRepository<Student>().Add(mapper);
-                _uow.SaveChanges();
-                studentDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
+                if (studentDto != null)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    studentDto.ImageBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+                    //upload file in local directory
+                    var result = _ifileService.UploadFile(file);
+                    studentDto.Image = result.FileName;
+                    var mapper = _mapper.Map<Student>(studentDto);
+                    mapper.IsDeleted = false;
+                    mapper.CreatedOn = DateTime.Now;
+                    mapper.IsSuspended = false;
+                    _uow.GetRepository<Student>().Add(mapper);
+                    _uow.SaveChanges();
+                    studentDto.Id = mapper.Id;
+                    studentDto.ImageBinary = null;
+                    studentDto.FullPath = result.virtualPath;
+                    return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditStudent(StudentDto studentDto)
+        public ResponseDto EditStudent(IFormFile file, StudentDto studentDto)
         {
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
                 var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
+                //change image to binary
+                MemoryStream ms = new MemoryStream();
+                file.CopyTo(ms);
+                studentDto.ImageBinary = ms.ToArray();
+                ms.Close();
+                ms.Dispose();
+
+                //upload file in local directory
+                var result = _ifileService.UploadFile(file);
+
+                studentDto.Image = result.FileName;
                 var mapper = _mapper.Map<Student>(studentDto);
 
                 _uow.GetRepository<Student>().Update(mapper);
                 _uow.SaveChanges();
+                transaction.Commit();
 
                 studentDto.Id = mapper.Id;
-                transaction.Commit();
+                studentDto.ImageBinary = null;
+                studentDto.FullPath = result.virtualPath;
                 return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = studentDto };
             }
             catch (Exception ex)

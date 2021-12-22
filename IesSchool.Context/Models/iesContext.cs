@@ -84,7 +84,7 @@ namespace IesSchool.Context.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=192.168.8.165\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
+                optionsBuilder.UseSqlServer("Server=192.168.8.181\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
             }
         }
 
@@ -119,8 +119,6 @@ namespace IesSchool.Context.Models
             modelBuilder.Entity<ApplicationGroup>(entity =>
             {
                 entity.ToTable("ApplicationGroup");
-
-                //entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Name).HasMaxLength(128);
             });
@@ -187,8 +185,6 @@ namespace IesSchool.Context.Models
 
             modelBuilder.Entity<AspNetRole>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Name).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedName).HasMaxLength(256);
@@ -408,6 +404,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Event)
                     .WithMany(p => p.EventAttachements)
                     .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_EventAttachement_Event");
             });
 
@@ -420,7 +417,6 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.EventAttachmentBinary)
                     .HasForeignKey<EventAttachmentBinary>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EventAttachmentBinary_EventAttachement");
             });
 
@@ -431,6 +427,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Event)
                     .WithMany(p => p.EventStudents)
                     .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Event_Student_Event");
 
                 entity.HasOne(d => d.Student)
@@ -450,6 +447,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.EventStudent)
                     .WithMany(p => p.EventStudentFiles)
                     .HasForeignKey(d => d.EventStudentId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_EventStudentFiles_Event_Student1");
             });
 
@@ -462,7 +460,6 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.EventStudentFileBinary)
                     .HasForeignKey<EventStudentFileBinary>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EventStudentFileBinary_EventStudentFiles");
             });
 
@@ -473,6 +470,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.Event)
                     .WithMany(p => p.EventTeachers)
                     .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Event_Teacher_Event");
 
                 entity.HasOne(d => d.Teacher)

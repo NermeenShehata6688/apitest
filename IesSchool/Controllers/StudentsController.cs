@@ -78,11 +78,11 @@ namespace IesSchool.Controllers
 
         // PUT api/<StudentsController>/5
         [HttpPut]
-        public IActionResult PutStudent(StudentDto studentDtoe)
+        public IActionResult PutStudent(IFormFile file, [FromForm] StudentDto studentDtoe)
         {
             try
             {
-                var all = _studentService.EditStudent(studentDtoe);
+                var all = _studentService.EditStudent(file, studentDtoe);
                 return Ok(all);
             }
             catch (Exception)
@@ -146,19 +146,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
-        public IActionResult PutStudentAttachment(StudentAttachmentDto studentAttachmentDto)
-        {
-            try
-            {
-                var all = _studentService.EditStudentAttachment(studentAttachmentDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        
         [HttpDelete]
         public IActionResult DeleteStudentAttachment(int studentAttachmentId)
         {
