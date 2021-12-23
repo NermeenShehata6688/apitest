@@ -16,7 +16,7 @@ namespace IesSchool.Core.Dto
         public bool? IsOther { get; set; }
         public int? RoomNumber { get; set; }
         public bool? IsExtraCurricular { get; set; }
-        //public byte[]? ImageBinary { get; set; }
+        public byte[]? ImageBinary { get; set; }
         public string? Image { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -27,6 +27,7 @@ namespace IesSchool.Core.Dto
         public int? DepartmentId { get; set; }
         public string? ParentUserName { get; set; }
         public string? ParentPassword { get; set; }
+        public string? FullPath { get; set; }
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }
         public virtual ICollection<TherapistParamedicalServiceDto>? TherapistParamedicalServices { get; set; }

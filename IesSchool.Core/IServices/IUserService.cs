@@ -18,8 +18,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetTherapistParamedicalServices(int therapistId);
         public ResponseDto GetUsersHelper();
         public ResponseDto GetUserById(int userId);
-        public ResponseDto AddUser(UserDto userDto);
-        public ResponseDto EditUser(UserDto userDto);
+        public ResponseDto AddUser(IFormFile file, UserDto userDto);
+        public ResponseDto EditUser(IFormFile file, UserDto userDto);
         public ResponseDto DeleteUser(int userId);
 
         public ResponseDto GetUserAttachmentById(int userAttachmentId);

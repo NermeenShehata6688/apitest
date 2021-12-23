@@ -129,11 +129,11 @@ namespace IesSchool.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public IActionResult PostUser(UserDto userDto)
+        public IActionResult PostUser(IFormFile file, UserDto userDto)
         {
             try
             {
-                var all = _userService.AddUser(userDto);
+                var all = _userService.AddUser(file, userDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -144,11 +144,11 @@ namespace IesSchool.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut]
-        public IActionResult PutUser(UserDto userDto)
+        public IActionResult PutUser(IFormFile file, UserDto userDto)
         {
             try
             {
-                var all = _userService.EditUser(userDto);
+                var all = _userService.EditUser(file, userDto);
                 return Ok(all);
             }
             catch (Exception)

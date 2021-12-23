@@ -193,18 +193,31 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddUser(UserDto userDto)
+        public ResponseDto AddUser(IFormFile file, UserDto userDto)
         {
             try
             {
-                AspNetUser aspNetUser = new AspNetUser();
-                var mapper = _mapper.Map<User>(userDto);
-                mapper.IsDeleted = false;
-                mapper.CreatedOn = DateTime.Now;
-                _uow.GetRepository<User>().Add(mapper);
-                _uow.SaveChanges();
-                try
+
+                if (userDto != null)
                 {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    userDto.ImageBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+                    //upload file in local directory
+                    AspNetUser aspNetUser = new AspNetUser();
+                    var result = _ifileService.UploadFile(file);
+                    userDto.Image = result.FileName;
+                    var mapper = _mapper.Map<User>(userDto);
+                    mapper.IsDeleted = false;
+                    mapper.CreatedOn = DateTime.Now;
+                    mapper.IsSuspended = false;
+                    _uow.GetRepository<User>().Add(mapper);
+                    _uow.SaveChanges();
+
                     aspNetUser.Id = mapper.Id;
                     aspNetUser.EmailConfirmed = false;
                     aspNetUser.PhoneNumberConfirmed = false;
@@ -213,33 +226,47 @@ namespace IesSchool.Core.Services
                     aspNetUser.AccessFailedCount = 0;
                     _uow.GetRepository<AspNetUser>().Add(aspNetUser);
                     _uow.SaveChanges();
+
+                    userDto.Id = mapper.Id;
+                    userDto.ImageBinary = null;
+                    userDto.FullPath = result.virtualPath;
+                    transaction.Commit();
+
+                    return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
-                userDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
+
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditUser(UserDto userDto)
+        public ResponseDto EditUser(IFormFile file, UserDto userDto)
         {
             try
             {
-                var allUserAssistant = _uow.GetRepository<UserAssistant>().GetList(x => x.UserId == userDto.Id);
-                var allTherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(x => x.UserId == userDto.Id);
-                var allStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == userDto.Id);
-                var cmd = $"delete from User_Assistant where UserId={userDto.Id}" +
-                    $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
-                    $" delete from Student_Therapist where TherapistId={ userDto.Id}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                var mapper = _mapper.Map<User>(userDto);
-                try
+                if (userDto != null)
                 {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from User_Assistant where UserId={userDto.Id}" +
+                        $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
+                        $" delete from Student_Therapist where TherapistId={ userDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    //change image to binary
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    userDto.ImageBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+
+                    //upload file in local directory
+                    var result = _ifileService.UploadFile(file);
+
+                    userDto.Image = result.FileName;
+                    var mapper = _mapper.Map<User>(userDto);
+
                     _uow.GetRepository<User>().Update(mapper);
                     _uow.SaveChanges();
 
@@ -249,17 +276,16 @@ namespace IesSchool.Core.Services
                     aspNetUser.Email = userDto.Email;
                     _uow.GetRepository<AspNetUser>().Update(aspNetUser);
                     _uow.SaveChanges();
+                    transaction.Commit();
+
+                    userDto.Id = mapper.Id;
+                    userDto.ImageBinary = null;
+                    userDto.FullPath = result.virtualPath;
+                    userDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = userDto };
                 }
-                catch (Exception)
-                {
-                    _uow.GetRepository<UserAssistant>().Add(allUserAssistant.Items);
-                    _uow.GetRepository<TherapistParamedicalService>().Add(allTherapistParamedicalService.Items);
-                    _uow.GetRepository<StudentTherapist>().Add(allStudentTherapist.Items);
-                    _uow.SaveChanges();
-                    throw;
-                }
-                userDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = userDto };
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
             }
             catch (Exception ex)
             {
