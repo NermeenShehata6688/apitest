@@ -78,13 +78,23 @@ namespace IesSchool.Core.Services
 				worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
 				worksheet.Range["A1:BE1"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 				worksheet.Range["A1:BE1"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+				worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+				worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
+				worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 				worksheet.Range["A2:AQ2"].Merge();
 				worksheet.Range["A2:AQ2"].Text = "LESSON PLAN (LP)";
 				worksheet.Range["A2:AQ2"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 				worksheet.Range["A2:AQ2"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-				worksheet.Range["A2:AQ2"].CellStyle.Color = Color.FromArgb(42, 118, 189);
+				worksheet.Range["A2:AQ2"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+				worksheet.Range["A2:AQ2"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
+				worksheet.Range["A2:AQ2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+				worksheet.Range["A2:AQ2"].CellStyle.Color = Color.FromArgb(255, 204, 255);
+				worksheet.Range["A2:AQ2"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+				worksheet.Range["AR2:AU2"].Merge();
 				worksheet.Range["AR2:AU2"].Text = "YEAR:";
-				worksheet.Range["AR2:AU2"].CellStyle.Color = Color.FromArgb(42, 118, 189);
+				worksheet.Range["AR2:AU2"].CellStyle.Color = Color.FromArgb(255, 255, 153);
+				worksheet.Range["AV2:BE2"].Merge();
+				worksheet.Range["AV2:BE2"].Text = iep.AcadmicYearName.ToString();
 
 
 
@@ -96,8 +106,8 @@ namespace IesSchool.Core.Services
 
 				//Apply row height and column width to look good
 				worksheet.Range["A1:BE1"].ColumnWidth = 1;
-				worksheet.Range["A1:BE1"].RowHeight = 20;
-				worksheet.Range["A2:AQ2"].RowHeight = 20;
+				worksheet.Range["A1:BE1"].RowHeight = 17;
+				worksheet.Range["A2:AQ2"].RowHeight = 17;
 
 
 
