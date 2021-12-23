@@ -92,31 +92,7 @@ builder.Services.Configure<FormOptions>(o => {
     o.MultipartBodyLengthLimit = int.MaxValue;
     o.MemoryBufferThreshold = int.MaxValue;
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTUzMDQwQDMxMzkyZTM0MmUzMGlHSVBGS0VVekpkZ0xoTmFkUnp3WU5mOEFwaTd2M2tjNHo4cnB1NU5XUzQ9");
 
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
