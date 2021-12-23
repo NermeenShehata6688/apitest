@@ -248,14 +248,7 @@ namespace IesSchool.Core.Services
 						//Download the Excel file in the browser
 						FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
-						 fileStreamResult.FileDownloadName = "Output.xlsx";
-				
-
-			
-
-
-
-
+						 fileStreamResult.FileDownloadName = "asds.xlsx";
 
 				return fileStreamResult;
 
