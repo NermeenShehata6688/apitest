@@ -157,7 +157,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allTeachers = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 100000, true);
+                var allTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<UserDto>>(allTeachers);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -170,7 +170,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allTherapists = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsTherapist == true, null, null, 0, 100000, true);
+                var allTherapists = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true && x.IsTherapist == true, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<UserDto>>(allTherapists);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -184,6 +184,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => x.Include(x => x.StudentTherapists).Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices));
+                user.ImageBinary = null;
                 var mapper = _mapper.Map<UserDto>(user);
                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
