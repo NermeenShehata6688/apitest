@@ -185,6 +185,9 @@ namespace IesSchool.Core.Services
             {
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => x.Include(x => x.StudentTherapists).Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices));
                 var mapper = _mapper.Map<UserDto>(user);
+                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                mapper.FullPath = fullpath;
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)

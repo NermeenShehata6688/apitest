@@ -73,10 +73,7 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
-                var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
-                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/";
-                lstStudentDto.ForEach(item => { item.FullPath = fullpath + item.Image; });
+                var lstToSend = GetFullPathAndBinary(lstStudentDto);
 
                 var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
@@ -119,8 +116,6 @@ namespace IesSchool.Core.Services
             {
                 if (studentId != null)
                 {
-
-
                     var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones).Include(x => x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
                     var mapper = _mapper.Map<StudentDetailsDto>(student);
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
@@ -129,7 +124,7 @@ namespace IesSchool.Core.Services
                  return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
                 else
-                    return new ResponseDto { Status = 1, Message = " null"};
+                    return new ResponseDto { Status = 1, Message = "null"};
             }
             catch (Exception ex)
             {
@@ -514,6 +509,43 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public List<VwStudentDto> GetFullPathAndBinary(List<VwStudentDto> allStudents)
+        {
+            try
+            {
+                if (allStudents.Count() > 0)
+                {
+                    foreach (var item in allStudents)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.Image))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.Image != null)
+                            {
+                                var student = _uow.GetRepository<Student>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
+                                if (student.ImageBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allStudents;
+            }
+            catch (Exception ex)
+            {
+                return allStudents; ;
             }
         }
 
