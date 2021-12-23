@@ -144,7 +144,7 @@ namespace IesSchool.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut]
-        public IActionResult PutUser(IFormFile file, [FromQuery] UserDto userDto)
+        public IActionResult PutUser(IFormFile file, [FromForm] UserDto userDto)
         {
             try
             {
@@ -172,19 +172,6 @@ namespace IesSchool.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult GetUserAttachmentById(int userAttachmentId)
-        {
-            try
-            {
-                var all = _userService.GetUserAttachmentById(userAttachmentId);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult AddUserAttachment( IFormFile file, [FromForm] UserAttachmentDto userAttachmentDto)
         {
@@ -201,19 +188,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
-        public IActionResult PutUserAttachment(UserAttachmentDto userAttachmentDto)
-        {
-            try
-            {
-                var all = _userService.EditUserAttachment(userAttachmentDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        
         [HttpDelete]
         public IActionResult DeleteUserAttachment(int userAttachmentId)
         {

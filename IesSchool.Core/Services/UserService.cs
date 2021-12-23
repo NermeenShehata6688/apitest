@@ -3,6 +3,7 @@ using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,16 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private iesContext _iesContext;
         private IFileService _ifileService;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService)
+        private IHostingEnvironment _hostingEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
             _ifileService = ifileService;
+            _hostingEnvironment = hostingEnvironment;
+            _httpContextAccessor = httpContextAccessor;
         }
         public ResponseDto GetUsersHelper()
         {
@@ -47,20 +52,15 @@ namespace IesSchool.Core.Services
         {
             try
             {
-
                 var allUsers = _uow.GetRepository<VwUser>().Query("select * from Vw_Users where IsDeleted != 1");
 
-                if (userSearchDto.Code != null)
+                if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
                 {
-                    allUsers = allUsers.Where(x => x.Code.Contains(userSearchDto.Code));
-                }
-                if (userSearchDto.Name != null)
-                {
-                    allUsers = allUsers.Where(x => x.Name.Contains(userSearchDto.Name));
-                }
-                if (userSearchDto.Email != null)
-                {
-                    allUsers = allUsers.Where(x => x.Email.Contains(userSearchDto.Email));
+                    allUsers = allUsers.Where(x => x.Code.Contains(userSearchDto.StringSearch)
+                        || x.Name.Contains(userSearchDto.StringSearch)
+                        || x.Code.Contains(userSearchDto.StringSearch)
+                        || x.Email.Contains(userSearchDto.StringSearch)
+                        || x.RoomNumber.ToString().Contains(userSearchDto.StringSearch));
                 }
                 if (userSearchDto.NationalityId != null)
                 {
@@ -90,10 +90,6 @@ namespace IesSchool.Core.Services
                 {
                     allUsers = allUsers.Where(x => x.IsOther == userSearchDto.IsOther);
                 }
-                if (userSearchDto.RoomNumber != null)
-                {
-                    allUsers = allUsers.Where(x => x.RoomNumber.ToString().Contains(userSearchDto.RoomNumber.ToString()));
-                }
                 if (userSearchDto.IsExtraCurricular != null)
                 {
                     allUsers = allUsers.Where(x => x.IsExtraCurricular == userSearchDto.IsExtraCurricular);
@@ -106,7 +102,13 @@ namespace IesSchool.Core.Services
                 {
                     allUsers = allUsers.Where(x => x.DepartmentId == userSearchDto.DepartmentId);
                 }
+
                 var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);
+                var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/";
+                lstUserDto.ForEach(item => { item.FullPath = fullpath + item.Image; });
+
                 var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstUserDto, Index = userSearchDto.Index, Pages = userSearchDto.PageSize };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -252,6 +254,7 @@ namespace IesSchool.Core.Services
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from User_Assistant where UserId={userDto.Id}" +
                         $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
+                        $"delete from UserAttachment where UserId={userDto.Id}" +
                         $" delete from Student_Therapist where TherapistId={ userDto.Id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     //change image to binary

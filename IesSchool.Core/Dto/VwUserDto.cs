@@ -30,5 +30,6 @@ namespace IesSchool.Core.Dto
         public bool? Gender { get; set; }
         public string? DepartmentName { get; set; }
         public string? NationalityName { get; set; }
+        public string? FullPath { get; set; }
     }
 }
