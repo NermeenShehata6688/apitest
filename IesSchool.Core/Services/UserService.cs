@@ -414,7 +414,7 @@ namespace IesSchool.Core.Services
                         }
                         else
                         {
-                            if (item != null && item.Image.Length > 0 && item.Image != null)
+                            if (item != null && item.Image != null)
                             {
                                 var user = _uow.GetRepository<User>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
                                 if (user.ImageBinary != null)
@@ -433,7 +433,7 @@ namespace IesSchool.Core.Services
             }
             catch (Exception ex)
             {
-                return new List<VwUserDto>(); ;
+                return allUsers; 
             }
         }
     }
