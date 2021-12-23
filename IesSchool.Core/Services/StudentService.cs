@@ -117,6 +117,7 @@ namespace IesSchool.Core.Services
                 if (studentId != null)
                 {
                     var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones).Include(x => x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
+                    student.ImageBinary = null;
                     var mapper = _mapper.Map<StudentDetailsDto>(student);
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";

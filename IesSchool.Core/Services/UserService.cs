@@ -34,9 +34,9 @@ namespace IesSchool.Core.Services
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllAssistants = _uow.GetRepository<Assistant>().GetList(x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
-                    AllStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<UserHelperDto>(userHelper);
 
@@ -118,7 +118,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var teacherAssignedStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && x.TeacherId == teacherId, x => x.OrderBy(c => c.Name), null, 0, 100000, true);
+                var teacherAssignedStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true && x.TeacherId == teacherId, x => x.OrderBy(c => c.Name), null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<StudentDto>>(teacherAssignedStudents);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

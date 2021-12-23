@@ -32,7 +32,6 @@ namespace IesSchool.Context.Models
         public bool? IsOther { get; set; }
         public int? RoomNumber { get; set; }
         public bool? IsExtraCurricular { get; set; }
-        [NotMapped]
         public byte[]? ImageBinary { get; set; }
         public string? Image { get; set; }
         public string? CreatedBy { get; set; }
