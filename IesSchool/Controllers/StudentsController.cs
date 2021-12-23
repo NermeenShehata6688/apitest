@@ -63,10 +63,11 @@ namespace IesSchool.Controllers
 
         // POST api/<StudentsController>
         [HttpPost]
-        public IActionResult PostStudent(IFormFile file, [FromForm] StudentDto studentDto)
+        public IActionResult PostStudent([FromForm] StudentDto studentDto)
         {
             try
             {
+                var file = Request.Form.Files[0];
                 var all = _studentService.AddStudent(file,studentDto);
                 return Ok(all);
             }
@@ -77,11 +78,13 @@ namespace IesSchool.Controllers
         }
 
         // PUT api/<StudentsController>/5
+        //IFormFile file, [FromForm]
         [HttpPut]
-        public IActionResult PutStudent(IFormFile file, [FromForm] StudentDto studentDtoe)
+        public IActionResult PutStudent(StudentDto studentDtoe)
         {
             try
             {
+                var file = Request.Form.Files[0];
                 var all = _studentService.EditStudent(file, studentDtoe);
                 return Ok(all);
             }
@@ -172,10 +175,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostStudentAttachment(IFormFile file, [FromForm] StudentAttachmentDto studentAttachmentDto)
+        public IActionResult PostStudentAttachment( StudentAttachmentDto studentAttachmentDto)
         {
             try
             {
+                var file = Request.Form.Files[0];
                 var all = _studentService.AddStudentAttachment(file,studentAttachmentDto);
                 return Ok(all);
             }
