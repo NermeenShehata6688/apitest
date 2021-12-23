@@ -129,7 +129,7 @@ namespace IesSchool.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public IActionResult PostUser(IFormFile file, UserDto userDto)
+        public IActionResult PostUser(IFormFile file, [FromForm] UserDto userDto)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace IesSchool.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut]
-        public IActionResult PutUser(IFormFile file, UserDto userDto)
+        public IActionResult PutUser(IFormFile file, [FromQuery] UserDto userDto)
         {
             try
             {
