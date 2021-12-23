@@ -63,6 +63,7 @@ namespace IesSchool.Core.Dto
         public bool? Gender { get; set; }
         public bool? IsActive { get; set; }
         public string? InactiveReason { get; set; }
+        public string? FullPath { get; set; }
 
 
         public virtual ICollection<PhoneDto> Phones { get; set; }
