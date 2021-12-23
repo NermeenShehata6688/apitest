@@ -64,11 +64,11 @@ namespace IesSchool.Core.Services
                 }
                 if (userSearchDto.NationalityId != null)
                 {
-                    allUsers = allUsers.Where(x => x.NationalityId==userSearchDto.NationalityId);
+                    allUsers = allUsers.Where(x => x.NationalityId == userSearchDto.NationalityId);
                 }
                 if (userSearchDto.IsTeacher != null)
                 {
-                    allUsers = allUsers.Where(x => x.IsTeacher==userSearchDto.IsTeacher);
+                    allUsers = allUsers.Where(x => x.IsTeacher == userSearchDto.IsTeacher);
                 }
                 if (userSearchDto.IsTherapist != null)
                 {
@@ -104,12 +104,9 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);
-                var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
-                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/";
-                lstUserDto.ForEach(item => { item.FullPath = fullpath + item.Image; });
+                var lstToSend = GetFullPathAndBinary(lstUserDto);
 
-                var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstUserDto, Index = userSearchDto.Index, Pages = userSearchDto.PageSize };
+                var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstToSend, Index = userSearchDto.Index, Pages = userSearchDto.PageSize };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
@@ -397,6 +394,46 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public List<VwUserDto> GetFullPathAndBinary(List<VwUserDto> allUsers )
+        {
+            try
+            {
+                if (allUsers.Count() > 0)
+                {
+                    foreach (var item in allUsers)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.Image))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                            //var target = Path.Combine(Environment.CurrentDirectory, "wwwRoot/tempFiles"+$"{item.Image}");
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.Image.Length > 0 && item.Image != null)
+                            {
+                                var user = _uow.GetRepository<User>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
+                                if (user.ImageBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, user.ImageBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+
+                    }
+                }
+                return allUsers;
+            }
+            catch (Exception ex)
+            {
+                return new List<VwUserDto>(); ;
             }
         }
     }

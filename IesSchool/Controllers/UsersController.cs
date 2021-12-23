@@ -215,5 +215,21 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+
+
+
+        [HttpGet]
+        public IActionResult test(UserDto userDto)
+        {
+            try
+            {
+                //var all = _userService.AddUser(file, userDto);
+                return Ok("");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
