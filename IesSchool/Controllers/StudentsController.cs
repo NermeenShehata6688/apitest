@@ -118,7 +118,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-
+        [HttpGet]
+        public IActionResult GetHistoricalSkillsBystudentId(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetHistoricalSkillsBystudentId(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost]
         public IActionResult PostStudentHistoricalSkills(List<StudentHistoricalSkillDto> studentHistoricalSkillDto)
         {
@@ -138,6 +150,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _studentService.DeleteStudentHistoricalSkill(studentHistoricalSkillId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetAttachmentsByStudentId(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetAttachmentsByStudentId(studentId);
                 return Ok(all);
             }
             catch (Exception)
@@ -180,6 +205,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _ifileService.UploadFile(file);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetPhonesByStudentId(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetPhonesByStudentId(studentId);
                 return Ok(all);
             }
             catch (Exception)

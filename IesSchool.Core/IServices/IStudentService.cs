@@ -19,17 +19,17 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteStudentTherapist(int studentTherapistId);
 
 
-        public ResponseDto GetStudentHistoricalSkillsById(int studentHistoricalSkillId);
+        public ResponseDto GetHistoricalSkillsBystudentId(int studentId);
         public ResponseDto AddStudentHistoricalSkill(List<StudentHistoricalSkillDto> studentHistoricalSkillDto);
         public ResponseDto EditStudentHistoricalSkill(StudentHistoricalSkillDto studentHistoricalSkillDto);
         public ResponseDto DeleteStudentHistoricalSkill(int studentHistoricalSkillId);
 
-        public ResponseDto GetStudentAttachmentsById(int studentAttachmentId);
+        public ResponseDto GetAttachmentsByStudentId(int studentId);
         public ResponseDto AddStudentAttachment(IFormFile file, StudentAttachmentDto studentAttachmentDto);
         public ResponseDto EditStudentAttachment(StudentAttachmentDto studentAttachmentDto);
         public ResponseDto DeleteStudentAttachment(int studentAttachmentId);
 
-        public ResponseDto GetStudentPhonesById(int phoneId);
+        public ResponseDto GetPhonesByStudentId(int studentId);
         public ResponseDto AddStudentPhone(PhoneDto phoneDto);
         public ResponseDto EditStudentPhone(PhoneDto phoneDto);
         public ResponseDto DeleteStudentPhone(int phoneId);

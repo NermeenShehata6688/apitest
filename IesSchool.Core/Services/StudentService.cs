@@ -289,13 +289,18 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetStudentHistoricalSkillsById(int studentHistoricalSkillId)
+        public ResponseDto GetHistoricalSkillsBystudentId(int studentId)
         {
             try
             {
-                var studentHistoricalSkill = _uow.GetRepository<StudentHistoricalSkill>().Single();
-                var mapper = _mapper.Map<StudentHistoricalSkillDto>(studentHistoricalSkill);
+                if (studentId != null || studentId != 0)
+                {
+                    var studentHistoricalSkill = _uow.GetRepository<StudentHistoricalSkill>().GetList(x => x.StudentId == studentId);
+                var mapper = _mapper.Map<Paginate<StudentHistoricalSkillDto>>(studentHistoricalSkill);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = " null" };
             }
             catch (Exception ex)
             {
@@ -349,13 +354,18 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetStudentAttachmentsById(int studentAttachmentId)
+        public ResponseDto GetAttachmentsByStudentId(int studentId)
         {
             try
             {
-                var studentAttachment = _uow.GetRepository<StudentAttachment>().Single();
-                var mapper = _mapper.Map<StudentAttachmentDto>(studentAttachment);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                if (studentId != null || studentId != 0)
+                {
+                    var studentAttachment = _uow.GetRepository<StudentAttachment>().GetList(x => x.StudentId == studentId );
+                    var mapper = _mapper.Map <Paginate<StudentAttachmentDto>>(studentAttachment);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+              else
+                return new ResponseDto { Status = 1, Message = " null" };
             }
             catch (Exception ex)
             {
@@ -425,13 +435,18 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetStudentPhonesById(int phoneId)
+        public ResponseDto GetPhonesByStudentId(int studentId)
         {
             try
             {
-                var phone = _uow.GetRepository<Phone>().Single();
-                var mapper = _mapper.Map<PhoneDto>(phone);
+                if (studentId != null || studentId != 0)
+                {
+                    var phone = _uow.GetRepository<Phone>().GetList(x => x.StudentId == studentId);
+                var mapper = _mapper.Map < Paginate<PhoneDto>>(phone);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = " null" };
             }
             catch (Exception ex)
             {
