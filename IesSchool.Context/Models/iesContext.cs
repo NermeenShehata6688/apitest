@@ -15,7 +15,7 @@ namespace IesSchool.Context.Models
 
         public iesContext(DbContextOptions<iesContext> options)
             : base(options)
-        {
+        {       
         }
 
         public virtual DbSet<AcadmicYear> AcadmicYears { get; set; } = null!;
