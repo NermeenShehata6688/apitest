@@ -19,6 +19,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetUsersHelper();
         public ResponseDto GetUserById(int userId);
         public ResponseDto AddUser(IFormFile file, UserDto userDto);
+        public ResponseDto AddUser2( UserDto userDto);
         public ResponseDto EditUser(IFormFile file, UserDto userDto);
         public ResponseDto DeleteUser(int userId);
 

@@ -1,6 +1,7 @@
 ﻿using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,7 +19,7 @@ namespace IesSchool.Controllers
             _fileService = fileService;
         }
 
-        [ResponseCache(Duration = 800)]
+        //[ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetUserHelper()
         {
@@ -129,14 +130,31 @@ namespace IesSchool.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public IActionResult PostUser(IFormFile file, [FromForm] UserDto userDto)
+        public IActionResult PostUser()
         {
+
+
             try
             {
-                var all = _userService.AddUser(file, userDto);
-                return Ok(all);
+                var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
+
+                if (Request.Form.Files!=null)
+                {
+                    var file = Request.Form.Files[0];
+                    var all = _userService.AddUser(file , modelData);
+                    return Ok(all);
+                }
+                else
+                {
+                    var all = _userService.AddUser2(modelData);
+                    return Ok(all);
+                }
+
+
+
+        
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
