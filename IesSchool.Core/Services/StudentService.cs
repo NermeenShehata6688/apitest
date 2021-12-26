@@ -538,7 +538,7 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + item.Image))
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                             item.FullPath = fullpath;
                         }
                         else
@@ -551,7 +551,7 @@ namespace IesSchool.Core.Services
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                                 item.FullPath = fullpath;
                             }
                         }
