@@ -37,6 +37,7 @@ namespace IesSchool.Context.Models
         public string? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
+        public DateTime? BirthDate { get; set; }
         public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsSuspended { get; set; }
@@ -47,7 +48,7 @@ namespace IesSchool.Context.Models
 
         public virtual Department? Department { get; set; }
         public virtual Country? Nationality { get; set; }
-        public virtual AspNetUser AspNetUser { get; set; } = null!;
+        public virtual AspNetUser AspNetUser { get; set; }
         public virtual ICollection<EventTeacher> EventTeachers { get; set; }
         public virtual ICollection<Iep> IepHeadOfDepartmentNavigations { get; set; }
         public virtual ICollection<Iep> IepHeadOfEducationNavigations { get; set; }

@@ -34,11 +34,16 @@ namespace IesSchool.Core.Services
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllAssistants = _uow.GetRepository  <Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                };
+                   AllAttachmentTypes= _uow.GetRepository<AttachmentType>().GetList(null, null, null, 0, 1000000, true)
+
+            };
+
                 var mapper = _mapper.Map<UserHelperDto>(userHelper);
+
+
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -183,9 +188,12 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => x.Include(x => x.StudentTherapists).Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices));
+                var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => 
+                x.Include(x => x.StudentTherapists).Include(x=>x.AspNetUser).Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices));
                 user.ImageBinary = null;
                 var mapper = _mapper.Map<UserDto>(user);
+                mapper.UserName= user.AspNetUser.UserName;
+                mapper.Email= user.AspNetUser.Email;
                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
                 mapper.FullPath = fullpath;
@@ -233,6 +241,56 @@ namespace IesSchool.Core.Services
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
                     userDto.FullPath = result.virtualPath;
+                    transaction.Commit();
+
+                    return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }   
+        public ResponseDto AddUser2( UserDto userDto)
+        {
+            try
+            {
+
+                if (userDto != null)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+
+                    //MemoryStream ms = new MemoryStream();
+                    //file.CopyTo(ms);
+                    //userDto.ImageBinary = ms.ToArray();
+                    //ms.Close();
+                    //ms.Dispose();
+                    //upload file in local directory
+                    AspNetUser aspNetUser = new AspNetUser();
+                    //var result = _ifileService.UploadFile(file);
+                    //userDto.Image = result.FileName;
+                    var mapper = _mapper.Map<User>(userDto);
+                    mapper.IsDeleted = false;
+                    mapper.CreatedOn = DateTime.Now;
+                    mapper.IsSuspended = false;
+                    _uow.GetRepository<User>().Add(mapper);
+                    _uow.SaveChanges();
+
+                    aspNetUser.Id = mapper.Id;
+                    aspNetUser.EmailConfirmed = false;
+                    aspNetUser.PhoneNumberConfirmed = false;
+                    aspNetUser.TwoFactorEnabled = false;
+                    aspNetUser.LockoutEnabled = false;
+                    aspNetUser.AccessFailedCount = 0;
+                    _uow.GetRepository<AspNetUser>().Add(aspNetUser);
+                    _uow.SaveChanges();
+
+                    userDto.Id = mapper.Id;
+                    //userDto.ImageBinary = null;
+                    //userDto.FullPath = result.virtualPath;
                     transaction.Commit();
 
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
@@ -412,7 +470,7 @@ namespace IesSchool.Core.Services
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                             //var target = Path.Combine(Environment.CurrentDirectory, "wwwRoot/tempFiles"+$"{item.Image}");
                             item.FullPath = fullpath;
                         }
@@ -426,7 +484,7 @@ namespace IesSchool.Core.Services
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, user.ImageBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                                 item.FullPath = fullpath;
                             }
                         }
