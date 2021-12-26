@@ -78,6 +78,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<VwStudent> VwStudents { get; set; } = null!;
         public virtual DbSet<VwUser> VwUsers { get; set; } = null!;
         public virtual DbSet<WorkCategory> WorkCategories { get; set; } = null!;
+        public virtual DbSet<VwSkill> VwSkills { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -90,6 +91,32 @@ namespace IesSchool.Context.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VwSkill>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_Skills");
+
+                entity.Property(e => e.AreaName).HasMaxLength(255);
+
+                entity.Property(e => e.AreaNameAr).HasMaxLength(255);
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Level).HasColumnName("level");
+
+                entity.Property(e => e.NameAr).HasColumnName("Name_Ar");
+
+                entity.Property(e => e.StrandName).HasMaxLength(255);
+
+                entity.Property(e => e.StrandNameAr).HasMaxLength(255);
+            });
             modelBuilder.Entity<AcadmicYear>(entity =>
             {
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
@@ -1176,6 +1203,7 @@ namespace IesSchool.Context.Models
                 entity.Property(e => e.TeacherName).HasMaxLength(1000);
 
                 entity.Property(e => e.TermName).HasMaxLength(255);
+                entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VwStudent>(entity =>

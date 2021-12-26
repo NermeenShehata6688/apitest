@@ -58,6 +58,7 @@ namespace IesSchool.Core.MappingProfile
 
             CreateMap<SkillEvaluation, SkillEvaluationDto>().ReverseMap();
             CreateMap<SkillAlowedDepartment, SkillAlowedDepartmentDto>().ReverseMap();
+            CreateMap<VwSkill, VwSkillDto>().ReverseMap();
 
 
             CreateMap<Assistant, AssistantDto>()

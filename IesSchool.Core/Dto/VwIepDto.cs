@@ -42,5 +42,7 @@ namespace IesSchool.Core.Dto
         public string? AcadmicYearName { get; set; }
         public int Index { get; set; }
         public int PageSize { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+
     }
 }
