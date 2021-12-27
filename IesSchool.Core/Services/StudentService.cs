@@ -149,7 +149,9 @@ namespace IesSchool.Core.Services
                         //upload file in local directory
                         var result = _ifileService.UploadFile(file);
                         studentDto.Image = result.FileName;
+                        studentDto.FullPath = result.virtualPath;
                     }
+                    
                     var mapper = _mapper.Map<Student>(studentDto);
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
@@ -158,7 +160,6 @@ namespace IesSchool.Core.Services
                     _uow.SaveChanges();
                     studentDto.Id = mapper.Id;
                     studentDto.ImageBinary = null;
-                    studentDto.FullPath = result.virtualPath;
                     return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
                 }
                 else
@@ -184,8 +185,6 @@ namespace IesSchool.Core.Services
                     studentDto.ImageBinary = ms.ToArray();
                     ms.Close();
                     ms.Dispose();
-
-                    //upload file in local directory
                     var result = _ifileService.UploadFile(file);
                     studentDto.Image = result.FileName;
                 }
@@ -197,7 +196,7 @@ namespace IesSchool.Core.Services
 
                 studentDto.Id = mapper.Id;
                 studentDto.ImageBinary = null;
-                studentDto.FullPath = result.virtualPath;
+               // studentDto.FullPath = result.virtualPath;
                 return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = studentDto };
             }
             catch (Exception ex)
