@@ -80,7 +80,7 @@ namespace IesSchool.Controllers
         // PUT api/<StudentsController>/5
         //IFormFile file, [FromForm]
         [HttpPut]
-        public IActionResult PutStudent(StudentDto studentDtoe)
+        public IActionResult PutStudent([FromForm] StudentDto studentDtoe)
         {
             try
             {
