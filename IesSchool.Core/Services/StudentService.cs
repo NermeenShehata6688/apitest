@@ -139,14 +139,17 @@ namespace IesSchool.Core.Services
                 //change image to binary
                 if (studentDto != null)
                 {
-                    MemoryStream ms = new MemoryStream();
-                    file.CopyTo(ms);
-                    studentDto.ImageBinary = ms.ToArray();
-                    ms.Close();
-                    ms.Dispose();
-                    //upload file in local directory
-                    var result = _ifileService.UploadFile(file);
-                    studentDto.Image = result.FileName;
+                    if (file!= null)
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        file.CopyTo(ms);
+                        studentDto.ImageBinary = ms.ToArray();
+                        ms.Close();
+                        ms.Dispose();
+                        //upload file in local directory
+                        var result = _ifileService.UploadFile(file);
+                        studentDto.Image = result.FileName;
+                    }
                     var mapper = _mapper.Map<Student>(studentDto);
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
@@ -174,16 +177,18 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 //change image to binary
-                MemoryStream ms = new MemoryStream();
-                file.CopyTo(ms);
-                studentDto.ImageBinary = ms.ToArray();
-                ms.Close();
-                ms.Dispose();
+                if (file!= null)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    studentDto.ImageBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
 
-                //upload file in local directory
-                var result = _ifileService.UploadFile(file);
-
-                studentDto.Image = result.FileName;
+                    //upload file in local directory
+                    var result = _ifileService.UploadFile(file);
+                    studentDto.Image = result.FileName;
+                }
                 var mapper = _mapper.Map<Student>(studentDto);
 
                 _uow.GetRepository<Student>().Update(mapper);

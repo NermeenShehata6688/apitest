@@ -107,7 +107,7 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A2:AQ2"].Text = "LESSON PLAN (LP)";
 
 						worksheet.Range["A2:AQ2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-						worksheet.Range["A2:AQ2"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+						worksheet.Range["A2:AQ2"].CellStyle.Color = Color.FromArgb(253, 246, 153);
 						worksheet.Range["AR2:AU2"].Merge();
 						worksheet.Range["AR2:AU2"].Text = "YEAR:";
 						worksheet.Range["AR2:AU2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -203,7 +203,7 @@ namespace IesSchool.Core.Services
 						worksheet.Range["K10:BE10"].Text = objective.Evaluation == null ? "" : objective.Evaluation;
 
 						worksheet.Range["A11:BE11"].Text = "Record";
-						worksheet.Range["A11:BE11"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+						worksheet.Range["A11:BE11"].CellStyle.Color = Color.FromArgb(253, 246, 153);
 						worksheet.Range["A11:BE11"].Merge();
 						worksheet.Range["A11:BE11"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 						#endregion
@@ -361,7 +361,7 @@ namespace IesSchool.Core.Services
 				//Download the Excel file in the browser
 				FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
-				fileStreamResult.FileDownloadName = ("PLReport"+iep.StudentName == null ? "" : iep.StudentName+".xlsx");
+				fileStreamResult.FileDownloadName = ( iep.StudentName == null ? "" : iep.StudentName+ "-PLReport" + ".xlsx");
 
 				return fileStreamResult;
 			}
