@@ -1,6 +1,7 @@
 ﻿using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -63,19 +64,21 @@ namespace IesSchool.Controllers
 
         // POST api/<StudentsController>
         [HttpPost]
-        public IActionResult PostStudent([FromForm] StudentDto studentDto)
+
+        public IActionResult PostStudent()
         {
             try
             {
+                var modelData = JsonConvert.DeserializeObject<StudentDto>(Request.Form["student"]);
                 if (Request.Form.Files.Count() > 0)
                 {
                     var file = Request.Form.Files[0];
-                    var all = _studentService.AddStudent(studentDto, file);
+                    var all = _studentService.AddStudent(modelData, file);
                     return Ok(all);
                 }
                 else
                 {
-                    var all = _studentService.AddStudent(studentDto, null);
+                    var all = _studentService.AddStudent(modelData, null);
                     return Ok(all);
                 }
             }
@@ -88,19 +91,21 @@ namespace IesSchool.Controllers
         // PUT api/<StudentsController>/5
         //IFormFile file, [FromForm]
         [HttpPut]
-        public IActionResult PutStudent([FromForm] StudentDto studentDto)
+        public IActionResult PutStudent()
         {
             try
             {
+                var modelData = JsonConvert.DeserializeObject<StudentDto>(Request.Form["student"]);
+
                 if (Request.Form.Files.Count()>0)
                 {
                     var file = Request.Form.Files[0];
-                    var all = _studentService.EditStudent( studentDto,file);
+                    var all = _studentService.EditStudent(modelData, file);
                     return Ok(all);
                 }
                 else
                 {
-                    var all = _studentService.EditStudent(studentDto,null) ;
+                    var all = _studentService.EditStudent(modelData, null) ;
                     return Ok(all);
                 }
             }
