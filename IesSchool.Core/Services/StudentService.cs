@@ -132,21 +132,26 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddStudent(IFormFile file ,StudentDto studentDto)
+        public ResponseDto AddStudent(StudentDto studentDto, IFormFile? file)
         {
             try
             {
                 //change image to binary
                 if (studentDto != null)
                 {
-                    MemoryStream ms = new MemoryStream();
-                    file.CopyTo(ms);
-                    studentDto.ImageBinary = ms.ToArray();
-                    ms.Close();
-                    ms.Dispose();
-                    //upload file in local directory
-                    var result = _ifileService.UploadFile(file);
-                    studentDto.Image = result.FileName;
+                    if (file!= null)
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        file.CopyTo(ms);
+                        studentDto.ImageBinary = ms.ToArray();
+                        ms.Close();
+                        ms.Dispose();
+                        //upload file in local directory
+                        var result = _ifileService.UploadFile(file);
+                        studentDto.Image = result.FileName;
+                        studentDto.FullPath = result.virtualPath;
+                    }
+                    
                     var mapper = _mapper.Map<Student>(studentDto);
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
@@ -155,7 +160,6 @@ namespace IesSchool.Core.Services
                     _uow.SaveChanges();
                     studentDto.Id = mapper.Id;
                     studentDto.ImageBinary = null;
-                    studentDto.FullPath = result.virtualPath;
                     return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
                 }
                 else
@@ -166,7 +170,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditStudent(IFormFile file, StudentDto studentDto)
+        public ResponseDto EditStudent(StudentDto studentDto, IFormFile? file)
         {
             try
             {
@@ -174,16 +178,16 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 //change image to binary
-                MemoryStream ms = new MemoryStream();
-                file.CopyTo(ms);
-                studentDto.ImageBinary = ms.ToArray();
-                ms.Close();
-                ms.Dispose();
-
-                //upload file in local directory
-                var result = _ifileService.UploadFile(file);
-
-                studentDto.Image = result.FileName;
+                if (file!= null)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    studentDto.ImageBinary = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+                    var result = _ifileService.UploadFile(file);
+                    studentDto.Image = result.FileName;
+                }
                 var mapper = _mapper.Map<Student>(studentDto);
 
                 _uow.GetRepository<Student>().Update(mapper);
@@ -192,7 +196,7 @@ namespace IesSchool.Core.Services
 
                 studentDto.Id = mapper.Id;
                 studentDto.ImageBinary = null;
-                studentDto.FullPath = result.virtualPath;
+               // studentDto.FullPath = result.virtualPath;
                 return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = studentDto };
             }
             catch (Exception ex)
@@ -538,7 +542,7 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + item.Image))
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                             item.FullPath = fullpath;
                         }
                         else
@@ -551,7 +555,7 @@ namespace IesSchool.Core.Services
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/wwwRoot/tempFiles/{item.Image}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                                 item.FullPath = fullpath;
                             }
                         }

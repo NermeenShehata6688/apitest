@@ -42,8 +42,7 @@ namespace IesSchool.Core.Dto
         public string? AcadmicYearName { get; set; }
         public int Index { get; set; }
         public int PageSize { get; set; }
-        //public virtual ICollection<ObjectiveDto>? ObjectiveDtos { get; set; }
-        public virtual ObjectiveDto? ObjectiveDtos { get; set; }
+        public virtual ICollection<ObjectiveDto>? ObjectiveDtos { get; set; }
 
     }
 }
