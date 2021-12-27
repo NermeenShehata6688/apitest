@@ -120,7 +120,15 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true,null,x=> x.Include(s=> s.IepAssistants).Include(s => s.IepParamedicalServices).Include(s => s.IepExtraCurriculars).Include(s => s.Goals));
+                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true,null,x=> x.Include(s=> s.IepAssistants)
+                .ThenInclude(s => s.Assistant).Include(s => s.IepParamedicalServices).
+                ThenInclude(s => s.ParamedicalService).Include(s => s.IepExtraCurriculars)
+                .ThenInclude(s => s.ExtraCurricular).Include(s => s.Student).ThenInclude(s => s.Department)
+                .Include(s => s.AcadmicYear)
+                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+                .ThenInclude(s => s.Skill).ThenInclude(s => s.Strand)
+                .ThenInclude(s => s.Area)
+                );
                 var mapper = _mapper.Map<GetIepDto>(iep);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }

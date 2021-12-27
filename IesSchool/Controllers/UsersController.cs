@@ -137,7 +137,7 @@ namespace IesSchool.Controllers
             try
             {
                 var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
-                var file = Request.Form.Files[0];
+                //var file = Request.Form.Files[0];
 
                 if (Request.Form.Files!=null)
                 {
