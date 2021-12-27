@@ -2,6 +2,7 @@
 using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -64,8 +65,9 @@ namespace IesSchool.Controllers
 
         // POST api/<StudentsController>
         [HttpPost]
-
-        public IActionResult PostStudent()
+        [Description("student")]
+        //[ConfigurationKeyName("dfghj")]
+        public IActionResult PostStudent(string? student)
         {
             try
             {

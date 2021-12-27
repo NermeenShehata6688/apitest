@@ -187,6 +187,12 @@ namespace IesSchool.Core.Services
                     ms.Dispose();
                     var result = _ifileService.UploadFile(file);
                     studentDto.Image = result.FileName;
+                    studentDto.FullPath = result.virtualPath;
+                }
+                else
+                {
+                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                    studentDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{studentDto.Image}";
                 }
                 var mapper = _mapper.Map<Student>(studentDto);
 

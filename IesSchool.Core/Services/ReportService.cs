@@ -60,8 +60,8 @@ namespace IesSchool.Core.Services
 				IWorkbook workbook = application.Workbooks.Create(0);
 				IWorksheet worksheet;
 				int noOfObjectives = 1;
-                if (mapper==null)
-                {
+				if (mapper == null)
+				{
 					MemoryStream stream1 = new MemoryStream();
 
 					return new FileStreamResult(stream1, "application/excel");
@@ -71,7 +71,7 @@ namespace IesSchool.Core.Services
 				{
 					var mapperObj = _mapper.Map<Paginate<ObjectiveDto>>(AllIepObjectives);
 					mapper.ObjectiveDtos = mapperObj.Items;
-					
+
 					foreach (var objective in AllIepObjectives.Items)
 					{
 						string strandName = "";
@@ -88,7 +88,7 @@ namespace IesSchool.Core.Services
 								skills = (listOfObjSkillsIds == null ? "" : string.Join(",", listOfObjSkillsIds));
 							}
 						}
-						worksheet = workbook.Worksheets.Create(noOfObjectives+"-"+ strandName+"(" + skills + ")");
+						worksheet = workbook.Worksheets.Create(noOfObjectives + "-" + strandName + "(" + skills + ")");
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -170,12 +170,12 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A7:J10"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 						worksheet.Range["A12:AB12"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 						worksheet.Range["A6:J6"].CellStyle.Color = Color.FromArgb(255, 205, 205);
-								worksheet.Range["A6:J6"].Merge();
-								worksheet.Range["A6:J6"].Text = "Area/Strand/Skills:";
-								worksheet.Range["K6:BE6"].Merge();
+						worksheet.Range["A6:J6"].Merge();
+						worksheet.Range["A6:J6"].Text = "Area/Strand/Skills:";
+						worksheet.Range["K6:BE6"].Merge();
 						if (objective.ObjectiveSkills.Count() > 0)
 						{
-								worksheet.Range["K6:BE6"].Text = areaName + "/" + strandName+ "/" + skills;
+							worksheet.Range["K6:BE6"].Text = areaName + "/" + strandName + "/" + skills;
 						}
 
 						worksheet.Range["A7:J7"].Merge();
@@ -267,8 +267,8 @@ namespace IesSchool.Core.Services
 						noOfObjectives++;
 					}
 				}
-                else
-                {
+				else
+				{
 					worksheet = workbook.Worksheets.Create("Sheet1");
 					#region General
 					//Disable gridlines in the worksheet
@@ -361,12 +361,15 @@ namespace IesSchool.Core.Services
 				//Download the Excel file in the browser
 				FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
-				fileStreamResult.FileDownloadName = ( iep.StudentName == null ? "" : iep.StudentName+ "-PLReport" + ".xlsx");
+				fileStreamResult.FileDownloadName = (iep.StudentName == null ? "" : iep.StudentName + "-PLReport" + ".xlsx");
 
 				return fileStreamResult;
 			}
 
 		}
+		//public FileStreamResult IepReport(int iepId)
+		//{
 
+		//}
 	}
 }

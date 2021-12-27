@@ -10,8 +10,8 @@ namespace IesSchool.Core.IServices
 {
     public interface IReportService
     {
-        
-        public FileStreamResult IepLpReport(int iepId);
         public ResponseDto GetReporstHelper();
+        public FileStreamResult IepLpReport(int iepId);
+        //public FileStreamResult IepReport(int iepId);
     }
 }
