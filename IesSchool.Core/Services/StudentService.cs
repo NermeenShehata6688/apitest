@@ -132,7 +132,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddStudent(IFormFile file ,StudentDto studentDto)
+        public ResponseDto AddStudent(StudentDto studentDto, IFormFile? file)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditStudent(IFormFile file, StudentDto studentDto)
+        public ResponseDto EditStudent(StudentDto studentDto, IFormFile? file)
         {
             try
             {

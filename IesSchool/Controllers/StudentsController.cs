@@ -67,9 +67,17 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var file = Request.Form.Files[0];
-                var all = _studentService.AddStudent(file,studentDto);
-                return Ok(all);
+                if (Request.Form.Files.Count() > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    var all = _studentService.AddStudent(studentDto, file);
+                    return Ok(all);
+                }
+                else
+                {
+                    var all = _studentService.AddStudent(studentDto, null);
+                    return Ok(all);
+                }
             }
             catch (Exception)
             {
@@ -80,13 +88,21 @@ namespace IesSchool.Controllers
         // PUT api/<StudentsController>/5
         //IFormFile file, [FromForm]
         [HttpPut]
-        public IActionResult PutStudent([FromForm] StudentDto studentDtoe)
+        public IActionResult PutStudent([FromForm] StudentDto studentDto)
         {
             try
             {
-                var file = Request.Form.Files[0];
-                var all = _studentService.EditStudent(file, studentDtoe);
-                return Ok(all);
+                if (Request.Form.Files.Count()>0)
+                {
+                    var file = Request.Form.Files[0];
+                    var all = _studentService.EditStudent( studentDto,file);
+                    return Ok(all);
+                }
+                else
+                {
+                    var all = _studentService.EditStudent(studentDto,null) ;
+                    return Ok(all);
+                }
             }
             catch (Exception)
             {
