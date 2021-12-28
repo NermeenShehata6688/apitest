@@ -47,7 +47,7 @@ namespace IesSchool.Core.Services
 				return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
 			}
 		}
-		public FileStreamResult LpReport(int iepId)
+		public FileStreamResult IepLpReport(int iepId)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace IesSchool.Core.Services
 							{
 								var listOfObjSkillsIds = objective.ObjectiveSkills.Select(x => x.SkillId).ToArray();
 								var AllIVwSkills = _uow.GetRepository<VwSkill>().GetList(x => listOfObjSkillsIds.Contains(x.Id) && x.IsDeleted != true, null);
-								if (AllIVwSkills != null || AllIVwSkills.Count > 0)
+								if (AllIVwSkills != null && AllIVwSkills.Count > 0)
 								{
 									areaName = AllIVwSkills.Items.First()?.AreaName == null ? "" : AllIVwSkills.Items.First().AreaName;
 									strandName = AllIVwSkills.Items.First()?.StrandName == null ? "" : AllIVwSkills.Items.First().StrandName;
@@ -99,11 +99,10 @@ namespace IesSchool.Core.Services
 							worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 							#endregion
 							#region IEP
-							worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["BE1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["A1:BE1"].Merge();
 							worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
-							worksheet.Range["A2:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["A2:AQ2"].Merge();
 							worksheet.Range["A2:AQ2"].Text = "LESSON PLAN (LP)";
 
@@ -115,7 +114,6 @@ namespace IesSchool.Core.Services
 							worksheet.Range["AR2:AU2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 							worksheet.Range["AV2:BE2"].Merge();
 							worksheet.Range["AV2:BE2"].Text = iep.AcadmicYearName == null ? "" : iep.AcadmicYearName;
-							worksheet.Range["A3:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
 							worksheet.Range["A3:J3"].Merge();
 							worksheet.Range["A3:J3"].Text = "STUDENT NAME:";
@@ -131,7 +129,7 @@ namespace IesSchool.Core.Services
 
 							worksheet.Range["AL3:AL4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["AM3:AV3"].Merge();
-							worksheet.Range["AM3:AV3"].Text = "dateofBirth";
+							worksheet.Range["AM3:AV3"].Text = iep.DateOfBirth == null ? "" : iep.DateOfBirth.Value.ToShortDateString();
 							worksheet.Range["AV3:AV4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["AW3:AZ3"].Merge();
 							worksheet.Range["AW3:AZ3"].Text = "REF#:";
@@ -141,7 +139,6 @@ namespace IesSchool.Core.Services
 							worksheet.Range["BA3:BE3"].Merge();
 							worksheet.Range["BA3:BE3"].Text = iep.StudentCode == null ? "" : iep.StudentCode.ToString();
 
-							worksheet.Range["A4:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["A4:J4"].Merge();
 							worksheet.Range["A4:J4"].Text = "TEACHER:";
 							worksheet.Range["A4:J4"].CellStyle.Color = Color.FromArgb(255, 205, 205);
@@ -174,12 +171,12 @@ namespace IesSchool.Core.Services
 							worksheet.Range["A6:J6"].Merge();
 							worksheet.Range["A6:J6"].Text = "Area/Strand/Skills:";
 							worksheet.Range["K6:BE6"].Merge();
-							if (objective.ObjectiveSkills.Count() > 0)
-							{
-								worksheet.Range["K6:BE6"].Text = areaName + "/" + strandName + "/" + skills;
-							}
+                            if (objective.ObjectiveSkills.Count() > 0 && skills!="")
+                            {
+                                worksheet.Range["K6:BE6"].Text = areaName + "/" + strandName + "/" + skills;
+                            }
 
-							worksheet.Range["A7:J7"].Merge();
+                            worksheet.Range["A7:J7"].Merge();
 							worksheet.Range["A7:J7"].Text = "Objective:";
 
 							worksheet.Range["K7:BE7"].Merge();
@@ -231,7 +228,6 @@ namespace IesSchool.Core.Services
 								{
 									worksheet.Range["A" + row + ":BE" + row].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 									worksheet.Range["A" + row + ":BE" + row].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-									//worksheet.Range["A" + row + ":BE" + row].CellStyle.WrapText = true;
 
 									worksheet.Range["A" + row].RowHeight = 35;
 									worksheet.Range["A" + row + ":J" + row].Merge();
@@ -282,12 +278,10 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 						#endregion
 						#region IEP
-						worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BE1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A1:BE1"].Merge();
 						worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
-
-						worksheet.Range["A2:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
 						worksheet.Range["A2:AQ2"].Merge();
 						worksheet.Range["A2:AQ2"].Text = "LESSON PLAN (LP)";
@@ -300,7 +294,6 @@ namespace IesSchool.Core.Services
 						worksheet.Range["AR2:AU2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 						worksheet.Range["AV2:BE2"].Merge();
 						worksheet.Range["AV2:BE2"].Text = iep.AcadmicYearName == null ? "" : iep.AcadmicYearName;
-						worksheet.Range["A3:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
 						worksheet.Range["A3:J3"].Merge();
 						worksheet.Range["A3:J3"].Text = "STUDENT NAME:";
@@ -316,7 +309,7 @@ namespace IesSchool.Core.Services
 
 						worksheet.Range["AL3:AL4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["AM3:AV3"].Merge();
-						worksheet.Range["AM3:AV3"].Text = "dateofBirth";
+						worksheet.Range["AM3:AV3"].Text = iep.DateOfBirth == null ? "" : iep.DateOfBirth.Value.ToShortDateString();
 						worksheet.Range["AV3:AV4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["AW3:AZ3"].Merge();
 						worksheet.Range["AW3:AZ3"].Text = "REF#:";
@@ -326,7 +319,6 @@ namespace IesSchool.Core.Services
 						worksheet.Range["BA3:BE3"].Merge();
 						worksheet.Range["BA3:BE3"].Text = iep.StudentCode == null ? "" : iep.StudentCode.ToString();
 
-						worksheet.Range["A4:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A4:J4"].Merge();
 						worksheet.Range["A4:J4"].Text = "TEACHER:";
 						worksheet.Range["A4:J4"].CellStyle.Color = Color.FromArgb(255, 205, 205);
@@ -396,55 +388,63 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1"].RowHeight = 17;
 						worksheet.Range["A1:BE100"].WrapText = true;
 						worksheet.Range["A1:BE100"].CellStyle.Font.Bold = true;
 						worksheet.Range["A1:BE13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 						worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 						#endregion
 						#region IEP
-						worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-						worksheet.Range["BE1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A1:BE9"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE1:BE9"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AH2:AH4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AL2:AL4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["J3:J4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["R5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AS2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AW2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["R5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AV3:AV4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AZ3:AZ3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
 						worksheet.Range["A1:BE1"].Merge();
 						worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
-						worksheet.Range["A2:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-						worksheet.Range["A2:AQ2"].Merge();
-						worksheet.Range["A2:AQ2"].Text = "LESSON PLAN (LP)";
+						worksheet.Range["A2:AH2"].Merge();
+						worksheet.Range["A2:AH2"].Text = "LESSON PLAN (LP)";
+						worksheet.Range["A2:AH2"].CellStyle.Color = Color.FromArgb(253, 246, 153);
+						worksheet.Range["AI2:AL2"].Merge();
+						worksheet.Range["AI2:AL2"].Text = "YEAR:";
+						worksheet.Range["AI2:AL2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AM2:AS2"].Merge();
+						worksheet.Range["AM2:AS2"].Text = iep.AcadmicYearName == null ? "" : iep.AcadmicYearName;
+						worksheet.Range["AT2:AW2"].Merge();
+						worksheet.Range["AT2:AW2"].Text = "Term:";
+						worksheet.Range["AT2:AW2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AX2:BE2"].Merge();
+						worksheet.Range["AX2:BE2"].Text = iep.TermName == null ? "" : iep.TermName;
 
-						worksheet.Range["A2:AQ2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-						worksheet.Range["A2:AQ2"].CellStyle.Color = Color.FromArgb(253, 246, 153);
-						worksheet.Range["AR2:AU2"].Merge();
-						worksheet.Range["AR2:AU2"].Text = "YEAR:";
-						worksheet.Range["AR2:AU2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-						worksheet.Range["AR2:AU2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
-						worksheet.Range["AV2:BE2"].Merge();
-						worksheet.Range["AV2:BE2"].Text = iep.AcadmicYearName == null ? "" : iep.AcadmicYearName;
-						worksheet.Range["A3:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
 						worksheet.Range["A3:J3"].Merge();
 						worksheet.Range["A3:J3"].Text = "STUDENT NAME:";
 						worksheet.Range["A3:J3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
-						worksheet.Range["A3:J4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["K3:AH3"].Merge();
 						worksheet.Range["K3:AH3"].Text = iep.StudentName == null ? "" : iep.StudentName;
-						worksheet.Range["AH3:Ah4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["AI3:AL3"].Merge();
 						worksheet.Range["AI3:AL3"].Text = "D.O.B:";
 						worksheet.Range["AI3:AL3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
-						worksheet.Range["AL3:AL4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["AM3:AV3"].Merge();
-						worksheet.Range["AM3:AV3"].Text = "dateofBirth";
-						worksheet.Range["AV3:AV4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AM3:AV3"].Text = iep.DateOfBirth == null ? "" : iep.DateOfBirth.Value.ToShortDateString();
 						worksheet.Range["AW3:AZ3"].Merge();
 						worksheet.Range["AW3:AZ3"].Text = "REF#:";
 						worksheet.Range["AW3:AZ3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
-						worksheet.Range["AZ3:AZ4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BA3:BE3"].Merge();
 						worksheet.Range["BA3:BE3"].Text = iep.StudentCode == null ? "" : iep.StudentCode.ToString();
 
-						worksheet.Range["A4:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A4:J4"].Merge();
 						worksheet.Range["A4:J4"].Text = "TEACHER:";
 						worksheet.Range["A4:J4"].CellStyle.Color = Color.FromArgb(255, 205, 205);
@@ -463,12 +463,60 @@ namespace IesSchool.Core.Services
 
 						worksheet.Range["BA4:BE4"].Merge();
 						worksheet.Range["BA4:BE4"].Text = iep.RoomNumber == null ? "" : iep.RoomNumber.ToString();
+
+
+						worksheet.Range["A5:R5"].Merge();
+						worksheet.Range["A5:R5"].Text = "People involved in setting up IEP:";
+						worksheet.Range["A5:R5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                        //if (iep.iepass)
+                        //{
+
+                        //}
+						worksheet.Range["S5:BE5"].Merge();
+						worksheet.Range["S5:BE5"].Text = iep.TeacherName == null ? "" : iep.TeacherName;
+
+						worksheet.Range["A6:BE6"].Merge();
+						worksheet.Range["A6:BE6"].Text = "General Current Level Achievement and Functional Performance";
+						worksheet.Range["A6:BE6"].CellStyle.Color = Color.FromArgb(253, 246, 153);
+
+						worksheet.Range["A7:BE9"].Merge();
+						worksheet.Range["A7:BE9"].Text = iep.StudentNotes == null ? "" : iep.StudentNotes;
+
+
+
+
+
 						#endregion
+						#region Goals
 						if (mapper.Goals != null && mapper.Goals.Count() > 0)
 						{
 							var AllIepGoals = mapper.Goals.ToList();
+							foreach (var goal in AllIepGoals)
+							{
+								worksheet.Range["A8:BE20"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["A8:BE20"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["A11:J11"].Merge();
+								worksheet.Range["A11:J11"].Text = "Goal Area:";
+								worksheet.Range["A11:J11"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+								worksheet.Range["A11:J11"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+								worksheet.Range["L11:AC11"].Merge();
+								worksheet.Range["L11:AC11"].Text = goal.AreaName == null ? "" : goal.AreaName;
+								worksheet.Range["L11:AC10"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+								worksheet.Range["AD11:AM11"].Merge();
+								worksheet.Range["AD11:AM11"].Text = "Strand#";
+								worksheet.Range["AD11:AM11"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+								worksheet.Range["AD11:AM11"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+								worksheet.Range["AO11:BE11"].Merge();
+								worksheet.Range["AO11:BE11"].Text = goal.StrandName == null ? "" : goal.StrandName;
+								worksheet.Range["AO11:BE10"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+							}
 
 						}
+						#endregion
 
 					}
                     else
@@ -487,7 +535,7 @@ namespace IesSchool.Core.Services
 					//Download the Excel file in the browser
 					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
-					fileStreamResult.FileDownloadName = (iep.StudentName == null ? "" : iep.StudentName + "-PLReport" + ".xlsx");
+					fileStreamResult.FileDownloadName = ("-PLReport" + ".xlsx");
 
 					return fileStreamResult;
 				}

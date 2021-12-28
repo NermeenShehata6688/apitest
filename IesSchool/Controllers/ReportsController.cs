@@ -35,7 +35,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _reportService.LpReport(iepId);
+                var all = _reportService.IepLpReport(iepId);
                 return all;
             }
             catch (Exception)
