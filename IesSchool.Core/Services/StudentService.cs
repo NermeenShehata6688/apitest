@@ -435,7 +435,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var cmd = $"delete from StudentAttachment where Id={studentAttachmentId}";
+                var cmd = $"delete from StudentAttachment where Id={studentAttachmentId}" +
+                    $"delete from StudentAttachmentBinary where Id={studentAttachmentId}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 return new ResponseDto { Status = 1, Message = "Student Attachment Deleted Seccessfuly" };
             }
