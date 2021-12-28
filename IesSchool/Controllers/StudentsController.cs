@@ -202,7 +202,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var modelData = JsonConvert.DeserializeObject<StudentAttachmentDto>(Request.Form["student"]);
+                var modelData = JsonConvert.DeserializeObject<StudentAttachmentDto>(Request.Form["studentAttachment"]);
                 var file = Request.Form.Files[0];
                 var all = _studentService.AddStudentAttachment(file, modelData);
                 return Ok(all);
