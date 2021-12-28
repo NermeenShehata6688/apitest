@@ -11,6 +11,6 @@ namespace IesSchool.Core.Dto
         public int Id { get; set; }
         public int? Iepid { get; set; }
         public int? ExtraCurricularId { get; set; }
-
+        public string? ExtraCurricularName { get; set; }
     }
 }

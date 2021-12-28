@@ -11,5 +11,6 @@ namespace IesSchool.Core.Dto
         public int Id { get; set; }
         public int? AssistantId { get; set; }
         public int? Iepid { get; set; }
+        public string? AssistantName { get; set; }
     }
 }

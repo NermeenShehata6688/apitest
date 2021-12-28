@@ -31,11 +31,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public FileStreamResult IepLpReport(int iepId)
+        public FileStreamResult LpReport(int iepId)
         {
             try
             {
-                var all = _reportService.IepLpReport(iepId);
+                var all = _reportService.LpReport(iepId);
                 return all;
             }
             catch (Exception)
@@ -43,6 +43,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-
+        [HttpGet]
+        public FileStreamResult IepReport(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepReport(iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

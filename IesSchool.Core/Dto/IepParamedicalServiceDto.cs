@@ -11,5 +11,6 @@ namespace IesSchool.Core.Dto
         public int Id { get; set; }
         public int? Iepid { get; set; }
         public int? ParamedicalServiceId { get; set; }
+        public string? ParamedicalServiceName { get; set; }
     }
 }

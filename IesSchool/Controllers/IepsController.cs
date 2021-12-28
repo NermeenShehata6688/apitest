@@ -394,20 +394,6 @@ namespace IesSchool.Controllers
             }
         }
 
-        [HttpPut]
-        public IActionResult PutIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto)
-        {
-            try
-            {
-                var all = _iepService.EditIepParamedicalService(iepParamedicalServiceDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         [HttpDelete]
         public IActionResult DeleteIepParamedicalService(int iepParamedicalServiceId)
         {
@@ -442,20 +428,6 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iepService.AddIepExtraCurricular(iepExtraCurricularDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpPut]
-        public IActionResult PutIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
-        {
-            try
-            {
-                var all = _iepService.EditIepExtraCurricular(iepExtraCurricularDto);
                 return Ok(all);
             }
             catch (Exception)

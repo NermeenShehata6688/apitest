@@ -120,17 +120,30 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true,null,x=> x.Include(s=> s.IepAssistants)
-                .ThenInclude(s => s.Assistant).Include(s => s.IepParamedicalServices).
-                ThenInclude(s => s.ParamedicalService).Include(s => s.IepExtraCurriculars)
-                .ThenInclude(s => s.ExtraCurricular).Include(s => s.Student).ThenInclude(s => s.Department)
-                .Include(s => s.AcadmicYear)
-                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
-                .ThenInclude(s => s.Skill).ThenInclude(s => s.Strand)
-                .ThenInclude(s => s.Area)
-                );
-                var mapper = _mapper.Map<GetIepDto>(iep);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                if (iepId!=0)
+                {
+                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
+               .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
+               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
+               .Include(s => s.Student).ThenInclude(s => s.Department)
+               .Include(s => s.Teacher)
+               .Include(s => s.HeadOfDepartmentNavigation)
+               .Include(s => s.HeadOfEducationNavigation)
+               .Include(s => s.AcadmicYear)
+               .Include(s => s.Term)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+               .Include(s => s.Goals).ThenInclude(s => s.Strand)
+               .Include(s => s.Goals).ThenInclude(s => s.Area)
+               );
+                    var mapper = _mapper.Map<GetIepDto>(iep);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null"};
+                }
             }
             catch (Exception ex)
             {
@@ -141,13 +154,21 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                iepDto.IsDeleted = false;
-                iepDto.CreatedOn = DateTime.Now;
-                var mapper = _mapper.Map<Iep>(iepDto);
-                _uow.GetRepository<Iep>().Add(mapper);
-                _uow.SaveChanges();
-                iepDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Iep Added  Seccessfuly", Data = iepDto };
+                if (iepDto!=null)
+                {
+                    iepDto.IsDeleted = false;
+                    iepDto.CreatedOn = DateTime.Now;
+                    var mapper = _mapper.Map<Iep>(iepDto);
+                    _uow.GetRepository<Iep>().Add(mapper);
+                    _uow.SaveChanges();
+                    iepDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Iep Added  Seccessfuly", Data = iepDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null"};
+                }
+
             }
             catch (Exception ex)
             {
@@ -158,18 +179,26 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                var mapper = _mapper.Map<Iep>(iepDto);
+                if (iepDto!=null)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    var mapper = _mapper.Map<Iep>(iepDto);
 
-                _uow.GetRepository<Iep>().Update(mapper);
-                _uow.SaveChanges();
+                    _uow.GetRepository<Iep>().Update(mapper);
+                    _uow.SaveChanges();
 
-                transaction.Commit();
+                    transaction.Commit();
 
-                iepDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Iep Updated Seccessfuly", Data = iepDto };
+                    iepDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Iep Updated Seccessfuly", Data = iepDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+
             }
             catch (Exception ex)
             {
@@ -180,13 +209,20 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                Iep oIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                oIep.IsDeleted = true;
-                oIep.DeletedOn = DateTime.Now;
+                if (iepId != 0)
+                {
+                    Iep oIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
+                    oIep.IsDeleted = true;
+                    oIep.DeletedOn = DateTime.Now;
 
-                _uow.GetRepository<Iep>().Update(oIep);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Iep Deleted Seccessfuly" };
+                    _uow.GetRepository<Iep>().Update(oIep);
+                    _uow.SaveChanges();
+                    return new ResponseDto { Status = 1, Message = "Iep Deleted Seccessfuly" };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -197,11 +233,19 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                iep.Status = status;
-                _uow.GetRepository<Iep>().Update(iep);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Iep Status Has Changed" };
+                if (iepId != 0)
+                {
+                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
+                    iep.Status = status;
+                    _uow.GetRepository<Iep>().Update(iep);
+                    _uow.SaveChanges();
+                    return new ResponseDto { Status = 1, Message = "Iep Status Has Changed" };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+
             }
             catch (Exception ex)
             {
@@ -212,11 +256,18 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                iep.IsPublished = isPublished;
-                _uow.GetRepository<Iep>().Update(iep);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Iep Is Published Status Has Changed" };
+                if (iepId != 0)
+                {
+                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
+                    iep.IsPublished = isPublished;
+                    _uow.GetRepository<Iep>().Update(iep);
+                    _uow.SaveChanges();
+                    return new ResponseDto { Status = 1, Message = "Iep Is Published Status Has Changed" };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -266,9 +317,16 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills));
-                var mapper = _mapper.Map<GetGoalDto>(goal);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                if (goalId!=0)
+                {
+                    var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills));
+                    var mapper = _mapper.Map<GetGoalDto>(goal);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
             }
             catch (Exception ex)
             {
@@ -279,27 +337,34 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                goalDto.IsDeleted = false;
-                goalDto.CreatedOn = DateTime.Now;
-                if (goalDto.Objectives!=null)
+                if (goalDto!=null)
                 {
-                    foreach (var objective in goalDto.Objectives)
+                    goalDto.IsDeleted = false;
+                    goalDto.CreatedOn = DateTime.Now;
+                    if (goalDto.Objectives != null)
                     {
-                        objective.IsDeleted = false;
-                        objective.CreatedOn = DateTime.Now;
-
-                        if (objective.Activities != null && objective.Activities.Count() > 2)
+                        foreach (var objective in goalDto.Objectives)
                         {
-                            var obj = _mapper.Map<Objective>(objective);
-                            objective.IsMasterd = ObjectiveIsMasterd(obj);
+                            objective.IsDeleted = false;
+                            objective.CreatedOn = DateTime.Now;
+
+                            if (objective.Activities != null && objective.Activities.Count() > 2)
+                            {
+                                var obj = _mapper.Map<Objective>(objective);
+                                objective.IsMasterd = ObjectiveIsMasterd(obj);
+                            }
                         }
                     }
+                    var mapper = _mapper.Map<Goal>(goalDto);
+                    _uow.GetRepository<Goal>().Add(mapper);
+                    _uow.SaveChanges();
+                    goalDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Goal Added  Seccessfuly", Data = goalDto };
                 }
-                var mapper = _mapper.Map<Goal>(goalDto);
-                _uow.GetRepository<Goal>().Add(mapper);
-                _uow.SaveChanges();
-                goalDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Goal Added  Seccessfuly", Data = goalDto };
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -310,70 +375,77 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var mapper = _mapper.Map<Goal>(goalDto);
-                _uow.GetRepository<Goal>().Update(mapper);
-
-                using var transaction = _iesContext.Database.BeginTransaction();
-                if (mapper.Id != 0 && mapper.Objectives != null || _iesContext.Objectives.Where(x => x.GoalId == mapper.Id) != null)///count>0
+                if (goalDto != null)
                 {
-                    if (mapper.Objectives != null)
+                    var mapper = _mapper.Map<Goal>(goalDto);
+                    _uow.GetRepository<Goal>().Update(mapper);
+
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    if (mapper.Id != 0 && mapper.Objectives != null || _iesContext.Objectives.Where(x => x.GoalId == mapper.Id) != null)///count>0
                     {
-                    //// delete old Objectives Ids which are not in edited goal
-                        var newObjInt = mapper.Objectives.Select(x => x.Id);
-                        _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == mapper.Id));
-                        _iesContext.SaveChanges();
-                        var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == mapper.Id).ToList();
-                        if (oldObjAfterDel.Count()>0)
+                        if (mapper.Objectives != null)
                         {
-                            foreach (var newObj in mapper.Objectives.ToList())
+                            //// delete old Objectives Ids which are not in edited goal
+                            var newObjInt = mapper.Objectives.Select(x => x.Id);
+                            _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == mapper.Id));
+                            _iesContext.SaveChanges();
+                            var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == mapper.Id).ToList();
+                            if (oldObjAfterDel.Count() > 0)
                             {
-                                if ((newObj.ObjectiveSkills == null|| newObj.ObjectiveSkills.Count==0) && newObj.Id != 0)  /// deit obj  and delete all skills
+                                foreach (var newObj in mapper.Objectives.ToList())
                                 {
-                                    var listofobskills = _iesContext.ObjectiveSkills.Where(x => x.ObjectiveId == newObj.Id);
-                                    _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
-                                    _iesContext.SaveChanges();
-                                }
-                                if ((newObj.ObjectiveSkills != null|| newObj.ObjectiveSkills.Count!=0) && newObj.Id != 0)  /// deit obj  and edit all skills
-                                {
-                                    var newObjSkillsInt = newObj.ObjectiveSkills.Select(o => o.Id).ToList();
-                                    if (newObjSkillsInt.Count() > 0)
+                                    if ((newObj.ObjectiveSkills == null || newObj.ObjectiveSkills.Count == 0) && newObj.Id != 0)  /// deit obj  and delete all skills
                                     {
-                                        var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
+                                        var listofobskills = _iesContext.ObjectiveSkills.Where(x => x.ObjectiveId == newObj.Id);
                                         _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
                                         _iesContext.SaveChanges();
                                     }
-                                }
-                                if ((newObj.ObjectiveEvaluationProcesses == null|| newObj.ObjectiveEvaluationProcesses.Count==0) && newObj.Id != 0)  /// deit obj  and delete all Evaluation
-                                {
-                                    var lisObEvaluationProcesses = _iesContext.ObjectiveEvaluationProcesses.Where(x => x.ObjectiveId == newObj.Id).ToList();
-                                    _iesContext.ObjectiveEvaluationProcesses.RemoveRange(lisObEvaluationProcesses);
-                                    _iesContext.SaveChanges();
-                                }
-                                if ((newObj.ObjectiveEvaluationProcesses != null|| newObj.ObjectiveEvaluationProcesses.Count()!=0) && newObj.Id != 0)  /// deit obj  and edit all Evaluation
-                                {
-                                    var newObjEvalProcessesInt = newObj.ObjectiveEvaluationProcesses.Select(o => o.Id).ToList();
-                                    if (newObjEvalProcessesInt.Count() > 0)
+                                    if ((newObj.ObjectiveSkills != null || newObj.ObjectiveSkills.Count != 0) && newObj.Id != 0)  /// deit obj  and edit all skills
                                     {
-                                        var listofEvaluations = _iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalProcessesInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
-                                        _iesContext.ObjectiveEvaluationProcesses.RemoveRange(listofEvaluations);
+                                        var newObjSkillsInt = newObj.ObjectiveSkills.Select(o => o.Id).ToList();
+                                        if (newObjSkillsInt.Count() > 0)
+                                        {
+                                            var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
+                                            _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
+                                            _iesContext.SaveChanges();
+                                        }
+                                    }
+                                    if ((newObj.ObjectiveEvaluationProcesses == null || newObj.ObjectiveEvaluationProcesses.Count == 0) && newObj.Id != 0)  /// deit obj  and delete all Evaluation
+                                    {
+                                        var lisObEvaluationProcesses = _iesContext.ObjectiveEvaluationProcesses.Where(x => x.ObjectiveId == newObj.Id).ToList();
+                                        _iesContext.ObjectiveEvaluationProcesses.RemoveRange(lisObEvaluationProcesses);
                                         _iesContext.SaveChanges();
                                     }
-                                 }
+                                    if ((newObj.ObjectiveEvaluationProcesses != null || newObj.ObjectiveEvaluationProcesses.Count() != 0) && newObj.Id != 0)  /// deit obj  and edit all Evaluation
+                                    {
+                                        var newObjEvalProcessesInt = newObj.ObjectiveEvaluationProcesses.Select(o => o.Id).ToList();
+                                        if (newObjEvalProcessesInt.Count() > 0)
+                                        {
+                                            var listofEvaluations = _iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalProcessesInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
+                                            _iesContext.ObjectiveEvaluationProcesses.RemoveRange(listofEvaluations);
+                                            _iesContext.SaveChanges();
+                                        }
+                                    }
+                                }
                             }
                         }
+                        else
+                        {
+                            _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => x.GoalId == mapper.Id));
+                            _iesContext.SaveChanges();
+                        }
                     }
-                    else
-                    {
-                        _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => x.GoalId == mapper.Id));
-                        _iesContext.SaveChanges();
-                    }
-                }
-                //_uow.GetRepositoryAsync<Goal>().UpdateAsync(mapper);
-                _uow.SaveChanges();
-                transaction.Commit();
+                    //_uow.GetRepositoryAsync<Goal>().UpdateAsync(mapper);
+                    _uow.SaveChanges();
+                    transaction.Commit();
 
-                goalDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
+                    goalDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -384,12 +456,19 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from Goals where Id={goalId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                transaction.Commit();
+                if (goalId!=0)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from Goals where Id={goalId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    transaction.Commit();
 
-                return new ResponseDto { Status = 1, Message = "Goal Deleted Seccessfuly" };
+                    return new ResponseDto { Status = 1, Message = "Goal Deleted Seccessfuly" };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -427,17 +506,24 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                objectiveDto.IsDeleted = false;
-                objectiveDto.CreatedOn = DateTime.Now;
-                var mapper = _mapper.Map<Objective>(objectiveDto);
-                if (objectiveDto.Activities != null && objectiveDto.Activities.Count() > 2)
+                if (objectiveDto!=null)
                 {
-                    mapper.IsMasterd = ObjectiveIsMasterd(mapper);
+                    objectiveDto.IsDeleted = false;
+                    objectiveDto.CreatedOn = DateTime.Now;
+                    var mapper = _mapper.Map<Objective>(objectiveDto);
+                    if (objectiveDto.Activities != null && objectiveDto.Activities.Count() > 2)
+                    {
+                        mapper.IsMasterd = ObjectiveIsMasterd(mapper);
+                    }
+                    _uow.GetRepository<Objective>().Add(mapper);
+                    _uow.SaveChanges();
+                    objectiveDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Objective Added  Seccessfuly", Data = objectiveDto };
                 }
-                _uow.GetRepository<Objective>().Add(mapper);
-                _uow.SaveChanges();
-                objectiveDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Objective Added  Seccessfuly", Data = objectiveDto };
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -448,34 +534,41 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from Objective_EvaluationProcess where ObjectiveId ={objectiveDto.Id}" +
-                    $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-
-                if (objectiveDto.Activities!=null)
+                if (objectiveDto != null)
                 {
-                    var listint = objectiveDto.Activities.Select(x => x.Id);
-                    _iesContext.Activities.RemoveRange(_iesContext.Activities.Where(x => !listint.Contains(x.Id) && x.ObjectiveId == objectiveDto.Id));
-                    _uow.SaveChanges();
-                }
-               
-                var mapper = _mapper.Map<Objective>(objectiveDto);
-               
-                _uow.GetRepository<Objective>().Update(mapper);
-                _uow.SaveChanges();
-                objectiveDto.Id = mapper.Id;
-                transaction.Commit();
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from Objective_EvaluationProcess where ObjectiveId ={objectiveDto.Id}" +
+                        $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
 
-                //check if object isMasterd
-                var newObjective = _uow.GetRepository<Objective>().Single(x => x.Id == mapper.Id && x.IsDeleted != true, null, x => x.Include(s => s.Activities));
-                if (newObjective!=null && newObjective.Activities.Count()>2)
-                {
-                    newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
+                    if (objectiveDto.Activities != null)
+                    {
+                        var listint = objectiveDto.Activities.Select(x => x.Id);
+                        _iesContext.Activities.RemoveRange(_iesContext.Activities.Where(x => !listint.Contains(x.Id) && x.ObjectiveId == objectiveDto.Id));
+                        _uow.SaveChanges();
+                    }
+
+                    var mapper = _mapper.Map<Objective>(objectiveDto);
+
                     _uow.GetRepository<Objective>().Update(mapper);
                     _uow.SaveChanges();
+                    objectiveDto.Id = mapper.Id;
+                    transaction.Commit();
+
+                    //check if object isMasterd
+                    var newObjective = _uow.GetRepository<Objective>().Single(x => x.Id == mapper.Id && x.IsDeleted != true, null, x => x.Include(s => s.Activities));
+                    if (newObjective != null && newObjective.Activities.Count() > 2)
+                    {
+                        newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
+                        _uow.GetRepository<Objective>().Update(mapper);
+                        _uow.SaveChanges();
+                    }
+                    return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveDto };
                 }
-                return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveDto };
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -486,12 +579,19 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from Objective where Id={objectiveId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                transaction.Commit();
+                if (objectiveId!=0)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from Objective where Id={objectiveId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    transaction.Commit();
+                    return new ResponseDto { Status = 1, Message = "Objective Deleted Seccessfuly" };
+                }
 
-                return new ResponseDto { Status = 1, Message = "Objective Deleted Seccessfuly" };
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -581,11 +681,18 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var mapper = _mapper.Map<Activity>(activityDto);
-                _uow.GetRepository<Activity>().Add(mapper);
-                _uow.SaveChanges();
-                activityDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Activity Added  Seccessfuly", Data = activityDto };
+                if (activityDto != null)
+                {
+                    var mapper = _mapper.Map<Activity>(activityDto);
+                    _uow.GetRepository<Activity>().Add(mapper);
+                    _uow.SaveChanges();
+                    activityDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Activity Added  Seccessfuly", Data = activityDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -596,11 +703,18 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var mapper = _mapper.Map<Activity>(activityDto);
-                _uow.GetRepository<Activity>().Update(mapper);
-                _uow.SaveChanges();
-                activityDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Activity Updated Seccessfuly", Data = activityDto };
+                if (activityDto != null)
+                {
+                    var mapper = _mapper.Map<Activity>(activityDto);
+                    _uow.GetRepository<Activity>().Update(mapper);
+                    _uow.SaveChanges();
+                    activityDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Activity Updated Seccessfuly", Data = activityDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
             }
             catch (Exception ex)
             {
@@ -611,9 +725,17 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var cmd = $"delete from Activities where Id={activityId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                return new ResponseDto { Status = 1, Message = "Activity Deleted Seccessfuly" };
+                if (activityId>0)
+                {
+                    var cmd = $"delete from Activities where Id={activityId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    return new ResponseDto { Status = 1, Message = "Activity Deleted Seccessfuly" };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+
             }
             catch (Exception ex)
             {

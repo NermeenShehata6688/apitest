@@ -198,12 +198,13 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostStudentAttachment( StudentAttachmentDto studentAttachmentDto)
+        public IActionResult PostStudentAttachment()
         {
             try
             {
+                var modelData = JsonConvert.DeserializeObject<StudentAttachmentDto>(Request.Form["student"]);
                 var file = Request.Form.Files[0];
-                var all = _studentService.AddStudentAttachment(file,studentAttachmentDto);
+                var all = _studentService.AddStudentAttachment(file, modelData);
                 return Ok(all);
             }
             catch (Exception)
