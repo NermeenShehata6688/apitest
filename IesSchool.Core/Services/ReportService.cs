@@ -380,7 +380,8 @@ namespace IesSchool.Core.Services
 					.Include(x => x.HeadOfDepartmentNavigation)
 					.Include(x => x.HeadOfEducationNavigation)
 					.Include(x => x.IepExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-					.Include(x => x.IepParamedicalServices).ThenInclude(x => x.ParamedicalService).Include(x => x.IepAssistants));
+					.Include(x => x.IepParamedicalServices).ThenInclude(x => x.ParamedicalService)
+					.Include(x => x.IepAssistants).ThenInclude(x => x.Assistant));
 					var mapper = _mapper.Map<GetIepDto>(iep);
 						
 					IWorkbook workbook = application.Workbooks.Create(0);
@@ -512,12 +513,16 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A5:R5"].Merge();
 						worksheet.Range["A5:R5"].Text = "People involved in setting up IEP:";
 						worksheet.Range["A5:R5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
-                        //if (iep.iepass)
-                        //{
-
-                        //}
-						worksheet.Range["S5:BE5"].Merge();
+                        if (iep.IepAssistants!=null && iep.IepAssistants.Count()>0)
+                        {
+							var iepAssistants = iep.IepAssistants.ToList().Select(x => (x.Assistant == null ? "" : x.Assistant.Name)).ToArray();
+							worksheet.Range["S5:BE5"].Text =  string.Join(Environment.NewLine, iepAssistants);
+						}
+                        else
+                        {
 						worksheet.Range["S5:BE5"].Text = iepTeacherName;
+						}
+						worksheet.Range["S5:BE5"].Merge();
 
 						worksheet.Range["A6:BE6"].Merge();
 						worksheet.Range["A6:BE6"].Text = "General Current Level Achievement and Functional Performance";
