@@ -415,7 +415,7 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
 						worksheet.Range["A2:AH2"].Merge();
 						worksheet.Range["A2:AH2"].Text = "LESSON PLAN (LP)";
-						worksheet.Range["A2:AH2"].CellStyle.Color = Color.FromArgb(253, 246, 153);
+						worksheet.Range["A2:AH2"].CellStyle.Color = Color.FromArgb(255, 236, 175);
 						worksheet.Range["AI2:AL2"].Merge();
 						worksheet.Range["AI2:AL2"].Text = "YEAR:";
 						worksheet.Range["AI2:AL2"].CellStyle.Color = Color.FromArgb(255, 205, 205);

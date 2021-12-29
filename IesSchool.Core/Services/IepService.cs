@@ -86,30 +86,31 @@ namespace IesSchool.Core.Services
                 {
                     allIeps = allIeps.Where(x => x.Status == iepSearchDto.Status);
                 }
-                if (iepSearchDto.RoomNumber != null)
-                {
-                    allIeps = allIeps.Where(x => x.RoomNumber.ToString().Contains(iepSearchDto.RoomNumber.ToString()));
-                }
                 if (iepSearchDto.IsPublished != null)
                 {
                     allIeps = allIeps.Where(x => x.IsPublished == iepSearchDto.IsPublished);
-                }
-                if (iepSearchDto.StudentNameAr != null)
-                {
-                    allIeps = allIeps.Where(x => x.StudentNameAr.Contains(iepSearchDto.StudentNameAr));
-                }
-                if (iepSearchDto.StudentName != null)
-                {
-                    allIeps = allIeps.Where(x => x.StudentName.Contains(iepSearchDto.StudentName));
-                }
-                if (iepSearchDto.StudentCode != null)
-                {
-                    allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains(iepSearchDto.StudentCode.ToString()));
                 }
                 if (iepSearchDto.Department_Id != null)
                 {
                     allIeps = allIeps.Where(x => x.Department_Id == iepSearchDto.Department_Id);
                 }
+                //if (iepSearchDto.RoomNumber != null)
+                //{
+                //    allIeps = allIeps.Where(x => x.RoomNumber.ToString().Contains(iepSearchDto.RoomNumber.ToString()));
+                //}
+                //if (iepSearchDto.StudentNameAr != null)
+                //{
+                //    allIeps = allIeps.Where(x => x.StudentNameAr.Contains(iepSearchDto.StudentNameAr));
+                //}
+                //if (iepSearchDto.StudentName != null)
+                //{
+                //    allIeps = allIeps.Where(x => x.StudentName.Contains(iepSearchDto.StudentName));
+                //}
+                //if (iepSearchDto.StudentCode != null)
+                //{
+                //    allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains(iepSearchDto.StudentCode.ToString()));
+                //}
+              
 
                 var lstIepDto = _mapper.Map<List<VwIepDto>>(allIeps);
                 var mapper = new PaginateDto<VwIepDto> { Count = allIeps.Count(), Items = lstIepDto != null ? lstIepDto.Skip(iepSearchDto.Index ??= 0).Take(iepSearchDto.PageSize ??= 20).ToList() : lstIepDto.ToList() };
