@@ -143,7 +143,9 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.Area, op => op.Ignore())
              .ForMember(x => x.Strand, op => op.Ignore())
              .ForMember(x => x.Skill, op => op.Ignore());
-             //.ForMember(x => x.Objectives, op => op.Ignore());
+            //.ForMember(x => x.Objectives, op => op.Ignore());
+            CreateMap<Paginate<Goal>, Paginate<GoalDto>>().ReverseMap();
+
 
             CreateMap<Goal, GetGoalDto>()
             .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Area == null ? "" : c.Area.Name))

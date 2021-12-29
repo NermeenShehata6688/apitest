@@ -43,6 +43,11 @@ namespace IesSchool.Core.Dto
         public int Index { get; set; }
         public int PageSize { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public int? Student_Id { get; set; }
+        public int? AcadmicYear_Id { get; set; }
+        public int? Department_Id { get; set; }
+        public int? Teacher_Id { get; set; }
+        public int? Term_Id { get; set; }
 
     }
 }

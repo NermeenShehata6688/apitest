@@ -41,5 +41,10 @@ namespace IesSchool.Context.Models
         public string? TermName { get; set; }
         public string? AcadmicYearName { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public int? Student_Id { get; set; }
+        public int? AcadmicYear_Id { get; set; }
+        public int? Department_Id { get; set; }
+        public int? Teacher_Id { get; set; }
+        public int? Term_Id { get; set; }
     }
 }

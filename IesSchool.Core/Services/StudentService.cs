@@ -195,7 +195,7 @@ namespace IesSchool.Core.Services
                     studentDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{studentDto.Image}";
                 }
                 var mapper = _mapper.Map<Student>(studentDto);
-
+                mapper.IsDeleted = false;
                 _uow.GetRepository<Student>().Update(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();

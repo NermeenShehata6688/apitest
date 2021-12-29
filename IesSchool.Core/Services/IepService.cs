@@ -58,17 +58,21 @@ namespace IesSchool.Core.Services
             {
                 var allIeps = _uow.GetRepository<VwIep>().Query("select * from Vw_Ieps where IsDeleted != 1");
 
-                if (iepSearchDto.AcadmicYearId != null)
+                if (iepSearchDto.Student_Id != null)
                 {
-                    allIeps = allIeps.Where(x => x.AcadmicYearId == iepSearchDto.AcadmicYearId);
+                    allIeps = allIeps.Where(x => x.Student_Id == iepSearchDto.Student_Id);
                 }
-                if (iepSearchDto.TermId != null)
+                if (iepSearchDto.AcadmicYear_Id != null)
                 {
-                    allIeps = allIeps.Where(x => x.TermId == iepSearchDto.TermId);
+                    allIeps = allIeps.Where(x => x.AcadmicYear_Id == iepSearchDto.AcadmicYear_Id);
                 }
-                if (iepSearchDto.TeacherId != null)
+                if (iepSearchDto.Term_Id != null)
                 {
-                    allIeps = allIeps.Where(x => x.TeacherId == iepSearchDto.TeacherId);
+                    allIeps = allIeps.Where(x => x.Term_Id == iepSearchDto.Term_Id);
+                }
+                if (iepSearchDto.Teacher_Id != null)
+                {
+                    allIeps = allIeps.Where(x => x.Teacher_Id == iepSearchDto.Teacher_Id);
                 }
                 if (iepSearchDto.HeadOfDepartment != null)
                 {
@@ -102,9 +106,9 @@ namespace IesSchool.Core.Services
                 {
                     allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains(iepSearchDto.StudentCode.ToString()));
                 }
-                if (iepSearchDto.DepartmentId != null)
+                if (iepSearchDto.Department_Id != null)
                 {
-                    allIeps = allIeps.Where(x => x.DepartmentId == iepSearchDto.DepartmentId);
+                    allIeps = allIeps.Where(x => x.Department_Id == iepSearchDto.Department_Id);
                 }
 
                 var lstIepDto = _mapper.Map<List<VwIepDto>>(allIeps);

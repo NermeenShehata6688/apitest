@@ -1178,7 +1178,7 @@ namespace IesSchool.Context.Models
             {
                 entity.HasNoKey();
 
-                entity.ToView("Vw_Ieps");
+                entity.Property(e => e.AcadmicYear_Id).HasColumnName("AcadmicYear_Id");
 
                 entity.Property(e => e.AcadmicYearName).HasMaxLength(255);
 
@@ -1186,24 +1186,33 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
+                entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
+
                 entity.Property(e => e.DateOfPreparation).HasColumnType("datetime");
 
                 entity.Property(e => e.DeletedBy).HasMaxLength(500);
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
+                entity.Property(e => e.Department_Id).HasColumnName("Department_Id");
+
                 entity.Property(e => e.DepartmentName).HasMaxLength(255);
 
                 entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
+
+                entity.Property(e => e.Student_Id).HasColumnName("Student_Id");
 
                 entity.Property(e => e.StudentName).HasMaxLength(500);
 
                 entity.Property(e => e.StudentNameAr).HasMaxLength(500);
 
+                entity.Property(e => e.Teacher_Id).HasColumnName("Teacher_Id");
+
                 entity.Property(e => e.TeacherName).HasMaxLength(1000);
 
+                entity.Property(e => e.Term_Id).HasColumnName("Term_Id");
+
                 entity.Property(e => e.TermName).HasMaxLength(255);
-                entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VwStudent>(entity =>
