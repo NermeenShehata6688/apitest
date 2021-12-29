@@ -114,7 +114,9 @@ namespace IesSchool.Core.Services
               
 
                 var lstIepDto = _mapper.Map<List<VwIepDto>>(allIeps);
-                var mapper = new PaginateDto<VwIepDto> { Count = allIeps.Count(), Items = lstIepDto != null ? lstIepDto.Skip(iepSearchDto.Index ??= 0).Take(iepSearchDto.PageSize ??= 20).ToList() : lstIepDto.ToList() };
+                var mapper = new PaginateDto<VwIepDto> { Count = allIeps.Count(), Items = lstIepDto != null ? lstIepDto.Skip(iepSearchDto.Index == null || iepSearchDto.PageSize == null ? 0 : ((iepSearchDto.Index.Value - 1) * iepSearchDto.PageSize.Value)).Take(iepSearchDto.PageSize ??= 20).ToList() : lstIepDto.ToList() };
+
+                //var mapper = new PaginateDto<VwIepDto> { Count = allIeps.Count(), Items = lstIepDto != null ? lstIepDto.Skip(iepSearchDto.Index ??= 0).Take(iepSearchDto.PageSize ??= 20).ToList() : lstIepDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)

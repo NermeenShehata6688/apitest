@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IesSchool.Context.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace IesSchool.Core.Dto
         public int Id { get; set; }
         public int? SkillEvaluationId { get; set; }
         public int? ObjectiveId { get; set; }
+        public virtual SkillEvaluation? SkillEvaluation { get; set; }
+
     }
 }
