@@ -1177,6 +1177,7 @@ namespace IesSchool.Context.Models
             modelBuilder.Entity<VwIep>(entity =>
             {
                 entity.HasNoKey();
+                entity.ToView("Vw_Ieps");
 
                 entity.Property(e => e.AcadmicYear_Id).HasColumnName("AcadmicYear_Id");
 
