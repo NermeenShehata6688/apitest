@@ -129,13 +129,17 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap();
             CreateMap<IepExtraCurricular, IepExtraCurricularDto>()
             .ForMember(dist => dist.ExtraCurricularName, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" : c.ExtraCurricular.Name))
-            .ReverseMap();
+            .ReverseMap()
+             .ForMember(x => x.ExtraCurricular, op => op.Ignore());
+
             CreateMap<IepParamedicalService, IepParamedicalServiceDto>()
             .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))
             .ReverseMap()
              .ForMember(x => x.ParamedicalService, op => op.Ignore()); 
             CreateMap<Paginate<Objective>, Paginate<ObjectiveDto>>().ReverseMap();
-            CreateMap<Paginate<IepParamedicalService>, Paginate<IepParamedicalServiceDto>>().ReverseMap();
+            CreateMap<Paginate<IepParamedicalService>, Paginate<IepParamedicalServiceDto>>()
+                //.ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))
+            .ReverseMap();
             CreateMap<Paginate<IepExtraCurricular>, Paginate<IepExtraCurricularDto>>().ReverseMap();
 
 
