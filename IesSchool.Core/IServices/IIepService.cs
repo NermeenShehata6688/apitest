@@ -40,13 +40,13 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteActivity(int activityId);
 
         public ResponseDto GetIepParamedicalServices();
-        public ResponseDto GetIepParamedicalServiceById(int iepParamedicalServiceId);
+        public ResponseDto GetIepParamedicalServiceByIepId(int iepId);
         public ResponseDto AddIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto);
         public ResponseDto EditIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto);
         public ResponseDto DeleteIepParamedicalService(int iepParamedicalServiceId);
 
         public ResponseDto GetIepExtraCurriculars(); 
-        public ResponseDto GetIepExtraCurricularById(int iepExtraCurricularId);
+        public ResponseDto GetIepExtraCurricularByIepId(int iepId);
         public ResponseDto AddIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
         public ResponseDto EditIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
         public ResponseDto DeleteIepExtraCurricular(int iepExtraCurricularId);

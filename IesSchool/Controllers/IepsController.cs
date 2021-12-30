@@ -367,11 +367,11 @@ namespace IesSchool.Controllers
         }
         
         [HttpGet]
-        public IActionResult GetIepParamedicalServiceById(int iepParamedicalServiceId)
+        public IActionResult GetIepParamedicalServiceByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepParamedicalServiceById(iepParamedicalServiceId);
+                var all = _iepService.GetIepParamedicalServiceByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -409,11 +409,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetIepExtraCurricularById(int iepExtraCurricularId)
+        public IActionResult GetIepExtraCurricularByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepExtraCurricularById(iepExtraCurricularId);
+                var all = _iepService.GetIepExtraCurricularByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)

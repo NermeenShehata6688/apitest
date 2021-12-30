@@ -772,12 +772,12 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIepParamedicalServiceById(int iepParamedicalServiceId)
+        public ResponseDto GetIepParamedicalServiceByIepId(int iepId)
         {
             try
             {
-                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().Single(x => x.Id == iepParamedicalServiceId);
-                var mapper = _mapper.Map<IepParamedicalServiceDto>(iepParamedicalService);
+                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId);
+                var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalService);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -842,12 +842,12 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIepExtraCurricularById(int iepExtraCurricularId)
+        public ResponseDto GetIepExtraCurricularByIepId(int iepId)
         {
             try
             {
-                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().Single(x => x.Id == iepExtraCurricularId);
-                var mapper = _mapper.Map<IepExtraCurricularDto>(iepExtraCurricular);
+                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId);
+                var mapper = _mapper.Map < PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
