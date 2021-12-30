@@ -776,7 +776,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId);
+                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId,null, x=> x.Include(x=>x.ParamedicalService));
                 var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalService);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
