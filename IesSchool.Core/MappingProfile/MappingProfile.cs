@@ -135,6 +135,9 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap()
              .ForMember(x => x.ParamedicalService, op => op.Ignore()); 
             CreateMap<Paginate<Objective>, Paginate<ObjectiveDto>>().ReverseMap();
+            CreateMap<Paginate<IepParamedicalService>, Paginate<IepParamedicalServiceDto>>().ReverseMap();
+            CreateMap<Paginate<IepExtraCurricular>, Paginate<IepExtraCurricularDto>>().ReverseMap();
+
 
 
             CreateMap<Goal, GoalDto>()
