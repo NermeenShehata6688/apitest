@@ -149,7 +149,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
                .Include(s => s.Goals).ThenInclude(s => s.Strand)
                .Include(s => s.Goals).ThenInclude(s => s.Area)
                );
