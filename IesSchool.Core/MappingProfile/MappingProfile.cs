@@ -181,7 +181,9 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(x => x.Goal, op => op.Ignore());
 
               
-            CreateMap<ObjectiveEvaluationProcess, ObjectiveEvaluationProcessDto>().ReverseMap();
+            CreateMap<ObjectiveEvaluationProcess, ObjectiveEvaluationProcessDto>()
+            .ForMember(x => x.SkillEvaluation, op => op.Ignore()).ReverseMap(); ;
+
             CreateMap<ObjectiveSkill, ObjectiveSkillDto>().ReverseMap();
 
             CreateMap<Activity, ActivityDto>()

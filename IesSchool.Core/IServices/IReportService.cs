@@ -11,7 +11,8 @@ namespace IesSchool.Core.IServices
     public interface IReportService
     {
         public ResponseDto GetReporstHelper();
-        public FileStreamResult IepLpReport(int iepId);
-        public FileStreamResult IepReport(int iepId);
+        public FileStreamResult IepLpReport(int iepId); 
+        public FileStreamResult IepReport(int iepId); 
+        public FileStreamResult BCPReport(); 
     }
 }

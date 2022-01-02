@@ -955,5 +955,108 @@ namespace IesSchool.Core.Services
 				throw;
 			}
 		}
-    }
+		public FileStreamResult BCPReport()
+		{
+			try
+			{
+				using (ExcelEngine excelEngine = new ExcelEngine())
+				{
+					IApplication application = excelEngine.Excel;
+					application.DefaultVersion = ExcelVersion.Excel2016;
+					int lastRow = 1;
+					int lastCulumn = 1;
+
+					
+
+					IWorkbook workbook = application.Workbooks.Create(0);
+					IWorksheet worksheet;
+					string studentName = "";
+					worksheet = workbook.Worksheets.Create("nn");
+
+					#region General
+					worksheet.IsGridLinesVisible = true;
+					worksheet.Range["A1:BS1"].ColumnWidth = 2;
+					worksheet.Range["A1"].RowHeight = 17;
+
+
+					#endregion
+					//lastCulumn = worksheet.Columns.Length;
+					worksheet.Range["A1:BS1"].Merge();
+					worksheet.Range["A1:BS1"].Text = "IDEAL EDUCATION SCHOOL";
+
+					worksheet.Range["A2:BS2"].Merge();
+					worksheet.Range["A2:BS2"].Text = "BCP Profile";
+					worksheet.Range["A2:BS2"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+					worksheet.Range["A3:BS3"].Merge();
+					worksheet.Range["A3:BS3"].Text = "Student Name";
+
+					worksheet.Range["A4:BS4"].Merge();
+					worksheet.Range["A4:BS4"].Text = "Level";
+					worksheet.Range["A4:BS4"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+					worksheet.Range["A5:M5"].Merge();
+					worksheet.Range["A5:M5"].Text = "Area/Strand";
+					worksheet.Range["A5:M5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+					worksheet.Range["N5:BS5"].Merge();
+					worksheet.Range["N5:BS5"].Text = "Behaviors / Skills";
+					worksheet.Range["N5:BS5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+					var allAreas = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strands.Where(s => s.IsDeleted != true)).ThenInclude(n => n.Skills), 0, 100000, true);
+					lastRow = worksheet.Rows.Length;
+					int noOfAreas = 1;
+                    if (allAreas != null && allAreas.Items.Count()>0)
+                    {
+						foreach (var area in allAreas.Items)
+						{
+							worksheet.Range["A1" + lastRow].Text = noOfAreas.ToString();
+							noOfAreas++;
+						}
+					}
+                   
+
+
+
+					//if (iep != null)
+					//{
+
+
+
+					//Disable gridlines in the worksheet
+
+
+
+
+
+					//}
+					//else
+					//{
+					//	MemoryStream stream1 = new MemoryStream();
+					//	return new FileStreamResult(stream1, "application/excel");
+					//}
+
+
+					//Saving the Excel to the MemoryStream 
+					MemoryStream stream = new MemoryStream();
+					workbook.SaveAs(stream);
+
+					//Set the position as '0'.
+					stream.Position = 0;
+					//Download the Excel file in the browser
+					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
+
+					fileStreamResult.FileDownloadName = (studentName + "-BCPReport" + ".xlsx");
+
+
+					return fileStreamResult;
+				}
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+	}
 }

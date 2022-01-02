@@ -56,5 +56,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public FileStreamResult BCPReport()
+        {
+            try
+            {
+                var all = _reportService.BCPReport();
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
