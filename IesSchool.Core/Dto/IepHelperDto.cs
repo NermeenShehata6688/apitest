@@ -22,6 +22,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
         public IPaginate<ExtraCurricular> AllExtraCurriculars { get; set; }
         public IPaginate<Department> AllDepartments { get; set; }
+        public IPaginate<SkillEvaluation> AllSkillEvaluations { get; set; }
         public Setting Setting { get; set; }
 
     }
@@ -39,6 +40,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<ParamedicalServiceDto> AllParamedicalServices { get; set; }
         public PaginateDto<ExtraCurricularDto> AllExtraCurriculars { get; set; }
         public PaginateDto<DepartmentDto> AllDepartments { get; set; }
+        public PaginateDto<SkillEvaluationDto> AllSkillEvaluations { get; set; }
         public SettingDto Setting { get; set; }
 
 
