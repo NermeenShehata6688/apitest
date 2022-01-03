@@ -109,8 +109,8 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Level).HasColumnName("level");
-
+                entity.Property(e => e.Level).HasColumnName("level"); 
+                //entity.Property(e => e.SkillNumber).HasColumnName("level"); 
                 entity.Property(e => e.NameAr).HasColumnName("Name_Ar");
 
                 entity.Property(e => e.StrandName).HasMaxLength(255);
