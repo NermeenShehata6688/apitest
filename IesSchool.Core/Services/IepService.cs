@@ -847,7 +847,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId);
+                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId,null, x => x.Include(x => x.ExtraCurricular));
                 var mapper = _mapper.Map < PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }

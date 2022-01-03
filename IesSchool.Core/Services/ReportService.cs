@@ -933,7 +933,8 @@ namespace IesSchool.Core.Services
                     worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
                     worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
-					
+
+
 					//Saving the Excel to the MemoryStream 
 					MemoryStream stream = new MemoryStream();
 					workbook.SaveAs(stream);
@@ -1044,8 +1045,8 @@ namespace IesSchool.Core.Services
 									{
                                        int currentCulumn = 14;
                                         for (int i = 0; i < strandSkills.Count; i++)
-                                       
 										{
+											worksheet.Range[(lastRow + 1), (currentCulumn + i)].CellStyle.Font.Size = 9;
 											worksheet.Range[(lastRow + 1), (currentCulumn+i)].Number = strandSkills[i].Id;
 										}
 									}
@@ -1054,27 +1055,45 @@ namespace IesSchool.Core.Services
 							}
 							lastRow++;
 						}
-					}			
-                    lastRow = worksheet.Rows.Length;
+					}
+					#region Keys
+					lastRow = worksheet.Rows.Length+1;
+					worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 2) + ":Q" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 3) + ":Q" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 4) + ":Q" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
-					//worksheet.Range["A1:BS" + (lastRow)].WrapText = true;
+					worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["Q" + (lastRow + 1) + ":Q" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+					worksheet.Range["A" + (lastRow + 1)].CellStyle.Color = Color.Green;
+					worksheet.Range["B" + (lastRow + 1) + ":Q" + (lastRow + 1)].Merge();
+					worksheet.Range["B" + (lastRow + 1) + ":Q" + (lastRow + 1)].Text = "Mastered Skills";
+
+					worksheet.Range["A" + (lastRow + 2) ].CellStyle.Color = Color.Yellow;
+					worksheet.Range["B" + (lastRow + 2) + ":Q" + (lastRow + 2)].Merge();
+					worksheet.Range["B" + (lastRow + 2) + ":Q" + (lastRow + 2)].Text = "Current Objective";
+
+					worksheet.Range["A" + (lastRow + 3) ].CellStyle.Color = Color.Orange;
+					worksheet.Range["B" + (lastRow + 3) + ":Q" + (lastRow + 3)].Merge();
+					worksheet.Range["B" + (lastRow + 3) + ":Q" + (lastRow + 3)].Text = "Regression to (so it is the current goal)";
+
+					worksheet.Range["A" + (lastRow + 4) ].CellStyle.Color = Color.Aqua;
+					worksheet.Range["B" + (lastRow + 4) + ":Q" + (lastRow + 4)].Merge();
+					worksheet.Range["B" + (lastRow + 4) + ":Q" + (lastRow + 4)].Text = "The last mastered skill in the previous/last assessment.";
+
+					#endregion
+					lastRow = worksheet.Rows.Length ;
+					worksheet.Range["A1:BS" + (lastRow)].WrapText = true;
 					worksheet.Range["A1:BS" + (lastRow)].CellStyle.Font.Bold = true;
 					worksheet.Range["A1:BS" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 					worksheet.Range["A1:BS" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-					worksheet.Range["A1:BS" + (lastRow)].CellStyle.Font.Size = 11;
-
+					//worksheet.Range["A1:BS" + (lastRow)].CellStyle.Font.Size = 11;
 
 					//if (iep != null)
 					//{
-
-
-
-					//Disable gridlines in the worksheet
-
-
-
-
-
 					//}
 					//else
 					//{
@@ -1082,19 +1101,14 @@ namespace IesSchool.Core.Services
 					//	return new FileStreamResult(stream1, "application/excel");
 					//}
 
-
-					//Saving the Excel to the MemoryStream 
 					MemoryStream stream = new MemoryStream();
 					workbook.SaveAs(stream);
 
-					//Set the position as '0'.
 					stream.Position = 0;
 					//Download the Excel file in the browser
 					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
 					fileStreamResult.FileDownloadName = (studentName + "-BCPReport" + ".xlsx");
-
-
 					return fileStreamResult;
 				}
 			}
