@@ -22,6 +22,7 @@ namespace IesSchool.Core.IServices
 
         public ResponseDto GetGoals();
         public ResponseDto GetGoalById(int goalId);
+        public ResponseDto GetGoalByIepId(int iepId);
         public ResponseDto AddGoal(GoalDto goalDto);
         public ResponseDto EditGoal(GoalDto goalDto);
         public ResponseDto DeleteGoal(int goalId);

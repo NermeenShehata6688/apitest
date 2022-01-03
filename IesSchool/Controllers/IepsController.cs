@@ -169,6 +169,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetGoalByIepId(int ieplId)
+        {
+            try
+            {
+                var all = _iepService.GetGoalByIepId(ieplId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         // POST api/<IepsController>
         [HttpPost]

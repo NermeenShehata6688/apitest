@@ -968,8 +968,6 @@ namespace IesSchool.Core.Services
 					int lastRow = 1;
 					int lastCulumn = 1;
 
-					
-
 					IWorkbook workbook = application.Workbooks.Create(0);
 					IWorksheet worksheet;
 					string studentName = "";
