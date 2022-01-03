@@ -972,14 +972,15 @@ namespace IesSchool.Core.Services
 					IWorksheet worksheet;
 					string studentName = "";
 					worksheet = workbook.Worksheets.Create("nn");
+					worksheet.UsedRange.AutofitColumns();
 
 					#region General
 					worksheet.IsGridLinesVisible = true;
 					worksheet.Range["A1:BS1"].ColumnWidth = 2;
 					worksheet.Range["A1"].RowHeight = 17;
 
-
 					#endregion
+					#region Header
 					//lastCulumn = worksheet.Columns.Length;
 					worksheet.Range["A1:BS5"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
@@ -1006,7 +1007,7 @@ namespace IesSchool.Core.Services
 					worksheet.Range["N5:BS5"].Merge();
 					worksheet.Range["N5:BS5"].Text = "Behaviors / Skills";
 					worksheet.Range["N5:BS5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
-
+					#endregion
 					var allAreas = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strands.Where(s => s.IsDeleted != true)).ThenInclude(n => n.Skills), 0, 100000, true);
 					
                     if (allAreas != null && allAreas.Items.Count()>0)
@@ -1041,25 +1042,22 @@ namespace IesSchool.Core.Services
 
 									if (strandSkills != null && strandSkills.Count() > 0)
 									{
-										//lastRow = worksheet.Rows.Length;
-										foreach (var skill in strandSkills)
+                                       int currentCulumn = 14;
+                                        for (int i = 0; i < strandSkills.Count; i++)
+                                       
 										{
-											//lastCulumn = worksheet.UsedRange.LastColumn;
-											//worksheet.Range["A" + (lastRow + 1)].Number = strand.Id;
-											//worksheet.Range["A" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+											worksheet.Range[(lastRow + 1), (currentCulumn+i)].Number = strandSkills[i].Id;
 										}
 									}
 									lastRow++;
 								}
-
 							}
 							lastRow++;
 						}
-					}
-                    //#region			
+					}			
                     lastRow = worksheet.Rows.Length;
 
-					worksheet.Range["A1:BS" + (lastRow)].WrapText = true;
+					//worksheet.Range["A1:BS" + (lastRow)].WrapText = true;
 					worksheet.Range["A1:BS" + (lastRow)].CellStyle.Font.Bold = true;
 					worksheet.Range["A1:BS" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 					worksheet.Range["A1:BS" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
