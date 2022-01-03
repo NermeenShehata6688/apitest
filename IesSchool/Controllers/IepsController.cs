@@ -241,6 +241,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetObjectiveByIEPId(int iepId)
+        {
+            try
+            {
+                var all = _iepService.GetObjectiveByIEPId(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpPost]
         public IActionResult PostObjective(ObjectiveDto objectiveDto)

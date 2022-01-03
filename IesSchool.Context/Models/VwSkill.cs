@@ -11,6 +11,7 @@ namespace IesSchool.Context.Models
         public int? Code { get; set; }
         public int? DisplayOrder { get; set; }
         public int? Level { get; set; }
+        public int? SkillNumber { get; set; }
         public int? StrandId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }

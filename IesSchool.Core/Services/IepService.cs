@@ -336,7 +336,7 @@ namespace IesSchool.Core.Services
             {
                 if (goalId!=0)
                 {
-                    var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills));
+                    var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill));
                     var mapper = _mapper.Map<GetGoalDto>(goal);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
@@ -497,7 +497,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=>s.ObjectiveSkills).Include(s => s.ObjectiveEvaluationProcesses).ThenInclude(x=> x.SkillEvaluation), 0, 100000, true);
+                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=>s.ObjectiveSkills).ThenInclude(s => s.Skill).Include(s => s.ObjectiveEvaluationProcesses).ThenInclude(x=> x.SkillEvaluation), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<GetObjectiveDto>>(allObjectives);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -512,6 +512,19 @@ namespace IesSchool.Core.Services
             {
                 var objective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId && x.IsDeleted != true, null, x=> x.Include(s=> s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities));
                 var mapper = _mapper.Map<ObjectiveDto>(objective);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetObjectiveByIEPId(int iepId)
+        {
+            try
+            {
+                var objective = _uow.GetRepository<Objective>().GetList(x => x.IepId == iepId && x.IsDeleted != true, null, x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities));
+                var mapper = _mapper.Map<PaginateDto<ObjectiveDto>>(objective);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)

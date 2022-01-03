@@ -26,8 +26,9 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditGoal(GoalDto goalDto);
         public ResponseDto DeleteGoal(int goalId);
 
-        public ResponseDto GetObjectives();
+        public ResponseDto GetObjectives(); 
         public ResponseDto GetObjectiveById(int objectiveId);
+        public ResponseDto GetObjectiveByIEPId(int iepId);
         public ResponseDto AddObjective(ObjectiveDto objectiveDto);
         public ResponseDto EditObjective(ObjectiveDto objectiveDto);
         public ResponseDto DeleteObjective(int objectiveId);

@@ -15,6 +15,7 @@ namespace IesSchool.Core.Dto
         public int? Code { get; set; }
         public int? DisplayOrder { get; set; }
         public int? Level { get; set; }
+        public int? SkillNumber { get; set; }
         public bool? IsDeleted { get; set; }
         public int? StrandId { get; set; }
         public DateTime? CreatedOn { get; set; }
