@@ -994,8 +994,10 @@ namespace IesSchool.Core.Services
 					worksheet.Range["A3:BS3"].Merge();
 					worksheet.Range["A3:BS3"].Text = "Student Name";
 
-					worksheet.Range["A4:BS4"].Merge();
-					worksheet.Range["A4:BS4"].Text = "Level";
+					worksheet.Range["A4:M4"].Merge();
+					worksheet.Range["A4:M4"].Text = "Level";
+					worksheet.Range["M4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
 					worksheet.Range["A4:BS4"].CellStyle.Color = Color.FromArgb(255, 255, 200);
 
 					worksheet.Range["A5:M5"].Merge();
@@ -1046,7 +1048,7 @@ namespace IesSchool.Core.Services
                                         for (int i = 0; i < strandSkills.Count; i++)
 										{
 											worksheet.Range[(lastRow + 1), (currentCulumn + i)].CellStyle.Font.Size = 9;
-											worksheet.Range[(lastRow + 1), (currentCulumn+i)].Number = strandSkills[i].Id;
+											worksheet.Range[(lastRow + 1), (currentCulumn+i)].Number =( strandSkills[i].Id);
 										}
 									}
 									lastRow++;
@@ -1059,29 +1061,49 @@ namespace IesSchool.Core.Services
 					lastRow = worksheet.Rows.Length+1;
 					worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 					worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-					worksheet.Range["A" + (lastRow + 2) + ":Q" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["J" + (lastRow + 1) + ":J" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 1) + ":J" + (lastRow + 1)].Merge();
+					worksheet.Range["A" + (lastRow + 1) + ":J" + (lastRow + 1)].Text = "Date of first assessment:";
+					worksheet.Range["A" + (lastRow + 1) + ":J" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+					worksheet.Range["K" + (lastRow + 1) + ":Q" + (lastRow + 1)].Merge();
+					worksheet.Range["K" + (lastRow + 1) + ":Q" + (lastRow + 1)].Text = " iep . date";
+
+					worksheet.Range["A" + (lastRow + 2) + ":J" + (lastRow + 2)].Merge();
+					worksheet.Range["A" + (lastRow + 2) + ":J" + (lastRow + 2)].Text = "Date of second assessment:";
+					worksheet.Range["A" + (lastRow + 2) + ":J" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+					worksheet.Range["K" + (lastRow + 2) + ":Q" + (lastRow + 2)].Merge();
+					worksheet.Range["K" + (lastRow + 2) + ":Q" + (lastRow + 2)].Text = " iep . date";
+
+
+
+
+					worksheet.Range["A" + (lastRow + 3) + ":Q" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 					worksheet.Range["A" + (lastRow + 3) + ":Q" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 					worksheet.Range["A" + (lastRow + 4) + ":Q" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 5) + ":Q" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 6) + ":Q" + (lastRow + 6)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
-					worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-					worksheet.Range["Q" + (lastRow + 1) + ":Q" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["A" + (lastRow + 3) + ":A" + (lastRow + 6)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+					worksheet.Range["Q" + (lastRow + 1) + ":Q" + (lastRow + 6)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
-					worksheet.Range["A" + (lastRow + 1)].CellStyle.Color = Color.Green;
-					worksheet.Range["B" + (lastRow + 1) + ":Q" + (lastRow + 1)].Merge();
-					worksheet.Range["B" + (lastRow + 1) + ":Q" + (lastRow + 1)].Text = "Mastered Skills";
-
-					worksheet.Range["A" + (lastRow + 2) ].CellStyle.Color = Color.Yellow;
-					worksheet.Range["B" + (lastRow + 2) + ":Q" + (lastRow + 2)].Merge();
-					worksheet.Range["B" + (lastRow + 2) + ":Q" + (lastRow + 2)].Text = "Current Objective";
-
-					worksheet.Range["A" + (lastRow + 3) ].CellStyle.Color = Color.Orange;
+					worksheet.Range["A" + (lastRow + 3)].CellStyle.Color = Color.Green;
 					worksheet.Range["B" + (lastRow + 3) + ":Q" + (lastRow + 3)].Merge();
-					worksheet.Range["B" + (lastRow + 3) + ":Q" + (lastRow + 3)].Text = "Regression to (so it is the current goal)";
+					worksheet.Range["B" + (lastRow + 3) + ":Q" + (lastRow + 3)].Text = "Mastered Skills";
 
-					worksheet.Range["A" + (lastRow + 4) ].CellStyle.Color = Color.Aqua;
+					worksheet.Range["A" + (lastRow + 4) ].CellStyle.Color = Color.Yellow;
 					worksheet.Range["B" + (lastRow + 4) + ":Q" + (lastRow + 4)].Merge();
-					worksheet.Range["B" + (lastRow + 4) + ":Q" + (lastRow + 4)].Text = "The last mastered skill in the previous/last assessment.";
+					worksheet.Range["B" + (lastRow + 4) + ":Q" + (lastRow + 4)].Text = "Current Objective";
+
+					worksheet.Range["A" + (lastRow + 5) ].CellStyle.Color = Color.Orange;
+					worksheet.Range["B" + (lastRow + 5) + ":Q" + (lastRow + 5)].Merge();
+					worksheet.Range["B" + (lastRow + 5) + ":Q" + (lastRow + 5)].Text = "Regression to (so it is the current goal)";
+
+					worksheet.Range["A" + (lastRow + 6) ].CellStyle.Color = Color.Aqua;
+					worksheet.Range["B" + (lastRow + 6) + ":Q" + (lastRow + 6)].Merge();
+					worksheet.Range["B" + (lastRow + 6) + ":Q" + (lastRow + 6)].Text = "The last mastered skill in the previous/last assessment.";
 
 					#endregion
 					lastRow = worksheet.Rows.Length ;

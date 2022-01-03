@@ -170,11 +170,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetGoalByIepId(int ieplId)
+        public IActionResult GetGoalsByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetGoalByIepId(ieplId);
+                var all = _iepService.GetGoalByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)
