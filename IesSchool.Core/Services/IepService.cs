@@ -369,6 +369,10 @@ namespace IesSchool.Core.Services
                             {
                                 var obj = _mapper.Map<Objective>(objective);
                                 objective.IsMasterd = ObjectiveIsMasterd(obj);
+                                if (objective.IsMasterd==true)
+                                {
+                                    objective.Date = DateTime.Now;
+                                }
                             }
                         }
                     }
@@ -544,6 +548,10 @@ namespace IesSchool.Core.Services
                     if (objectiveDto.Activities != null && objectiveDto.Activities.Count() > 2)
                     {
                         mapper.IsMasterd = ObjectiveIsMasterd(mapper);
+                        if (mapper.IsMasterd==true)
+                        {
+                            mapper.Date = DateTime.Now;
+                        }
                     }
                     _uow.GetRepository<Objective>().Add(mapper);
                     _uow.SaveChanges();
@@ -590,6 +598,10 @@ namespace IesSchool.Core.Services
                     if (newObjective != null && newObjective.Activities.Count() > 2)
                     {
                         newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
+                        if (newObjective.IsMasterd==true)
+                        {
+                            newObjective.Date = DateTime.Now;
+                        }
                         _uow.GetRepository<Objective>().Update(mapper);
                         _uow.SaveChanges();
                     }

@@ -82,11 +82,12 @@ namespace IesSchool.Core.Services
 							{
 								var listOfObjSkillsIds = objective.ObjectiveSkills.Select(x => x.SkillId).ToArray();
 								var AllIVwSkills = _uow.GetRepository<VwSkill>().GetList(x => listOfObjSkillsIds.Contains(x.Id) && x.IsDeleted != true, null);
+								var skillsNumbers = AllIVwSkills.Items.Select(x => x.SkillNumber).ToArray();
 								if (AllIVwSkills != null && AllIVwSkills.Count > 0)
 								{
 									areaName = AllIVwSkills.Items.First()?.AreaName == null ? "" : AllIVwSkills.Items.First().AreaName;
 									strandName = AllIVwSkills.Items.First()?.StrandName == null ? "" : AllIVwSkills.Items.First().StrandName;
-									skills = (listOfObjSkillsIds == null ? "" : string.Join(",", listOfObjSkillsIds));
+									skills = (skillsNumbers == null ? "" : string.Join(",", skillsNumbers));
 								}
 							}
 							worksheet = workbook.Worksheets.Create(noOfObjectives + "-" + strandName + "(" + skills + ")");
@@ -531,7 +532,7 @@ namespace IesSchool.Core.Services
 
 						#endregion
 						//var iepGoals = iep.Goals.Where(x => x.IsDeleted != true).ToList();
-						var iepGoals = _uow.GetRepository<Goal>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.Strand).Include(x => x.Area).Include(x => x.Objectives).ThenInclude(x => x.ObjectiveSkills).Include(x => x.Objectives).ThenInclude(x => x.ObjectiveEvaluationProcesses).ThenInclude(x => x.SkillEvaluation));
+						var iepGoals = _uow.GetRepository<Goal>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.Strand).Include(x => x.Area).Include(x => x.Objectives).ThenInclude(x => x.ObjectiveSkills).ThenInclude(x=>x.Skill).Include(x => x.Objectives).ThenInclude(x => x.ObjectiveEvaluationProcesses).ThenInclude(x => x.SkillEvaluation));
 						var mapperGoals = _mapper.Map<Paginate<GoalDto>>(iepGoals).Items;
 
 						lastRow = worksheet.Rows.Length;
@@ -620,8 +621,8 @@ namespace IesSchool.Core.Services
                                             worksheet.Range["Q" + (lastRow + 1) + ":S" + (lastRow + 1)].Merge();
                                             if (objective.ObjectiveSkills != null && objective.ObjectiveSkills.Count() > 0)
                                             {
-                                                var listOfObjSkillsIds = objective.ObjectiveSkills.Select(x => x.SkillId).ToArray();
-                                                worksheet.Range["Q" + (lastRow + 1) + ":S" + (lastRow + 1)].Text = (listOfObjSkillsIds == null ? "" : string.Join(",", listOfObjSkillsIds));
+												var listOfObjSkillsNumbers = objective.ObjectiveSkills.Select(x => x.SkillNumber).ToArray();
+												worksheet.Range["Q" + (lastRow + 1) + ":S" + (lastRow + 1)].Text = (listOfObjSkillsNumbers == null ? "" : string.Join(",", listOfObjSkillsNumbers));
                                             }
 
                                             worksheet.Range["T" + (lastRow + 1) + ":AC" + (lastRow + 1)].Merge();
