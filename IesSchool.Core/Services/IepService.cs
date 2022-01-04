@@ -201,7 +201,7 @@ namespace IesSchool.Core.Services
                     var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     var mapper = _mapper.Map<Iep>(iepDto);
-                    mapper.IsDeleted = true;
+                    mapper.IsDeleted = false;
                     _uow.GetRepository<Iep>().Update(mapper);
                     _uow.SaveChanges();
 
@@ -424,7 +424,7 @@ namespace IesSchool.Core.Services
                 {
                     var mapper = _mapper.Map<Goal>(goalDto);
                     _uow.GetRepository<Goal>().Update(mapper);
-                    mapper.IsDeleted = true;
+                    mapper.IsDeleted = false;
                     using var transaction = _iesContext.Database.BeginTransaction();
                     if (mapper.Id != 0 && mapper.Objectives != null || _iesContext.Objectives.Where(x => x.GoalId == mapper.Id) != null)///count>0
                     {
@@ -611,7 +611,7 @@ namespace IesSchool.Core.Services
                     }
 
                     var mapper = _mapper.Map<Objective>(objectiveDto);
-                    mapper.IsDeleted = true;
+                    mapper.IsDeleted = false;
                     _uow.GetRepository<Objective>().Update(mapper);
                     _uow.SaveChanges();
                     objectiveDto.Id = mapper.Id;
