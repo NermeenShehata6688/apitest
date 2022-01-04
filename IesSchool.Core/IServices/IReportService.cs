@@ -13,6 +13,6 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetReporstHelper();
         public FileStreamResult IepLpReport(int iepId); 
         public FileStreamResult IepReport(int iepId); 
-        public FileStreamResult BCPReport(); 
+        public FileStreamResult BCPReport(int? studentId, int? iepId); 
     }
 }

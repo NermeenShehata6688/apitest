@@ -14,7 +14,6 @@ namespace IesSchool.Core.Services
 {
     internal class IepService : IIepService
     {
-      
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
@@ -31,15 +30,15 @@ namespace IesSchool.Core.Services
                 IepHelper iepHelper = new IepHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code }),x => x.IsDeleted != true,null, null, 0, 100000, true),
+                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code }), x => x.IsDeleted != true, null, null, 0, 100000, true),
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
-                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 1000000, true),
-                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true, null, null, 0, 1000000, true),
+                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 1000000, true),
+                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }), x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsDeleted != true && x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllStrands = _uow.GetRepository<Strand>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
-                    AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true,null, null, 0, 1000000, true),
+                    AllSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
                     AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),

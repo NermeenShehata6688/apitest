@@ -57,11 +57,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public FileStreamResult BCPReport()
+        public FileStreamResult BCPReport(int? studentId, int? iepId)
         {
             try
             {
-                var all = _reportService.BCPReport();
+                var all = _reportService.BCPReport(studentId, iepId);
                 return all;
             }
             catch (Exception)
