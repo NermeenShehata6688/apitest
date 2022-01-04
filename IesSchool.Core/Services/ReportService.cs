@@ -969,29 +969,11 @@ namespace IesSchool.Core.Services
 
 					IWorkbook workbook = application.Workbooks.Create(0);
 					IWorksheet worksheet;
-
-					if (studentId > 0 && studentId != null)
-					{
-						var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3, null,
-							x => x.Include(s => s.Goals).ThenInclude(x => x.Objectives.Where(o => o.IsMasterd == true)).ThenInclude(os => os.ObjectiveSkills).ThenInclude(s => s.Skill)).Items;
-						if (studentIeps.Count > 0)
-						{
-							foreach (var studentIep in studentIeps)
-							{
-								var masteredSkills = studentIep.Goals.ToList().Select(g => g.Objectives.ToList()
-								.SelectMany(os => os.ObjectiveSkills.ToList()
-								
-								));
-							}
-						}
-					}
-					else if (iepId > 0 && iepId != null)
-					{
-
-					}
-					string studentName = "";
 					worksheet = workbook.Worksheets.Create("nn");
 					worksheet.UsedRange.AutofitColumns();
+					
+					string studentName = "";
+					List<IGrouping<int?, Skill>> iepMasteredSkills;
 					#region General
 					worksheet.IsGridLinesVisible = true;
 					worksheet.Range["A1:BS1"].ColumnWidth = 2;
@@ -1025,7 +1007,26 @@ namespace IesSchool.Core.Services
 					worksheet.Range["N5:BS5"].Text = "Behaviors / Skills";
 					worksheet.Range["N5:BS5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 					#endregion
+					if (studentId > 0 && studentId != null)
+					{
+						var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3, null,
+							x => x.Include(s => s.Goals).ThenInclude(x => x.Objectives.Where(o => o.IsMasterd == true)).ThenInclude(os => os.ObjectiveSkills).ThenInclude(s => s.Skill)).Items;
+						if (studentIeps.Count > 0)
+						{
+							foreach (var studentIep in studentIeps)
+							{
+								 iepMasteredSkills = studentIep.Goals
+								   .SelectMany(x => x.Objectives)
+								   .SelectMany(x => x.ObjectiveSkills)
+								   .Select(x => x.Skill).GroupBy(x => x.StrandId)
+								   .ToList();
+							}
+						}
+					}
+					else if (iepId > 0 && iepId != null)
+					{
 
+					}
 					var allAreas = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strands.Where(s => s.IsDeleted != true)).ThenInclude(n => n.Skills), 0, 100000, true);
 					if (allAreas != null && allAreas.Items.Count() > 0)
 					{

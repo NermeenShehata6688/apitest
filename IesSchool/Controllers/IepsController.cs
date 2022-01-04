@@ -88,11 +88,11 @@ namespace IesSchool.Controllers
         }
         // DELETE api/<IepsController>/5
         [HttpDelete]
-        public IActionResult DeleteIep(int iepId)
+        public IActionResult DeleteIep(List<IepDto> iepDto)
         {
             try
             {
-                var all = _iepService.DeleteIep(iepId);
+                var all = _iepService.DeleteIep(iepDto);
                 return Ok(all);
             }
             catch (Exception)

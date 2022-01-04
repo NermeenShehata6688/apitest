@@ -221,17 +221,20 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto DeleteIep(int iepId)
+        public ResponseDto DeleteIep(List<IepDto> iepDto)
         {
             try
             {
-                if (iepId != 0)
+                if (iepDto != null)
                 {
-                    Iep oIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                    oIep.IsDeleted = true;
-                    oIep.DeletedOn = DateTime.Now;
-
-                    _uow.GetRepository<Iep>().Update(oIep);
+                    foreach (var iep in iepDto)
+                    {
+                        iep.IsDeleted = true;
+                        iep.DeletedOn = DateTime.Now;
+                        var mapper = _mapper.Map<Iep>(iep);
+                        _uow.GetRepository<Iep>().Update(mapper);
+                    }
+                  
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Deleted Seccessfuly" };
                 }
