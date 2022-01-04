@@ -973,7 +973,8 @@ namespace IesSchool.Core.Services
 					worksheet.UsedRange.AutofitColumns();
 					
 					string studentName = "";
-					List<IGrouping<int?, Skill>> iepMasteredSkills;
+					List< List < IGrouping<int?, Skill>>> alIepMasteredSkills=new List<List<IGrouping<int?, Skill>>>();
+					List<IGrouping<int?, Skill>> iepMasteredSkills=new	List<IGrouping<int?, Skill>>();
 					#region General
 					worksheet.IsGridLinesVisible = true;
 					worksheet.Range["A1:BS1"].ColumnWidth = 2;
@@ -1007,6 +1008,7 @@ namespace IesSchool.Core.Services
 					worksheet.Range["N5:BS5"].Text = "Behaviors / Skills";
 					worksheet.Range["N5:BS5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
 					#endregion
+				
 					if (studentId > 0 && studentId != null)
 					{
 						var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3, null,
@@ -1015,11 +1017,16 @@ namespace IesSchool.Core.Services
 						{
 							foreach (var studentIep in studentIeps)
 							{
-								 iepMasteredSkills = studentIep.Goals
-								   .SelectMany(x => x.Objectives)
-								   .SelectMany(x => x.ObjectiveSkills)
-								   .Select(x => x.Skill).GroupBy(x => x.StrandId)
+								var iepMasteredSkillds = studentIep.Goals
+								  .SelectMany(x => x.Objectives)
+								  .SelectMany(x => x.ObjectiveSkills)
+								  .Select(x => x.Skill == null ? new Skill { Id =0, StrandId=0 } : x.Skill).GroupBy(x => x.StrandId)
+								   .Select(x => new { stKey = x.Key, Items = x.ToList() })
 								   .ToList();
+                                if (iepMasteredSkills!=null&& iepMasteredSkills.Count>0)
+                                {
+									alIepMasteredSkills.Add(iepMasteredSkills);
+								}
 							}
 						}
 					}
@@ -1027,6 +1034,7 @@ namespace IesSchool.Core.Services
 					{
 
 					}
+					#region DrowSkills
 					var allAreas = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(n => n.Strands.Where(s => s.IsDeleted != true)).ThenInclude(n => n.Skills), 0, 100000, true);
 					if (allAreas != null && allAreas.Items.Count() > 0)
 					{
@@ -1054,15 +1062,41 @@ namespace IesSchool.Core.Services
 									worksheet.Range["B" + (lastRow + 1) + ":M" + (lastRow + 1)].Text = strand.Name == null ? "" : strand.Name;
 									worksheet.Range["A" + (lastRow + 1) + ":BS" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 									worksheet.Range["M" + (lastRow + 1) + ":BS" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-									
+
 									var strandSkills = strand.Skills.Where(x => x.IsDeleted != true).ToList();
 									if (strandSkills != null && strandSkills.Count() > 0)
 									{
+										List<IGrouping<int?, Skill>> masteredStrandSkills=new List<IGrouping<int?, Skill>>();	
+										if (alIepMasteredSkills != null && alIepMasteredSkills.Count > 0)
+										{
+											foreach (var iepSkills in alIepMasteredSkills)
+											{
+												if ( iepSkills.Any(x => x.Key == strand.Id))
+												{
+													var masteredStrandSkillss = iepSkills.Where(x => x.Key == strand.Id);
+												}
+											}
+										}
 										int currentCulumn = 14;
 										for (int i = 0; i < strandSkills.Count; i++)
 										{
 											worksheet.Range[(lastRow + 1), (currentCulumn + i)].CellStyle.Font.Size = 9;
 											worksheet.Range[(lastRow + 1), (currentCulumn + i)].Number = (double)(strandSkills[i].SkillNumber == null ? 0 : strandSkills[i].SkillNumber);
+                                            if (masteredStrandSkills!= null && masteredStrandSkills.Count>0)
+                                            {
+                                                foreach (var item in masteredStrandSkills)
+                                                {
+                                                    foreach (var ii in item)
+                                                    {
+														if (ii.Id == strandSkills[i].Id)
+														{
+															worksheet.Range[(lastRow + 1), (currentCulumn + i)].CellStyle.Color = Color.Green;
+														}
+													}
+													
+												}
+                                                
+											}
 										}
 									}
 									lastRow++;
@@ -1071,6 +1105,7 @@ namespace IesSchool.Core.Services
 							lastRow++;
 						}
 					}
+					#endregion
 					#region Keys
 					lastRow = worksheet.Rows.Length+1;
 					worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
