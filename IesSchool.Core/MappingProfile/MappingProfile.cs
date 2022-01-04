@@ -126,7 +126,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<VwIep, VwIepDto>().ReverseMap();
             CreateMap<IepAssistant, IepAssistantDto>()
             .ForMember(dist => dist.AssistantName, opt => opt.MapFrom(c => c.Assistant == null ? "" : c.Assistant.Name))
-            .ReverseMap();
+            .ReverseMap()
+             .ForMember(x => x.Assistant, op => op.Ignore());
+
             CreateMap<IepExtraCurricular, IepExtraCurricularDto>()
             .ForMember(dist => dist.ExtraCurricularName, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" : c.ExtraCurricular.Name))
             .ReverseMap()
