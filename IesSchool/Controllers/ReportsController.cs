@@ -16,20 +16,20 @@ namespace IesSchool.Controllers
         }
 
         // GET api/<ReportsController>/5
-        [ResponseCache(Duration = 800)]
-        [HttpGet]
-        public IActionResult GetReporstHelper()
-        {
-            try
-            {
-                var all = _reportService.GetReporstHelper();
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //[ResponseCache(Duration = 800)]
+        //[HttpGet]
+        //public IActionResult GetReporstHelper()
+        //{
+        //    try
+        //    {
+        //        var all = _reportService.GetReporstHelper();
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         [HttpGet]
         public FileStreamResult LpReport(int iepId)
         {
