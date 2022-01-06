@@ -515,7 +515,7 @@ namespace IesSchool.Core.Services
 						if (iep.IepAssistants != null && iep.IepAssistants.Count() > 0)
 						{
 							var iepAssistants = iep.IepAssistants.ToList().Select(x => (x.Assistant == null ? "" : x.Assistant.Name)).ToArray();
-							worksheet.Range["S5:BE5"].Text = studentTeacherName + "," + string.Join(",", iepAssistants);
+							worksheet.Range["S5:BE5"].Text = iepTeacherName + "," + string.Join(",", iepAssistants);
 						}
 						else
 						{
@@ -647,7 +647,8 @@ namespace IesSchool.Core.Services
 											worksheet.Range["T" + (lastRow + 2) + ":AC" + (lastRow + 4)].Merge();
 											if (objective.ObjectiveEvaluationProcesses != null && objective.ObjectiveEvaluationProcesses.Count() > 0)
 											{
-												var listOfObjEvaluationsNames = objective.ObjectiveEvaluationProcesses.ToList().Select(x => (x.SkillEvaluation.Name == null ? "" : x.SkillEvaluation.Name)).ToArray();
+												//var listOfObjEvaluationsNames = objective.ObjectiveEvaluationProcesses.ToList().Select(x => (x.SkillEvaluation.Name == null ? "" : x.SkillEvaluation.Name)).ToArray();
+												var listOfObjEvaluationsNames = string.Join(Environment.NewLine, objective.EvaluationProcessName);
 												worksheet.Range["T" + (lastRow + 2) + ":AC" + (lastRow + 4)].Text = (listOfObjEvaluationsNames == null ? "" : string.Join(Environment.NewLine, listOfObjEvaluationsNames));
 											}
 											worksheet.Range["AD" + (lastRow + 2) + ":AL" + (lastRow + 4)].Merge();
@@ -992,8 +993,6 @@ namespace IesSchool.Core.Services
 								{
 									allSkills.AddRange(iepMasteredSkills);
 								}
-								//.GroupBy(x => x.StrandId)
-								//   .Select(x => new { stKey = x.Key, Items = x.ToList() })
 							}
 						}
 					}
@@ -1148,7 +1147,7 @@ namespace IesSchool.Core.Services
 						worksheet.Range["Q" + (lastRow + 1) + ":Q" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
-						worksheet.Range["A" + (lastRow + 1)].CellStyle.Color = Color.Green;
+						worksheet.Range["A" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(113, 211, 110);
 						worksheet.Range["B" + (lastRow + 1) + ":Q" + (lastRow + 1)].Merge();
 						worksheet.Range["B" + (lastRow + 1) + ":Q" + (lastRow + 1)].Text = "Mastered Skills";
 
