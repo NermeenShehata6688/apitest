@@ -682,6 +682,11 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
+                entity.HasOne(d => d.AcadmicYear)
+                    .WithMany(p => p.IepProgressReports)
+                    .HasForeignKey(d => d.AcadmicYearId)
+                    .HasConstraintName("FK_IepProgressReport_AcadmicYears");
+
                 entity.HasOne(d => d.HeadOfEducation)
                     .WithMany(p => p.IepProgressReportHeadOfEducations)
                     .HasForeignKey(d => d.HeadOfEducationId)
@@ -692,11 +697,22 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.IepId)
                     .HasConstraintName("FK_IepProgressReport_IEP");
 
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.IepProgressReports)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_IepProgressReport_Students");
+
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.IepProgressReportTeachers)
                     .HasForeignKey(d => d.TeacherId)
                     .HasConstraintName("FK_IepProgressReport_Teacher");
+
+                entity.HasOne(d => d.Term)
+                    .WithMany(p => p.IepProgressReports)
+                    .HasForeignKey(d => d.TermId)
+                    .HasConstraintName("FK_IepProgressReport_Term");
             });
+
 
 
             modelBuilder.Entity<Objective>(entity =>

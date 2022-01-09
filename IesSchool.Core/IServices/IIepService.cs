@@ -58,6 +58,9 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetIepProgressReportById(int iepProgressReportId);
         public ResponseDto AddIepProgressReport(IepProgressReportDto iepProgressReportDto);
         public ResponseDto EditIepProgressReport(IepProgressReportDto iepProgressReportDto);
-        //public ResponseDto DeleteIepProgressReport(int iepProgressReportId);
+        public ResponseDto DeleteIepProgressReport(int iepProgressReportId);
+        public ResponseDto CreateIepProgressReport(int iepId);
+        //public ResponseDto SyncData(int iepId);
+
     }
 }

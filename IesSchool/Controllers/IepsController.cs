@@ -475,5 +475,84 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public IActionResult GetIepProgressReportsByIepId(int iepId)
+        {
+            try
+            {
+                var all = _iepService.GetIepProgressReportsByIepId(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetIepProgressReportById(int iepId)
+        {
+            try
+            {
+                var all = _iepService.GetIepProgressReportById(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public IActionResult PostIepProgressReport(IepProgressReportDto iepProgressReportDto)
+        {
+            try
+            {
+                var all = _iepService.AddIepProgressReport(iepProgressReportDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult PutIepProgressReport(IepProgressReportDto iepProgressReportDto)
+        {
+            try
+            {
+                var all = _iepService.EditIepProgressReport(iepProgressReportDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteIepProgressReport(int iepProgressReportId)
+        {
+            try
+            {
+                var all = _iepService.DeleteIepProgressReport(iepProgressReportId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult CreateIepProgressReport(int iepId)
+        {
+            try
+            {
+                var all = _iepService.CreateIepProgressReport(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

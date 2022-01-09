@@ -956,7 +956,11 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId, null);
+                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId, null,
+                    x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
+                    .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
+                    .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands));
+
                 var mapper = _mapper.Map<PaginateDto<IepProgressReportDto>>(iepProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -969,7 +973,10 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId, null, x => x.Include(s => s.ProgressReportExtraCurriculars).Include(s => s.ProgressReportParamedicals).Include(s => s.ProgressReportStrands));
+                var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId && x.IsDeleted!=true, null, x => x.Include(x => x.Student)
+                .Include(x => x.AcadmicYear).Include(x => x.Term)
+                   .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
+                   .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands));
                 var mapper = _mapper.Map<IepProgressReportDto>(iepProgressReport);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -982,6 +989,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                iepProgressReportDto.IsDeleted = false;
+                iepProgressReportDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<IepProgressReport>(iepProgressReportDto);
                 _uow.GetRepository<IepProgressReport>().Add(mapper);
                 _uow.SaveChanges();
@@ -997,10 +1006,17 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from ProgressReportExtraCurricular where ProgressReportId={iepProgressReportDto.Id}" +
+                    $"delete from ProgressReportParamedical where ProgressReportId={iepProgressReportDto.Id}" +
+                    $"delete from ProgressReportStrand where ProgressReportId={iepProgressReportDto.Id}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+
                 var mapper = _mapper.Map<IepProgressReport>(iepProgressReportDto);
                 _uow.GetRepository<IepProgressReport>().Update(mapper);
                 _uow.SaveChanges();
-                iepProgressReportDto.Id = mapper.Id;
+                transaction.Commit();
+
                 return new ResponseDto { Status = 1, Message = "Iep Progress Report Updated Seccessfuly", Data = iepProgressReportDto };
             }
             catch (Exception ex)
@@ -1008,34 +1024,123 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        //public ResponseDto DeleteIepProgressReport(int iepProgressReportId)
+        public ResponseDto DeleteIepProgressReport(int iepProgressReportId)
+        {
+            try
+            {
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from ProgressReportExtraCurricular where ProgressReportId={iepProgressReportId}" +
+                    $"delete from ProgressReportParamedical where ProgressReportId={iepProgressReportId}" +
+                    $"delete from ProgressReportStrand where ProgressReportId={iepProgressReportId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+
+                IepProgressReport iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId);
+                iepProgressReport.IsDeleted = true;
+                iepProgressReport.DeletedOn = DateTime.Now;
+
+                var mapper = _mapper.Map<IepProgressReport>(iepProgressReport);
+                _uow.GetRepository<IepProgressReport>().Update(mapper);
+                _uow.SaveChanges();
+                transaction.Commit();
+                return new ResponseDto { Status = 1, Message = "Iep Extra Curricular Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto CreateIepProgressReport(int iepId)
+        {
+            try
+            {
+                if (iepId != 0)
+                {
+                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
+               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
+               .Include(s => s.Student)
+               .Include(s => s.AcadmicYear)
+               .Include(s => s.Term)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+               );
+
+                    if (iep!=null)
+                    {
+                        IepProgressReportDto iepProgressReportDto=new IepProgressReportDto();
+                        iepProgressReportDto.StudentCode = iep.Student == null ? "" : iep.Student.Code.ToString();
+                        iepProgressReportDto.StudentName = iep.Student == null ? "" : iep.Student.Name;
+                        iepProgressReportDto.AcadmicYearName = iep.AcadmicYear == null ? "" : iep.AcadmicYear.Name;
+                        iepProgressReportDto.TermName = iep.Term == null ? "" : iep.Term.Name;
+
+                        if (iep.IepExtraCurriculars.Count>0)
+                        {
+                            for (int i = 0; i < iep.IepExtraCurriculars.Count; i++)
+                            {
+                                iepProgressReportDto.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto {
+                                    Id = 0,
+                                    ProgressReportId = 0,
+                                    ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId,
+                                    Comment = ""
+                                });
+                            }
+                        }
+                       
+
+                    }
+
+
+
+
+
+                    var mapper = _mapper.Map<IepProgressReportDto>(iep);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+
+        //public ResponseDto SyncData(int iepId)
         //{
-            //try
-            //{
-            //        using var transaction = _iesContext.Database.BeginTransaction();
-            //        var cmd = $"delete from ProgressReportExtraCurricular where ProgressReportId={iepProgressReportId}" +
-            //            $"delete from ProgressReportParamedical where ProgressReportId={iepProgressReportId}" +
-            //            $"delete from ProgressReportStrand where ProgressReportId={iepProgressReportId}" ;
-            //        _iesContext.Database.ExecuteSqlRaw(cmd);
-
-            //    IepProgressReport iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == userId);
-            //    user.IsDeleted = true;
-            //    user.DeletedOn = DateTime.Now;
-
-            //    var mapper = _mapper.Map<User>(userDto);
-            //        _uow.GetRepository<User>().Update(mapper);
-            //        _uow.SaveChanges();
-                    
-            //        userDto.Id = mapper.Id;
-            //        return new ResponseDto { Status = 1, Message = "Iep Extra Curricular Deleted Seccessfuly" };
-            //}
-            //catch (Exception ex)
-            //{
-            //    return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-            //}
+        //    try
+        //    {
+        //        if (iepId != 0)
+        //        {
+        //            var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
+        //       .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
+        //       .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
+        //       .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
+        //       .Include(s => s.Student).ThenInclude(s => s.Department)
+        //       .Include(s => s.Teacher)
+        //       .Include(s => s.HeadOfDepartmentNavigation)
+        //       .Include(s => s.HeadOfEducationNavigation)
+        //       .Include(s => s.AcadmicYear)
+        //       .Include(s => s.Term)
+        //       .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+        //       .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
+        //       .Include(s => s.Goals).ThenInclude(s => s.Strand)
+        //       .Include(s => s.Goals).ThenInclude(s => s.Area)
+        //       );
+        //            var mapper = _mapper.Map<GetIepDto>(iep);
+        //            return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+        //        }
+        //        else
+        //        {
+        //            return new ResponseDto { Status = 1, Message = " null" };
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+        //    }
         //}
-
-
     }
 }
 

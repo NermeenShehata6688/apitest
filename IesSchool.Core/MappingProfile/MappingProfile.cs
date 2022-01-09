@@ -110,8 +110,10 @@ namespace IesSchool.Core.MappingProfile
 
 
             CreateMap<Iep, IepDto>().ReverseMap()
-             .ForMember(x => x.IepAssistants, op => op.Ignore());
-            
+             //.ForMember(x => x.IepAssistants, op => op.Ignore())
+             .ForMember(x => x.IepExtraCurriculars, op => op.Ignore())
+             .ForMember(x => x.IepParamedicalServices, op => op.Ignore());
+
             CreateMap<Iep, GetIepDto>()
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
             .ForMember(dist => dist.StudentCodeName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
@@ -136,7 +138,22 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap()
              .ForMember(x => x.ExtraCurricular, op => op.Ignore());
 
-            CreateMap<IepProgressReport, IepProgressReportDto>().ReverseMap();
+            CreateMap<IepProgressReport, IepProgressReportDto>()
+            .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
+            .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
+            .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name))
+            .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Term == null ? "" : c.Term.Name))
+            .ForMember(dist => dist.StrandsCount, opt => opt.MapFrom(c => c.ProgressReportStrands.Count()))
+            .ForMember(dist => dist.ParamedicalCount, opt => opt.MapFrom(c => c.ProgressReportParamedicals.Count()))
+            .ForMember(dist => dist.ExtraCount, opt => opt.MapFrom(c => c.ProgressReportExtraCurriculars.Count()))
+                .ReverseMap()
+             .ForMember(x => x.Student, op => op.Ignore())
+             .ForMember(x => x.AcadmicYear, op => op.Ignore())
+             .ForMember(x => x.Iep, op => op.Ignore())
+             .ForMember(x => x.Teacher, op => op.Ignore())
+             .ForMember(x => x.Term, op => op.Ignore());
+
+
             CreateMap<ProgressReportExtraCurricular, ProgressReportExtraCurricularDto>().ReverseMap();
             CreateMap<ProgressReportParamedical, ProgressReportParamedicalDto>().ReverseMap();
             CreateMap<ProgressReportStrand, ProgressReportStrandDto>().ReverseMap();
