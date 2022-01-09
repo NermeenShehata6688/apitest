@@ -597,7 +597,6 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.HeadOfEducationNavigation)
                     .WithMany(p => p.IepHeadOfEducationNavigations)
                     .HasForeignKey(d => d.HeadOfEducation)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_IEP_HeadOfEducationUser");
 
                 entity.HasOne(d => d.Student)

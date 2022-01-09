@@ -16,7 +16,7 @@ namespace IesSchool.Context.Models
         public int? TeacherId { get; set; }
         public DateTime? LastDateOfReview { get; set; }
         public int? HeadOfDepartment { get; set; }
-        public int HeadOfEducation { get; set; }
+        public int? HeadOfEducation { get; set; }
         public bool? ParentsInvolvedInSettingUpSuggestions { get; set; }
         public bool? ReportCard { get; set; }
         public bool? ProgressReport { get; set; }
