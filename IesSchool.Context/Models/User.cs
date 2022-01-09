@@ -11,6 +11,8 @@ namespace IesSchool.Context.Models
             EventTeachers = new HashSet<EventTeacher>();
             IepHeadOfDepartmentNavigations = new HashSet<Iep>();
             IepHeadOfEducationNavigations = new HashSet<Iep>();
+            IepProgressReportHeadOfEducations = new HashSet<IepProgressReport>();
+            IepProgressReportTeachers = new HashSet<IepProgressReport>();
             IepTeachers = new HashSet<Iep>();
             StudentTherapists = new HashSet<StudentTherapist>();
             Students = new HashSet<Student>();
@@ -52,6 +54,8 @@ namespace IesSchool.Context.Models
         public virtual ICollection<EventTeacher> EventTeachers { get; set; }
         public virtual ICollection<Iep> IepHeadOfDepartmentNavigations { get; set; }
         public virtual ICollection<Iep> IepHeadOfEducationNavigations { get; set; }
+        public virtual ICollection<IepProgressReport> IepProgressReportHeadOfEducations { get; set; }
+        public virtual ICollection<IepProgressReport> IepProgressReportTeachers { get; set; }
         public virtual ICollection<Iep> IepTeachers { get; set; }
         public virtual ICollection<StudentTherapist> StudentTherapists { get; set; }
         public virtual ICollection<Student> Students { get; set; }

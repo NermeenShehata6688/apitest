@@ -50,11 +50,15 @@ namespace IesSchool.Context.Models
         public virtual DbSet<IepAssistant> IepAssistants { get; set; } = null!;
         public virtual DbSet<IepExtraCurricular> IepExtraCurriculars { get; set; } = null!;
         public virtual DbSet<IepParamedicalService> IepParamedicalServices { get; set; } = null!;
+        public virtual DbSet<IepProgressReport> IepProgressReports { get; set; } = null!;
         public virtual DbSet<Objective> Objectives { get; set; } = null!;
         public virtual DbSet<ObjectiveEvaluationProcess> ObjectiveEvaluationProcesses { get; set; } = null!;
         public virtual DbSet<ObjectiveSkill> ObjectiveSkills { get; set; } = null!;
         public virtual DbSet<ParamedicalService> ParamedicalServices { get; set; } = null!;
         public virtual DbSet<Phone> Phones { get; set; } = null!;
+        public virtual DbSet<ProgressReportExtraCurricular> ProgressReportExtraCurriculars { get; set; } = null!;
+        public virtual DbSet<ProgressReportParamedical> ProgressReportParamedicals { get; set; } = null!;
+        public virtual DbSet<ProgressReportStrand> ProgressReportStrands { get; set; } = null!;
         public virtual DbSet<Religion> Religions { get; set; } = null!;
         public virtual DbSet<Setting> Settings { get; set; } = null!;
         public virtual DbSet<Skill> Skills { get; set; } = null!;
@@ -665,6 +669,37 @@ namespace IesSchool.Context.Models
                     .HasConstraintName("FK_IEP_ParamedicalService_ParamedicalService");
             });
 
+            modelBuilder.Entity<IepProgressReport>(entity =>
+            {
+                entity.ToTable("IepProgressReport");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.HasOne(d => d.HeadOfEducation)
+                    .WithMany(p => p.IepProgressReportHeadOfEducations)
+                    .HasForeignKey(d => d.HeadOfEducationId)
+                    .HasConstraintName("FK_IepProgressReport_HeadOfEducation");
+
+                entity.HasOne(d => d.Iep)
+                    .WithMany(p => p.IepProgressReports)
+                    .HasForeignKey(d => d.IepId)
+                    .HasConstraintName("FK_IepProgressReport_IEP");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.IepProgressReportTeachers)
+                    .HasForeignKey(d => d.TeacherId)
+                    .HasConstraintName("FK_IepProgressReport_Teacher");
+            });
+
+
             modelBuilder.Entity<Objective>(entity =>
             {
                 entity.ToTable("Objective");
@@ -747,6 +782,50 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.Phones)
                     .HasForeignKey(d => d.StudentId)
                     .HasConstraintName("FK_Phone_Students");
+            });
+            modelBuilder.Entity<ProgressReportExtraCurricular>(entity =>
+            {
+                entity.ToTable("ProgressReportExtraCurricular");
+
+                entity.HasOne(d => d.ExtraCurricular)
+                    .WithMany(p => p.ProgressReportExtraCurriculars)
+                    .HasForeignKey(d => d.ExtraCurricularId)
+                    .HasConstraintName("FK_ProgressReportExtraCurricular_ExtraCurricular");
+
+                entity.HasOne(d => d.ProgressReport)
+                    .WithMany(p => p.ProgressReportExtraCurriculars)
+                    .HasForeignKey(d => d.ProgressReportId)
+                    .HasConstraintName("FK_ProgressReportExtraCurricular_IepProgressReport");
+            });
+
+            modelBuilder.Entity<ProgressReportParamedical>(entity =>
+            {
+                entity.ToTable("ProgressReportParamedical");
+
+                entity.HasOne(d => d.ParamedicalService)
+                    .WithMany(p => p.ProgressReportParamedicals)
+                    .HasForeignKey(d => d.ParamedicalServiceId)
+                    .HasConstraintName("FK_ProgressReportParamedical_ParamedicalService");
+
+                entity.HasOne(d => d.ProgressReport)
+                    .WithMany(p => p.ProgressReportParamedicals)
+                    .HasForeignKey(d => d.ProgressReportId)
+                    .HasConstraintName("FK_ProgressReportParamedical_IepProgressReport");
+            });
+
+            modelBuilder.Entity<ProgressReportStrand>(entity =>
+            {
+                entity.ToTable("ProgressReportStrand");
+
+                entity.HasOne(d => d.ProgressReport)
+                    .WithMany(p => p.ProgressReportStrands)
+                    .HasForeignKey(d => d.ProgressReportId)
+                    .HasConstraintName("FK_ProgressReportStrand_IepProgressReport");
+
+                entity.HasOne(d => d.Strand)
+                    .WithMany(p => p.ProgressReportStrands)
+                    .HasForeignKey(d => d.StrandId)
+                    .HasConstraintName("FK_ProgressReportStrand_Strand");
             });
 
             modelBuilder.Entity<Religion>(entity =>

@@ -52,5 +52,12 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
         public ResponseDto EditIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
         public ResponseDto DeleteIepExtraCurricular(int iepExtraCurricularId);
+
+
+        public ResponseDto GetIepProgressReportsByIepId(int iepId);
+        public ResponseDto GetIepProgressReportById(int iepProgressReportId);
+        public ResponseDto AddIepProgressReport(IepProgressReportDto iepProgressReportDto);
+        public ResponseDto EditIepProgressReport(IepProgressReportDto iepProgressReportDto);
+        //public ResponseDto DeleteIepProgressReport(int iepProgressReportId);
     }
 }

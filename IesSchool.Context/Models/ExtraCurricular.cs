@@ -8,6 +8,7 @@ namespace IesSchool.Context.Models
         public ExtraCurricular()
         {
             IepExtraCurriculars = new HashSet<IepExtraCurricular>();
+            ProgressReportExtraCurriculars = new HashSet<ProgressReportExtraCurricular>();
         }
 
         public int Id { get; set; }
@@ -20,5 +21,7 @@ namespace IesSchool.Context.Models
         public string? CreatedBy { get; set; }
 
         public virtual ICollection<IepExtraCurricular> IepExtraCurriculars { get; set; }
+        public virtual ICollection<ProgressReportExtraCurricular> ProgressReportExtraCurriculars { get; set; }
+
     }
 }

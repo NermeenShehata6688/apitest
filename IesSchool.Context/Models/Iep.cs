@@ -11,6 +11,7 @@ namespace IesSchool.Context.Models
             IepAssistants = new HashSet<IepAssistant>();
             IepExtraCurriculars = new HashSet<IepExtraCurricular>();
             IepParamedicalServices = new HashSet<IepParamedicalService>();
+            IepProgressReports = new HashSet<IepProgressReport>();
         }
 
         public int Id { get; set; }
@@ -48,5 +49,6 @@ namespace IesSchool.Context.Models
         public virtual ICollection<IepAssistant> IepAssistants { get; set; }
         public virtual ICollection<IepExtraCurricular> IepExtraCurriculars { get; set; }
         public virtual ICollection<IepParamedicalService> IepParamedicalServices { get; set; }
+        public virtual ICollection<IepProgressReport> IepProgressReports { get; set; }
     }
 }

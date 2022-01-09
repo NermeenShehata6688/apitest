@@ -8,6 +8,7 @@ namespace IesSchool.Context.Models
         public Strand()
         {
             Goals = new HashSet<Goal>();
+            ProgressReportStrands = new HashSet<ProgressReportStrand>();
             Skills = new HashSet<Skill>();
         }
 
@@ -26,5 +27,7 @@ namespace IesSchool.Context.Models
         public virtual Area? Area { get; set; }
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<Skill> Skills { get; set; }
+        public virtual ICollection<ProgressReportStrand> ProgressReportStrands { get; set; }
+
     }
 }

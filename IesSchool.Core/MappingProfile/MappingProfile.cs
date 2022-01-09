@@ -134,6 +134,11 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap()
              .ForMember(x => x.ExtraCurricular, op => op.Ignore());
 
+            CreateMap<IepProgressReport, IepProgressReportDto>().ReverseMap();
+            CreateMap<ProgressReportExtraCurricular, ProgressReportExtraCurricularDto>().ReverseMap();
+            CreateMap<ProgressReportParamedical, ProgressReportParamedicalDto>().ReverseMap();
+            CreateMap<ProgressReportStrand, ProgressReportStrandDto>().ReverseMap();
+
             CreateMap<IepParamedicalService, IepParamedicalServiceDto>()
             .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))
             .ReverseMap()
