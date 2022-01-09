@@ -109,7 +109,9 @@ namespace IesSchool.Core.MappingProfile
 
 
 
-            CreateMap<Iep, IepDto>().ReverseMap();
+            CreateMap<Iep, IepDto>().ReverseMap()
+             .ForMember(x => x.IepAssistants, op => op.Ignore());
+            
             CreateMap<Iep, GetIepDto>()
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
             .ForMember(dist => dist.StudentCodeName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
