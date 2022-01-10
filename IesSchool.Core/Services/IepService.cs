@@ -33,7 +33,7 @@ namespace IesSchool.Core.Services
                     AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code }),null, null, null, 0, 100000, true),
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x =>  x.IsTeacher == true, null, null, 0, 1000000, true),
+                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name,RoomNumber=x.RoomNumber }), x =>  x.IsTeacher == true, null, null, 0, 1000000, true),
                     AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),null, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x =>  x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
@@ -1072,6 +1072,7 @@ namespace IesSchool.Core.Services
                         iepProgressReportDto.StudentName = iep.Student == null ? "" : iep.Student.Name;
                         iepProgressReportDto.AcadmicYearName = iep.AcadmicYear == null ? "" : iep.AcadmicYear.Name;
                         iepProgressReportDto.TermName = iep.Term == null ? "" : iep.Term.Name;
+                        iepProgressReportDto.ProgressReportExtraCurriculars = new List<ProgressReportExtraCurricularDto>();
 
                         if (iep.IepExtraCurriculars.Count>0)
                         {
@@ -1080,13 +1081,11 @@ namespace IesSchool.Core.Services
                                 iepProgressReportDto.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto {
                                     Id = 0,
                                     ProgressReportId = 0,
-                                    ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId,
+                                    ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
                                     Comment = ""
                                 });
                             }
                         }
-                       
-
                     }
 
 
