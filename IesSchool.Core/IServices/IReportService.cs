@@ -1,5 +1,6 @@
 ﻿using IesSchool.Core.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace IesSchool.Core.IServices
         public FileStreamResult IepLpReport(int iepId); 
         public FileStreamResult IepReport(int iepId); 
         public FileStreamResult BCPReport(int? studentId, int? iepId); 
+        public FileStreamResult IepReportHTML(int iepId);
     }
 }

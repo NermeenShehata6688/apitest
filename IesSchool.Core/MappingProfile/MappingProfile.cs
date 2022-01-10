@@ -110,9 +110,13 @@ namespace IesSchool.Core.MappingProfile
 
 
             CreateMap<Iep, IepDto>().ReverseMap()
+                //.ForMember(dest => dest.IepAssistants, o =>{  o.Condition(src => src.IepAssistants.Count == 0);
+                //    o.Ignore();
+                //})
              //.ForMember(x => x.IepAssistants, op => op.Ignore())
              .ForMember(x => x.IepExtraCurriculars, op => op.Ignore())
-             .ForMember(x => x.IepParamedicalServices, op => op.Ignore());
+             .ForMember(x => x.IepParamedicalServices, op => op.Ignore())
+             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Iep, GetIepDto>()
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
@@ -139,6 +143,7 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.ExtraCurricular, op => op.Ignore());
 
             CreateMap<IepProgressReport, IepProgressReportDto>()
+
             .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
             .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name))
@@ -151,7 +156,13 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.AcadmicYear, op => op.Ignore())
              .ForMember(x => x.Iep, op => op.Ignore())
              .ForMember(x => x.Teacher, op => op.Ignore())
-             .ForMember(x => x.Term, op => op.Ignore());
+             .ForMember(x => x.Term, op => op.Ignore())
+              .ForMember(dest => dest.ProgressReportExtraCurriculars, o =>
+              {
+                  o.Condition(src => src.ProgressReportExtraCurriculars.Count == 0);
+                  o.Ignore();
+              });
+              //.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
 
             CreateMap<ProgressReportExtraCurricular, ProgressReportExtraCurricularDto>().ReverseMap();

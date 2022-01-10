@@ -1053,7 +1053,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (iepId != 0)
+                if (iepId > 0)
                 {
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
                .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
@@ -1064,36 +1064,148 @@ namespace IesSchool.Core.Services
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
                );
+                    IepProgressReportDto iepProgressReportDto = new IepProgressReportDto();
 
-                    if (iep!=null)
+                    if (iep != null)
                     {
-                        IepProgressReportDto iepProgressReportDto=new IepProgressReportDto();
+                        
                         iepProgressReportDto.StudentCode = iep.Student == null ? "" : iep.Student.Code.ToString();
                         iepProgressReportDto.StudentName = iep.Student == null ? "" : iep.Student.Name;
                         iepProgressReportDto.AcadmicYearName = iep.AcadmicYear == null ? "" : iep.AcadmicYear.Name;
                         iepProgressReportDto.TermName = iep.Term == null ? "" : iep.Term.Name;
-                        iepProgressReportDto.ProgressReportExtraCurriculars = new List<ProgressReportExtraCurricularDto>();
 
-                        if (iep.IepExtraCurriculars.Count>0)
+                        if (iep.IepExtraCurriculars.Count > 0)
                         {
+                            iepProgressReportDto.ProgressReportExtraCurriculars = new List<ProgressReportExtraCurricularDto>();
                             for (int i = 0; i < iep.IepExtraCurriculars.Count; i++)
                             {
-                                iepProgressReportDto.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto {
+                                iepProgressReportDto.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto
+                                {
                                     Id = 0,
                                     ProgressReportId = 0,
-                                    ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
+                                    ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId == null ? 0 : iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
                                     Comment = ""
                                 });
                             }
                         }
+                        if (iep.IepParamedicalServices.Count > 0)
+                        {
+                            iepProgressReportDto.ProgressReportParamedicals = new List<ProgressReportParamedicalDto>();
+                            for (int i = 0; i < iep.IepParamedicalServices.Count; i++)
+                            {
+                                iepProgressReportDto.ProgressReportParamedicals.Add(new ProgressReportParamedicalDto
+                                {
+                                    Id = 0,
+                                    ProgressReportId = 0,
+                                    ParamedicalServiceId = iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId == null ? 0 : iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId.Value,
+                                    Comment = ""
+                                });
+                            }
+                        }
+                        if (iep.Goals.Count > 0)
+                        {
+                            iepProgressReportDto.ProgressReportStrands = new List<ProgressReportStrandDto>();
+
+                            for (int i = 0; i < iep.Goals.Count; i++)
+                            {
+                                int frsTermPercentage = 0;
+                                int scndTermPercentage = 0;
+                                if (iep.TermId == 1)
+                                {
+                                    frsTermPercentage = CalculateMasterdObjPercentage(iep.Goals.ToList()[i]);
+                                    iepProgressReportDto.ProgressReportStrands.Add(new ProgressReportStrandDto
+                                    {
+                                        Id = 0,
+                                        ProgressReportId = 0,
+                                        StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId.Value,
+                                        FirstTermPercentage = frsTermPercentage,
+                                        SecondTermPercentage = scndTermPercentage,
+                                        Comment = ""
+                                    });
+                                }
+                                else if (iep.TermId == 2)
+                                {
+                                    var iepFirstTerm = _uow.GetRepository<Iep>().Single(x => x.StudentId==iep.StudentId && x.IsDeleted != true && x.AcadmicYearId == iep.AcadmicYearId && x.TermId == 1, null, x => x
+                                          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+                                          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+                                       );
+                                    if (iepFirstTerm!=null && iepFirstTerm.Goals.Count>0)
+                                    {
+                                        Goal firstTermGoal = iepFirstTerm.Goals.Where(x => x.StrandId == iep.Goals.ToList()[i].StrandId).FirstOrDefault();
+                                        if (firstTermGoal !=null)
+                                        {
+                                            frsTermPercentage = CalculateMasterdObjPercentage(firstTermGoal);
+                                        }
+                                    }
+                                    scndTermPercentage = CalculateMasterdObjPercentage(iep.Goals.ToList()[i]);
+                                    iepProgressReportDto.ProgressReportStrands.Add(new ProgressReportStrandDto
+                                    {
+                                        Id = 0,
+                                        ProgressReportId = 0,
+                                        StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId.Value,
+                                        FirstTermPercentage = frsTermPercentage,
+                                        SecondTermPercentage = scndTermPercentage,
+                                        Comment = ""
+                                    });
+                                }
+                                #region MyRegion
+                                //var goalObjectives = iep.Goals.ToList()[i].Objectives.Where(x => x.IsDeleted != true);
+
+                                //if (goalObjectives.Count() > 0 && iep.TermId == 1)
+                                //{
+                                //    foreach (var objective in goalObjectives)
+                                //    {
+                                //        // to calculate frsTermPercentage Percentage
+                                //        if (objective.IsMasterd == true)
+                                //        {
+                                //            frsTermPercentage = frsTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
+                                //        }
+                                //    }
+                                //}
+                                //else if (goalObjectives.Count() > 0 && iep.TermId == 2)
+                                //{
+                                //    foreach (var objective in goalObjectives)
+                                //    {
+                                //        // to calculate scndTermPercentage Percentage
+                                //        if (objective.IsMasterd == true)
+                                //        {
+                                //            scndTermPercentage = scndTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
+                                //        }
+                                //    }
+                                //    #region FirstTerm
+                                //    var iepFirstTerm = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true && x.AcadmicYearId == iep.AcadmicYearId && x.TermId == 1, null, x => x
+                                //          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+                                //          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+                                //       );
+                                //    if (iepFirstTerm != null)
+                                //    {
+                                //        if (iepFirstTerm.Goals.Count() > 0)
+                                //        {
+                                //            for (int j = 0; j < iepFirstTerm.Goals.Count; j++)
+                                //            {
+                                //                var firstTermObjectives = iep.Goals.ToList()[j].Objectives.Where(x => x.IsDeleted != true);
+                                //                if (firstTermObjectives.Count() > 0)
+                                //                {
+                                //                    foreach (var objective in goalObjectives)
+                                //                    {
+                                //                        // to calculate scndTermPercentage Percentage
+                                //                        if (objective.IsMasterd == true)
+                                //                        {
+                                //                            scndTermPercentage = scndTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
+                                //                        }
+                                //                    }
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //    #endregion
+                                //}
+                                #endregion
+                            }
+                        }
                     }
-
-
-
-
-
-                    var mapper = _mapper.Map<IepProgressReportDto>(iep);
-                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    //var mapper = _mapper.Map<IepProgressReportDto>(iep);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = iepProgressReportDto };
                 }
                 else
                 {
@@ -1106,6 +1218,33 @@ namespace IesSchool.Core.Services
             }
         }
 
+        public  int CalculateMasterdObjPercentage(Goal goal)
+        {
+            try
+            {
+                int masterdObjPercentage = 0;
+                if (goal != null)
+                {
+                    if (goal.Objectives.Count>0)
+                    {
+                        foreach (var obj in goal.Objectives)
+                        {
+                            if (obj.IsMasterd == true)
+                            {
+                                masterdObjPercentage = masterdObjPercentage + (obj.ObjectiveNumber == null ? 0 : obj.ObjectiveNumber.Value);
+                            }
+                        }
+                    }
+                }
+                return masterdObjPercentage;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
         //public ResponseDto SyncData(int iepId)
         //{
         //    try

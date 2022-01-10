@@ -1,5 +1,6 @@
 ﻿using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Syncfusion.XlsIO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -62,6 +63,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _reportService.BCPReport(studentId, iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult IepReportHTML(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepReportHTML(iepId);
                 return all;
             }
             catch (Exception)

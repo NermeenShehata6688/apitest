@@ -1124,6 +1124,8 @@ namespace IesSchool.Context.Models
             {
                 entity.ToTable("Term");
 
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
@@ -1133,11 +1135,6 @@ namespace IesSchool.Context.Models
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).HasMaxLength(255);
-
-                entity.HasOne(d => d.AcadmicYear)
-                    .WithMany(p => p.Terms)
-                    .HasForeignKey(d => d.AcadmicYearId)
-                    .HasConstraintName("FK_Term_AcadmicYears");
             });
 
             modelBuilder.Entity<TherapistParamedicalService>(entity =>
