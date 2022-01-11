@@ -34,7 +34,7 @@ namespace IesSchool.Core.Services
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
                     AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name,RoomNumber=x.RoomNumber }), x =>  x.IsTeacher == true, null, null, 0, 1000000, true),
-                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),null, null, null, 0, 1000000, true),
+                    //AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),null, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x =>  x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
                     AllStrands = _uow.GetRepository<Strand>().GetList(null, null, null, 0, 1000000, true),
@@ -42,6 +42,7 @@ namespace IesSchool.Core.Services
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                     AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(null, null, null, 0, 1000000, true),
+                    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x=> x.Include(x=>x.Assistant), 0, 1000000, true),
                     Setting = _uow.GetRepository<Setting>().Single(),
                 };
                 var mapper = _mapper.Map<IepHelperDto>(iepHelper);

@@ -52,6 +52,12 @@ namespace IesSchool.Core.Services
             {
                 termDto.IsDeleted = false;
                 termDto.CreatedOn = DateTime.Now;
+                if (termDto.IsCurrent == true)
+                {
+                    var allTermss = _uow.GetRepository<Term>().GetList().Items.ToList();
+                    allTermss.ForEach(x => x.IsCurrent = false);
+                    _uow.GetRepository<Term>().Update(allTermss);
+                }
                 var mapper = _mapper.Map<Term>(termDto);
                 _uow.GetRepository<Term>().Add(mapper);
                 _uow.SaveChanges();
@@ -68,6 +74,12 @@ namespace IesSchool.Core.Services
             try
             {
                 var mapper = _mapper.Map<Term>(termDto);
+                if (termDto.IsCurrent == true)
+                {
+                    var allTermsButCurrent = _uow.GetRepository<Term>().GetList(x => x.Id != termDto.Id).Items.ToList();
+                    allTermsButCurrent.ForEach(x => x.IsCurrent = false);
+                    _uow.GetRepository<Term>().Update(allTermsButCurrent);
+                }
                 _uow.GetRepository<Term>().Update(mapper);
                 _uow.SaveChanges();
                 termDto.Id = mapper.Id;

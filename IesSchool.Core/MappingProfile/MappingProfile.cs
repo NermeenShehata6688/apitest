@@ -100,7 +100,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<AspNetUser, AspNetUserDto>().ReverseMap();
             CreateMap<VwUser, VwUserDto>().ReverseMap();
             CreateMap<UserHelper, UserHelperDto>().ReverseMap();
-            CreateMap<UserAssistant, UserAssistantDto>().ReverseMap()
+            CreateMap<UserAssistant, UserAssistantDto>()
+             .ForMember(dist => dist.AssistantName, opt => opt.MapFrom(c => c.Assistant == null ? "" : c.Assistant.Name))
+                .ReverseMap()
            .ForMember(x => x.Assistant, op => op.Ignore()).ForMember(x => x.User, op => op.Ignore());
             CreateMap<TherapistParamedicalService, TherapistParamedicalServiceDto>()
              .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))

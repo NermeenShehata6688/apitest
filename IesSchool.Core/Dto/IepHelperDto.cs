@@ -14,7 +14,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<AcadmicYear> AllAcadmicYears { get; set; }
         public IPaginate<Term> AllTerms { get; set; }
         public IPaginate<User> AllTeachers { get; set; }
-        public IPaginate<Assistant> AllAssistants { get; set; }
+      //  public IPaginate<Assistant> AllAssistants { get; set; }
         public IPaginate<User> AllHeadOfEducations { get; set; }
         public IPaginate<Area> AllAreas { get; set; }
         public IPaginate<Strand> AllStrands { get; set; }
@@ -23,6 +23,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<ExtraCurricular> AllExtraCurriculars { get; set; }
         public IPaginate<Department> AllDepartments { get; set; }
         public IPaginate<SkillEvaluation> AllSkillEvaluations { get; set; }
+        public IPaginate<UserAssistant> AllTeacherAssistants { get; set; }
         public Setting Setting { get; set; }
 
     }
@@ -32,7 +33,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<AcadmicYearDto> AllAcadmicYears { get; set; }
         public PaginateDto<TermDto> AllTerms { get; set; }
         public PaginateDto<UserDto> AllTeachers { get; set; }
-        public PaginateDto<AssistantDto> AllAssistants { get; set; }
+       // public PaginateDto<AssistantDto> AllAssistants { get; set; }
         public PaginateDto<UserDto> AllHeadOfEducations { get; set; }
         public PaginateDto<AreaDto> AllAreas { get; set; }
         public PaginateDto<StrandDto> AllStrands { get; set; }
@@ -41,6 +42,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<ExtraCurricularDto> AllExtraCurriculars { get; set; }
         public PaginateDto<DepartmentDto> AllDepartments { get; set; }
         public PaginateDto<SkillEvaluationDto> AllSkillEvaluations { get; set; }
+        public PaginateDto<UserAssistantDto> AllTeacherAssistants { get; set; }
         public SettingDto Setting { get; set; }
 
 

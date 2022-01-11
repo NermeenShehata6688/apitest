@@ -52,6 +52,12 @@ namespace IesSchool.Core.Services
             {
                 acadmicYearDto.IsDeleted = false;
                 acadmicYearDto.CreatedOn = DateTime.Now;
+                if (acadmicYearDto.IsCurrent==true)
+                {
+                    var allAcademicYears = _uow.GetRepository<AcadmicYear>().GetList().Items.ToList();
+                    allAcademicYears.ForEach(x => x.IsCurrent = false);
+                    _uow.GetRepository<AcadmicYear>().Update(allAcademicYears);
+                }
                 var mapper = _mapper.Map<AcadmicYear>(acadmicYearDto);
                 _uow.GetRepository<AcadmicYear>().Add(mapper);
                 _uow.SaveChanges();
@@ -68,6 +74,12 @@ namespace IesSchool.Core.Services
             try
             {
                 var mapper = _mapper.Map<AcadmicYear>(acadmicYearDto);
+                if (acadmicYearDto.IsCurrent == true)
+                {
+                    var allAcadmicYearsButCurrent = _uow.GetRepository<AcadmicYear>().GetList(x => x.Id != acadmicYearDto.Id).Items.ToList();
+                    allAcadmicYearsButCurrent.ForEach(x => x.IsCurrent = false);
+                    _uow.GetRepository<AcadmicYear>().Update(allAcadmicYearsButCurrent);
+                }
                 _uow.GetRepository<AcadmicYear>().Update(mapper);
                 _uow.SaveChanges();
                 acadmicYearDto.Id = mapper.Id;
