@@ -937,15 +937,10 @@ namespace IesSchool.Core.Services
 					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
 
 
-					//Saving the Excel to the MemoryStream 
 					MemoryStream stream = new MemoryStream();
 					//workbook.SaveAsHtml(stream, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
 					workbook.SaveAs(stream);
-
-
-					//Set the position as '0'.
 					stream.Position = 0;
-					//Download the Excel file in the browser
 					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
 
 					fileStreamResult.FileDownloadName = (studentName + "-IEPReport" + ".xlsx");
@@ -1252,11 +1247,6 @@ namespace IesSchool.Core.Services
 
 		public FileStreamResult IepReportHTML(int iepId)
 		{
-			
-
-
-
-				
 			try
 			{
 				using (ExcelEngine excelEngine = new ExcelEngine())
@@ -1831,7 +1821,7 @@ namespace IesSchool.Core.Services
 					workbook.SaveAsHtml(stream, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
 					//workbook.SaveAs(stream);
 
-
+					
 					//Set the position as '0'.
 					stream.Position = 0;
 					//Download the Excel file in the browser
@@ -1840,7 +1830,12 @@ namespace IesSchool.Core.Services
 					//fileStreamResult.FileDownloadName = (studentName + "-IEPReport" + ".xlsx");
 					fileStreamResult.FileDownloadName = ("-IEPReport.html");
 
-					
+					//string path = HttpContext.Current.Server.MapPath("~/files/sample.html");
+
+					string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+					var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+
+					string content = System.IO.File.ReadAllText("-IEPReport.html");
 
 					return fileStreamResult;
 

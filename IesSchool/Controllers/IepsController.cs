@@ -126,7 +126,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
+        [HttpGet]
         public IActionResult IepObjectiveMasterdPercentage(int iepId)
         {
             try
