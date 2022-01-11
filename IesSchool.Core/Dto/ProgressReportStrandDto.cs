@@ -14,5 +14,7 @@ namespace IesSchool.Core.Dto
         public int? FirstTermPercentage { get; set; }
         public int? SecondTermPercentage { get; set; }
         public string? Comment { get; set; }
+        public string? AreaName { get; set; }
+        public string? StrandName { get; set; }
     }
 }

@@ -71,6 +71,19 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public FileStreamResult ProgressReport(int iepProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ProgressReport(iepProgressReportId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public FileStreamResult IepReportHTML(int iepId)
         {
             try

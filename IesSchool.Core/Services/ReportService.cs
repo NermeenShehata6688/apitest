@@ -1236,6 +1236,214 @@ namespace IesSchool.Core.Services
                 throw;
             }
         }
+		public FileStreamResult ProgressReport(int iepProgressReportId)
+		{
+			try
+			{
+				using (ExcelEngine excelEngine = new ExcelEngine())
+				{
+					IApplication application = excelEngine.Excel;
+					application.DefaultVersion = ExcelVersion.Excel2016;
+					int lastRow = 0;
+
+					var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId , null,
+						x => x.Include(x => x.ProgressReportExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+						.Include(x => x.ProgressReportParamedicals)
+						.Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand).ThenInclude(x => x.Area)
+						.Include(x => x.Teacher)
+						.Include(x => x.Student).Include(x => x.Term));
+					
+					var iepProgressReportDto = _mapper.Map<IepProgressReportDto>(iepProgressReport);
+
+					IWorkbook workbook = application.Workbooks.Create(0);
+					IWorksheet worksheet;
+
+					if (iepProgressReportDto != null)
+					{
+                       
+                        string acadmicYearName = "";
+                        string termName = "";
+						string studentName = iepProgressReportDto.StudentName==null?"":iepProgressReportDto.StudentName;
+						string dateOfBirthName = iepProgressReportDto.StudentBirthDay == null ? "" : iepProgressReportDto.StudentBirthDay;
+						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
+						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
+
+					worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+
+						#region Strands
+						worksheet.Range["A1:AH1"].Merge();
+						worksheet.Range["A1:AH1"].Text = "Educational";
+						worksheet.Range["A1:AH1"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+						lastRow = worksheet.Rows.Length+1;
+
+                        if (iepProgressReportDto.ProgressReportStrands.Count>0)
+                        {
+							foreach (var strand in iepProgressReportDto.ProgressReportStrands.ToList())
+							{
+								worksheet.Range["A" + (lastRow) + ":AH" + (lastRow+6)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+								worksheet.Range["A" + (lastRow) + ":Q" + (lastRow)].Merge();
+								worksheet.Range["A" + (lastRow) + ":Q" + (lastRow)].Text = strand.AreaName == null ? "" : strand.AreaName;
+								worksheet.Range["Q" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+								worksheet.Range["A" + (lastRow) + ":Ah" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+								worksheet.Range["R" + (lastRow) + ":AH" + (lastRow)].Merge();
+								worksheet.Range["R" + (lastRow) + ":AH" + (lastRow)].Text = strand.StrandName == null ? "" : strand.StrandName;
+
+								worksheet.Range["A" + (lastRow+1) + ":AH" + (lastRow+1)].Merge();
+								worksheet.Range["A" + (lastRow+1) + ":AH" + (lastRow+1)].Text = "Comment:";
+
+								worksheet.Range["A" + (lastRow + 2) + ":AH" + (lastRow + 6)].Merge();
+								worksheet.Range["A" + (lastRow + 2) + ":AH" + (lastRow + 6)].Text = strand.Comment == null ? "" : strand.Comment;
+								lastRow = worksheet.Rows.Length + 1;
+							}
+
+
+						}
+						#endregion
+						#region General
+						lastRow = worksheet.Rows.Length + 2;
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].Merge();
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].Text = "GENERAL COMMENT:";
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow+6)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 5)].Merge();
+						worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 5)].Text = iepProgressReportDto.GeneralComment == null ? "" : iepProgressReportDto.GeneralComment;
+						
+						worksheet.Range["A" + (lastRow + 6) + ":Q" + (lastRow + 6)].Merge();
+						worksheet.Range["A" + (lastRow + 6) + ":Q" + (lastRow + 6)].Text = "Teacher's name";
+						worksheet.Range["Q" + (lastRow+6)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["A" + (lastRow+6) + ":Ah" + (lastRow+6)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["R" + (lastRow + 6) + ":AH" + (lastRow + 6)].Merge();
+						worksheet.Range["R" + (lastRow + 6) + ":AH" + (lastRow + 6)].Text = "School Stamp";
+						lastRow = worksheet.Rows.Length+1;
+
+						worksheet.Range["A" + (lastRow) + ":Q" + (lastRow+4)].Merge();
+						worksheet.Range["A" + (lastRow) + ":Q" + (lastRow+4)].Text = iepProgressReportDto.TeacherName == null ? "" : iepProgressReportDto.TeacherName;
+						worksheet.Range["Q" + (lastRow)+ ":Q" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow+4)+ ":AH" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["R" + (lastRow) + ":AH" + (lastRow + 4)].Merge();
+						#endregion
+						#region Extra
+						lastRow = worksheet.Rows.Length + 2;
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].Merge();
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].Text = "Extra Curricula";
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow )].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow) + ":AH" + (lastRow )].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+
+						if (iepProgressReportDto.ProgressReportExtraCurriculars.Count > 0)
+                        {
+                            foreach (var extra in iepProgressReportDto.ProgressReportExtraCurriculars)
+                            {
+								worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].Merge();
+								worksheet.Range["A" + (lastRow + 1) + ":Q" + (lastRow + 1)].Text = extra.ExtraCurricularName == null ? "" : extra.ExtraCurricularName;
+								worksheet.Range["Q" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["A" + (lastRow + 1) + ":Ah" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+
+								worksheet.Range["A" + (lastRow+1) + ":Ah" + (lastRow+1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+								worksheet.Range["R" + (lastRow+ 1) + ":AH" + (lastRow + 1)].Merge();
+								worksheet.Range["R" + (lastRow + 1) + ":AH" + (lastRow + 1)].Text = extra.ExtraCurricularNameAr == null ? "" : extra.ExtraCurricularNameAr;
+								
+								worksheet.Range["A" + (lastRow+2) + ":AH" + (lastRow+5)].Merge();
+								worksheet.Range["A" + (lastRow+2) + ":AH" + (lastRow+5)].Text = extra.Comment == null ? "" : extra.Comment;
+								worksheet.Range["A" + (lastRow + 5) + ":Ah" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+								lastRow = worksheet.Rows.Length ;
+							}
+							lastRow = worksheet.Rows.Length+2;
+							worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].Merge();
+							worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].Text = "Other";
+							worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+							worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+
+							worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 9)].Merge();
+							worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 9)].Text = iepProgressReportDto.OtherComment == null ? "" : iepProgressReportDto.OtherComment;
+							worksheet.Range["A" + (lastRow + 9) + ":Ah" + (lastRow + 9)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+							lastRow = worksheet.Rows.Length;
+							worksheet.Range["AH1:AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						}
+
+						#endregion
+						#region Para
+						int lastRowLeftSide = 0;
+                        worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide)].Merge();
+                        worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide)].Text = "Paramedical";
+                        worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+                        worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+
+                        if (iepProgressReportDto.ProgressReportParamedicals.Count > 0)
+                        {
+                            foreach (var para in iepProgressReportDto.ProgressReportParamedicals)
+                            {
+                                worksheet.Range["A" + (lastRowLeftSide + 1) + ":Q" + (lastRowLeftSide + 1)].Merge();
+                                worksheet.Range["A" + (lastRowLeftSide + 1) + ":Q" + (lastRowLeftSide + 1)].Text = extra.ExtraCurricularName == null ? "" : extra.ExtraCurricularName;
+                                worksheet.Range["Q" + (lastRowLeftSide + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                                worksheet.Range["A" + (lastRowLeftSide + 1) + ":Ah" + (lastRowLeftSide + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+
+                                worksheet.Range["A" + (lastRowLeftSide + 1) + ":Ah" + (lastRowLeftSide + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                                worksheet.Range["R" + (lastRowLeftSide + 1) + ":AH" + (lastRowLeftSide + 1)].Merge();
+                                worksheet.Range["R" + (lastRowLeftSide + 1) + ":AH" + (lastRowLeftSide + 1)].Text = extra.ExtraCurricularNameAr == null ? "" : extra.ExtraCurricularNameAr;
+
+                                worksheet.Range["A" + (lastRowLeftSide + 2) + ":AH" + (lastRowLeftSide + 5)].Merge();
+                                worksheet.Range["A" + (lastRowLeftSide + 2) + ":AH" + (lastRowLeftSide + 5)].Text = extra.Comment == null ? "" : extra.Comment;
+                                worksheet.Range["A" + (lastRowLeftSide + 5) + ":Ah" + (lastRowLeftSide + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                                lastRow = worksheet.Rows.Length;
+                            }
+                        }
+                        #endregion
+
+
+
+                    }
+                    else
+					{
+						MemoryStream stream1 = new MemoryStream();
+						return new FileStreamResult(stream1, "application/excel");
+					}
+					#region General
+					lastRow = worksheet.Rows.Length;
+
+					worksheet.IsGridLinesVisible = true;
+					worksheet.Range["A1:BE1"].ColumnWidth = 1;
+					worksheet.Range["A1:AH" + (lastRow)].RowHeight = 10;
+					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
+					#endregion
+
+
+
+					MemoryStream stream = new MemoryStream();
+					//workbook.SaveAsHtml(stream, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
+					workbook.SaveAs(stream);
+					stream.Position = 0;
+					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
+
+					fileStreamResult.FileDownloadName = ("-IEPReport" + ".xlsx");
+					//fileStreamResult.FileDownloadName = ( "-IEPReport.html");
+
+
+					return fileStreamResult;
+				}
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
+		}
 
 
 

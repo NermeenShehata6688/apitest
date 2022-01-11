@@ -26,8 +26,11 @@ namespace IesSchool.Core.Dto
 
         public string? StudentCode { get; set; }
         public string? StudentName { get; set; }
+        public string? StudentBirthDay { get; set; }
+        public string? StudentDepartmentName { get; set; }
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
+        public string? TeacherName { get; set; }
         public int? StrandsCount { get; set; }
         public int? ParamedicalCount { get; set; }
         public int? ExtraCount { get; set; }

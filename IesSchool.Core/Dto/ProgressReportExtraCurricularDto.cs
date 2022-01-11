@@ -12,5 +12,7 @@ namespace IesSchool.Core.Dto
         public int? ProgressReportId { get; set; }
         public int? ExtraCurricularId { get; set; }
         public string? Comment { get; set; }
+        public string? ExtraCurricularName { get; set; }
+        public string? ExtraCurricularNameAr { get; set; }
     }
 }
