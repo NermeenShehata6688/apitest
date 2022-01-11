@@ -555,8 +555,13 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var objective = _uow.GetRepository<Objective>().GetList(x => x.IepId == iepId && x.IsDeleted != true, null, x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities));
-                var mapper = _mapper.Map<PaginateDto<ObjectiveDto>>(objective);
+                var objective = _uow.GetRepository<Objective>().GetList(x => x.IepId == iepId && x.IsDeleted != true, null,
+                    x => x.Include(s => s.ObjectiveEvaluationProcesses)
+                    .Include(s => s.ObjectiveSkills)
+                    .Include(s => s.Activities)
+                    .Include(s => s.Goal).ThenInclude(s => s.Strand)
+                     .Include(s => s.Goal).ThenInclude(s => s.Area));
+                var mapper = _mapper.Map<PaginateDto<IepObjectiveDto>>(objective);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)

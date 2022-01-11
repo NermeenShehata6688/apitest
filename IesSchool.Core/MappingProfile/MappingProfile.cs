@@ -218,6 +218,13 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.Objectives, op => op.Ignore());
 
 
+            CreateMap<Objective, IepObjectiveDto>()
+           .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Area == null ? "" : c.Goal.Area.Name == null ? "" : c.Goal.Area.Name))
+           .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Name == null ? "" : c.Goal.Strand.Name))
+            .ForMember(dist => dist.NoOfObjSkills, opt => opt.MapFrom(c => c.ObjectiveSkills == null ? 0 : c.ObjectiveSkills.Count()))
+            .ForMember(dist => dist.NoOfObjActivities, opt => opt.MapFrom(c => c.Activities == null ? 0 : c.Activities.Count()))
+           .ReverseMap();
+
             CreateMap<Objective, ObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))
            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c =>  c.Skill.SkillNumber == null ? 0: c.Skill.SkillNumber))).ReverseMap()
