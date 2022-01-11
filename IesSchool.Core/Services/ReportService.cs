@@ -1835,7 +1835,7 @@ namespace IesSchool.Core.Services
 					//string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 					//var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
 
-					//string content = System.IO.File.ReadAllText("-IEPReport.html");
+					string content = System.IO.File.ReadAllText("-IEPReport.html");
 
 					return fileStreamResult;
 
