@@ -12,7 +12,7 @@ namespace IesSchool.Core.Dto
         public int Id { get; set; }
         public int? SkillEvaluationId { get; set; }
         public int? ObjectiveId { get; set; }
-        public virtual SkillEvaluation? SkillEvaluation { get; set; }
+       // public virtual SkillEvaluationDto? SkillEvaluation { get; set; }
 
     }
 }

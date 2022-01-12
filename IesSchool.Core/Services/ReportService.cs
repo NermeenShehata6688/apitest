@@ -1410,25 +1410,81 @@ namespace IesSchool.Core.Services
 						chart = worksheet.Charts.Add();
 						//Set chart type
 						chart.ChartType = ExcelChartType.Column_Clustered;
-						IChartSerie gaol = chart.Series.Add("Goal");
-						
 
-						IChartSerie firstTerm = chart.Series.Add();
 						
-						IChartSerie secondTerm = chart.Series.Add();
-						
+						IChartSerie goal = chart.Series.Add("Goal");
+						goal.Values = worksheet.Range["B2:B6"];
+						goal.CategoryLabels = worksheet.Range["A2:A6"];
 
+						//Set second serie
+						IChartSerie firstTerm = chart.Series.Add("First Term");
+						firstTerm.Values = worksheet.Range["C2:C6"];
+						firstTerm.CategoryLabels = worksheet.Range["A2:A6"];
+						//Months
 						if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
-						{
-							for (int i = 0; i < iepProgressReportDto.ProgressReportStrands.Count(); i++)
-							{
-								firstTerm.EnteredDirectlyValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].FirstTermPercentage);
-								firstTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
+                        {
+							var progressStrands = iepProgressReportDto.ProgressReportStrands.ToList();
+							for (int i = 0; i < progressStrands.Count(); i++)
+                            {
 
-								secondTerm.EnteredDirectlyValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].SecondTermPercentage);
-								secondTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
-							}
-						}
+								//goal.CategoryLabels.Append( worksheet.Range["A" + (i + 1)].Text = progressStrands[i].StrandName;
+
+                            }
+                        }
+
+						worksheet.Range["A1"].Text = "Month";
+						worksheet.Range["B1"].Text = "Product A";
+						worksheet.Range["C1"].Text = "Product B";
+						//Create a random Data
+						//Random r = new Random();
+						//for (int i = 2; i <= 6; i++)
+						//{
+						//	for (int j = 2; j <= 3; j++)
+						//	{
+						//		worksheet.Range[i, j].Number = r.Next(0, 500);
+						//	}
+						//}
+						//IChartShape chart = worksheet.Charts.Add();
+
+						//Set chart type
+						chart.ChartType = ExcelChartType.Column_Clustered;
+
+						//Set Chart Title
+						chart.ChartTitle = "Product Sales comparison";
+
+						//Set first serie
+						
+
+
+
+
+
+						//IChartSerie gaol = chart.Series.Add("Goal");
+						//IChartSerie firstTerm = chart.Series.Add(ExcelChartType.Column_Clustered);						;
+						//IChartSerie secondTerm = chart.Series.Add(ExcelChartType.Column_Clustered);
+
+						//object[]   goalsValues;
+						
+
+						//if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
+						//{
+						//	for (int i = 0; i < iepProgressReportDto.ProgressReportStrands.Count(); i++)
+						//	{
+
+						//		worksheet.Range["A" + (i + 1)].Text = iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName;
+
+
+
+						//		//goalsValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].GoalLongTermNumber==null?0: iepProgressReportDto.ProgressReportStrands.ToList()[i].GoalLongTermNumber);
+						//		//gaol.CategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName == null ? "" : iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
+
+						//		firstTerm.va=(iepProgressReportDto.ProgressReportStrands.ToList()[i].FirstTermPercentage == null ? 0 : iepProgressReportDto.ProgressReportStrands.ToList()[i].FirstTermPercentage);
+      //                          firstTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName == null ? "" : iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
+
+      //                          //secondTerm.EnteredDirectlyValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].SecondTermPercentage == null ? 0 : iepProgressReportDto.ProgressReportStrands.ToList()[i].SecondTermPercentage);
+      //                          //secondTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName == null ? "" : iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
+      //                      }
+						//}
 
 
 

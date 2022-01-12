@@ -11,6 +11,8 @@ namespace IesSchool.Context.Models
         public int? FirstTermPercentage { get; set; }
         public int? SecondTermPercentage { get; set; }
         public string? Comment { get; set; }
+        public int? GoalShortTermNumber { get; set; }
+        public int? GoalLongTermNumber { get; set; }
 
         public virtual IepProgressReport? ProgressReport { get; set; }
         public virtual Strand? Strand { get; set; }

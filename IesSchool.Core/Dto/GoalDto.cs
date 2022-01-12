@@ -15,6 +15,7 @@ namespace IesSchool.Core.Dto
         public string? CurrentLevel { get; set; }
         public string? LongTermGoal { get; set; }
         public string? ShortTermGoal { get; set; }
+        public int? LongTermNumber { get; set; }
         public int? Iepid { get; set; }
         public int? ShortTermProgressNumber { get; set; }
         public string? DeletedBy { get; set; }

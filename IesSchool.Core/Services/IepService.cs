@@ -1126,7 +1126,9 @@ namespace IesSchool.Core.Services
                                     {
                                         Id = 0,
                                         ProgressReportId = 0,
-                                        StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId.Value,
+                                        StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId,
+                                        GoalLongTermNumber = iep.Goals.ToList()[i].LongTermNumber == null ? 0 : iep.Goals.ToList()[i].LongTermNumber,
+                                        GoalShortTermNumber = iep.Goals.ToList()[i].ShortTermProgressNumber == null ? 0 : iep.Goals.ToList()[i].ShortTermProgressNumber,
                                         FirstTermPercentage = frsTermPercentage,
                                         SecondTermPercentage = scndTermPercentage,
                                         Comment = ""

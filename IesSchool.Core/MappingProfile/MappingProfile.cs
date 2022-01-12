@@ -181,7 +181,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ProgressReportStrand, ProgressReportStrandDto>()
             .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Strand == null ? "" :c.Strand.Name))
             .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
-            .ForMember(dist => dist.ShortTermProgressNumber, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
+            //.ForMember(dist => dist.ShortTermProgressNumber, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
                 .ReverseMap();
 
             CreateMap<IepParamedicalService, IepParamedicalServiceDto>()
@@ -243,8 +243,7 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(x => x.Goal, op => op.Ignore());
 
               
-            CreateMap<ObjectiveEvaluationProcess, ObjectiveEvaluationProcessDto>()
-            .ForMember(x => x.SkillEvaluation, op => op.Ignore()).ReverseMap(); ;
+            CreateMap<ObjectiveEvaluationProcess, ObjectiveEvaluationProcessDto>().ReverseMap();
 
             CreateMap<ObjectiveSkill, ObjectiveSkillDto>()
             .ForMember(dist => dist.SkillNumber, opt => opt.MapFrom(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber))
