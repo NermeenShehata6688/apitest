@@ -16,5 +16,7 @@ namespace IesSchool.Core.Dto
         public string? Comment { get; set; }
         public string? AreaName { get; set; }
         public string? StrandName { get; set; }
+        public int? ShortTermProgressNumber { get; set; }
+
     }
 }

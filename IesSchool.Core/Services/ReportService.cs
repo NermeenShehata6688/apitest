@@ -1405,93 +1405,50 @@ namespace IesSchool.Core.Services
 						}
 
 						#endregion
-
-
-
-
-
-
 						#region Chart
-						worksheet.Range["AO1:BV10"].Merge();
 
-						//int currentCulumn = 40;
-      //                  if (iepProgressReportDto.ProgressReportStrands.Count()>0)
-      //                  {
-						//		for (int i = 0; i < iepProgressReportDto.ProgressReportStrands.Count(); i++)
-						//		{
-						//			worksheet.Range["A" + (i + 1)].Text = iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName;
-
-
-
-						//			//worksheet.Range[(lastRow + 1), (currentCulumn + i)].CellStyle.Font.Size = 9;
-						//			//worksheet.Range[(lastRow + 1), (currentCulumn + i)].Number = (double)(strandSkills[i].SkillNumber == null ? 0 : strandSkills[i].SkillNumber);
-									
-						//			//		worksheet.Range[(lastRow + 1), (currentCulumn + i)].CellStyle.Color = Color.FromArgb(113, 211, 110);
-										
-						//		}
-      //                  }
-						
-
-						//worksheet.Range["A1"].Text = "Month";
-						//worksheet.Range["B1"].Text = "Goal";
-						//worksheet.Range["C1"].Text = "First Term";
-						//worksheet.Range["C1"].Text = "Second Term";
-
-						//Months
-						//worksheet.Range["A2"].Text = "Jan";
-						//worksheet.Range["A3"].Text = "Feb";
-						//worksheet.Range["A4"].Text = "Mar";
-						//worksheet.Range["A5"].Text = "Apr";
-						//worksheet.Range["A6"].Text = "May";
-
-						//Create a random Data
-						//Random r = new Random();
-						//for (int i = 2; i <= 6; i++)
-						//{
-						//	for (int j = 2; j <= 3; j++)
-						//	{
-						//		worksheet.Range[i, j].Number = r.Next(0, 500);
-						//	}
-						//}
-						 chart = worksheet.Charts.Add();
-
+						chart = worksheet.Charts.Add();
 						//Set chart type
 						chart.ChartType = ExcelChartType.Column_Clustered;
+						IChartSerie gaol = chart.Series.Add("Goal");
+						
 
-						//Set Chart Title
-						chart.ChartTitle = "Product Sales comparison";
+						IChartSerie firstTerm = chart.Series.Add();
+						
+						IChartSerie secondTerm = chart.Series.Add();
+						
 
-                        //Set first serie
-                        //IChartSerie gaol = chart.Series.Add("Goal");
-                        //gaol.Values = worksheet.Range["B2:B6"];
-                        //gaol.CategoryLabels = worksheet.Range["A2:A6"];
+						if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
+						{
+							for (int i = 0; i < iepProgressReportDto.ProgressReportStrands.Count(); i++)
+							{
+								firstTerm.EnteredDirectlyValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].FirstTermPercentage);
+								firstTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
 
-                        ////Set second serie
-                        //IChartSerie productB = chart.Series.Add("ProductB");
-                        //productB.Values = worksheet.Range["C2:C6"];
-                        //productB.CategoryLabels = worksheet.Range["A2:A6"];
-
-
-
-                        object[] yValues = new object[] { 2000, 1000, 1000 };
-                        object[] xValues = new object[] { "Total Income", "Expenses", "Profit" };
-
-
-                        chart.ChartType = ExcelChartType.Column_Clustered;
-                        chart.DataRange = worksheet.Range["A70:AH70"];
-
-                        IChartSerie serie = chart.Series.Add(ExcelChartType.Column_Clustered);
+								secondTerm.EnteredDirectlyValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].SecondTermPercentage);
+								secondTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
+							}
+						}
 
 
-                        serie.EnteredDirectlyValues = yValues;
-                        serie.EnteredDirectlyCategoryLabels = xValues;
+
+                        //object[] yValues = new object[] { 2000, 1000, 1000 };
+                        //object[] xValues = new object[] { "Total Income", "Expenses", "Profit" };
+
+
+                        //chart.ChartType = ExcelChartType.Column_Clustered;
+                        //chart.DataRange = worksheet.Range["A70:AH70"];
+
+                        //IChartSerie serie = chart.Series.Add(ExcelChartType.Column_Clustered);
+
+
+                        //serie.EnteredDirectlyValues = yValues;
+                        //serie.EnteredDirectlyCategoryLabels = xValues;
 
 
                         //worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide+25)].Merge();
 
                         #endregion
-
-
 
                     }
 					else

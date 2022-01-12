@@ -28,6 +28,11 @@ namespace IesSchool.Core.Dto
         public string?[] EvaluationProcessName { get; set; }
         //public int?[] ObjSkillsIds { get; set; }
         public int?[] ObjSkillsNumbers { get; set; }
+        public int? ObjAreaId { get; set; }
+        public int? ObjStrandId { get; set; }
+        public int? ObjActivitiesCount { get; set; }
+
+
 
         public virtual ICollection<ActivityDto>? Activities { get; set; }
         public virtual ICollection<ObjectiveSkillDto>? ObjectiveSkills { get; set; }

@@ -542,7 +542,9 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var objective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId && x.IsDeleted != true, null, x=> x.Include(s=> s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities));
+                var objective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId && x.IsDeleted != true, null,
+                    x=> x.Include(s=> s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities)
+                    .Include(s => s.Goal));
                 var mapper = _mapper.Map<ObjectiveDto>(objective);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
