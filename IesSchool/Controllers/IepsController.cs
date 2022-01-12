@@ -283,11 +283,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpPut]
-        public IActionResult PutObjective(ObjectiveDto objectiveDto)
+        public IActionResult EditObjectiveActivities(ObjectiveActivitiesDto objectiveActivitiesDto)
         {
             try
             {
-                var all = _iepService.EditObjective(objectiveDto);
+                var all = _iepService.EditObjectiveActivities(objectiveActivitiesDto);
                 return Ok(all);
             }
             catch (Exception)

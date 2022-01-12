@@ -1413,13 +1413,13 @@ namespace IesSchool.Core.Services
 
 						
 						IChartSerie goal = chart.Series.Add("Goal");
-						goal.Values = worksheet.Range["B2:B6"];
-						goal.CategoryLabels = worksheet.Range["A2:A6"];
+						//goal.Values = worksheet.Range["B2:B6"];
+						//goal.CategoryLabels = worksheet.Range["A2:A6"];
 
 						//Set second serie
 						IChartSerie firstTerm = chart.Series.Add("First Term");
-						firstTerm.Values = worksheet.Range["C2:C6"];
-						firstTerm.CategoryLabels = worksheet.Range["A2:A6"];
+						//firstTerm.Values = worksheet.Range["C2:C6"];
+						//firstTerm.CategoryLabels = worksheet.Range["A2:A6"];
 						//Months
 						if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
                         {
@@ -1427,14 +1427,15 @@ namespace IesSchool.Core.Services
 							for (int i = 0; i < progressStrands.Count(); i++)
                             {
 
-								//goal.CategoryLabels.Append( worksheet.Range["A" + (i + 1)].Text = progressStrands[i].StrandName;
-
-                            }
+								 worksheet.Range["A" + (i + 1)].Text = progressStrands[i].StrandName;
+								goal.CategoryLabels = worksheet.Range["A1:A20"];
+								
+							}
                         }
 
-						worksheet.Range["A1"].Text = "Month";
-						worksheet.Range["B1"].Text = "Product A";
-						worksheet.Range["C1"].Text = "Product B";
+						//worksheet.Range["A1"].Text = "Month";
+						//worksheet.Range["B1"].Text = "Product A";
+						//worksheet.Range["C1"].Text = "Product B";
 						//Create a random Data
 						//Random r = new Random();
 						//for (int i = 2; i <= 6; i++)
@@ -1447,10 +1448,10 @@ namespace IesSchool.Core.Services
 						//IChartShape chart = worksheet.Charts.Add();
 
 						//Set chart type
-						chart.ChartType = ExcelChartType.Column_Clustered;
+						//chart.ChartType = ExcelChartType.Column_Clustered;
 
 						//Set Chart Title
-						chart.ChartTitle = "Product Sales comparison";
+						//chart.ChartTitle = "Product Sales comparison";
 
 						//Set first serie
 						

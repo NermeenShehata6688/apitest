@@ -31,7 +31,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetObjectiveById(int objectiveId);
         public ResponseDto GetObjectiveByIEPId(int iepId);
         public ResponseDto AddObjective(ObjectiveDto objectiveDto);
-        public ResponseDto EditObjective(ObjectiveDto objectiveDto);
+        public ResponseDto EditObjectiveActivities(ObjectiveActivitiesDto objectiveDto);
         public ResponseDto DeleteObjective(int objectiveId);
         public bool ObjectiveIsMasterd(Objective objective);
 

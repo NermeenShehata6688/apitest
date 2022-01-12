@@ -604,29 +604,24 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditObjective(ObjectiveDto objectiveDto)
+        public ResponseDto EditObjectiveActivities(ObjectiveActivitiesDto objectiveActivitiesDto)
         {
             try
             {
-                if (objectiveDto != null)
+                if (objectiveActivitiesDto != null)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
-                    var cmd = $"delete from Objective_EvaluationProcess where ObjectiveId ={objectiveDto.Id}" +
-                        $"  delete from Objective_Skill where ObjectiveId ={ objectiveDto.Id}";
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
-
-                    if (objectiveDto.Activities != null)
+                    if (objectiveActivitiesDto.Activities != null)
                     {
-                        var listint = objectiveDto.Activities.Select(x => x.Id);
-                        _iesContext.Activities.RemoveRange(_iesContext.Activities.Where(x => !listint.Contains(x.Id) && x.ObjectiveId == objectiveDto.Id));
-                        _uow.SaveChanges();
+                        var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
+                        _iesContext.Database.ExecuteSqlRaw(cmd);
                     }
 
-                    var mapper = _mapper.Map<Objective>(objectiveDto);
+                    var mapper = _mapper.Map<Objective>(objectiveActivitiesDto);
                     mapper.IsDeleted = false;
                     _uow.GetRepository<Objective>().Update(mapper);
                     _uow.SaveChanges();
-                    objectiveDto.Id = mapper.Id;
+                    objectiveActivitiesDto.Id = mapper.Id;
                     transaction.Commit();
 
                     //check if object isMasterd
@@ -641,7 +636,7 @@ namespace IesSchool.Core.Services
                         _uow.GetRepository<Objective>().Update(mapper);
                         _uow.SaveChanges();
                     }
-                    return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveDto };
+                    return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveActivitiesDto };
                 }
                 else
                 {
