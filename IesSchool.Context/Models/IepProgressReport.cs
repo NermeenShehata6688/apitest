@@ -22,6 +22,8 @@ namespace IesSchool.Context.Models
         public string? OtherComment { get; set; }
         public int? TeacherId { get; set; }
         public int? HeadOfEducationId { get; set; }
+        public int? GoalShortTermNumber { get; set; }
+        public int? GoalLongTermNumber { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
         public bool? IsDeleted { get; set; }
