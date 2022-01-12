@@ -1410,104 +1410,78 @@ namespace IesSchool.Core.Services
 						chart = worksheet.Charts.Add();
 						//Set chart type
 						chart.ChartType = ExcelChartType.Column_Clustered;
+						//chart.DataRange = worksheet.Range["AO1:BV20"];
 
-						
-						IChartSerie goal = chart.Series.Add("Goal");
-						//goal.Values = worksheet.Range["B2:B6"];
-						//goal.CategoryLabels = worksheet.Range["A2:A6"];
-
-						//Set second serie
-						IChartSerie firstTerm = chart.Series.Add("First Term");
-						//firstTerm.Values = worksheet.Range["C2:C6"];
-						//firstTerm.CategoryLabels = worksheet.Range["A2:A6"];
-						//Months
-						if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
+						//IChartSerie goal = chart.Series.Add("Goal");
+                        IChartSerie firstTerm = chart.Series.Add("First Term"); ;
+                        IChartSerie secondTerm = chart.Series.Add("Second Term");
+                        //firstTerm.Values = worksheet.Range["C2:C6"];
+                        //firstTerm.CategoryLabels = worksheet.Range["A2:A6"];
+                        //Months
+                        if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
                         {
 							var progressStrands = iepProgressReportDto.ProgressReportStrands.ToList();
 							for (int i = 0; i < progressStrands.Count(); i++)
                             {
+								worksheet.Range["AO" + (i + 1)].Text = progressStrands[i].StrandName;
+								worksheet.Range["AP" + (i + 1)].Text = progressStrands[i].FirstTermPercentage.ToString();
+								worksheet.Range["AQ" + (i + 1)].Text = progressStrands[i].SecondTermPercentage.ToString();
+                                //goal.Values = worksheet.Range["AO1:AO" + progressStrands.Count()];
+                                //goal.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
 
-								 worksheet.Range["A" + (i + 1)].Text = progressStrands[i].StrandName;
-								goal.CategoryLabels = worksheet.Range["A1:A20"];
-								
-							}
-                        }
+                                firstTerm.Values = worksheet.Range["AP1:AP"+ progressStrands.Count()];
+								firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
 
-						//worksheet.Range["A1"].Text = "Month";
-						//worksheet.Range["B1"].Text = "Product A";
-						//worksheet.Range["C1"].Text = "Product B";
+                                secondTerm.Values = worksheet.Range["AQ1:AQ" + progressStrands.Count()];
+                                secondTerm.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
+
+                            }
+						}
+
+                        //worksheet.Range["A1"].Text = "Month";
+                        //worksheet.Range["B1"].Text = "Product A";
+                        //worksheet.Range["C1"].Text = "Product B";
+                        //Create a random Data
+                       
+						//Inserts the sample data for the chart
+						worksheet.Range["A1"].Text = "Month";
+						worksheet.Range["B1"].Text = "Product A";
+						worksheet.Range["C1"].Text = "Product B";
+
+						//Months
+						worksheet.Range["A2"].Text = "Jan";
+						worksheet.Range["A3"].Text = "Feb";
+						worksheet.Range["A4"].Text = "Mar";
+						worksheet.Range["A5"].Text = "Apr";
+						worksheet.Range["A6"].Text = "May";
+
 						//Create a random Data
-						//Random r = new Random();
-						//for (int i = 2; i <= 6; i++)
-						//{
-						//	for (int j = 2; j <= 3; j++)
-						//	{
-						//		worksheet.Range[i, j].Number = r.Next(0, 500);
-						//	}
-						//}
-						//IChartShape chart = worksheet.Charts.Add();
+						Random r = new Random();
+						for (int i = 2; i <= 6; i++)
+						{
+							for (int j = 2; j <= 3; j++)
+							{
+								worksheet.Range[i, j].Number = r.Next(0, 500);
+							}
+						}
 
-						//Set chart type
-						//chart.ChartType = ExcelChartType.Column_Clustered;
 
 						//Set Chart Title
-						//chart.ChartTitle = "Product Sales comparison";
+						chart.ChartTitle = "Product Sales comparison";
 
 						//Set first serie
-						
+						IChartSerie productA = chart.Series.Add("ProductA");
+						productA.Values = worksheet.Range["B2:B6"];
+						productA.CategoryLabels = worksheet.Range["A2:A6"];
 
+						//Set second serie
+						IChartSerie productB = chart.Series.Add("ProductB");
+						productB.Values = worksheet.Range["C2:C6"];
+						productB.CategoryLabels = worksheet.Range["A2:A6"];
 
+						#endregion
 
-
-
-						//IChartSerie gaol = chart.Series.Add("Goal");
-						//IChartSerie firstTerm = chart.Series.Add(ExcelChartType.Column_Clustered);						;
-						//IChartSerie secondTerm = chart.Series.Add(ExcelChartType.Column_Clustered);
-
-						//object[]   goalsValues;
-						
-
-						//if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
-						//{
-						//	for (int i = 0; i < iepProgressReportDto.ProgressReportStrands.Count(); i++)
-						//	{
-
-						//		worksheet.Range["A" + (i + 1)].Text = iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName;
-
-
-
-						//		//goalsValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].GoalLongTermNumber==null?0: iepProgressReportDto.ProgressReportStrands.ToList()[i].GoalLongTermNumber);
-						//		//gaol.CategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName == null ? "" : iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
-
-						//		firstTerm.va=(iepProgressReportDto.ProgressReportStrands.ToList()[i].FirstTermPercentage == null ? 0 : iepProgressReportDto.ProgressReportStrands.ToList()[i].FirstTermPercentage);
-      //                          firstTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName == null ? "" : iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
-
-      //                          //secondTerm.EnteredDirectlyValues.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].SecondTermPercentage == null ? 0 : iepProgressReportDto.ProgressReportStrands.ToList()[i].SecondTermPercentage);
-      //                          //secondTerm.EnteredDirectlyCategoryLabels.Append(iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName == null ? "" : iepProgressReportDto.ProgressReportStrands.ToList()[i].StrandName);
-      //                      }
-						//}
-
-
-
-                        //object[] yValues = new object[] { 2000, 1000, 1000 };
-                        //object[] xValues = new object[] { "Total Income", "Expenses", "Profit" };
-
-
-                        //chart.ChartType = ExcelChartType.Column_Clustered;
-                        //chart.DataRange = worksheet.Range["A70:AH70"];
-
-                        //IChartSerie serie = chart.Series.Add(ExcelChartType.Column_Clustered);
-
-
-                        //serie.EnteredDirectlyValues = yValues;
-                        //serie.EnteredDirectlyCategoryLabels = xValues;
-
-
-                        //worksheet.Range["AO" + (lastRowLeftSide) + ":BV" + (lastRowLeftSide+25)].Merge();
-
-                        #endregion
-
-                    }
+					}
 					else
 					{
 						MemoryStream stream1 = new MemoryStream();

@@ -337,11 +337,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetActivityById(int activityId)
+        public IActionResult GetActivityByObjectiveId(int objectiveId)
         {
             try
             {
-                var all = _iepService.GetActivityById(activityId);
+                var all = _iepService.GetActivityByObjectiveId(objectiveId);
                 return Ok(all);
             }
             catch (Exception)

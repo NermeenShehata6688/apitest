@@ -737,12 +737,12 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetActivityById(int activityId)
+        public ResponseDto GetActivityByObjectiveId(int objectiveId)
         {
             try
             {
-                var activity = _uow.GetRepository<Activity>().Single(x => x.Id == activityId,null, x=> x.Include(s=> s.Objective));
-                var mapper = _mapper.Map<ActivityDto>(activity);
+                var objActivities = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objectiveId, null);
+                var mapper = _mapper.Map<PaginateDto<ActivityDto>>(objActivities);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
