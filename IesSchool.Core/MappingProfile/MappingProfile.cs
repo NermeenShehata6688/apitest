@@ -50,9 +50,9 @@ namespace IesSchool.Core.MappingProfile
            .ReverseMap();
 
             CreateMap<Skill, SkillDto>()
-            .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area.Name))
+            .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ? "" : c.Strand.Area.Name))
             .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Name))
-            .ForMember(dist => dist.AllowedDepartments, opt => opt.MapFrom(c => c.SkillAlowedDepartments.ToList().Select(x => x.Department.Name).Distinct())).ReverseMap()
+            .ForMember(dist => dist.AllowedDepartments, opt => opt.MapFrom(c => c.SkillAlowedDepartments.ToList().Select(x => x.Department==null?"": x.Department.Name).Distinct())).ReverseMap()
             .ForMember(x => x.Strand, op => op.Ignore())
             .ForMember(x => x.ObjectiveSkills, op => op.Ignore()).ReverseMap();
 
@@ -123,7 +123,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Iep, GetIepDto>()
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
             .ForMember(dist => dist.StudentCodeName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
-            .ForMember(dist => dist.StudentBirthdayName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth.Value.ToShortDateString()))
+            .ForMember(dist => dist.StudentBirthdayName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth == null ? "" : c.Student.DateOfBirth.Value.ToShortDateString()))
             .ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department== null ? "" : c.Student.Department.Name))
             .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name))
             .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Term == null ? "" : c.Term.Name))
@@ -229,8 +229,8 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Objective, ObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))
            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c =>  c.Skill == null ? 0: c.Skill.SkillNumber == null ? 0: c.Skill.SkillNumber)))
-           .ForMember(dist => dist.ObjAreaId, opt => opt.MapFrom(c => c.Goal== null ? 0 : c.Goal.AreaId == null ? 0 : c.Goal.AreaId))
-           .ForMember(dist => dist.ObjStrandId, opt => opt.MapFrom(c => c.Goal== null ? 0 : c.Goal.StrandId == null ? 0 : c.Goal.StrandId))
+           .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Goal== null ?"" : c.Goal.Area == null ? "" : c.Goal.Area.Name))
+           .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Goal== null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Name))
             .ForMember(dist => dist.ObjActivitiesCount, opt => opt.MapFrom(c => c.Activities == null ? 0 : c.Activities.Count())).ReverseMap()
            .ForMember(x => x.Goal, op => op.Ignore()).ReverseMap();
             //.ForMember(x => x.ObjectiveEvaluationProcesses, op => op.Ignore())
@@ -247,7 +247,7 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.SkillEvaluation, op => op.Ignore()).ReverseMap(); ;
 
             CreateMap<ObjectiveSkill, ObjectiveSkillDto>()
-            .ForMember(dist => dist.SkillNumber, opt => opt.MapFrom(c => c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber))
+            .ForMember(dist => dist.SkillNumber, opt => opt.MapFrom(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber))
             .ReverseMap();
 
             CreateMap<Activity, ActivityDto>()
