@@ -40,6 +40,8 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Strand, StrandDto>()
            .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Skills.Count()))
             .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Area == null ? "" : c.Area.Name))
+            .ForMember(dist => dist.MaxSkillForStrand, opt => opt.MapFrom(c => c.Skills == null ? 0 : c.Skills.ToList().Where(x=> x.StrandId==c.Id)==null?0: c.Skills.Where(x => x.StrandId == c.Id).Select(x => x.SkillNumber).ToList().Max()))
+            //.ForMember(dist => dist.LastIndexForStrand, opt => opt.MapFrom(c => c.Skills == null ? 0 : c.Skills.Where(x=> x.StrandId==c.Id)==null?0: c.Skills.Where(x => x.StrandId == c.Id).Select(x=> x.SkillNumber).ToList().Last())
             .ReverseMap()
             .ForMember(x => x.Skills, op => op.Ignore())
             .ForMember(x => x.Area, op => op.Ignore()).ReverseMap();

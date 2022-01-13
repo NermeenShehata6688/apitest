@@ -319,6 +319,40 @@ namespace IesSchool.Core.Services
                 return 0;
             }
         }
+        public ResponseDto DuplicateIEP(int iepId)
+        {
+            try
+            {
+                if (iepId != 0)
+                {
+                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
+               .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
+               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
+               .Include(s => s.Student).ThenInclude(s => s.Department)
+               .Include(s => s.Teacher)
+               .Include(s => s.HeadOfDepartmentNavigation)
+               .Include(s => s.HeadOfEducationNavigation)
+               .Include(s => s.AcadmicYear)
+               .Include(s => s.Term)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
+               .Include(s => s.Goals).ThenInclude(s => s.Strand)
+               .Include(s => s.Goals).ThenInclude(s => s.Area)
+               );
+                    var mapper = _mapper.Map<GetIepDto>(iep);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
 
         public ResponseDto GetGoals()
         {
@@ -393,15 +427,15 @@ namespace IesSchool.Core.Services
                             objective.IsDeleted = false;
                             objective.CreatedOn = DateTime.Now;
 
-                            if (objective.Activities != null && objective.Activities.Count() > 2)
-                            {
-                                var obj = _mapper.Map<Objective>(objective);
-                                objective.IsMasterd = ObjectiveIsMasterd(obj);
-                                if (objective.IsMasterd==true)
-                                {
-                                    objective.Date = DateTime.Now;
-                                }
-                            }
+                            //if (objective.Activities != null && objective.Activities.Count() > 2)
+                            //{
+                            //    var obj = _mapper.Map<Objective>(objective);
+                            //    objective.IsMasterd = ObjectiveIsMasterd(obj);
+                            //    if (objective.IsMasterd==true)
+                            //    {
+                            //        objective.Date = DateTime.Now;
+                            //    }
+                            //}
                         }
                     }
                     var mapper = _mapper.Map<Goal>(goalDto);
@@ -615,6 +649,11 @@ namespace IesSchool.Core.Services
                     {
                         var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
                         _iesContext.Database.ExecuteSqlRaw(cmd);
+                        if (objectiveActivitiesDto.Activities != null && objectiveActivitiesDto.Activities.Count() > 2)
+                        {
+                            var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
+                            objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
+                        }
                     }
 
                     var mapper = _mapper.Map<Objective>(objectiveActivitiesDto);
@@ -695,26 +734,6 @@ namespace IesSchool.Core.Services
                     else
                         return false;
                 }
-                //// edit Objective
-                //if (objective.Id != 0 || objective.Activities != null || objective.Activities.Count() >= 2 || objective.Activities.Any(x => x.Evaluation == 3))
-                //{
-                //    //if Activities.Count() >= 2
-                //    if (objective.Activities.Count() >= 2)
-                //    {
-                //        int eval = 0;
-                //        for (int i = 0; i < objective.Activities.Count(); i++)
-                //        {
-                //            if (objective.Activities.ToList()[i].Evaluation == 3)
-                //            {
-                //                eval++;
-                //                if (eval == 3)
-                //                    return true;
-                //            }
-                //            else
-                //                eval = 0;
-                //        }
-                //    }
-                //}
                 return false;
             }
             catch (Exception ex)

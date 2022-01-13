@@ -23,6 +23,8 @@ namespace IesSchool.Core.Dto
         public string? CreatedBy { get; set; }
         public int? SkillsCount { get; set; }
         public string? AreaName { get; set; }
-        
+        public int? MaxSkillForStrand { get; set; }
+
+
     }
 }

@@ -1410,52 +1410,39 @@ namespace IesSchool.Core.Services
 						chart = worksheet.Charts.Add();
 						//Set chart type
 						chart.ChartType = ExcelChartType.Column_Clustered;
+						chart.PrimaryValueAxis.MaximumValue = 90;
+						chart.PrimaryValueAxis.MinimumValue = 0;
+						chart.PrimaryValueAxis.MajorUnit = 10;
+
+
+
+
+						//chart.IsSeriesInRows = false;
+						//chart.DataRange = worksheet.Range("AP1:AP20");
+						//chart.HasLegend = false;
 						//chart.DataRange = worksheet.Range["AO1:BV20"];
 
-						//IChartSerie goal = chart.Series.Add("Goal");
-                        IChartSerie firstTerm = chart.Series.Add("First Term"); ;
-                        IChartSerie secondTerm = chart.Series.Add("Second Term");
-                        //firstTerm.Values = worksheet.Range["C2:C6"];
-                        //firstTerm.CategoryLabels = worksheet.Range["A2:A6"];
-                        //Months
-                        if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
+						IChartSerie goal = chart.Series.Add("Goal");
+                        IChartSerie firstTerm = chart.Series.Add("First Term");
+						firstTerm.SerieType = ExcelChartType.Column_Clustered;
+						chart.DataRange = worksheet.Range["AO1:BV50"];
+
+
+						//IChartSerie secondTerm = chart.Series.Add("Second Term");
+
+						if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
                         {
 							var progressStrands = iepProgressReportDto.ProgressReportStrands.ToList();
 							for (int i = 0; i < progressStrands.Count(); i++)
                             {
 								worksheet.Range["AO" + (i + 1)].Text = progressStrands[i].StrandName;
 								worksheet.Range["AP" + (i + 1)].Text = progressStrands[i].FirstTermPercentage.ToString();
-								worksheet.Range["AQ" + (i + 1)].Text = progressStrands[i].SecondTermPercentage.ToString();
-                                //goal.Values = worksheet.Range["AO1:AO" + progressStrands.Count()];
-                                //goal.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
-
-                                firstTerm.Values = worksheet.Range["AP1:AP"+ progressStrands.Count()];
-								firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
-
-                                secondTerm.Values = worksheet.Range["AQ1:AQ" + progressStrands.Count()];
-                                secondTerm.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
-
+								worksheet.Range["C" + (i + 1)].Text = progressStrands[i].SecondTermPercentage.ToString();
                             }
 						}
 
-                        //worksheet.Range["A1"].Text = "Month";
-                        //worksheet.Range["B1"].Text = "Product A";
-                        //worksheet.Range["C1"].Text = "Product B";
-                        //Create a random Data
-                       
-						//Inserts the sample data for the chart
-						worksheet.Range["A1"].Text = "Month";
-						worksheet.Range["B1"].Text = "Product A";
-						worksheet.Range["C1"].Text = "Product B";
-
-						//Months
-						worksheet.Range["A2"].Text = "Jan";
-						worksheet.Range["A3"].Text = "Feb";
-						worksheet.Range["A4"].Text = "Mar";
-						worksheet.Range["A5"].Text = "Apr";
-						worksheet.Range["A6"].Text = "May";
-
-						//Create a random Data
+						//goal.Values = worksheet.Range["AO1:AO" + progressStrands.Count()];
+						//goal.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
 						Random r = new Random();
 						for (int i = 2; i <= 6; i++)
 						{
@@ -1466,22 +1453,54 @@ namespace IesSchool.Core.Services
 						}
 
 
-						//Set Chart Title
-						chart.ChartTitle = "Product Sales comparison";
 
-						//Set first serie
-						IChartSerie productA = chart.Series.Add("ProductA");
-						productA.Values = worksheet.Range["B2:B6"];
-						productA.CategoryLabels = worksheet.Range["A2:A6"];
 
-						//Set second serie
-						IChartSerie productB = chart.Series.Add("ProductB");
-						productB.Values = worksheet.Range["C2:C6"];
-						productB.CategoryLabels = worksheet.Range["A2:A6"];
 
-						#endregion
 
-					}
+						firstTerm.Values = worksheet.Range["AP1:AP4"];
+                        firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+
+                        //secondTerm.Values = worksheet.Range["AQ1:AQ" + iepProgressReportDto.ProgressReportStrands.Count()];
+                        //secondTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+                        //worksheet.Range["A1"].Text = "Month";
+                        //worksheet.Range["B1"].Text = "Product A";
+                        //worksheet.Range["C1"].Text = "Product B";
+                        //Create a random Data
+
+                        //Inserts the sample data for the chart
+
+
+
+                        //                  worksheet.Range["A1"].Text = "Month";
+                        //worksheet.Range["B1"].Text = "Product A";
+                        //worksheet.Range["C1"].Text = "Product B";
+
+                        ////Months
+                        //worksheet.Range["A2"].Text = "Jan";
+                        //worksheet.Range["A3"].Text = "Feb";
+                        //worksheet.Range["A4"].Text = "Mar";
+                        //worksheet.Range["A5"].Text = "Apr";
+                        //worksheet.Range["A6"].Text = "May";
+
+                        ////Create a random Data
+                       
+
+                        ////Set Chart Title
+                        //chart.ChartTitle = "Product Sales comparison";
+
+                        ////Set first serie
+                        //IChartSerie productA = chart.Series.Add("ProductA");
+                        //productA.Values = worksheet.Range["AP1:AP3"];
+                        //productA.CategoryLabels = worksheet.Range["A2:A6"];
+
+                        ////Set second serie
+                        //IChartSerie productB = chart.Series.Add("ProductB");
+                        //productB.Values = worksheet.Range["C2:C6"];
+                        //productB.CategoryLabels = worksheet.Range["A2:A6"];
+
+                        #endregion
+
+                    }
 					else
 					{
 						MemoryStream stream1 = new MemoryStream();
