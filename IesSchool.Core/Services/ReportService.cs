@@ -1255,7 +1255,7 @@ namespace IesSchool.Core.Services
 					
 					var iepProgressReportDto = _mapper.Map<IepProgressReportDto>(iepProgressReport);
 
-					IWorkbook workbook = application.Workbooks.Create(0);
+					 IWorkbook workbook = application.Workbooks.Create(0);
 					IWorksheet worksheet;
 
 					if (iepProgressReportDto != null)
@@ -1407,58 +1407,125 @@ namespace IesSchool.Core.Services
 						#endregion
 						#region Chart
 
+
+
+
 						chart = worksheet.Charts.Add();
+
+
+						// Setting value in the cell.
+						
+
+
+
 						//Set chart type
 						chart.ChartType = ExcelChartType.Column_Clustered;
-						chart.PrimaryValueAxis.MaximumValue = 90;
-						chart.PrimaryValueAxis.MinimumValue = 0;
-						chart.PrimaryValueAxis.MajorUnit = 10;
+						//chart.PrimaryValueAxis.MaximumValue = 90;
+						//chart.PrimaryValueAxis.MinimumValue = 0;
+						//chart.PrimaryValueAxis.MajorUnit = 10;
 
 
-
-
-						//chart.IsSeriesInRows = false;
-						//chart.DataRange = worksheet.Range("AP1:AP20");
-						//chart.HasLegend = false;
-						//chart.DataRange = worksheet.Range["AO1:BV20"];
-
-						IChartSerie goal = chart.Series.Add("Goal");
-                        IChartSerie firstTerm = chart.Series.Add("First Term");
-						firstTerm.SerieType = ExcelChartType.Column_Clustered;
-						chart.DataRange = worksheet.Range["AO1:BV50"];
-
-
-						//IChartSerie secondTerm = chart.Series.Add("Second Term");
-
-						if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
+                        if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
                         {
-							var progressStrands = iepProgressReportDto.ProgressReportStrands.ToList();
+                            var progressStrands = iepProgressReportDto.ProgressReportStrands.ToList();
+							int currentCulumn = 41;
 							for (int i = 0; i < progressStrands.Count(); i++)
                             {
-								worksheet.Range["AO" + (i + 1)].Text = progressStrands[i].StrandName;
-								worksheet.Range["AP" + (i + 1)].Text = progressStrands[i].FirstTermPercentage.ToString();
-								worksheet.Range["C" + (i + 1)].Text = progressStrands[i].SecondTermPercentage.ToString();
+                                worksheet.Range[(1), (currentCulumn + i)].Text = progressStrands[i].StrandName;
+                                worksheet.Range[(2), (currentCulumn + i)].Text = progressStrands[i].GoalLongTermNumber.ToString();
+                                worksheet.Range[(3), (currentCulumn + i)].Text = progressStrands[i].FirstTermPercentage.ToString();
+                                worksheet.Range[(4), (currentCulumn + i)].Text = progressStrands[i].SecondTermPercentage.ToString();
                             }
 						}
+                        chart.DataRange = worksheet["AO1:AR4"];
+						chart.IsSeriesInRows = false;
 
-						//goal.Values = worksheet.Range["AO1:AO" + progressStrands.Count()];
-						//goal.CategoryLabels = worksheet.Range["AO1:AO" + progressStrands.Count()];
-						Random r = new Random();
-						for (int i = 2; i <= 6; i++)
-						{
-							for (int j = 2; j <= 3; j++)
-							{
-								worksheet.Range[i, j].Number = r.Next(0, 500);
-							}
-						}
+						//Apply chart elements
+						//Set Chart Title
+						chart.ChartTitle = "Stacked Column Chart";
 
+						//Set Datalabels
+						//IChartSerie firstTerm = chart.Series[0];
 
-
+						//firstTerm.Values = worksheet.Range["B2:B4"];
+						//firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
 
 
+						//IChartSerie serie2 = chart.Series[1];
+						//IChartSerie serie3 = chart.Series[2];
 
-						firstTerm.Values = worksheet.Range["AP1:AP4"];
-                        firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+						////serie1.DataPoints.DefaultDataPoint.DataLabels.IsValue = true;
+						//serie2.DataPoints.DefaultDataPoint.DataLabels.IsValue = true;
+						//serie3.DataPoints.DefaultDataPoint.DataLabels.IsValue = true;
+						//serie1.DataPoints.DefaultDataPoint.DataLabels.Position = ExcelDataLabelPosition.Center;
+						//serie2.DataPoints.DefaultDataPoint.DataLabels.Position = ExcelDataLabelPosition.Center;
+						//serie3.DataPoints.DefaultDataPoint.DataLabels.Position = ExcelDataLabelPosition.Center;
+
+						////Set Legend
+						//chart.HasLegend = true;
+						//chart.Legend.Position = ExcelLegendPosition.Bottom;
+
+						////Positioning the chart in the worksheet
+						//chart.TopRow = 8;
+						//chart.LeftColumn = 1;
+						//chart.BottomRow = 23;
+						//chart.RightColumn = 8;
+
+
+
+
+
+
+
+
+                        //chart.IsSeriesInRows = false;
+                        //chart.DataRange = worksheet.Range("AP1:AP20");
+                        //chart.HasLegend = false;
+
+                        //IChartSerie goal = chart.Series.Add("Goal");
+                        //IChartSerie firstTerm = chart.Series.Add("First Term");
+                        //IChartSerie secondTerm = chart.Series.Add("Second Term");
+
+
+                        //if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
+                        //                  {
+                        //	var progressStrands = iepProgressReportDto.ProgressReportStrands.ToList();
+                        //	for (int i = 0; i < progressStrands.Count(); i++)
+                        //                      {
+                        //		worksheet.Range["AO" + (i + 1)].Text = progressStrands[i].StrandName;
+                        //		worksheet.Range["AP" + (i + 1)].Text = progressStrands[i].GoalLongTermNumber.ToString();
+                        //		//worksheet.Range["AQ" + (i + 1)].Text = progressStrands[i].FirstTermPercentage.ToString();
+                        //		//worksheet.Range["AR" + (i + 1)].Text = progressStrands[i].SecondTermPercentage.ToString();
+                        //                      }
+                        //}
+
+
+                        //chart.DataRange = worksheet["AO1:A4"];
+                        //chart.IsSeriesInRows = false;
+
+                        //                  goal.Values = worksheet.Range["AP1:AP" + iepProgressReportDto.ProgressReportStrands.Count()];
+                        //goal.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+
+                        //                  firstTerm.Values = worksheet.Range["AQ1:AQ4"];
+                        //                  firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+
+                        //                  secondTerm.Values = worksheet.Range["AR1:AR" + iepProgressReportDto.ProgressReportStrands.Count()];
+                        //                  secondTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+
+
+                        //firstTerm.Values = worksheet.Range["B2:B4"];
+                        //firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
+
+                        
+
+
+
+                        //chart.DataRange = worksheet.Range["AO1:BV20"];
+
+
+
+                        //firstTerm.Values = worksheet.Range["B2:B4"];
+                        //firstTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
 
                         //secondTerm.Values = worksheet.Range["AQ1:AQ" + iepProgressReportDto.ProgressReportStrands.Count()];
                         //secondTerm.CategoryLabels = worksheet.Range["AO1:AO" + iepProgressReportDto.ProgressReportStrands.Count()];
@@ -1483,7 +1550,7 @@ namespace IesSchool.Core.Services
                         //worksheet.Range["A6"].Text = "May";
 
                         ////Create a random Data
-                       
+
 
                         ////Set Chart Title
                         //chart.ChartTitle = "Product Sales comparison";

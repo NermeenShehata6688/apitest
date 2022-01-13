@@ -998,8 +998,10 @@ namespace IesSchool.Core.Services
             {
                 var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId && x.IsDeleted!=true, null, x => x.Include(x => x.Student)
                 .Include(x => x.AcadmicYear).Include(x => x.Term)
-                   .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
-                   .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands));
+                   .Include(x => x.Teacher)
+                   .Include(x => x.ProgressReportExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                   .Include(x => x.ProgressReportParamedicals).ThenInclude(x => x.ParamedicalService)
+                   .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
                 var mapper = _mapper.Map<IepProgressReportDto>(iepProgressReport);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -1085,6 +1087,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+               .Include(s => s.Goals).ThenInclude(s => s.Strand)
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
                );
                     IepProgressReportDto iepProgressReportDto = new IepProgressReportDto();
