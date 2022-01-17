@@ -104,7 +104,7 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _reportService.ProgressReportHTML(iepProgressReportId);
-                return (all);
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
@@ -117,7 +117,7 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _reportService.BCPReportHTML(studentId, iepId);
-                return all;
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
@@ -130,7 +130,7 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _reportService.IepLpReportHTML(iepId);
-                return all;
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
