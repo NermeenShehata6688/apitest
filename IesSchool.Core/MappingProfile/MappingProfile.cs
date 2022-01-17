@@ -149,7 +149,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<IepProgressReport, IepProgressReportDto>()
 
             .ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name))
-            .ForMember(dist => dist.StudentDepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department == null ?"":c.Student.Department.Name))
+            .ForMember(dist => dist.StudentDepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department == null ? "" : c.Student.Department.Name))
             .ForMember(dist => dist.StudentBirthDay, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth.ToString()))
             .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
@@ -163,28 +163,34 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.AcadmicYear, op => op.Ignore())
              .ForMember(x => x.Iep, op => op.Ignore())
              .ForMember(x => x.Teacher, op => op.Ignore())
-             .ForMember(x => x.Term, op => op.Ignore())
-              .ForMember(dest => dest.ProgressReportExtraCurriculars, o =>
-              {
-                  o.Condition(src => src.ProgressReportExtraCurriculars.Count == 0);
-                  o.Ignore();
-              });
+             .ForMember(x => x.Term, op => op.Ignore());
+              //.ForMember(dest => dest.ProgressReportExtraCurriculars, o =>
+              //{
+              //    o.Condition(src => src.ProgressReportExtraCurriculars.Count == 0);
+              //    o.Ignore();
+              //});
               //.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
 
             CreateMap<ProgressReportExtraCurricular, ProgressReportExtraCurricularDto>()
             .ForMember(dist => dist.ExtraCurricularName, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" :c.ExtraCurricular.Name))
             .ForMember(dist => dist.ExtraCurricularNameAr, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" :c.ExtraCurricular.NameAr))
-                .ReverseMap();
+                .ReverseMap()
+             .ForMember(x => x.ExtraCurricular, op => op.Ignore()) ;
+
             CreateMap<ProgressReportParamedical, ProgressReportParamedicalDto>()
             .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" :c.ParamedicalService.Name))
             .ForMember(dist => dist.ParamedicalServiceNameAr, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" :c.ParamedicalService.NameAr))
-                .ReverseMap();
+                .ReverseMap()
+             .ForMember(x => x.ParamedicalService, op => op.Ignore()) ;
+
             CreateMap<ProgressReportStrand, ProgressReportStrandDto>()
             .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Strand == null ? "" :c.Strand.Name))
             .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
             //.ForMember(dist => dist.ShortTermProgressNumber, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
-                .ReverseMap();
+                .ReverseMap()
+             .ForMember(x => x.Strand, op => op.Ignore());
+
 
             CreateMap<IepParamedicalService, IepParamedicalServiceDto>()
             .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))

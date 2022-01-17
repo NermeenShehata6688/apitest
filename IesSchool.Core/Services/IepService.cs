@@ -1110,6 +1110,8 @@ namespace IesSchool.Core.Services
                                     Id = 0,
                                     ProgressReportId = 0,
                                     ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId == null ? 0 : iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
+                                    ExtraCurricularName = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name,
+                                    ExtraCurricularNameAr = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr,
                                     Comment = ""
                                 });
                             }
@@ -1124,6 +1126,8 @@ namespace IesSchool.Core.Services
                                     Id = 0,
                                     ProgressReportId = 0,
                                     ParamedicalServiceId = iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId == null ? 0 : iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId.Value,
+                                    ParamedicalServiceName = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name,
+                                    ParamedicalServiceNameAr = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr,
                                     Comment = ""
                                 });
                             }
@@ -1144,6 +1148,7 @@ namespace IesSchool.Core.Services
                                         Id = 0,
                                         ProgressReportId = 0,
                                         StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId,
+                                        StrandName = iep.Goals.ToList()[i].Strand == null ? "" : iep.Goals.ToList()[i].Strand.Name==null? "" : iep.Goals.ToList()[i].Strand.Name,
                                         GoalLongTermNumber = iep.Goals.ToList()[i].LongTermNumber == null ? 0 : iep.Goals.ToList()[i].LongTermNumber,
                                         GoalShortTermNumber = iep.Goals.ToList()[i].ShortTermProgressNumber == null ? 0 : iep.Goals.ToList()[i].ShortTermProgressNumber,
                                         FirstTermPercentage = frsTermPercentage,
@@ -1171,6 +1176,8 @@ namespace IesSchool.Core.Services
                                         Id = 0,
                                         ProgressReportId = 0,
                                         StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId.Value,
+                                        StrandName = iep.Goals.ToList()[i].Strand == null ? "" : iep.Goals.ToList()[i].Strand.Name == null ? "" : iep.Goals.ToList()[i].Strand.Name,
+
                                         FirstTermPercentage = frsTermPercentage,
                                         SecondTermPercentage = scndTermPercentage,
                                         Comment = ""
