@@ -1,6 +1,7 @@
 ﻿using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Syncfusion.XlsIO;
+using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -89,7 +90,8 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _reportService.IepReportHTML(iepId);
-                return all;
+              
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
