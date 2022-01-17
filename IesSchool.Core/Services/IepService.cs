@@ -1091,6 +1091,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
                );
                     IepProgressReportDto iepProgressReportDto = new IepProgressReportDto();
+                    iepProgressReportDto.IepId= iepId;
 
                     if (iep != null)
                     {
