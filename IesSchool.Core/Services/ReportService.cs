@@ -1570,12 +1570,9 @@ namespace IesSchool.Core.Services
 
 						#endregion
 						#region Images
-						////Adding a picture
-						FileStream x = new FileStream("wwwroot/staticFiles/SystemLogo.jpg", FileMode.Open, FileAccess.Read);
-						IPictureShape xx = worksheet.Pictures.AddPicture(50, 41, x,70,70);
-
-						FileStream CisFile1 = new FileStream("wwwroot/staticFiles/SystemLogo.jpg", FileMode.Open, FileAccess.Read);
-						IPictureShape CisShap1 = worksheet.Pictures.AddPicture(76, 41, CisFile1, 20, 20);
+						//Adding a picture
+						FileStream SysFile = new FileStream("wwwroot/staticFiles/SysLogo.jpeg", FileMode.Open, FileAccess.Read);
+						IPictureShape SysShape = worksheet.Pictures.AddPicture(50, 48, SysFile, 60,60);
 
 						FileStream CisFile = new FileStream("wwwroot/staticFiles/CisLogo.png", FileMode.Open, FileAccess.Read);
 						IPictureShape CisShap = worksheet.Pictures.AddPicture(70, 41, CisFile, 20, 20);
@@ -1953,8 +1950,8 @@ namespace IesSchool.Core.Services
 						#endregion
 						#region Images
 						////Adding a picture
-						FileStream x = new FileStream("wwwroot/staticFiles/SystemLogo.jpg", FileMode.Open, FileAccess.Read);
-						IPictureShape xx = worksheet.Pictures.AddPicture(50, 41, x, 70, 70);
+						FileStream SysFile = new FileStream("wwwroot/staticFiles/SysLogo.jpeg", FileMode.Open, FileAccess.Read);
+						IPictureShape SysShape = worksheet.Pictures.AddPicture(50, 48, SysFile, 60, 60);
 
 						FileStream CisFile = new FileStream("wwwroot/staticFiles/CisLogo.png", FileMode.Open, FileAccess.Read);
 						IPictureShape CisShap = worksheet.Pictures.AddPicture(70, 41, CisFile, 20, 20);

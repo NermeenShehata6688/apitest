@@ -1273,40 +1273,7 @@ namespace IesSchool.Core.Services
             }
 
         }
-        //public ResponseDto SyncData(int iepId)
-        //{
-        //    try
-        //    {
-        //        if (iepId != 0)
-        //        {
-        //            var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
-        //       .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
-        //       .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
-        //       .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
-        //       .Include(s => s.Student).ThenInclude(s => s.Department)
-        //       .Include(s => s.Teacher)
-        //       .Include(s => s.HeadOfDepartmentNavigation)
-        //       .Include(s => s.HeadOfEducationNavigation)
-        //       .Include(s => s.AcadmicYear)
-        //       .Include(s => s.Term)
-        //       .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
-        //       .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
-        //       .Include(s => s.Goals).ThenInclude(s => s.Strand)
-        //       .Include(s => s.Goals).ThenInclude(s => s.Area)
-        //       );
-        //            var mapper = _mapper.Map<GetIepDto>(iep);
-        //            return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
-        //        }
-        //        else
-        //        {
-        //            return new ResponseDto { Status = 1, Message = " null" };
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-        //    }
-        //}
+       
     }
 }
 
