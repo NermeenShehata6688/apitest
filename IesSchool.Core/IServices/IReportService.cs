@@ -16,7 +16,9 @@ namespace IesSchool.Core.IServices
         public FileStreamResult IepReport(int iepId); 
         public FileStreamResult BCPReport(int? studentId, int? iepId);
         public FileStreamResult ProgressReport(int iepProgressReportId);
-        public FileStreamResult IepReportHTML(int iepId);
-        public FileStreamResult ProgressReportHTML(int iepProgressReportId);
+        public string IepReportHTML(int iepId);
+        public string ProgressReportHTML(int iepProgressReportId);
+        public string IepLpReportHTML(int iepId);
+        public string BCPReportHTML(int? studentId, int? iepId);
     }
 }

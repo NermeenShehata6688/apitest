@@ -84,7 +84,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public FileStreamResult IepReportHTML(int iepId)
+        public string IepReportHTML(int iepId)
         {
             try
             {
@@ -97,11 +97,37 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public FileStreamResult ProgressReportHTML(int iepProgressReportId)
+        public string ProgressReportHTML(int iepProgressReportId)
         {
             try
             {
                 var all = _reportService.ProgressReportHTML(iepProgressReportId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public string BCPReportHTML(int? studentId, int? iepId)
+        {
+            try
+            {
+                var all = _reportService.BCPReportHTML(studentId, iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public string LpReportHTML(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepLpReportHTML(iepId);
                 return all;
             }
             catch (Exception)

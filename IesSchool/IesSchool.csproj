@@ -28,4 +28,8 @@
     <ProjectReference Include="..\IesSchool.Core\IesSchool.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\ecxelFiles\" />
+  </ItemGroup>
+
 </Project>

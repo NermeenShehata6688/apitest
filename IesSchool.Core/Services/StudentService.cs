@@ -15,7 +15,8 @@ namespace IesSchool.Core.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
-        private IFileService _ifileService; private IHostingEnvironment _hostingEnvironment;
+        private IFileService _ifileService;
+        private IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public StudentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
