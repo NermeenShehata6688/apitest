@@ -2582,15 +2582,15 @@ namespace IesSchool.Core.Services
 					if (workbook!= null)
 					{
 						//var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(workbook.CodeName);
-						var fileName = Guid.NewGuid().ToString().Replace("-", "") + ".html";
-						var filePath = Path.Combine(target, fileName);
+						var fileName = Guid.NewGuid().ToString().Replace("-", "") ;
+						var filePath = Path.Combine(target, fileName + ".html");
                         using (var stream1 = new FileStream(filePath, FileMode.Create))
                         {
 							workbook.SaveAsHtml(stream1, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
 							//file.CopyToAsync(stream);
 						}
                         string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-						 fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}";
+						 fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.html";
 					}
                     return fullpath;
 				}
@@ -2874,15 +2874,15 @@ namespace IesSchool.Core.Services
 					if (workbook != null)
 					{
 						//var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(workbook.CodeName);
-						var fileName = Guid.NewGuid().ToString().Replace("-", "") + ".html";
-						var filePath = Path.Combine(target, fileName);
+						var fileName = Guid.NewGuid().ToString().Replace("-", "") ;
+						var filePath = Path.Combine(target, fileName + ".html");
 						using (var stream1 = new FileStream(filePath, FileMode.Create))
 						{
 							workbook.SaveAsHtml(stream1, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
 							//file.CopyToAsync(stream);
 						}
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}";
+						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.html";
 					}
 					return fullpath;
 				}
@@ -3200,15 +3200,15 @@ namespace IesSchool.Core.Services
 					if (workbook != null)
 					{
 						//var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(workbook.CodeName);
-						var fileName = Guid.NewGuid().ToString().Replace("-", "") + ".html";
-						var filePath = Path.Combine(target, fileName);
+						var fileName = Guid.NewGuid().ToString().Replace("-", "");
+						var filePath = Path.Combine(target, fileName + ".html");
 						using (var stream1 = new FileStream(filePath, FileMode.Create))
 						{
 							workbook.SaveAsHtml(stream1, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
 							//file.CopyToAsync(stream);
 						}
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}";
+						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.html";
 					}
 					return fullpath;
 				}
