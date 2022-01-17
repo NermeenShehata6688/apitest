@@ -1179,6 +1179,9 @@ namespace IesSchool.Core.Services
                                         StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId.Value,
                                         StrandName = iep.Goals.ToList()[i].Strand == null ? "" : iep.Goals.ToList()[i].Strand.Name == null ? "" : iep.Goals.ToList()[i].Strand.Name,
 
+                                        GoalLongTermNumber = iep.Goals.ToList()[i].LongTermNumber == null ? 0 : iep.Goals.ToList()[i].LongTermNumber,
+                                        GoalShortTermNumber = iep.Goals.ToList()[i].ShortTermProgressNumber == null ? 0 : iep.Goals.ToList()[i].ShortTermProgressNumber,
+
                                         FirstTermPercentage = frsTermPercentage,
                                         SecondTermPercentage = scndTermPercentage,
                                         Comment = ""
