@@ -62,8 +62,8 @@ namespace IesSchool.Controllers
                     Id = x.Id,
                     UserName = x.UserName,
                     Email = x.Email,
-                    //roles = string.Join(",", _iaplicationGroupService.GetGroups(x.Id).Select(c => c.Name)),
-                    //gruops = _iaplicationGroupService.GetGroups(x.Id).Select(c => c.Name).ToList()
+                    roles = string.Join(",", _iaplicationGroupService.GetGroups(x.Id).Select(c => c.Name)),
+                    gruops = _iaplicationGroupService.GetGroups(x.Id).Select(c => c.Name).ToList()
 
                 }).ToList();
                 return Ok(new ResponseDto { Message = "Success", Data = usersrole, Status = 1 });
@@ -304,7 +304,7 @@ namespace IesSchool.Controllers
 
         [HttpPost]
         //[Route("EditUser")]
-        public async Task<IActionResult> EditUser([FromBody] RegisterModel model)
+        public async Task<IActionResult> EditUser(RegisterModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -440,8 +440,6 @@ namespace IesSchool.Controllers
 
             try
             {
-
-
                 var user = await _userManager.FindByIdAsync(model.Id);
                 user.UserName = model.UserName;
                 //user.Email = model.Email;

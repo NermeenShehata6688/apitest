@@ -16,8 +16,9 @@ namespace IesSchool.Controllers
             _acadmicYearsService = acadmicYearsService;
         }
 
-
-        // GET: api/<AcadmicYearsController>
+        /// <summary>
+        /// This is method summary I want displayed
+        /// </summary>
         [HttpGet]
         public IActionResult GetAcadmicYears()
         {

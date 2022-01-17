@@ -95,6 +95,25 @@ namespace IesSchool.Context.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+                entity.ToTable("AspNetUserRoles");
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("code")
+                    .IsFixedLength();
+
+                //entity.HasOne(d => d.Role)
+                //    .WithMany(p => p.AspNetUserRoles)
+                //    .HasForeignKey(d => d.RoleId);
+
+                //entity.HasOne(d => d.User)
+                //    .WithMany(p => p.AspNetUserRoles)
+                //    .HasForeignKey(d => d.UserId);
+            });
             modelBuilder.Entity<VwSkill>(entity =>
             {
                 entity.HasNoKey();
@@ -263,18 +282,18 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.UserId);
             });
 
-            modelBuilder.Entity<AspNetUserRole>(entity =>
-            {
-                entity.HasNoKey();
+            //modelBuilder.Entity<AspNetUserRole>(entity =>
+            //{
+            //    entity.HasNoKey();
 
-                entity.HasOne(d => d.Role)
-                    .WithMany()
-                    .HasForeignKey(d => d.RoleId);
+            //    entity.HasOne(d => d.Role)
+            //        .WithMany()
+            //        .HasForeignKey(d => d.RoleId);
 
-                entity.HasOne(d => d.User)
-                    .WithMany()
-                    .HasForeignKey(d => d.UserId);
-            });
+            //    entity.HasOne(d => d.User)
+            //        .WithMany()
+            //        .HasForeignKey(d => d.UserId);
+            //});
 
             modelBuilder.Entity<AspNetUserToken>(entity =>
             {

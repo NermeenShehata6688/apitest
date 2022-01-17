@@ -56,6 +56,8 @@ namespace IesSchool.Core.Services
         }
         public ResponseDto AddGroupToUser(int[] groupIds, int userid)
         {
+        
+
             using (var context = _context.Database.BeginTransaction())
             {
                 foreach (var item in groupIds)
@@ -219,54 +221,53 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto DeleteGroupFromUser(string userId)
+        public ResponseDto DeleteGroupFromUser(int userId)
         {
             var cmd = $"delete from ApplicationUserGroup where ApplicationUserId='{userId}'; delete from AspNetUserRoles where UserId ='{userId}' ";
-            //_ = _context.Database.ExecuteSqlCommand(cmd);
-
+           _ = _context.Database.ExecuteSqlRaw(cmd);
             return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
 
         }
 
-        //public IEnumerable<ApplicationGroup> GetGroups(string id)
-        //{
+        public IEnumerable<ApplicationGroup> GetGroups(int id)
+        {
 
-        //    var query = $"SELECT ApplicationGroup.Id, ApplicationGroup.Name, ApplicationGroup.Description " +
-        //            " FROM ApplicationGroup INNER JOIN " +
-        //            " ApplicationUserGroup ON ApplicationGroup.Id = ApplicationUserGroup.ApplicationGroupId " +
-        //            $"where ApplicationUserId = '{id}'";
-        //    //var res = _context.ApplicationGroup.FromSqlRaw(query);
-        //    var res = _context.ApplicationGroups.FromSql(query);
-        //    //var res = _context.ApplicationGroup.ToArray();
-        //    return res;
+            var query = $"SELECT ApplicationGroup.Id, ApplicationGroup.Name, ApplicationGroup.Description " +
+                    " FROM ApplicationGroup INNER JOIN " +
+                    " ApplicationUserGroup ON ApplicationGroup.Id = ApplicationUserGroup.ApplicationGroupId " +
+                    $"where ApplicationUserId = '{id}'";
+            //var res = _context.ApplicationGroup.FromSqlRaw(query);
+            var res = _context.ApplicationGroups.FromSqlRaw(query);
+            //var res = _context.ApplicationGroup.ToArray();
+            return res;
 
 
-        //}
+        }
 
         public ResponseDto AddGroupToUser(string[] groupIds, string userid)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ApplicationGroup> GetGroups(string id)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<ApplicationGroup> GetGroups(string id)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public ResponseDto DeleteRoleFromGroup(int roleId, int groupId)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseDto DeleteGroupFromUser(int userId)
-        {
-            throw new NotImplementedException();
-        }
+        //public ResponseDto DeleteGroupFromUser(int userId)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public IEnumerable<ApplicationGroup> GetGroups(int id)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<ApplicationGroup> GetGroups(int id)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public IEnumerable<ApplicationGroup> GetGroupsDetails(int id)
         {

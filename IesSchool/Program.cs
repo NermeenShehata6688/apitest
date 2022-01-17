@@ -99,6 +99,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
     app.UseSwagger().UseSwaggerUI(options =>
     {
         options.DocExpansion(DocExpansion.None);
