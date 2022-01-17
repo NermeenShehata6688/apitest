@@ -1974,7 +1974,7 @@ namespace IesSchool.Core.Services
 					if (workbook != null)
 					{
 						//var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(workbook.CodeName);
-						var fileName = Guid.NewGuid().ToString().Replace("-", "") + ".html";
+						var fileName = Guid.NewGuid().ToString().Replace("-", "") ;
 						var filePath = Path.Combine(target, fileName);
 						using (var stream1 = new FileStream(filePath, FileMode.Create))
 						{

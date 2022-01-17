@@ -97,12 +97,12 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public string ProgressReportHTML(int iepProgressReportId)
+        public IActionResult ProgressReportHTML(int iepProgressReportId)
         {
             try
             {
                 var all = _reportService.ProgressReportHTML(iepProgressReportId);
-                return all;
+                return Ok(all);
             }
             catch (Exception)
             {
