@@ -55,9 +55,11 @@ namespace IesSchool.Core.Services
                     _uow.SaveChanges();
 
                 }
-
-
-                return new ResponseDto { Status = 1, Message = " Country Added  Seccessfuly" };
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "Null" };
+                }
+                return new ResponseDto { Status = 1, Message = "Done Check Your Strands now" };
 
             }
             catch (Exception ex)
