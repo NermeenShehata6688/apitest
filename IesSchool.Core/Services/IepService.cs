@@ -984,7 +984,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId, null,
+                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId && x.IsDeleted!=true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
                     .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands));

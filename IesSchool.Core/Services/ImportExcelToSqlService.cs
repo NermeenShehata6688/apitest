@@ -26,7 +26,6 @@ namespace IesSchool.Core.Services
             {
                 if (file != null && (Path.GetExtension(file.FileName) == ".xlsx" || Path.GetExtension(file.FileName) == ".csv"))
                 {
-
                     List<Strand> strandsToImport = new List<Strand>();
                     System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                     using (var stream = file.OpenReadStream())
