@@ -1862,6 +1862,21 @@ namespace IesSchool.Core.Services
 							chart.RightColumn = 75;
 							chart.BottomRow = 27;
 							chart.HasTitle = false;
+
+
+
+
+							////// chartStream
+							// application.ChartToImageConverter = new ChartToImageConverter();
+
+							////Set the image quality
+							//application.ChartToImageConverter.ScalingMode = ScalingMode.Normal;
+
+							//MemoryStream chartStream = new MemoryStream();
+
+							////Save Excel chart as image
+							//chart.SaveAsImage(chartStream);
+							//chartStream.Position = 0;
 						}
 						else
 						{
@@ -1964,6 +1979,15 @@ namespace IesSchool.Core.Services
 					worksheet.Range["A1:BV" + (lastRow)].CellStyle.Font.Size = 9;
 					#endregion
 
+
+
+					
+
+
+
+
+
+
 					var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
 
 					if (!Directory.Exists(target))
@@ -1978,6 +2002,7 @@ namespace IesSchool.Core.Services
 						var filePath = Path.Combine(target, fileName+ ".html");
 						using (var stream1 = new FileStream(filePath, FileMode.Create))
 						{
+							//stream1.WriteTimeout = 3000;
 							workbook.SaveAsHtml(stream1, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
 							//file.CopyToAsync(stream);
 						}
