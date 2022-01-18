@@ -645,17 +645,22 @@ namespace IesSchool.Core.Services
                 if (objectiveActivitiesDto != null)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
-                    if (objectiveActivitiesDto.Activities != null)
-                    {
-                        var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
-                        _iesContext.Database.ExecuteSqlRaw(cmd);
-                        if (objectiveActivitiesDto.Activities != null && objectiveActivitiesDto.Activities.Count() > 2)
-                        {
-                            var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
-                            objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
-                        }
-                    }
+                    var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
 
+                    var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
+                    objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
+
+                    //if (objectiveActivitiesDto.Activities != null)
+                    //{
+                    //    var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
+                    //    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    //    if (objectiveActivitiesDto.Activities != null && objectiveActivitiesDto.Activities.Count() > 2)
+                    //    {
+                    //        var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
+                    //        objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
+                    //    }
+                    //}
                     var mapper = _mapper.Map<Objective>(objectiveActivitiesDto);
                     mapper.IsDeleted = false;
                     _uow.GetRepository<Objective>().Update(mapper);
@@ -668,7 +673,7 @@ namespace IesSchool.Core.Services
                     if (newObjective != null && newObjective.Activities.Count() > 2)
                     {
                         newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
-                        if (newObjective.IsMasterd==true)
+                        if (newObjective.IsMasterd == true)
                         {
                             newObjective.Date = DateTime.Now;
                         }
