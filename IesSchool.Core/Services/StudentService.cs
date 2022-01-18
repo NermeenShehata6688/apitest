@@ -74,7 +74,7 @@ namespace IesSchool.Core.Services
                 }
 
                 var lstStudentDto = _mapper.Map<List<VwStudentDto>>(allStudents);
-               // var lstToSend = GetFullPathAndBinary(lstStudentDto);
+                var lstToSend = GetFullPathAndBinary(lstStudentDto);
 
                 if (studentSearchDto.Index == null || studentSearchDto.Index == 0)
                 {
@@ -84,7 +84,7 @@ namespace IesSchool.Core.Services
                 {
                     studentSearchDto.Index += 1;
                 }
-                var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
+                var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstToSend != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstToSend.ToList() };
 
                 //var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
