@@ -109,6 +109,7 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<Event>().Update(mapper);
                     _uow.SaveChanges();
                     oEventDto.Id = mapper.Id;
+                    transaction.Commit();
                     return new ResponseDto { Status = 1, Message = "Event Updated Seccessfuly", Data = oEventDto };
                 }
                 else
