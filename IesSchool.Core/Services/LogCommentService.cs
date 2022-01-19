@@ -16,14 +16,12 @@ namespace IesSchool.Core.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        private iesContext _iesContext;
        
 
-        public LogCommentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
+        public LogCommentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _uow = unitOfWork;
             _mapper = mapper;
-            _iesContext = iesContext;
         }
         public ResponseDto GetStudentLogComments(int studentId)
         {
@@ -58,6 +56,7 @@ namespace IesSchool.Core.Services
             {
                 logCommentDto.IsDeleted = false;
                 logCommentDto.CreatedOn = DateTime.Now;
+                logCommentDto.LogDate = DateTime.Now;
                 var mapper = _mapper.Map<LogComment>(logCommentDto);
                 _uow.GetRepository<LogComment>().Add(mapper);
                 _uow.SaveChanges();
@@ -75,14 +74,10 @@ namespace IesSchool.Core.Services
             {
                 if (logCommentDto!= null)
                 {
-                    using var transaction = _iesContext.Database.BeginTransaction();
-                    //var cmd = $"delete from Event_Teacher where EventId={oEventDto.Id}" +
-                    //    $"delete from Event_Student where EventId={oEventDto.Id}";
-
-                    //var mapper = _mapper.Map<LogComment>(logCommentDto);
-                    //_uow.GetRepository<LogComment>().Update(mapper);
-                    //_uow.SaveChanges();
-                    //logCommentDto.Id = mapper.Id;
+                    var mapper = _mapper.Map<LogComment>(logCommentDto);
+                    _uow.GetRepository<LogComment>().Update(mapper);
+                    _uow.SaveChanges();
+                    logCommentDto.Id = mapper.Id;
                     return new ResponseDto { Status = 1, Message = "Log Comment Updated Seccessfuly", Data = logCommentDto };
                 }
                 else
