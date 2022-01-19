@@ -16,11 +16,14 @@ namespace IesSchool.Core.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private iesContext _iesContext;
+       
 
         public LogCommentService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
         {
             _uow = unitOfWork;
             _mapper = mapper;
+            _iesContext = iesContext;
         }
         public ResponseDto GetStudentLogComments(int studentId)
         {
@@ -70,11 +73,24 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var mapper = _mapper.Map<LogComment>(logCommentDto);
-                _uow.GetRepository<LogComment>().Update(mapper);
-                _uow.SaveChanges();
-                logCommentDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Log Comment Updated Seccessfuly", Data = logCommentDto };
+                if (logCommentDto!= null)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    //var cmd = $"delete from Event_Teacher where EventId={oEventDto.Id}" +
+                    //    $"delete from Event_Student where EventId={oEventDto.Id}";
+
+                    //var mapper = _mapper.Map<LogComment>(logCommentDto);
+                    //_uow.GetRepository<LogComment>().Update(mapper);
+                    //_uow.SaveChanges();
+                    //logCommentDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Log Comment Updated Seccessfuly", Data = logCommentDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null", Data = logCommentDto };
+
+                }
+
             }
             catch (Exception ex)
             {

@@ -19,15 +19,13 @@ namespace IesSchool.Core.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private iesContext _iesContext;
-        private IMemoryCache _memoryCache;
         private IFileService _ifileService;
 
-        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IMemoryCache memoryCache, IFileService ifileService)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
-            _memoryCache = memoryCache;
             _ifileService = ifileService;
         }
         public ResponseDto GetEventHelper()
