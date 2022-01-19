@@ -309,6 +309,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpPut]
+        public IActionResult ObjIsMasterd(int objId, bool isMastered)
+        {
+            try
+            {
+                var all = _iepService.ObjIsMasterd(objId, isMastered);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         //[HttpPut]
         //public IActionResult ObjectiveIsMasterd(int objectiveId, bool isMasterd)
         //{

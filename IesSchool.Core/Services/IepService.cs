@@ -615,14 +615,14 @@ namespace IesSchool.Core.Services
                     objectiveDto.IsDeleted = false;
                     objectiveDto.CreatedOn = DateTime.Now;
                     var mapper = _mapper.Map<Objective>(objectiveDto);
-                    if (objectiveDto.Activities != null && objectiveDto.Activities.Count() > 2)
-                    {
-                        mapper.IsMasterd = ObjectiveIsMasterd(mapper);
-                        if (mapper.IsMasterd==true)
-                        {
-                            mapper.Date = DateTime.Now;
-                        }
-                    }
+                    //if (objectiveDto.Activities != null && objectiveDto.Activities.Count() > 2)
+                    //{
+                    //    mapper.IsMasterd = ObjectiveIsMasterd(mapper);
+                    //    if (mapper.IsMasterd==true)
+                    //    {
+                    //        mapper.Date = DateTime.Now;
+                    //    }
+                    //}
                     _uow.GetRepository<Objective>().Add(mapper);
                     _uow.SaveChanges();
                     objectiveDto.Id = mapper.Id;
@@ -705,6 +705,33 @@ namespace IesSchool.Core.Services
                     return new ResponseDto { Status = 1, Message = "Objective Deleted Seccessfuly" };
                 }
 
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto ObjIsMasterd(int objId, bool IsMasterd)
+        {
+            try
+            {
+                if (objId != 0)
+                {
+                    Objective objective = _uow.GetRepository<Objective>().Single(x => x.Id == objId);
+                    if (objective!=null)
+                    {
+                        objective.IsMasterd = IsMasterd;
+                        _uow.GetRepository<Objective>().Update(objective);
+                        _uow.SaveChanges();
+                        return new ResponseDto { Status = 1, Message = "Objective Is Masterd Status Has Changed" };
+                    }
+                        return new ResponseDto { Status = 1, Message = "null" };
+
+                }
                 else
                 {
                     return new ResponseDto { Status = 1, Message = "null" };

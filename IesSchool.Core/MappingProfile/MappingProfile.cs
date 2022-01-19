@@ -273,7 +273,8 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<EventTeacher, EventTeacherDto>()
             .ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name))
                 .ReverseMap()
-             .ForMember(x => x.Event, op => op.Ignore());
+             .ForMember(x => x.Event, op => op.Ignore())
+             .ForMember(x => x.Teacher, op => op.Ignore());
 
             CreateMap<EventStudent, EventStudentDto>()
             .ForMember(dist => dist.EventName, opt => opt.MapFrom(c => c.Event == null ? "" : c.Event.Name))
@@ -281,6 +282,7 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(dist => dist.StudentNameAr, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.NameAr))
                 .ReverseMap()
              .ForMember(x => x.Event, op => op.Ignore())
+            . ForMember(x => x.Student, op => op.Ignore())
              .ForMember(x => x.EventStudentFiles, op => op.Ignore()).ReverseMap();
 
             CreateMap< List<EventStudent>, List<EventStudentDto>>().ReverseMap();
@@ -300,6 +302,10 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ReportsHelper, ReportsHelperDto>().ReverseMap();
             CreateMap<VwIep, IepLPReportDto>().ReverseMap();
             CreateMap<VwIep, IepReportDto>().ReverseMap();
+            CreateMap<LogComment, LogCommentDto>().ReverseMap()
+             .ForMember(x => x.Iep, op => op.Ignore())
+             .ForMember(x => x.Student, op => op.Ignore())
+             .ForMember(x => x.User, op => op.Ignore());
 
         }
     }

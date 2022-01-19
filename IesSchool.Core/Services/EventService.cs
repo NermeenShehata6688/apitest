@@ -99,11 +99,23 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var mapper = _mapper.Map<Event>(oEventDto);
-                _uow.GetRepository<Event>().Update(mapper);
-                _uow.SaveChanges();
-                oEventDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Event Updated Seccessfuly", Data = oEventDto };
+                if (oEventDto != null)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from Event_Teacher where EventId={oEventDto.Id}" +
+                        $"delete from Event_Student where EventId={oEventDto.Id}";
+
+                    var mapper = _mapper.Map<Event>(oEventDto);
+                    _uow.GetRepository<Event>().Update(mapper);
+                    _uow.SaveChanges();
+                    oEventDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Event Updated Seccessfuly", Data = oEventDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null", Data = oEventDto };
+
+                }
             }
             catch (Exception ex)
             {

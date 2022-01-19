@@ -10,6 +10,8 @@ namespace IesSchool.Core.IServices
 {
     public interface IImportExcelToSqlService
     {
+        public ResponseDto ImportAreasExcel(IFormFile file);
         public ResponseDto ImportStrandsExcel(IFormFile file);
+        public ResponseDto ImportSkillsExcel(IFormFile file);
     }
 }

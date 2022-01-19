@@ -7,6 +7,12 @@
 	  <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
 	  <LangVersion>preview</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Modelss\**" />
+    <EmbeddedResource Remove="Modelss\**" />
+    <None Remove="Modelss\**" />
+  </ItemGroup>
 	
 	
 	<ItemGroup>

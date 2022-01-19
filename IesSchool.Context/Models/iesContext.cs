@@ -40,6 +40,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<EventAttachement> EventAttachements { get; set; } = null!;
         public virtual DbSet<EventAttachmentBinary> EventAttachmentBinaries { get; set; } = null!;
         public virtual DbSet<EventStudent> EventStudents { get; set; } = null!;
+        public virtual DbSet<LogComment> LogComments { get; set; } = null!;
         public virtual DbSet<EventStudentFile> EventStudentFiles { get; set; } = null!;
         public virtual DbSet<EventStudentFileBinary> EventStudentFileBinaries { get; set; } = null!;
         public virtual DbSet<EventTeacher> EventTeachers { get; set; } = null!;
@@ -113,6 +114,34 @@ namespace IesSchool.Context.Models
                 //entity.HasOne(d => d.User)
                 //    .WithMany(p => p.AspNetUserRoles)
                 //    .HasForeignKey(d => d.UserId);
+            });
+            modelBuilder.Entity<LogComment>(entity =>
+            {
+                entity.ToTable("LogComment");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.LogDate).HasColumnType("datetime");
+                entity.HasOne(d => d.Iep)
+                   .WithMany(p => p.LogComments)
+                   .HasForeignKey(d => d.IepId)
+                   .HasConstraintName("FK_LogComment_IEP");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.LogComments)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_LogComment_Students");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.LogComments)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_LogComment_User");
             });
             modelBuilder.Entity<VwSkill>(entity =>
             {

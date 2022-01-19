@@ -22,5 +22,7 @@ namespace IesSchool.Core.Dto
         public int? DepartmentId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public virtual ICollection<EventStudentDto> EventStudents { get; set; }
+        public virtual ICollection<EventTeacherDto> EventTeachers { get; set; }
     }
 }
