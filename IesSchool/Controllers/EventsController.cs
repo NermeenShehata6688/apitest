@@ -265,17 +265,18 @@ namespace IesSchool.Controllers
         public IActionResult PostEventAttachement()
         {
 
-            var modelData = JsonConvert.DeserializeObject<EventAttachementDto>(Request.Form["eventAttachement"]);
+            var evenid = JsonConvert.DeserializeObject<EventAttachementDto>(Request.Form["evenid"]);
             if (Request.Form.Files.Count() > 0)
             {
-                
-                var all = _eventService.AddEventAttachement(modelData);
-                return Ok(all);
+                var file = Request.Form.Files;
+
+                //var all = _eventService.AddEventAttachement(modelData);
+                return Ok();
             }
             else
             {
-                var all = _eventService.AddEventAttachement(modelData);
-                return Ok(all);
+                //var all = _eventService.AddEventAttachement(modelData);
+                return Ok();
             }
             //try
             //{
