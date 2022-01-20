@@ -1,7 +1,9 @@
-﻿using IesSchool.Core.Dto;
+﻿using IesSchool.Context.Models;
+using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace IesSchool.Controllers
 {
@@ -260,17 +262,30 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        public IActionResult PostEventAttachement()
         {
-            try
+
+            var modelData = JsonConvert.DeserializeObject<List<EventAttachementDto>>(Request.Form["eventAttachement"]);
+            if (Request.Form.Files.Count() > 0)
             {
-                var all = _eventService.AddEventAttachement(eventAttachementDto);
+                
+                var all = _eventService.AddEventAttachement(modelData);
                 return Ok(all);
             }
-            catch (Exception)
+            else
             {
-                throw;
+                var all = _eventService.AddEventAttachement(modelData);
+                return Ok(all);
             }
+            //try
+            //{
+            //    var all = _eventService.AddEventAttachement(eventAttachementDto);
+            //    return Ok(all);
+            //}
+            //catch (Exception)
+            //{
+            //    throw;
+            //}
         }
 
         [HttpDelete]

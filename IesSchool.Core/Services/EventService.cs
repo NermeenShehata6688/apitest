@@ -409,34 +409,34 @@ namespace IesSchool.Core.Services
                 foreach (var item in eventAttachementDto)
                 {
                     EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
-                    if (item.Id == 0)
-                    {
-                        if (item.file!=null)
-                        {
-                            MemoryStream ms = new MemoryStream();
-                            item.file.CopyTo(ms);
-                            eventAttachmentBinary = new EventAttachmentBinary();
-                            eventAttachmentBinary.FileBinary = ms.ToArray();
-                            ms.Close();
-                            ms.Dispose();
+                    //if (item.Id == 0)
+                    //{
+                        //if (item.file!=null)
+                        //{
+                        //    MemoryStream ms = new MemoryStream();
+                        //    item.file.CopyTo(ms);
+                        //    eventAttachmentBinary = new EventAttachmentBinary();
+                        //    eventAttachmentBinary.FileBinary = ms.ToArray();
+                        //    ms.Close();
+                        //    ms.Dispose();
 
-                           // upload file in local directory
-                            var result = _ifileService.UploadFile(item.file);
-                        }
-                        eventAttachement.Add(new EventAttachement
-                        {
-                            EventId = item.EventId,
-                            Name = item.Name,
-                            Description = item.Description,
-                            Date = item.Date,
-                            IsPublished = item.IsPublished,
-                            FileName = item.FileName,
-                            EventAttachmentBinary = eventAttachmentBinary
-                        });
-                    }
+                        //   // upload file in local directory
+                        //    var result = _ifileService.UploadFile(item.file);
+                        //}
+                        //eventAttachement.Add(new EventAttachement
+                        //{
+                        //    EventId = item.EventId,
+                        //    Name = item.Name,
+                        //    Description = item.Description,
+                        //    Date = item.Date,
+                        //    IsPublished = item.IsPublished,
+                        //    FileName = item.FileName,
+                        //    EventAttachmentBinary = eventAttachmentBinary
+                        //});
+                    //}
                 }
-                _uow.GetRepository<EventAttachement>().Add(eventAttachement);
-                _uow.SaveChanges();
+                //_uow.GetRepository<EventAttachement>().Add(eventAttachement);
+                //_uow.SaveChanges();
                 transaction.Commit();
 
                 return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventAttachementDto };
@@ -451,23 +451,23 @@ namespace IesSchool.Core.Services
             try
             {
                 /// not use this func
-                using var transaction = _iesContext.Database.BeginTransaction();
-                List<EventAttachement> eventAttachement = new List<EventAttachement>();
+                //        using var transaction = _iesContext.Database.BeginTransaction();
+                //        List<EventAttachement> eventAttachement = new List<EventAttachement>();
 
-                foreach (var item in eventAttachementDto)
-                    eventAttachement.Add(new EventAttachement
-                    {
-                        EventId = item.EventId,
-                        Name = item.Name,
-                        Description = item.Description,
-                        Date = item.Date,
-                        IsPublished = item.IsPublished,
-                        FileName = item.FileName,
-                    });
-                var mapper = _mapper.Map<List<EventAttachement>>(eventAttachementDto);
-                _uow.GetRepository<EventAttachement>().Update(mapper);
-                _uow.SaveChanges();
-                transaction.Commit();
+                //        foreach (var item in eventAttachementDto)
+                //            eventAttachement.Add(new EventAttachement
+                //            {
+                //                EventId = item.EventId,
+                //                Name = item.Name,
+                //                Description = item.Description,
+                //                Date = item.Date,
+                //                IsPublished = item.IsPublished,
+                //                FileName = item.FileName,
+                //            });
+                //        var mapper = _mapper.Map<List<EventAttachement>>(eventAttachementDto);
+                //        _uow.GetRepository<EventAttachement>().Update(mapper);
+                //        _uow.SaveChanges();
+                //        transaction.Commit();
                 return new ResponseDto { Status = 1, Message = "Event Attachement Updated Seccessfuly", Data = eventAttachementDto };
             }
             catch (Exception ex)
