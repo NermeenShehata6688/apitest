@@ -187,7 +187,6 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ProgressReportStrand, ProgressReportStrandDto>()
             .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Strand == null ? "" :c.Strand.Name))
             .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
-            //.ForMember(dist => dist.ShortTermProgressNumber, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Area == null ?"":c.Strand.Area.Name))
                 .ReverseMap()
              .ForMember(x => x.Strand, op => op.Ignore());
 
@@ -240,7 +239,7 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c =>  c.Skill == null ? 0: c.Skill.SkillNumber == null ? 0: c.Skill.SkillNumber)))
            .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Goal== null ?"" : c.Goal.Area == null ? "" : c.Goal.Area.Name))
            .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Goal== null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Name))
-            .ForMember(dist => dist.ObjActivitiesCount, opt => opt.MapFrom(c => c.Activities == null ? 0 : c.Activities.Count())).ReverseMap()
+           .ForMember(dist => dist.ObjActivitiesCount, opt => opt.MapFrom(c => c.Activities == null ? 0 : c.Activities.Count())).ReverseMap()
            .ForMember(x => x.Goal, op => op.Ignore()).ReverseMap();
             //.ForMember(x => x.ObjectiveEvaluationProcesses, op => op.Ignore())
             //.ForMember(x => x.ObjectiveSkills, op => op.Ignore())
