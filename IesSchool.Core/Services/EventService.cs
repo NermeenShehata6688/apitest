@@ -423,7 +423,6 @@ namespace IesSchool.Core.Services
                            // upload file in local directory
                             var result = _ifileService.UploadFile(item.file);
                         }
-
                         eventAttachement.Add(new EventAttachement
                         {
                             EventId = item.EventId,
@@ -451,22 +450,20 @@ namespace IesSchool.Core.Services
         {
             try
             {
-               // int[] newIds = eventAttachementDto.Select(x => x.Id).Where(x=> x!=0);
+                /// not use this func
                 using var transaction = _iesContext.Database.BeginTransaction();
-                //var cmd = $"delete from EventAttachement where EventId={eventAttachementDto.FirstOrDefault().EventId}";
-                //_iesContext.Database.ExecuteSqlRaw(cmd);
-               // List<EventAttachement> eventAttachement = new List<EventAttachement>();
+                List<EventAttachement> eventAttachement = new List<EventAttachement>();
 
-                //foreach (var item in eventAttachementDto)
-                //    eventAttachement.Add(new EventAttachement
-                //    {
-                //        EventId = item.EventId,
-                //        Name = item.Name,
-                //        Description = item.Description,
-                //        Date = item.Date,
-                //        IsPublished = item.IsPublished,
-                //        FileName = item.FileName,
-                //    });
+                foreach (var item in eventAttachementDto)
+                    eventAttachement.Add(new EventAttachement
+                    {
+                        EventId = item.EventId,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Date = item.Date,
+                        IsPublished = item.IsPublished,
+                        FileName = item.FileName,
+                    });
                 var mapper = _mapper.Map<List<EventAttachement>>(eventAttachementDto);
                 _uow.GetRepository<EventAttachement>().Update(mapper);
                 _uow.SaveChanges();

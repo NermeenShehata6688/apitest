@@ -260,7 +260,7 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostEventAttachement( List<EventAttachementDto> eventAttachementDto)
+        public IActionResult PostEventAttachement(List<EventAttachementDto> eventAttachementDto)
         {
             try
             {
