@@ -243,8 +243,22 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        
-       
+
+
+        [HttpGet]
+        public IActionResult GetEventAttachementByEventId(int eventId)
+        {
+            try
+            {
+                var all = _eventService.GetEventAttachementByEventId(eventId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpPost]
         public IActionResult PostEventAttachement( List<EventAttachementDto> eventAttachementDto)
         {

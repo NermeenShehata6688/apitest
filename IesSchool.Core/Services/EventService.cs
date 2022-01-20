@@ -70,8 +70,7 @@ namespace IesSchool.Core.Services
                 var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true, null,
                     x=> x.Include(x=> x.EventTeachers).ThenInclude(x => x.Teacher)
                     .Include(x => x.EventStudents).ThenInclude(x => x.Student)
-                    .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles)
-                    .Include(x => x.EventAttachements));
+                    .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                 var mapper = _mapper.Map<EventGetDto>(oEvent);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -387,6 +386,19 @@ namespace IesSchool.Core.Services
             }
         }
 
+        public ResponseDto GetEventAttachementByEventId(int eventId)
+        {
+            try
+            {
+                var oLeventAttachement = _uow.GetRepository<EventAttachement>().GetList(x => x.EventId == eventId, null);
+                var mapper = _mapper.Map <PaginateDto<EventAttachementDto>>(oLeventAttachement);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto AddEventAttachement(List<EventAttachementDto> eventAttachementDto)
         {
             try
@@ -396,25 +408,33 @@ namespace IesSchool.Core.Services
                 List<EventAttachement> eventAttachement = new List<EventAttachement>();
                 foreach (var item in eventAttachementDto)
                 {
-                    MemoryStream ms = new MemoryStream();
-                    //file.CopyTo(ms);
                     EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
-                    eventAttachmentBinary.FileBinary = ms.ToArray();
-                    ms.Close();
-                    ms.Dispose();
-
-                    //upload file in local directory
-                    //var result = _ifileService.UploadFile(file);
-                    eventAttachement.Add(new EventAttachement
+                    if (item.Id == 0)
                     {
-                        EventId = item.EventId,
-                        Name = item.Name,
-                        Description = item.Description,
-                        Date = item.Date,
-                        IsPublished = item.IsPublished,
-                        FileName = item.FileName,
-                        EventAttachmentBinary = eventAttachmentBinary
-                    }) ;
+                        if (item.file!=null)
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            item.file.CopyTo(ms);
+                            eventAttachmentBinary = new EventAttachmentBinary();
+                            eventAttachmentBinary.FileBinary = ms.ToArray();
+                            ms.Close();
+                            ms.Dispose();
+
+                           // upload file in local directory
+                            var result = _ifileService.UploadFile(item.file);
+                        }
+
+                        eventAttachement.Add(new EventAttachement
+                        {
+                            EventId = item.EventId,
+                            Name = item.Name,
+                            Description = item.Description,
+                            Date = item.Date,
+                            IsPublished = item.IsPublished,
+                            FileName = item.FileName,
+                            EventAttachmentBinary = eventAttachmentBinary
+                        });
+                    }
                 }
                 _uow.GetRepository<EventAttachement>().Add(eventAttachement);
                 _uow.SaveChanges();
@@ -431,23 +451,24 @@ namespace IesSchool.Core.Services
         {
             try
             {
+               // int[] newIds = eventAttachementDto.Select(x => x.Id).Where(x=> x!=0);
                 using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from EventAttachement where EventId={eventAttachementDto.FirstOrDefault().EventId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                List<EventAttachement> eventAttachement = new List<EventAttachement>();
+                //var cmd = $"delete from EventAttachement where EventId={eventAttachementDto.FirstOrDefault().EventId}";
+                //_iesContext.Database.ExecuteSqlRaw(cmd);
+               // List<EventAttachement> eventAttachement = new List<EventAttachement>();
 
-                foreach (var item in eventAttachementDto)
-                    eventAttachement.Add(new EventAttachement
-                    {
-                        EventId = item.EventId,
-                        Name = item.Name,
-                        Description = item.Description,
-                        Date = item.Date,
-                        IsPublished = item.IsPublished,
-                        FileName = item.FileName,
-                    });
-
-                _uow.GetRepository<EventAttachement>().Update(eventAttachement);
+                //foreach (var item in eventAttachementDto)
+                //    eventAttachement.Add(new EventAttachement
+                //    {
+                //        EventId = item.EventId,
+                //        Name = item.Name,
+                //        Description = item.Description,
+                //        Date = item.Date,
+                //        IsPublished = item.IsPublished,
+                //        FileName = item.FileName,
+                //    });
+                var mapper = _mapper.Map<List<EventAttachement>>(eventAttachementDto);
+                _uow.GetRepository<EventAttachement>().Update(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();
                 return new ResponseDto { Status = 1, Message = "Event Attachement Updated Seccessfuly", Data = eventAttachementDto };
