@@ -265,7 +265,7 @@ namespace IesSchool.Controllers
         public IActionResult PostEventAttachement()
         {
 
-            var evenid = JsonConvert.DeserializeObject<EventAttachementDto>(Request.Form["evenid"]);
+            var evenid = JsonConvert.DeserializeObject<int>(Request.Form["evenid"]);
             if (Request.Form.Files.Count() > 0)
             {
                 var file = Request.Form.Files;
