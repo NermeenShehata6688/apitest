@@ -265,7 +265,7 @@ namespace IesSchool.Controllers
         public IActionResult PostEventAttachement()
         {
 
-            var modelData = JsonConvert.DeserializeObject<List<EventAttachementDto>>(Request.Form["eventAttachement"]);
+            var modelData = JsonConvert.DeserializeObject<EventAttachementDto>(Request.Form["eventAttachement"]);
             if (Request.Form.Files.Count() > 0)
             {
                 

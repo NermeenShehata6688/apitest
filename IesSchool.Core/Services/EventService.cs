@@ -399,17 +399,17 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        public ResponseDto AddEventAttachement(EventAttachementDto eventAttachementDto)
         {
             try
             {
                 //change File to binary
                 using var transaction = _iesContext.Database.BeginTransaction();
                 List<EventAttachement> eventAttachement = new List<EventAttachement>();
-                foreach (var item in eventAttachementDto)
-                {
-                    EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
-                    //if (item.Id == 0)
+                //foreach (var item in eventAttachementDto)
+                //{
+                //    EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
+                //    //if (item.Id == 0)
                     //{
                         //if (item.file!=null)
                         //{
@@ -434,7 +434,7 @@ namespace IesSchool.Core.Services
                         //    EventAttachmentBinary = eventAttachmentBinary
                         //});
                     //}
-                }
+                //}
                 //_uow.GetRepository<EventAttachement>().Add(eventAttachement);
                 //_uow.SaveChanges();
                 transaction.Commit();
