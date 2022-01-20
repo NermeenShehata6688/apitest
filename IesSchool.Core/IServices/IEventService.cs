@@ -24,7 +24,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditEventType(EventTypeDto eventTypeDto);
         public ResponseDto DeleteEventType(int eventTypeId);
 
-        public ResponseDto GetEventStudents();
+        public ResponseDto GetEventStudentsByEventId(int eventId);
         public ResponseDto GetEventStudentById(int eventStudentId);
         public ResponseDto AddEventStudent(List<EventStudentDto> eventStudentDto);
         public ResponseDto EditEventStudent(List<EventStudentDto> eventStudentDto);

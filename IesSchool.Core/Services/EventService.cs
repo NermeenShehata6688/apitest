@@ -39,7 +39,7 @@ namespace IesSchool.Core.Services
                     AllTeachers = _uow.GetReadOnlyRepository<User>().GetList((x => new User  {Id=  x.Id ,Name= x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null,null, 0, 1000000, true),
                     AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllEventTypes = _uow.GetRepository<EventType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllEvents = _uow.GetRepository<Event>().GetList(x=> x.IsDeleted!=true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                   // AllEvents = _uow.GetRepository<Event>().GetList(x=> x.IsDeleted!=true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<EventHelperDto>(eventHelper);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
@@ -67,7 +67,11 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true, null, x=> x.Include(x=> x.EventTeachers).ThenInclude(x => x.Teacher).Include(x => x.EventStudents).ThenInclude(x => x.Student).Include(x => x.EventAttachements));
+                var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true, null,
+                    x=> x.Include(x=> x.EventTeachers).ThenInclude(x => x.Teacher)
+                    .Include(x => x.EventStudents).ThenInclude(x => x.Student)
+                    .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles)
+                    .Include(x => x.EventAttachements));
                 var mapper = _mapper.Map<EventGetDto>(oEvent);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -224,11 +228,11 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetEventStudents()
+        public ResponseDto GetEventStudentsByEventId(int eventId)
         {
             try
             {
-                var allEventStudents = _uow.GetRepository<EventStudent>().GetList(null, null, x => x.Include(x => x.Student).Include(x => x.Event), 0, 100000, true);
+                var allEventStudents = _uow.GetRepository<EventStudent>().GetList(x=> x.EventId== eventId, null, x => x.Include(x => x.EventStudentFiles), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventStudentDto>>(allEventStudents);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

@@ -188,6 +188,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetEventStudentsByEventId(int eventId)
+        {
+            try
+            {
+                var all = _eventService.GetEventStudentsByEventId(eventId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpPost]
         public IActionResult PostEventStudent(List<EventStudentDto> eventStudentDto)
@@ -231,49 +244,9 @@ namespace IesSchool.Controllers
             }
         }
         
+       
         [HttpPost]
-        public IActionResult PostEventTeacher(List<EventTeacherDto> eventTeacherDto)
-        {
-            try
-            {
-                var all = _eventService.AddEventTeacher(eventTeacherDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpPut]
-        public IActionResult PutEventTeacher(List<EventTeacherDto> eventTeacherDto)
-        {
-            try
-            {
-                var all = _eventService.EditEventTeacher(eventTeacherDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpDelete]
-        public IActionResult DeleteEventTeacher(int eventTeacherId)
-        {
-            try
-            {
-                var all = _eventService.DeleteEventTeacher(eventTeacherId);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpPost]
-        public IActionResult PostEventAttachement( [FromForm]  List<EventAttachementDto> eventAttachementDto)
+        public IActionResult PostEventAttachement( List<EventAttachementDto> eventAttachementDto)
         {
             try
             {
@@ -300,32 +273,76 @@ namespace IesSchool.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult PostEventStudentFiles(IFormFile file, [FromForm] List<EventStudentFileDto> eventStudentFileDtoDto)
-        {
-            try
-            {
-                var all = _eventService.AddEventStudentFiles(file,eventStudentFileDtoDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+      
+        #region NotNeededNow
+        //[HttpPost]
+        //public IActionResult PostEventTeacher(List<EventTeacherDto> eventTeacherDto)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.AddEventTeacher(eventTeacherDto);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
-        [HttpDelete]
-        public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
-        {
-            try
-            {
-                var all = _eventService.DeleteEventStudentFile(eventStudentFileId);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //[HttpPut]
+        //public IActionResult PutEventTeacher(List<EventTeacherDto> eventTeacherDto)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.EditEventTeacher(eventTeacherDto);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+
+        //[HttpDelete]
+        //public IActionResult DeleteEventTeacher(int eventTeacherId)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.DeleteEventTeacher(eventTeacherId);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+        //[HttpPost]
+        //public IActionResult PostEventStudentFiles(IFormFile file, [FromForm] List<EventStudentFileDto> eventStudentFileDtoDto)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.AddEventStudentFiles(file, eventStudentFileDtoDto);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+
+        //[HttpDelete]
+        //public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.DeleteEventStudentFile(eventStudentFileId);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+        #endregion
     }
 }

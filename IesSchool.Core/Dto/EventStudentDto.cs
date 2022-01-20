@@ -14,7 +14,7 @@ namespace IesSchool.Core.Dto
         public string? EventName { get; set; }
         public string? StudentName { get; set; }
         public string? StudentNameAr { get; set; }
-       // public virtual ICollection<EventStudentFileDto>? EventStudentFiles { get; set; }
+        public virtual ICollection<EventStudentFileDto>? EventStudentFiles { get; set; }
 
     }
 }

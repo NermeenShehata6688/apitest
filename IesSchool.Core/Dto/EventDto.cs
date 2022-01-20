@@ -26,7 +26,7 @@ namespace IesSchool.Core.Dto
         public string? EventTypeName { get; set; }
 
 
-        public virtual ICollection<EventStudentDto> EventStudents { get; set; }
+      //  public virtual ICollection<EventStudentDto> EventStudents { get; set; }
         public virtual ICollection<EventTeacherDto> EventTeachers { get; set; }
     }
 }
