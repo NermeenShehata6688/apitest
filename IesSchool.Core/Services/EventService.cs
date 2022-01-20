@@ -104,9 +104,9 @@ namespace IesSchool.Core.Services
                 if (oEventDto != null)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
-                    var cmd = $"delete from Event_Teacher where EventId={oEventDto.Id}" +
-                        $"delete from Event_Student where EventId={oEventDto.Id}";
-
+                    var cmd = $"delete from Event_Teacher where EventId={oEventDto.Id}";
+                    // $"delete from Event_Student where EventId={oEventDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
                     var mapper = _mapper.Map<Event>(oEventDto);
                     _uow.GetRepository<Event>().Update(mapper);
                     _uow.SaveChanges();
