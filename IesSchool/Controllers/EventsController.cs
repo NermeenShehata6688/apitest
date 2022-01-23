@@ -302,8 +302,20 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpDelete]
+        public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
+        {
+            try
+            {
+                var all = _eventService.DeleteEventStudentFile(eventStudentFileId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-      
         #region NotNeededNow
         //[HttpPost]
         //public IActionResult PostEventTeacher(List<EventTeacherDto> eventTeacherDto)
@@ -360,19 +372,7 @@ namespace IesSchool.Controllers
         //    }
         //}
 
-        //[HttpDelete]
-        //public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
-        //{
-        //    try
-        //    {
-        //        var all = _eventService.DeleteEventStudentFile(eventStudentFileId);
-        //        return Ok(all);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+
         #endregion
     }
 }
