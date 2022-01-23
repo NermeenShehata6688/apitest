@@ -271,7 +271,7 @@ namespace IesSchool.Controllers
                 var file = Request.Form.Files;
 
                 var all = _eventService.AddEventAttachement(evenid , file);
-                return Ok();
+                return Ok(all);
             }
             else
             {

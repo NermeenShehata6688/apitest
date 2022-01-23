@@ -4,6 +4,7 @@ using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using IesSchool.InfraStructure.Paging;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -21,13 +22,17 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private iesContext _iesContext;
         private IFileService _ifileService;
+        private IHostingEnvironment _hostingEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _iesContext = iesContext;
             _ifileService = ifileService;
+            _hostingEnvironment = hostingEnvironment;
+            _httpContextAccessor = httpContextAccessor;
         }
         public ResponseDto GetEventHelper()
         {
@@ -431,18 +436,6 @@ namespace IesSchool.Core.Services
                             EventAttachmentBinary = eventAttachmentBinary
                         });
                     }
-
-                    //bug !!!not checked!!! var file = files[fileName];
-                    //var newName = GenerateNewName() + "." + file.FileName.Split('.').Last();
-                    //var newPath = GenerateNewPath(ImagesPath);
-                    //var relativePath = Path.Combine(newPath, newName);
-                    //var path = GetFullPath(relativePath);
-
-                    //using (var fileStream = new FileStream(path, FileMode.Create))
-                    //{
-                    //    await file.CopyToAsync(fileStream);
-                    //}
-                    //result.Add(relativePath);
                 }
                 var mapper = _mapper.Map<IEnumerable<EventAttachement>>(eventAttachement);
                 _uow.GetRepository<EventAttachement>().Add(mapper);
@@ -568,5 +561,43 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+
+        //public List<EventAttachementDto> GetFullPathAndBinary(List<EventAttachementDto> allEventAttachement)
+        //{
+        //    try
+        //    {
+        //        if (allEventAttachement.Count() > 0)
+        //        {
+        //            foreach (var item in allEventAttachement)
+        //            {
+        //                if (File.Exists("wwwRoot/tempFiles/" + item.Image))
+        //                {
+        //                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+        //                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+        //                    item.FullPath = fullpath;
+        //                }
+        //                else
+        //                {
+        //                    if (item != null && item.Image != null)
+        //                    {
+        //                        var student = _uow.GetRepository<Student>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
+        //                        if (student.ImageBinary != null)
+        //                        {
+        //                            System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
+        //                        }
+        //                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+        //                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+        //                        item.FullPath = fullpath;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        return allStudents;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return allStudents; ;
+        //    }
+        //}
     }
 }
