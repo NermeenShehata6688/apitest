@@ -444,7 +444,7 @@ namespace IesSchool.Core.Services
                     //}
                     //result.Add(relativePath);
                 }
-                var mapper = _mapper.Map<List<EventAttachement>>(eventAttachement);
+                var mapper = _mapper.Map<IEnumerable<EventAttachement>>(eventAttachement);
                 _uow.GetRepository<EventAttachement>().Add(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();
