@@ -404,9 +404,12 @@ namespace IesSchool.Core.Services
             {
                 var oEventAttachement = _uow.GetRepository<EventAttachement>().GetList(x => x.EventId == eventId, null);
                 var mapper = _mapper.Map <PaginateDto<EventAttachementDto>>(oEventAttachement);
-
-                var lstToSend = GetFullPathAndBinary(mapper);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
+                if (mapper.Items.Count()>0)
+                {
+                    var lstToSend = GetFullPathAndBinary(mapper);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
+                }
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
             {
@@ -499,6 +502,21 @@ namespace IesSchool.Core.Services
             }
         }
 
+        public ResponseDto GetStudentFilesByEventId(int eventId)
+        {
+            try
+            {
+                var oEventStudentFile = _uow.GetRepository<EventStudentFile>().GetList(x => x.EventId == eventId, null);
+                var mapper = _mapper.Map<PaginateDto<EventStudentFileDto>>(oEventStudentFile);
+
+                var lstToSend = GetFullPathAndBinary(mapper);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto AddEventStudentFiles(IFormFile file, List<EventStudentFileDto> eventStudentFileDto)
         {
             try
