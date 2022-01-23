@@ -403,44 +403,51 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                //change File to binary
-                using var transaction = _iesContext.Database.BeginTransaction();
-                List<EventAttachement> eventAttachement = new List<EventAttachement>();
-               // var _files = files.GetFiles();
-                foreach (var item in files)
-                {
-                    EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
-                    //if (item. == 0)
-                    //{
-                    //    if ( != null)
-                    //    {
-                    //        MemoryStream ms = new MemoryStream();
-                    //        item.file.CopyTo(ms);
-                    //        eventAttachmentBinary = new EventAttachmentBinary();
-                    //        eventAttachmentBinary.FileBinary = ms.ToArray();
-                    //        ms.Close();
-                    //        ms.Dispose();
+                List<EventAttachementDto> eventAttachement = new List<EventAttachementDto>();
+                EventAttachmentBinaryDto eventAttachmentBinary ;
 
-                    //        // upload file in local directory
-                    //        var result = _ifileService.UploadFile(item.file);
-                    //    }
-                    //    eventAttachement.Add(new EventAttachement
-                    //    {
-                    //        EventId = item.EventId,
-                    //        Name = item.Name,
-                    //        Description = item.Description,
-                    //        Date = item.Date,
-                    //        IsPublished = item.IsPublished,
-                    //        FileName = item.FileName,
-                    //        EventAttachmentBinary = eventAttachmentBinary
-                    //    });
+                using var transaction = _iesContext.Database.BeginTransaction();
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        file.CopyTo(ms);
+                        eventAttachmentBinary = new EventAttachmentBinaryDto();
+                        eventAttachmentBinary.FileBinary = ms.ToArray();
+                        ms.Close();
+                        ms.Dispose();
+
+                        var result = _ifileService.UploadFile(file);
+
+                        eventAttachement.Add(new EventAttachementDto
+                        {
+                            Id = 0,
+                            EventId = eventId,
+                            FileName = result.FileName,
+                            FullPath = result.virtualPath,
+                            EventAttachmentBinary = eventAttachmentBinary
+                        });
+                    }
+
+                    //bug !!!not checked!!! var file = files[fileName];
+                    //var newName = GenerateNewName() + "." + file.FileName.Split('.').Last();
+                    //var newPath = GenerateNewPath(ImagesPath);
+                    //var relativePath = Path.Combine(newPath, newName);
+                    //var path = GetFullPath(relativePath);
+
+                    //using (var fileStream = new FileStream(path, FileMode.Create))
+                    //{
+                    //    await file.CopyToAsync(fileStream);
                     //}
+                    //result.Add(relativePath);
                 }
-                _uow.GetRepository<EventAttachement>().Add(eventAttachement);
+                var mapper = _mapper.Map<List<EventAttachement>>(eventAttachement);
+                _uow.GetRepository<EventAttachement>().Add(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();
 
-                return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly" };
+                return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventAttachement };
             }
             catch (Exception ex)
             {
