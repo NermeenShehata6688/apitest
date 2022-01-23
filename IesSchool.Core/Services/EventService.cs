@@ -79,6 +79,11 @@ namespace IesSchool.Core.Services
                     .Include(x => x.EventStudents).ThenInclude(x => x.Student)
                     .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                 var mapper = _mapper.Map<EventGetDto>(oEvent);
+                
+                if (mapper.EventAttachements!=null && mapper.EventAttachements.Count()>0)
+                {
+                    var lstToSend = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
+                }
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -397,9 +402,11 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var oLeventAttachement = _uow.GetRepository<EventAttachement>().GetList(x => x.EventId == eventId, null);
-                var mapper = _mapper.Map <PaginateDto<EventAttachementDto>>(oLeventAttachement);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                var oEventAttachement = _uow.GetRepository<EventAttachement>().GetList(x => x.EventId == eventId, null);
+                var mapper = _mapper.Map <PaginateDto<EventAttachementDto>>(oEventAttachement);
+
+                var lstToSend = GetFullPathAndBinary(mapper);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
             }
             catch (Exception ex)
             {
@@ -561,43 +568,79 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-
-        //public List<EventAttachementDto> GetFullPathAndBinary(List<EventAttachementDto> allEventAttachement)
-        //{
-        //    try
-        //    {
-        //        if (allEventAttachement.Count() > 0)
-        //        {
-        //            foreach (var item in allEventAttachement)
-        //            {
-        //                if (File.Exists("wwwRoot/tempFiles/" + item.Image))
-        //                {
-        //                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-        //                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
-        //                    item.FullPath = fullpath;
-        //                }
-        //                else
-        //                {
-        //                    if (item != null && item.Image != null)
-        //                    {
-        //                        var student = _uow.GetRepository<Student>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
-        //                        if (student.ImageBinary != null)
-        //                        {
-        //                            System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
-        //                        }
-        //                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-        //                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
-        //                        item.FullPath = fullpath;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        return allStudents;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return allStudents; ;
-        //    }
-        //}
+        public PaginateDto<EventAttachementDto> GetFullPathAndBinary(PaginateDto<EventAttachementDto> allEventAttachement)
+        {
+            try
+            {
+                if (allEventAttachement.Items.Count() > 0)
+                {
+                    foreach (var item in allEventAttachement.Items)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == item.Id , null, null);
+                                if (att.FileBinary != null)
+                                {
+                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allEventAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allEventAttachement; ;
+            }
+        }
+        public ICollection<EventAttachementDto> GetFullPathAndBinaryIColliction(ICollection<EventAttachementDto> allEventAttachement)
+        {
+            try
+            {
+                if (allEventAttachement.Count() > 0)
+                {
+                    foreach (var item in allEventAttachement)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == item.Id , null, null);
+                                if (att.FileBinary != null)
+                                {
+                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allEventAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allEventAttachement; ;
+            }
+        }
     }
 }
