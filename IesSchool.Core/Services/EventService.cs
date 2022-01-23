@@ -502,18 +502,75 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetStudentFilesByEventId(int eventStudentId)
+
+        public ResponseDto AddEventStudentAttachement(int eventId, int studentId ,IFormFileCollection? files)
+        {
+            try
+            {
+                if ( (eventId > 0 &&  studentId>0)&& (eventId != null && studentId != null))
+                {
+                    EventStudent eventStudent;
+                    List<EventStudentFile> eventStudentFile = new List<EventStudentFile>();
+                    EventStudentFileBinary eventStudentFileBinary;
+
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    if (files.Count > 0)
+                    {
+                        foreach (var file in files)
+                        {
+                            if (file.Length > 0)
+                            {
+                                MemoryStream ms = new MemoryStream();
+                                file.CopyTo(ms);
+                                eventStudentFileBinary = new EventStudentFileBinary();
+                                eventStudentFileBinary.FileBinary = ms.ToArray();
+                                ms.Close();
+                                ms.Dispose();
+
+                                var result = _ifileService.UploadFile(file);
+                                eventStudentFile.Add(new EventStudentFile
+                                {
+                                    Id = 0,
+                                    EventStudentId = 0,
+                                    FileName = result.FileName,
+                                    // FullPath = result.virtualPath,
+                                    EventStudentFileBinary = eventStudentFileBinary
+                                });
+                            }
+                        }
+                         eventStudent = new EventStudent()
+                        {
+                            EventId = eventId,
+                            StudentId = studentId,
+                            EventStudentFiles= eventStudentFile,
+
+                        };
+                        _uow.GetRepository<EventStudent>().Add(eventStudent);
+                        _uow.SaveChanges();
+                        transaction.Commit();
+                        return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventStudent };
+
+                    }
+                }
+                return new ResponseDto { Status = 1, Message = "null" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto GetStudentAttatchmentByEventStudenId(int eventStudentId)
         {
             try
             {
                 var oEventStudentFile = _uow.GetRepository<EventStudentFile>().GetList(x => x.EventStudentId == eventStudentId, null);
                 var mapper = _mapper.Map<PaginateDto<EventStudentFileDto>>(oEventStudentFile);
 
-                //if (mapper.Items.Count() > 0)
-                //{
-                //    var lstToSend = GetFullPathAndBinary(mapper);
-                //    return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
-                //}
+                if (mapper.Items.Count() > 0)
+                {
+                    var lstToSend = GetFullPathAndBinaryStudentFiles(mapper);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
+                }
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -664,5 +721,43 @@ namespace IesSchool.Core.Services
                 return allEventAttachement; ;
             }
         }
+        private PaginateDto<EventStudentFileDto> GetFullPathAndBinaryStudentFiles(PaginateDto<EventStudentFileDto> allEventStudentFiles)
+        {
+            try
+            {
+                if (allEventStudentFiles.Items.Count() > 0)
+                {
+                    foreach (var item in allEventStudentFiles.Items)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventStudentFileBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allEventStudentFiles;
+            }
+            catch (Exception ex)
+            {
+                return allEventStudentFiles; ;
+            }
+        }
+
     }
 }

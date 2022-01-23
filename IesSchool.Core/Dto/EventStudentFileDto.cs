@@ -15,5 +15,6 @@ namespace IesSchool.Core.Dto
         public int? EventStudentId { get; set; }
         public bool? IsPublished { get; set; }
         public string? FileName { get; set; }
+        public string? FullPath { get; set; }
     }
 }

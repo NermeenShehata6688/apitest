@@ -205,16 +205,26 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostEventStudent(List<EventStudentDto> eventStudentDto)
+        public IActionResult PostEventStudentAttachement()
         {
-            try
+
+            var evenid = JsonConvert.DeserializeObject<int>(Request.Form["evenid"]);
+            var studentId = JsonConvert.DeserializeObject<int>(Request.Form["studentId"]);
+            if (evenid > 0 && studentId > 0 && Request.Form.Files.Count() < 0)
             {
-                var all = _eventService.AddEventStudent(eventStudentDto);
+                var all = _eventService.AddEventStudentAttachement(evenid, studentId, null);
                 return Ok(all);
             }
-            catch (Exception)
+            if (evenid > 0 && studentId > 0 && Request.Form.Files.Count() > 0)
             {
-                throw;
+                var file = Request.Form.Files;
+
+                var all = _eventService.AddEventStudentAttachement(evenid, studentId, file);
+                return Ok(all);
+            }
+            else
+            {
+                return Ok(null);
             }
         }
 
@@ -302,6 +312,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+       
         [HttpDelete]
         public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
         {
@@ -317,6 +328,19 @@ namespace IesSchool.Controllers
         }
 
         #region NotNeededNow
+        //[HttpGet]
+        //public IActionResult GetStudentAttatchmentByEventStudenId(int eventStudentId)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.GetStudentAttatchmentByEventStudenId(eventStudentId);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         //[HttpPost]
         //public IActionResult PostEventTeacher(List<EventTeacherDto> eventTeacherDto)
         //{
