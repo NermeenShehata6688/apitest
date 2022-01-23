@@ -228,20 +228,6 @@ namespace IesSchool.Controllers
             }
         }
 
-        [HttpPut]
-        public IActionResult PutEventStudent(List<EventStudentDto> eventStudentDto)
-        {
-            try
-            {
-                var all = _eventService.EditEventStudent(eventStudentDto);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         [HttpDelete]
         public IActionResult DeleteEventStudent(int eventStudentId)
         {
@@ -285,18 +271,25 @@ namespace IesSchool.Controllers
             }
             else
             {
-                //var all = _eventService.AddEventAttachement(modelData);
                 return Ok(null);
             }
-            //try
-            //{
-            //    var all = _eventService.AddEventAttachement(eventAttachementDto);
-            //    return Ok(all);
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
+          
+        }
+        [HttpPost]
+        public IActionResult PostEventStudentAttatchmentsWithEventStudentId()
+        {
+            var evenid = JsonConvert.DeserializeObject<int>(Request.Form["evenid"]);
+            if (Request.Form.Files.Count() > 0)
+            {
+                var file = Request.Form.Files;
+
+                var all = _eventService.AddEventStudentAttatchmentsWithEventStudentId(evenid, file);
+                return Ok(all);
+            }
+            else
+            {
+                return Ok(null);
+            }
         }
 
         [HttpDelete]
@@ -312,7 +305,20 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-       
+        [HttpGet]
+        public IActionResult GetStudentAttatchmentByEventStudenId(int eventId)
+        {
+            try
+            {
+                var all = _eventService.GetStudentAttatchmentByEventStudenId(eventId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpDelete]
         public IActionResult DeleteEventStudentFiles(int eventStudentFileId)
         {
@@ -328,6 +334,19 @@ namespace IesSchool.Controllers
         }
 
         #region NotNeededNow
+        //[HttpPut]
+        //public IActionResult PutEventStudent(List<EventStudentDto> eventStudentDto)
+        //{
+        //    try
+        //    {
+        //        var all = _eventService.EditEventStudent(eventStudentDto);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         //[HttpGet]
         //public IActionResult GetStudentAttatchmentByEventStudenId(int eventStudentId)
         //{

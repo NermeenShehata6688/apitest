@@ -238,71 +238,24 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-
         public ResponseDto GetEventStudentsByEventId(int eventId)
         {
             try
             {
                 var allEventStudents = _uow.GetRepository<EventStudent>().GetList(x=> x.EventId== eventId, null, x => x.Include(x => x.EventStudentFiles), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventStudentDto>>(allEventStudents);
+                foreach (var item in mapper.Items)
+                {
+                    if (item.EventStudentFiles!= null&&item.EventStudentFiles.Count() > 0)
+                    {
+                        item.EventStudentFiles = GetFullPathAndBinaryStudentFilesICollection(item.EventStudentFiles);
+                    }
+                }
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-            }
-        }
-        public ResponseDto GetEventStudentById(int eventStudentId)
-        {
-            try
-            {
-                var eventStudent = _uow.GetRepository<EventStudent>().Single(x => x.Id == eventStudentId, null, x => x.Include(x => x.EventStudentFiles));
-                var mapper = _mapper.Map<EventStudentDto>(eventStudent);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-            }
-        }
-        public ResponseDto AddEventStudent(List<EventStudentDto>  eventStudentDto)
-        {
-            try
-            {
-                List<EventStudent> eventStudent = new List<EventStudent>();
-                foreach (var item in eventStudentDto)
-                    eventStudent.Add(new EventStudent { EventId = item.EventId, StudentId = item.StudentId });
-
-                _uow.GetRepository<EventStudent>().Add(eventStudent);
-                _uow.SaveChanges();
-                //eventStudentDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Event Student Added  Seccessfuly", Data = eventStudentDto };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-            }
-        }
-        public ResponseDto EditEventStudent(List<EventStudentDto> eventStudentDto)
-        {
-            try
-            {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from Event_Student where EventId={eventStudentDto.FirstOrDefault().EventId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                List<EventStudent> eventStudent = new List<EventStudent>();
-
-                foreach (var item in eventStudentDto)
-                    eventStudent.Add(new EventStudent { EventId = item.EventId, StudentId = item.StudentId });
-
-                _uow.GetRepository<EventStudent>().Update(eventStudent);
-                _uow.SaveChanges();
-                transaction.Commit();
-                return new ResponseDto { Status = 1, Message = "Event Student Updated Seccessfuly", Data = eventStudentDto };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
         public ResponseDto DeleteEventStudent(int eventStudentId)
@@ -312,85 +265,6 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from Event_Student where Id={eventStudentId}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 return new ResponseDto { Status = 1, Message = "EventType Deleted Seccessfuly" };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-            }
-        }
-
-        public ResponseDto GetEventTeachers()
-        {
-            try
-            {
-                var allEventTeachers = _uow.GetRepository<EventTeacher>().GetList(null, null, null, 0, 100000, true);
-                var mapper = _mapper.Map<PaginateDto<EventTeacherDto>>(allEventTeachers);
-                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-            }
-        }
-        public ResponseDto GetEventTeacherById(int eventTeacherId)
-        {
-            try
-            {
-                var eventTeacher = _uow.GetRepository<EventTeacher>().Single(x => x.Id == eventTeacherId , null);
-                var mapper = _mapper.Map<EventTeacherDto>(eventTeacher);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-            }
-        }
-        public ResponseDto AddEventTeacher(List<EventTeacherDto> eventTeacherDto)
-        {
-            try
-            {
-                List<EventTeacher> eventTeacher = new List<EventTeacher>();
-                foreach (var item in eventTeacherDto)
-                    eventTeacher.Add(new EventTeacher { EventId = item.EventId, TeacherId = item.TeacherId });
-
-                _uow.GetRepository<EventTeacher>().Add(eventTeacher);
-                _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Event Teacher Added  Seccessfuly", Data = eventTeacherDto };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-            }
-        }
-        public ResponseDto EditEventTeacher(List<EventTeacherDto> eventTeacherDto)
-        {
-            try
-            {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from Event_Teacher where EventId={eventTeacherDto.FirstOrDefault().EventId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                List<EventTeacher> eventTeacher = new List<EventTeacher>();
-
-                foreach (var item in eventTeacherDto)
-                    eventTeacher.Add(new EventTeacher { EventId = item.EventId, TeacherId = item.TeacherId });
-
-                _uow.GetRepository<EventTeacher>().Update(eventTeacher);
-                _uow.SaveChanges();
-                transaction.Commit();
-                return new ResponseDto { Status = 1, Message = "Event Teacher Updated Seccessfuly", Data = eventTeacherDto };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-            }
-        }
-        public ResponseDto DeleteEventTeacher(int eventTeacherId)
-        {
-            try
-            {
-                var cmd = $"delete from Event_Teacher where Id={eventTeacherId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                return new ResponseDto { Status = 1, Message = "Event Teacher Deleted Seccessfuly" };
             }
             catch (Exception ex)
             {
@@ -459,35 +333,6 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditEventAttachement(List<EventAttachementDto> eventAttachementDto)
-        {
-            try
-            {
-                /// not use this func
-                //        using var transaction = _iesContext.Database.BeginTransaction();
-                //        List<EventAttachement> eventAttachement = new List<EventAttachement>();
-
-                //        foreach (var item in eventAttachementDto)
-                //            eventAttachement.Add(new EventAttachement
-                //            {
-                //                EventId = item.EventId,
-                //                Name = item.Name,
-                //                Description = item.Description,
-                //                Date = item.Date,
-                //                IsPublished = item.IsPublished,
-                //                FileName = item.FileName,
-                //            });
-                //        var mapper = _mapper.Map<List<EventAttachement>>(eventAttachementDto);
-                //        _uow.GetRepository<EventAttachement>().Update(mapper);
-                //        _uow.SaveChanges();
-                //        transaction.Commit();
-                return new ResponseDto { Status = 1, Message = "Event Attachement Updated Seccessfuly", Data = eventAttachementDto };
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-            }
-        }
         public ResponseDto DeleteEventAttachement(int eventAttachementId)
         {
             try
@@ -501,7 +346,6 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-
 
         public ResponseDto AddEventStudentAttachement(int eventId, int studentId ,IFormFileCollection? files)
         {
@@ -578,25 +422,47 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddEventStudentFiles(IFormFile file, List<EventStudentFileDto> eventStudentFileDto)
+        public ResponseDto AddEventStudentAttatchmentsWithEventStudentId(int eventStudentId, IFormFileCollection files)
         {
             try
             {
-                List<EventStudentFile> eventStudentFile = new List<EventStudentFile>();
-                foreach (var item in eventStudentFileDto)
-                    eventStudentFile.Add(new EventStudentFile
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        Description = item.Description,
-                        Date = item.Date,
-                        EventStudentId=item.EventStudentId,
-                        IsPublished = item.IsPublished,
-                        FileName = item.FileName,
-                    });
 
-                _uow.GetRepository<EventStudentFile>().Add(eventStudentFile);
-                return new ResponseDto { Status = 1, Message = "Event Student File Added  Seccessfuly", Data = eventStudentFileDto };
+                List<EventStudentFile> eventStudentFile = new List<EventStudentFile>();
+                EventStudentFileBinary eventStudentFileBinary;
+
+                using var transaction = _iesContext.Database.BeginTransaction();
+                if (files.Count()>0)
+                {
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            file.CopyTo(ms);
+                            eventStudentFileBinary = new EventStudentFileBinary();
+                            eventStudentFileBinary.FileBinary = ms.ToArray();
+                            ms.Close();
+                            ms.Dispose();
+
+                            var result = _ifileService.UploadFile(file);
+
+                            eventStudentFile.Add(new EventStudentFile
+                            {
+                                Id = 0,
+                                EventStudentId= eventStudentId,
+                                FileName = result.FileName,
+                                EventStudentFileBinary = eventStudentFileBinary
+                            });
+                        }
+                    }
+                    _uow.GetRepository<EventStudentFile>().Add(eventStudentFile);
+                    _uow.SaveChanges();
+                    transaction.Commit();
+                    return new ResponseDto { Status = 1, Message = "Event Student File Added  Seccessfuly", Data = eventStudentFile };
+
+                }
+                else
+                return new ResponseDto { Status = 1, Message = "null" };
             }
             catch (Exception ex)
             {
@@ -758,6 +624,205 @@ namespace IesSchool.Core.Services
                 return allEventStudentFiles; ;
             }
         }
+        private ICollection<EventStudentFileDto> GetFullPathAndBinaryStudentFilesICollection(ICollection<EventStudentFileDto> allEventStudentFiles)
+        {
+            try
+            {
+                if (allEventStudentFiles.Count() > 0)
+                {
+                    foreach (var item in allEventStudentFiles)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventStudentFileBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allEventStudentFiles;
+            }
+            catch (Exception ex)
+            {
+                return allEventStudentFiles; ;
+            }
+        }
+        #region NotNeededNow
+        //public ResponseDto GetEventStudentById(int eventStudentId)
+        //{
+        //    try
+        //    {
+        //        var eventStudent = _uow.GetRepository<EventStudent>().Single(x => x.Id == eventStudentId, null, x => x.Include(x => x.EventStudentFiles));
+        //        var mapper = _mapper.Map<EventStudentDto>(eventStudent);
+        //        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+        //    }
+        //}
+        //public ResponseDto AddEventStudent(List<EventStudentDto> eventStudentDto)
+        //{
+        //    try
+        //    {
+        //        List<EventStudent> eventStudent = new List<EventStudent>();
+        //        foreach (var item in eventStudentDto)
+        //            eventStudent.Add(new EventStudent { EventId = item.EventId, StudentId = item.StudentId });
 
+        //        _uow.GetRepository<EventStudent>().Add(eventStudent);
+        //        _uow.SaveChanges();
+        //        eventStudentDto.Id = mapper.Id;
+        //        return new ResponseDto { Status = 1, Message = "Event Student Added  Seccessfuly", Data = eventStudentDto };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+        //public ResponseDto EditEventStudent(List<EventStudentDto> eventStudentDto)
+        //{
+        //    try
+        //    {
+        //        using var transaction = _iesContext.Database.BeginTransaction();
+        //        var cmd = $"delete from Event_Student where EventId={eventStudentDto.FirstOrDefault().EventId}";
+        //        _iesContext.Database.ExecuteSqlRaw(cmd);
+        //        List<EventStudent> eventStudent = new List<EventStudent>();
+
+        //        foreach (var item in eventStudentDto)
+        //            eventStudent.Add(new EventStudent { EventId = item.EventId, StudentId = item.StudentId });
+
+        //        _uow.GetRepository<EventStudent>().Update(eventStudent);
+        //        _uow.SaveChanges();
+        //        transaction.Commit();
+        //        return new ResponseDto { Status = 1, Message = "Event Student Updated Seccessfuly", Data = eventStudentDto };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+        //public ResponseDto GetEventTeachers()
+        //{
+        //    try
+        //    {
+        //        var allEventTeachers = _uow.GetRepository<EventTeacher>().GetList(null, null, null, 0, 100000, true);
+        //        var mapper = _mapper.Map<PaginateDto<EventTeacherDto>>(allEventTeachers);
+        //        return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+        //    }
+        //}
+        //public ResponseDto GetEventTeacherById(int eventTeacherId)
+        //{
+        //    try
+        //    {
+        //        var eventTeacher = _uow.GetRepository<EventTeacher>().Single(x => x.Id == eventTeacherId, null);
+        //        var mapper = _mapper.Map<EventTeacherDto>(eventTeacher);
+        //        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+        //    }
+        //}
+        //public ResponseDto AddEventTeacher(List<EventTeacherDto> eventTeacherDto)
+        //{
+        //    try
+        //    {
+        //        List<EventTeacher> eventTeacher = new List<EventTeacher>();
+        //        foreach (var item in eventTeacherDto)
+        //            eventTeacher.Add(new EventTeacher { EventId = item.EventId, TeacherId = item.TeacherId });
+
+        //        _uow.GetRepository<EventTeacher>().Add(eventTeacher);
+        //        _uow.SaveChanges();
+        //        return new ResponseDto { Status = 1, Message = "Event Teacher Added  Seccessfuly", Data = eventTeacherDto };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+        //public ResponseDto EditEventTeacher(List<EventTeacherDto> eventTeacherDto)
+        //{
+        //    try
+        //    {
+        //        using var transaction = _iesContext.Database.BeginTransaction();
+        //        var cmd = $"delete from Event_Teacher where EventId={eventTeacherDto.FirstOrDefault().EventId}";
+        //        _iesContext.Database.ExecuteSqlRaw(cmd);
+        //        List<EventTeacher> eventTeacher = new List<EventTeacher>();
+
+        //        foreach (var item in eventTeacherDto)
+        //            eventTeacher.Add(new EventTeacher { EventId = item.EventId, TeacherId = item.TeacherId });
+
+        //        _uow.GetRepository<EventTeacher>().Update(eventTeacher);
+        //        _uow.SaveChanges();
+        //        transaction.Commit();
+        //        return new ResponseDto { Status = 1, Message = "Event Teacher Updated Seccessfuly", Data = eventTeacherDto };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+        //public ResponseDto DeleteEventTeacher(int eventTeacherId)
+        //{
+        //    try
+        //    {
+        //        var cmd = $"delete from Event_Teacher where Id={eventTeacherId}";
+        //        _iesContext.Database.ExecuteSqlRaw(cmd);
+        //        return new ResponseDto { Status = 1, Message = "Event Teacher Deleted Seccessfuly" };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+        //public ResponseDto EditEventAttachement(List<EventAttachementDto> eventAttachementDto)
+        //{
+        //    try
+        //    {
+        //        /// not use this func
+        //        //        using var transaction = _iesContext.Database.BeginTransaction();
+        //        //        List<EventAttachement> eventAttachement = new List<EventAttachement>();
+
+        //        //        foreach (var item in eventAttachementDto)
+        //        //            eventAttachement.Add(new EventAttachement
+        //        //            {
+        //        //                EventId = item.EventId,
+        //        //                Name = item.Name,
+        //        //                Description = item.Description,
+        //        //                Date = item.Date,
+        //        //                IsPublished = item.IsPublished,
+        //        //                FileName = item.FileName,
+        //        //            });
+        //        //        var mapper = _mapper.Map<List<EventAttachement>>(eventAttachementDto);
+        //        //        _uow.GetRepository<EventAttachement>().Update(mapper);
+        //        //        _uow.SaveChanges();
+        //        //        transaction.Commit();
+        //        return new ResponseDto { Status = 1, Message = "Event Attachement Updated Seccessfuly", Data = eventAttachementDto };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+
+        #endregion
     }
 }
