@@ -242,7 +242,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allEventStudents = _uow.GetRepository<EventStudent>().GetList(x=> x.EventId== eventId, null, x => x.Include(x => x.EventStudentFiles), 0, 100000, true);
+                var allEventStudents = _uow.GetRepository<EventStudent>().GetList(x=> x.EventId== eventId, null, x => x.Include(x => x.EventStudentFiles).Include(x => x.Student), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventStudentDto>>(allEventStudents);
                 foreach (var item in mapper.Items)
                 {
