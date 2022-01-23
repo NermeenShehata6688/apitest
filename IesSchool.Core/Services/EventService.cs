@@ -69,7 +69,8 @@ namespace IesSchool.Core.Services
             try
             {
                 var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true, null,
-                    x=> x.Include(x=> x.EventTeachers).ThenInclude(x => x.Teacher)
+                    x=> x.Include(x=> x.EventAttachements)
+                    .Include(x=> x.EventTeachers).ThenInclude(x => x.Teacher)
                     .Include(x => x.EventStudents).ThenInclude(x => x.Student)
                     .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                 var mapper = _mapper.Map<EventGetDto>(oEvent);
@@ -443,8 +444,8 @@ namespace IesSchool.Core.Services
                     //}
                     //result.Add(relativePath);
                 }
-                var mapper = _mapper.Map<Paginate<EventAttachement>>(eventAttachement);
-               // _uow.GetRepository<EventAttachement>().Add(mapper);
+                var mapper = _mapper.Map<List<EventAttachement>>(eventAttachement);
+                _uow.GetRepository<EventAttachement>().Add(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();
 
