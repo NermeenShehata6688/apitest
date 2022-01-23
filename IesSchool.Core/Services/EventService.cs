@@ -3,6 +3,7 @@ using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
+using IesSchool.InfraStructure.Paging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -442,8 +443,8 @@ namespace IesSchool.Core.Services
                     //}
                     //result.Add(relativePath);
                 }
-                var mapper = _mapper.Map<List<EventAttachement>>(eventAttachement);
-                _uow.GetRepository<EventAttachement>().Add(mapper);
+                var mapper = _mapper.Map<Paginate<EventAttachement>>(eventAttachement);
+               // _uow.GetRepository<EventAttachement>().Add(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();
 
