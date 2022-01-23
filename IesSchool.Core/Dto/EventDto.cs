@@ -27,6 +27,6 @@ namespace IesSchool.Core.Dto
 
 
       //  public virtual ICollection<EventStudentDto> EventStudents { get; set; }
-        public virtual ICollection<EventTeacherDto> EventTeachers { get; set; }
+        public virtual ICollection<EventTeacherDto>? EventTeachers { get; set; }
     }
 }
