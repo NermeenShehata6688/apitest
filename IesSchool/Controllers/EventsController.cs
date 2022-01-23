@@ -278,12 +278,12 @@ namespace IesSchool.Controllers
         [HttpPost]
         public IActionResult PostEventStudentAttatchmentsWithEventStudentId()
         {
-            var evenid = JsonConvert.DeserializeObject<int>(Request.Form["evenid"]);
+            var eventStudentId = JsonConvert.DeserializeObject<int>(Request.Form["eventStudentId"]);
             if (Request.Form.Files.Count() > 0)
             {
                 var file = Request.Form.Files;
 
-                var all = _eventService.AddEventStudentAttatchmentsWithEventStudentId(evenid, file);
+                var all = _eventService.AddEventStudentAttatchmentsWithEventStudentId(eventStudentId, file);
                 return Ok(all);
             }
             else
