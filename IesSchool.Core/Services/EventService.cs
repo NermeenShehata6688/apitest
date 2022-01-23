@@ -399,47 +399,48 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddEventAttachement(EventAttachementDto eventAttachementDto)
+        public ResponseDto AddEventAttachement(int eventId, IFormFileCollection files)
         {
             try
             {
                 //change File to binary
                 using var transaction = _iesContext.Database.BeginTransaction();
                 List<EventAttachement> eventAttachement = new List<EventAttachement>();
-                //foreach (var item in eventAttachementDto)
-                //{
-                //    EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
-                //    //if (item.Id == 0)
+               // var _files = files.GetFiles();
+                foreach (var item in files)
+                {
+                    EventAttachmentBinary eventAttachmentBinary = new EventAttachmentBinary();
+                    //if (item. == 0)
                     //{
-                        //if (item.file!=null)
-                        //{
-                        //    MemoryStream ms = new MemoryStream();
-                        //    item.file.CopyTo(ms);
-                        //    eventAttachmentBinary = new EventAttachmentBinary();
-                        //    eventAttachmentBinary.FileBinary = ms.ToArray();
-                        //    ms.Close();
-                        //    ms.Dispose();
+                    //    if ( != null)
+                    //    {
+                    //        MemoryStream ms = new MemoryStream();
+                    //        item.file.CopyTo(ms);
+                    //        eventAttachmentBinary = new EventAttachmentBinary();
+                    //        eventAttachmentBinary.FileBinary = ms.ToArray();
+                    //        ms.Close();
+                    //        ms.Dispose();
 
-                        //   // upload file in local directory
-                        //    var result = _ifileService.UploadFile(item.file);
-                        //}
-                        //eventAttachement.Add(new EventAttachement
-                        //{
-                        //    EventId = item.EventId,
-                        //    Name = item.Name,
-                        //    Description = item.Description,
-                        //    Date = item.Date,
-                        //    IsPublished = item.IsPublished,
-                        //    FileName = item.FileName,
-                        //    EventAttachmentBinary = eventAttachmentBinary
-                        //});
+                    //        // upload file in local directory
+                    //        var result = _ifileService.UploadFile(item.file);
+                    //    }
+                    //    eventAttachement.Add(new EventAttachement
+                    //    {
+                    //        EventId = item.EventId,
+                    //        Name = item.Name,
+                    //        Description = item.Description,
+                    //        Date = item.Date,
+                    //        IsPublished = item.IsPublished,
+                    //        FileName = item.FileName,
+                    //        EventAttachmentBinary = eventAttachmentBinary
+                    //    });
                     //}
-                //}
-                //_uow.GetRepository<EventAttachement>().Add(eventAttachement);
-                //_uow.SaveChanges();
+                }
+                _uow.GetRepository<EventAttachement>().Add(eventAttachement);
+                _uow.SaveChanges();
                 transaction.Commit();
 
-                return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventAttachementDto };
+                return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly" };
             }
             catch (Exception ex)
             {

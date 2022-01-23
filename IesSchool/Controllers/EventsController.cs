@@ -270,13 +270,13 @@ namespace IesSchool.Controllers
             {
                 var file = Request.Form.Files;
 
-                //var all = _eventService.AddEventAttachement(modelData);
+                var all = _eventService.AddEventAttachement(evenid , file);
                 return Ok();
             }
             else
             {
                 //var all = _eventService.AddEventAttachement(modelData);
-                return Ok();
+                return Ok(null);
             }
             //try
             //{

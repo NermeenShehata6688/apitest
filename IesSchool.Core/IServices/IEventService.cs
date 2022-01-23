@@ -37,7 +37,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteEventTeacher(int eventTeacherId);
         
         public ResponseDto GetEventAttachementByEventId(int eventId);
-        public ResponseDto AddEventAttachement(EventAttachementDto eventAttachementDto);
+        public ResponseDto AddEventAttachement(int eventId, IFormFileCollection files);
         public ResponseDto EditEventAttachement(List<EventAttachementDto> eventAttachementDto);
         public ResponseDto DeleteEventAttachement(int eventAttachementId);
 
