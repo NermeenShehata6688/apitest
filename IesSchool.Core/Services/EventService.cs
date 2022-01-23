@@ -502,15 +502,19 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetStudentFilesByEventId(int eventId)
+        public ResponseDto GetStudentFilesByEventId(int eventStudentId)
         {
             try
             {
-                var oEventStudentFile = _uow.GetRepository<EventStudentFile>().GetList(x => x.EventId == eventId, null);
+                var oEventStudentFile = _uow.GetRepository<EventStudentFile>().GetList(x => x.EventStudentId == eventStudentId, null);
                 var mapper = _mapper.Map<PaginateDto<EventStudentFileDto>>(oEventStudentFile);
 
-                var lstToSend = GetFullPathAndBinary(mapper);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
+                //if (mapper.Items.Count() > 0)
+                //{
+                //    var lstToSend = GetFullPathAndBinary(mapper);
+                //    return new ResponseDto { Status = 1, Message = " Seccess", Data = lstToSend };
+                //}
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
             {
@@ -586,7 +590,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public PaginateDto<EventAttachementDto> GetFullPathAndBinary(PaginateDto<EventAttachementDto> allEventAttachement)
+        private PaginateDto<EventAttachementDto> GetFullPathAndBinary(PaginateDto<EventAttachementDto> allEventAttachement)
         {
             try
             {
@@ -623,7 +627,7 @@ namespace IesSchool.Core.Services
                 return allEventAttachement; ;
             }
         }
-        public ICollection<EventAttachementDto> GetFullPathAndBinaryIColliction(ICollection<EventAttachementDto> allEventAttachement)
+        private ICollection<EventAttachementDto> GetFullPathAndBinaryIColliction(ICollection<EventAttachementDto> allEventAttachement)
         {
             try
             {
