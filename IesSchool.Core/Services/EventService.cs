@@ -82,7 +82,17 @@ namespace IesSchool.Core.Services
                 
                 if (mapper.EventAttachements!=null && mapper.EventAttachements.Count()>0)
                 {
-                    var lstToSend = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
+                    mapper.EventAttachements = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
+                }
+                if (mapper.EventStudents != null && mapper.EventStudents.Count > 0)
+                {
+                    foreach (var item in mapper.EventStudents)
+                    {
+                        if (item.EventStudentFiles != null)
+                        {
+                            item.EventStudentFiles = GetFullPathAndBinaryStudentFilesICollection(item.EventStudentFiles);
+                        }
+                    }
                 }
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
