@@ -289,8 +289,8 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(dist => dist.StudentNameAr, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.NameAr))
                 .ReverseMap()
              .ForMember(x => x.Event, op => op.Ignore())
-            . ForMember(x => x.Student, op => op.Ignore())
-             .ForMember(x => x.EventStudentFiles, op => op.Ignore()).ReverseMap();
+            . ForMember(x => x.Student, op => op.Ignore()).ReverseMap();
+            // .ForMember(x => x.EventStudentFiles, op => op.Ignore())
 
             CreateMap< List<EventStudent>, List<EventStudentDto>>().ReverseMap();
 
