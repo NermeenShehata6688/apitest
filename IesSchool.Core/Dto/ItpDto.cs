@@ -34,7 +34,7 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
-        public virtual ICollection<ItpObjectiveDto>? ItpObjectives { get; set; }
         public virtual ICollection<ItpStrategyDto>? ItpStrategies { get; set; }
+        //public virtual ICollection<ItpObjectiveDto>? ItpObjectives { get; set; }
     }
 }

@@ -326,6 +326,15 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ItpObjective, ItpObjectiveDto>().ReverseMap()
             .ForMember(x => x.Itp, op => op.Ignore());
 
+            CreateMap<ItpStrategy, ItpStrategyDto>().ReverseMap()
+           .ForMember(x => x.Itp, op => op.Ignore())
+           .ForMember(x => x.ParamedicalStrategy, op => op.Ignore());
+
+            CreateMap<ParamedicalStrategy, ParamedicalStrategyDto>().ReverseMap()
+           .ForMember(x => x.ParamedicalService, op => op.Ignore());
+
+            CreateMap<ItpHelper, ItpHelperDto>().ReverseMap();
+            
         }
     }
 }
