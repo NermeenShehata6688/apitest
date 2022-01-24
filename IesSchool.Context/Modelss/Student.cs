@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
     public partial class Student
     {

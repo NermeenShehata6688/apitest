@@ -19,8 +19,8 @@ namespace IesSchool.Core.Dto
         public bool? IsExtraCurricular { get; set; }
         public bool? IsSuspended { get; set; }
         public int? DepartmentId { get; set; }
-        public int Index { get; set; }
-        public int PageSize { get; set; }
+        public int? Index { get; set; }
+        public int? PageSize { get; set; }
 
     }
 }

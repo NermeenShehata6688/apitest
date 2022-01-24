@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
     public partial class iesContext : DbContext
     {
@@ -15,7 +13,7 @@ namespace IesSchool.Context.Models
 
         public iesContext(DbContextOptions<iesContext> options)
             : base(options)
-        {       
+        {
         }
 
         public virtual DbSet<AcadmicYear> AcadmicYears { get; set; } = null!;
@@ -40,7 +38,6 @@ namespace IesSchool.Context.Models
         public virtual DbSet<EventAttachement> EventAttachements { get; set; } = null!;
         public virtual DbSet<EventAttachmentBinary> EventAttachmentBinaries { get; set; } = null!;
         public virtual DbSet<EventStudent> EventStudents { get; set; } = null!;
-        public virtual DbSet<LogComment> LogComments { get; set; } = null!;
         public virtual DbSet<EventStudentFile> EventStudentFiles { get; set; } = null!;
         public virtual DbSet<EventStudentFileBinary> EventStudentFileBinaries { get; set; } = null!;
         public virtual DbSet<EventTeacher> EventTeachers { get; set; } = null!;
@@ -52,10 +49,15 @@ namespace IesSchool.Context.Models
         public virtual DbSet<IepExtraCurricular> IepExtraCurriculars { get; set; } = null!;
         public virtual DbSet<IepParamedicalService> IepParamedicalServices { get; set; } = null!;
         public virtual DbSet<IepProgressReport> IepProgressReports { get; set; } = null!;
+        public virtual DbSet<Itp> Itps { get; set; } = null!;
+        public virtual DbSet<ItpObjective> ItpObjectives { get; set; } = null!;
+        public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
+        public virtual DbSet<LogComment> LogComments { get; set; } = null!;
         public virtual DbSet<Objective> Objectives { get; set; } = null!;
         public virtual DbSet<ObjectiveEvaluationProcess> ObjectiveEvaluationProcesses { get; set; } = null!;
         public virtual DbSet<ObjectiveSkill> ObjectiveSkills { get; set; } = null!;
         public virtual DbSet<ParamedicalService> ParamedicalServices { get; set; } = null!;
+        public virtual DbSet<ParamedicalStrategy> ParamedicalStrategies { get; set; } = null!;
         public virtual DbSet<Phone> Phones { get; set; } = null!;
         public virtual DbSet<ProgressReportExtraCurricular> ProgressReportExtraCurriculars { get; set; } = null!;
         public virtual DbSet<ProgressReportParamedical> ProgressReportParamedicals { get; set; } = null!;
@@ -73,9 +75,6 @@ namespace IesSchool.Context.Models
         public virtual DbSet<StudentHistoricalSkill> StudentHistoricalSkills { get; set; } = null!;
         public virtual DbSet<StudentTherapist> StudentTherapists { get; set; } = null!;
         public virtual DbSet<Term> Terms { get; set; } = null!;
-        public virtual DbSet<Itp> Itps { get; set; } = null!;
-        public virtual DbSet<ItpObjective> ItpObjectives { get; set; } = null!;
-        public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
         public virtual DbSet<TherapistParamedicalService> TherapistParamedicalServices { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserAssistant> UserAssistants { get; set; } = null!;
@@ -83,95 +82,22 @@ namespace IesSchool.Context.Models
         public virtual DbSet<UserAttachmentBinary> UserAttachmentBinaries { get; set; } = null!;
         public virtual DbSet<VwAssistant> VwAssistants { get; set; } = null!;
         public virtual DbSet<VwIep> VwIeps { get; set; } = null!;
+        public virtual DbSet<VwSkill> VwSkills { get; set; } = null!;
         public virtual DbSet<VwStudent> VwStudents { get; set; } = null!;
         public virtual DbSet<VwUser> VwUsers { get; set; } = null!;
         public virtual DbSet<WorkCategory> WorkCategories { get; set; } = null!;
-        public virtual DbSet<VwSkill> VwSkills { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //optionsBuilder.UseSqlServer("Server=192.168.8.181\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
+                optionsBuilder.UseSqlServer("Server=192.168.8.148\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AspNetUserRole>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RoleId });
-                entity.ToTable("AspNetUserRoles");
-
-                entity.Property(e => e.Code)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasColumnName("code")
-                    .IsFixedLength();
-
-                //entity.HasOne(d => d.Role)
-                //    .WithMany(p => p.AspNetUserRoles)
-                //    .HasForeignKey(d => d.RoleId);
-
-                //entity.HasOne(d => d.User)
-                //    .WithMany(p => p.AspNetUserRoles)
-                //    .HasForeignKey(d => d.UserId);
-            });
-            modelBuilder.Entity<LogComment>(entity =>
-            {
-                entity.ToTable("LogComment");
-
-                entity.Property(e => e.CreatedBy).HasMaxLength(500);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.DeletedBy).HasMaxLength(500);
-
-                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.LogDate).HasColumnType("datetime");
-                entity.HasOne(d => d.Iep)
-                   .WithMany(p => p.LogComments)
-                   .HasForeignKey(d => d.IepId)
-                   .HasConstraintName("FK_LogComment_IEP");
-
-                entity.HasOne(d => d.Student)
-                    .WithMany(p => p.LogComments)
-                    .HasForeignKey(d => d.StudentId)
-                    .HasConstraintName("FK_LogComment_Students");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.LogComments)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_LogComment_User");
-            });
-            modelBuilder.Entity<VwSkill>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("VW_Skills");
-
-                entity.Property(e => e.AreaName).HasMaxLength(255);
-
-                entity.Property(e => e.AreaNameAr).HasMaxLength(255);
-
-                entity.Property(e => e.CreatedBy).HasMaxLength(500);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.DeletedBy).HasMaxLength(500);
-
-                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.Level).HasColumnName("level"); 
-                //entity.Property(e => e.SkillNumber).HasColumnName("level"); 
-                entity.Property(e => e.NameAr).HasColumnName("Name_Ar");
-
-                entity.Property(e => e.StrandName).HasMaxLength(255);
-
-                entity.Property(e => e.StrandNameAr).HasMaxLength(255);
-            });
             modelBuilder.Entity<AcadmicYear>(entity =>
             {
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
@@ -314,18 +240,24 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.UserId);
             });
 
-            //modelBuilder.Entity<AspNetUserRole>(entity =>
-            //{
-            //    entity.HasNoKey();
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
 
-            //    entity.HasOne(d => d.Role)
-            //        .WithMany()
-            //        .HasForeignKey(d => d.RoleId);
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("code")
+                    .IsFixedLength();
 
-            //    entity.HasOne(d => d.User)
-            //        .WithMany()
-            //        .HasForeignKey(d => d.UserId);
-            //});
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
 
             modelBuilder.Entity<AspNetUserToken>(entity =>
             {
@@ -763,6 +695,7 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.TermId)
                     .HasConstraintName("FK_IepProgressReport_Term");
             });
+
             modelBuilder.Entity<Itp>(entity =>
             {
                 entity.ToTable("ITP");
@@ -850,6 +783,35 @@ namespace IesSchool.Context.Models
                     .HasConstraintName("FK_ITP_Strategy_Paramedical_Strategy");
             });
 
+            modelBuilder.Entity<LogComment>(entity =>
+            {
+                entity.ToTable("LogComment");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.LogDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Iep)
+                    .WithMany(p => p.LogComments)
+                    .HasForeignKey(d => d.IepId)
+                    .HasConstraintName("FK_LogComment_IEP");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.LogComments)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_LogComment_Students");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.LogComments)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_LogComment_User");
+            });
 
             modelBuilder.Entity<Objective>(entity =>
             {
@@ -918,6 +880,7 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.NameAr).HasColumnName("Name_Ar");
             });
+
             modelBuilder.Entity<ParamedicalStrategy>(entity =>
             {
                 entity.ToTable("Paramedical_Strategy");
@@ -943,6 +906,7 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.StudentId)
                     .HasConstraintName("FK_Phone_Students");
             });
+
             modelBuilder.Entity<ProgressReportExtraCurricular>(entity =>
             {
                 entity.ToTable("ProgressReportExtraCurricular");
@@ -1280,6 +1244,11 @@ namespace IesSchool.Context.Models
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).HasMaxLength(255);
+
+                entity.HasOne(d => d.AcadmicYear)
+                    .WithMany(p => p.Terms)
+                    .HasForeignKey(d => d.AcadmicYearId)
+                    .HasConstraintName("FK_Term_AcadmicYears");
             });
 
             modelBuilder.Entity<TherapistParamedicalService>(entity =>
@@ -1377,7 +1346,6 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.UserAttachmentBinary)
                     .HasForeignKey<UserAttachmentBinary>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserAttachmentBinary_UserAttachment");
             });
 
@@ -1413,9 +1381,10 @@ namespace IesSchool.Context.Models
             modelBuilder.Entity<VwIep>(entity =>
             {
                 entity.HasNoKey();
+
                 entity.ToView("Vw_Ieps");
 
-                entity.Property(e => e.AcadmicYear_Id).HasColumnName("AcadmicYear_Id");
+                entity.Property(e => e.AcadmicYearId1).HasColumnName("AcadmicYear_Id");
 
                 entity.Property(e => e.AcadmicYearName).HasMaxLength(255);
 
@@ -1431,25 +1400,52 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Department_Id).HasColumnName("Department_Id");
+                entity.Property(e => e.DepartmentId1).HasColumnName("Department_Id");
 
                 entity.Property(e => e.DepartmentName).HasMaxLength(255);
 
                 entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
 
-                entity.Property(e => e.Student_Id).HasColumnName("Student_Id");
+                entity.Property(e => e.StudentId1).HasColumnName("Student_Id");
 
                 entity.Property(e => e.StudentName).HasMaxLength(500);
 
                 entity.Property(e => e.StudentNameAr).HasMaxLength(500);
 
-                entity.Property(e => e.Teacher_Id).HasColumnName("Teacher_Id");
+                entity.Property(e => e.TeacherId1).HasColumnName("Teacher_Id");
 
                 entity.Property(e => e.TeacherName).HasMaxLength(1000);
 
-                entity.Property(e => e.Term_Id).HasColumnName("Term_Id");
+                entity.Property(e => e.TermId1).HasColumnName("Term_Id");
 
                 entity.Property(e => e.TermName).HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<VwSkill>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_Skills");
+
+                entity.Property(e => e.AreaName).HasMaxLength(255);
+
+                entity.Property(e => e.AreaNameAr).HasMaxLength(255);
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Level).HasColumnName("level");
+
+                entity.Property(e => e.NameAr).HasColumnName("Name_Ar");
+
+                entity.Property(e => e.StrandName).HasMaxLength(255);
+
+                entity.Property(e => e.StrandNameAr).HasMaxLength(255);
             });
 
             modelBuilder.Entity<VwStudent>(entity =>
@@ -1562,18 +1558,4 @@ namespace IesSchool.Context.Models
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
-
-
-
-    public partial class iesIdentityContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
-    {
-        public iesIdentityContext()
-        {
-        }
-
-        public iesIdentityContext(DbContextOptions<iesIdentityContext> options)
-            : base(options)
-        {
-        }
-    }
-    }
+}

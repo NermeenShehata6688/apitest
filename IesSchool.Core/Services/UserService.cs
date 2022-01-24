@@ -110,8 +110,16 @@ namespace IesSchool.Core.Services
 
                 var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);
                 var lstToSend = GetFullPathAndBinary(lstUserDto);
-
-                var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstToSend, Index = userSearchDto.Index, Pages = userSearchDto.PageSize };
+                if (userSearchDto.Index == null || userSearchDto.Index == 0)
+                {
+                    userSearchDto.Index = 0;
+                }
+                else
+                {
+                    userSearchDto.Index += 1;
+                }
+                var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstToSend != null ? lstUserDto.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstToSend.ToList() };
+               // var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstToSend, Index = userSearchDto.Index, Pages = userSearchDto.PageSize };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)

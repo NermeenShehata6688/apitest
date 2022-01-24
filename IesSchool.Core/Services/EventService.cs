@@ -361,7 +361,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if ( (eventId > 0 &&  studentId>0)&& (eventId != null && studentId != null))
+                if ((eventId > 0 && studentId > 0) && (eventId != null && studentId != null))
                 {
                     EventStudent eventStudent;
                     List<EventStudentFile> eventStudentFile = new List<EventStudentFile>();
@@ -391,19 +391,34 @@ namespace IesSchool.Core.Services
                                     EventStudentFileBinary = eventStudentFileBinary
                                 });
                             }
+
                         }
-                         eventStudent = new EventStudent()
+                        eventStudent = new EventStudent()
                         {
                             EventId = eventId,
                             StudentId = studentId,
-                            EventStudentFiles= eventStudentFile,
+                            EventStudentFiles = eventStudentFile,
 
                         };
                         _uow.GetRepository<EventStudent>().Add(eventStudent);
                         _uow.SaveChanges();
                         transaction.Commit();
-                        return new ResponseDto { Status = 1, Message = "Event Attachements Added  Seccessfuly", Data = eventStudent };
+                        return new ResponseDto { Status = 1, Message = "Event Student Attachements Added  Seccessfuly", Data = eventStudent };
 
+                    }
+                    else if (eventId > 0 && studentId > 0)
+                    {
+                        eventStudent = new EventStudent()
+                        {
+                            EventId = eventId,
+                            StudentId = studentId,
+                            // EventStudentFiles = eventStudentFile,
+
+                        };
+                        _uow.GetRepository<EventStudent>().Add(eventStudent);
+                        _uow.SaveChanges();
+                        transaction.Commit();
+                        return new ResponseDto { Status = 1, Message = "Event Student Attachements Added  Seccessfuly", Data = eventStudent };
                     }
                 }
                 return new ResponseDto { Status = 1, Message = "null" };

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
     public partial class Term
     {
