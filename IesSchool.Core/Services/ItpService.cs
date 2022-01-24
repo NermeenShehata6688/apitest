@@ -217,7 +217,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var itpObjectives = _uow.GetRepository<ItpObjective>().GetList(x => x.ItpId == itpId, null);
+                var itpObjectives = _uow.GetRepository<ItpObjective>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null);
                 var mapper = _mapper.Map<PaginateDto<ItpObjectiveDto>>(itpObjectives);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -231,6 +231,9 @@ namespace IesSchool.Core.Services
             try
             {
                 var mapper = _mapper.Map<ItpObjective>(itpObjectiveDto);
+                mapper.IsDeleted = false;
+                mapper.CreatedOn = DateTime.Now;
+
                 _uow.GetRepository<ItpObjective>().Add(mapper);
                 _uow.SaveChanges();
                 itpObjectiveDto.Id = mapper.Id;
@@ -249,7 +252,7 @@ namespace IesSchool.Core.Services
                 _uow.GetRepository<ItpObjective>().Update(mapper);
                 _uow.SaveChanges();
                 itpObjectiveDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Itp Objectiver Updated Seccessfuly", Data = itpObjectiveDto };
+                return new ResponseDto { Status = 1, Message = "Itp Objective Updated Seccessfuly", Data = itpObjectiveDto };
             }
             catch (Exception ex)
             {
@@ -260,14 +263,20 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var cmd = $"delete from IEP_ExtraCurricular where Id={itpObjectiveId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
+                ItpObjective oItpObjective = _uow.GetRepository<ItpObjective>().Single(x => x.Id == itpObjectiveId);
+                oItpObjective.IsDeleted = true;
+                oItpObjective.DeletedOn = DateTime.Now;
+
+                _uow.GetRepository<ItpObjective>().Update(oItpObjective);
+                _uow.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "Itp Objective Deleted Seccessfuly" };
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
+
+
         }
     }
 }

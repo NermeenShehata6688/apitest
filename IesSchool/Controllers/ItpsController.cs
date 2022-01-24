@@ -116,5 +116,44 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetItpObjectiveByItpId(int itpId)
+        {
+            try
+            {
+                var all = _itpService.GetItpObjectiveByItpId(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public IActionResult PostItpObjective(ItpObjectiveDto itpObjectiveDto)
+        {
+            try
+            {
+                var all = _itpService.AddItpObjective(itpObjectiveDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteItpObjective(int itpObjectiveId)
+        {
+            try
+            {
+                var all = _itpService.DeleteItpObjective(itpObjectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

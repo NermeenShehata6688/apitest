@@ -13,7 +13,7 @@ namespace IesSchool.Core.Dto
         public string? ObjectiveNote { get; set; }
         public DateTime? Date { get; set; }
         public string? ResourcesRequired { get; set; }
-        public string? EvaluationId { get; set; }
+        public int? EvaluationId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? DeletedOn { get; set; }
