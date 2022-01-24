@@ -368,7 +368,7 @@ namespace IesSchool.Core.Services
                     EventStudentFileBinary eventStudentFileBinary;
 
                     using var transaction = _iesContext.Database.BeginTransaction();
-                    if (files.Count > 0)
+                    if (files != null && files.Count > 0)
                     {
                         foreach (var file in files)
                         {

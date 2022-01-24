@@ -210,7 +210,7 @@ namespace IesSchool.Controllers
 
             var evenid = JsonConvert.DeserializeObject<int>(Request.Form["evenid"]);
             var studentId = JsonConvert.DeserializeObject<int>(Request.Form["studentId"]);
-            if (evenid > 0 && studentId > 0 && Request.Form.Files.Count() < 0)
+            if (evenid > 0 && studentId > 0 && Request.Form.Files.Count() == 0)
             {
                 var all = _eventService.AddEventStudentAttachement(evenid, studentId, null);
                 return Ok(all);
