@@ -223,8 +223,8 @@ namespace IesSchool.Core.Services
                     mapper.UserAttachments = GetFullPathAndBinaryICollictionAtt(mapper.UserAttachments);
                 }
 
-                mapper.UserName= user.AspNetUser.UserName==null? "": user.AspNetUser.UserName;
-                mapper.Email= user.AspNetUser.Email ==null?"": user.AspNetUser.Email;
+                mapper.UserName= user.AspNetUser == null ? "" : user.AspNetUser.UserName==null? "": user.AspNetUser.UserName;
+                mapper.Email= user.AspNetUser == null ? "" : user.AspNetUser.Email ==null?"": user.AspNetUser.Email;
                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
                 mapper.FullPath = fullpath;
