@@ -217,7 +217,6 @@ namespace IesSchool.Core.Services
                         mapper.UserRoles = string.Join(",", roles);
                     }
                 }
-                
                 if (mapper.UserAttachments.Count()>0)
                 {
                     mapper.UserAttachments = GetFullPathAndBinaryICollictionAtt(mapper.UserAttachments);
@@ -445,6 +444,11 @@ namespace IesSchool.Core.Services
             {
                 var userAttachment = _uow.GetRepository<UserAttachment>().GetList(x => x.UserId == userId, null);
                 var mapper = _mapper.Map<PaginateDto<UserAttachmentDto>>(userAttachment);
+                mapper.Items.ToList();
+                //if (mapper.Count() > 0)
+                //{
+                //    mapper = GetFullPathAndBinaryICollictionAtt(mapper);
+                //}
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
