@@ -5,6 +5,7 @@ using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace IesSchool.Core.Services
@@ -15,9 +16,11 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private iesContext _iesContext;
         private IFileService _ifileService;
+        private readonly UserManager<IdentityUser<int>> _userManager;
+
         private IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+        public UserService(UserManager<IdentityUser<int>> userManage,IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _uow = unitOfWork;
             _mapper = mapper;
@@ -25,6 +28,7 @@ namespace IesSchool.Core.Services
             _ifileService = ifileService;
             _hostingEnvironment = hostingEnvironment;
             _httpContextAccessor = httpContextAccessor;
+            _userManager = userManage;
         }
         public ResponseDto GetUsersHelper()
         {
@@ -198,10 +202,19 @@ namespace IesSchool.Core.Services
             {
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => 
                 x.Include(x => x.StudentTherapists).Include(x=>x.AspNetUser)
+                .Include(x => x.UserAttachments)
                 .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
                 .Include(x => x.AspNetUser));
                 user.ImageBinary = null;
                 var mapper = _mapper.Map<UserDto>(user);
+               
+                var appUser = _userManager.Users.SingleOrDefault(r => r.Email == user.Email);
+                var roles = _userManager.GetRolesAsync(appUser).Result;
+                if (roles != null)
+                {
+                    mapper.UserRoles = string.Join(",", roles);
+                }
+
                 mapper.UserName= user.AspNetUser.UserName;
                 mapper.Email= user.AspNetUser.Email;
                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;

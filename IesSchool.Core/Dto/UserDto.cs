@@ -20,7 +20,6 @@ namespace IesSchool.Core.Dto
         public string? Image { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? BirthDate { get; set; }
-
         public DateTime? CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
         //public bool? IsDeleted { get; set; }
@@ -32,10 +31,12 @@ namespace IesSchool.Core.Dto
         public string? FullPath { get; set; }
         public string? UserName { get; set; }
         public string? NormalizedUserName { get; set; }
+        public string? UserRoles { get; set; }
 
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }
         public virtual ICollection<TherapistParamedicalServiceDto>? TherapistParamedicalServices { get; set; }
+        public virtual ICollection<UserAttachmentDto>? UserAttachments { get; set; }
 
     }
 }

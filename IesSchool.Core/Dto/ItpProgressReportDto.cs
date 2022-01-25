@@ -30,6 +30,6 @@ namespace IesSchool.Core.Dto
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
         //public string? TeacherName { get; set; }
-        public virtual ICollection<ItpObjectiveProgressReportDto>? ItpObjectiveProgressReports { get; set; }
+        public virtual ICollection<ItpObjectiveProgressReportDto> ItpObjectiveProgressReports { get; set; }
     }
 }
