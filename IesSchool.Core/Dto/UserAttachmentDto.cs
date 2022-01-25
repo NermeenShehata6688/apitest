@@ -16,6 +16,7 @@ namespace IesSchool.Core.Dto
         public DateTime? ValidTill { get; set; }
         public int? AttachmentTypeId { get; set; }
         public int? UserId { get; set; }
+        public string? FullPath { get; set; }
         //public IFormFile File { get; set; }
     }
 }

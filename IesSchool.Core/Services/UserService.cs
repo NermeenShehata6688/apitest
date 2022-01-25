@@ -209,14 +209,22 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<UserDto>(user);
                
                 var appUser = _userManager.Users.SingleOrDefault(r => r.Email == user.Email);
-                var roles = _userManager.GetRolesAsync(appUser).Result;
-                if (roles != null)
+                if (appUser!= null)
                 {
-                    mapper.UserRoles = string.Join(",", roles);
+                    var roles = _userManager.GetRolesAsync(appUser).Result;
+                    if (roles.Count() > 0)
+                    {
+                        mapper.UserRoles = string.Join(",", roles);
+                    }
+                }
+                
+                if (mapper.UserAttachments.Count()>0)
+                {
+                    mapper.UserAttachments = GetFullPathAndBinaryICollictionAtt(mapper.UserAttachments);
                 }
 
-                mapper.UserName= user.AspNetUser.UserName;
-                mapper.Email= user.AspNetUser.Email;
+                mapper.UserName= user.AspNetUser.UserName==null? "": user.AspNetUser.UserName;
+                mapper.Email= user.AspNetUser.Email ==null?"": user.AspNetUser.Email;
                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
                 mapper.FullPath = fullpath;
@@ -431,12 +439,12 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetUserAttachmentById(int userAttachmentId)
+        public ResponseDto GetUserAttachmentByUserId(int userId)
         {
             try
             {
-                var userAttachment = _uow.GetRepository<UserAttachment>().Single(x => x.Id == userAttachmentId, null);
-                var mapper = _mapper.Map<UserAttachmentDto>(userAttachment);
+                var userAttachment = _uow.GetRepository<UserAttachment>().GetList(x => x.UserId == userId, null);
+                var mapper = _mapper.Map<PaginateDto<UserAttachmentDto>>(userAttachment);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -557,5 +565,81 @@ namespace IesSchool.Core.Services
                 return allUsers; 
             }
         }
+
+        private PaginateDto<UserAttachmentDto> GetFullPathAndBinaryAtt(PaginateDto<UserAttachmentDto> allUserAttachement)
+        {
+            try
+            {
+                if (allUserAttachement.Items.Count() > 0)
+                {
+                    foreach (var item in allUserAttachement.Items)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<UserAttachmentBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allUserAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allUserAttachement; ;
+            }
+        }
+        private ICollection<UserAttachmentDto> GetFullPathAndBinaryICollictionAtt(ICollection<UserAttachmentDto> allUserAttachement)
+        {
+            try
+            {
+                if (allUserAttachement.Count() > 0)
+                {
+                    foreach (var item in allUserAttachement)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<UserAttachmentBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allUserAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allUserAttachement; ;
+            }
+        }
+
     }
 }

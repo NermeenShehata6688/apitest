@@ -196,6 +196,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetUserAttachmentByUserId(int userId)
+        {
+            try
+            {
+                var all = _userService.GetUserAttachmentByUserId(userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult AddUserAttachment()

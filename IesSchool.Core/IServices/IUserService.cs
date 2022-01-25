@@ -24,7 +24,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditUser2(UserDto userDto);
         public ResponseDto DeleteUser(int userId);
 
-        public ResponseDto GetUserAttachmentById(int userAttachmentId);
+        public ResponseDto GetUserAttachmentByUserId(int userId);
         public ResponseDto AddUserAttachment(IFormFile file, UserAttachmentDto userAttachmentDto);
         public ResponseDto EditUserAttachment(UserAttachmentDto userAttachmentDto);
         public ResponseDto DeleteUserAttachment(int userAttachmentId);
