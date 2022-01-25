@@ -243,6 +243,8 @@ namespace IesSchool.Core.Services
                     aspNetUser.TwoFactorEnabled = false;
                     aspNetUser.LockoutEnabled = false;
                     aspNetUser.AccessFailedCount = 0;
+                    aspNetUser.UserName = userDto.UserName==null?"": userDto.UserName;
+                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
                     _uow.GetRepository<AspNetUser>().Add(aspNetUser);
                     _uow.SaveChanges();
 
@@ -271,15 +273,8 @@ namespace IesSchool.Core.Services
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
 
-                    //MemoryStream ms = new MemoryStream();
-                    //file.CopyTo(ms);
-                    //userDto.ImageBinary = ms.ToArray();
-                    //ms.Close();
-                    //ms.Dispose();
-                    //upload file in local directory
                     AspNetUser aspNetUser = new AspNetUser();
-                    //var result = _ifileService.UploadFile(file);
-                    //userDto.Image = result.FileName;
+                    
                     var mapper = _mapper.Map<User>(userDto);
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
@@ -293,6 +288,8 @@ namespace IesSchool.Core.Services
                     aspNetUser.TwoFactorEnabled = false;
                     aspNetUser.LockoutEnabled = false;
                     aspNetUser.AccessFailedCount = 0;
+                    aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
+                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
                     _uow.GetRepository<AspNetUser>().Add(aspNetUser);
                     _uow.SaveChanges();
 
@@ -342,8 +339,8 @@ namespace IesSchool.Core.Services
 
                     AspNetUser aspNetUser = new AspNetUser();
                     aspNetUser.Id = userDto.Id;
-                    aspNetUser.UserName = userDto.Name;
-                    aspNetUser.Email = userDto.Email;
+                    aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
+                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
                     _uow.GetRepository<AspNetUser>().Update(aspNetUser);
                     _uow.SaveChanges();
                     transaction.Commit();
@@ -382,8 +379,8 @@ namespace IesSchool.Core.Services
 
                     AspNetUser aspNetUser = new AspNetUser();
                     aspNetUser.Id = userDto.Id;
-                    aspNetUser.UserName = userDto.Name;
-                    aspNetUser.Email = userDto.Email;
+                    aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
+                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
                     _uow.GetRepository<AspNetUser>().Update(aspNetUser);
                     _uow.SaveChanges();
                     transaction.Commit();

@@ -310,7 +310,7 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.Student, op => op.Ignore())
              .ForMember(x => x.ParamedicalService, op => op.Ignore())
              .ForMember(x => x.Therapist, op => op.Ignore())
-             .ForMember(x => x.AcadmicYearId, op => op.Ignore())
+             .ForMember(x => x.AcadmicYear, op => op.Ignore())
              .ForMember(x => x.Term, op => op.Ignore())
              .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
              .ForMember(x => x.HeadOfEducation, op => op.Ignore());

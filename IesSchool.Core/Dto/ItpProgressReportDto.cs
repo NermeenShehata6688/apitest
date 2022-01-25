@@ -30,7 +30,7 @@ namespace IesSchool.Core.Dto
         public string? StudentDepartmentName { get; set; }
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
-        public string? TeacherName { get; set; }
+        //public string? TeacherName { get; set; }
         public virtual ICollection<ItpObjectiveProgressReportDto> ItpObjectiveProgressReportsDto { get; set; }
     }
 }
