@@ -198,14 +198,13 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult AddUserAttachment( IFormFile file, [FromForm] UserAttachmentDto userAttachmentDto)
+        public IActionResult AddUserAttachment()
         {
-            //get file From Request
-            //var file = Request.Form.Files[0];
-
             try
             {
-                var all = _userService.AddUserAttachment(file ,userAttachmentDto);
+                var modelData = JsonConvert.DeserializeObject<UserAttachmentDto>(Request.Form["userAttachment"]);
+                var file = Request.Form.Files[0];
+                var all = _userService.AddUserAttachment(file, modelData);
                 return Ok(all);
             }
             catch (Exception)

@@ -24,13 +24,12 @@ namespace IesSchool.Core.Dto
         public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
+
         public string? StudentCode { get; set; }
         public string? StudentName { get; set; }
-        public string? StudentBirthDay { get; set; }
-        public string? StudentDepartmentName { get; set; }
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
         //public string? TeacherName { get; set; }
-        public virtual ICollection<ItpObjectiveProgressReportDto> ItpObjectiveProgressReportsDto { get; set; }
+        public virtual ICollection<ItpObjectiveProgressReportDto>? ItpObjectiveProgressReports { get; set; }
     }
 }

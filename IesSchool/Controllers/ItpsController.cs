@@ -182,7 +182,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPost]
-        public IActionResult PastItpProgressReport(ItpProgressReportDto itpProgressReportDto)
+        public IActionResult PostItpProgressReport(ItpProgressReportDto itpProgressReportDto)
         {
             try
             {

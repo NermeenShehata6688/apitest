@@ -399,11 +399,11 @@ namespace IesSchool.Core.Services
 
                         if (itp.ItpObjectives.Count > 0)
                         {
-                            itpProgressReportDto.ItpObjectiveProgressReportsDto = new List<ItpObjectiveProgressReportDto>();
+                            itpProgressReportDto.ItpObjectiveProgressReports = new List<ItpObjectiveProgressReportDto>();
                                 
                                 for (int i = 0; i < itp.ItpObjectives.Count; i++)
                             {
-                                itpProgressReportDto.ItpObjectiveProgressReportsDto.Add(new ItpObjectiveProgressReportDto
+                                itpProgressReportDto.ItpObjectiveProgressReports.Add(new ItpObjectiveProgressReportDto
                                 {
                                     Id = 0,
                                     ItpProgressReportId = 0,
