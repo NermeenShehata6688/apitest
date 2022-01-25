@@ -137,7 +137,7 @@ namespace IesSchool.Controllers
                 var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
                 //var file = Request.Form.Files[0];
 
-                if (Request.Form.Files!=null)
+                if (Request.Form.Files.Count() > 0)
                 {
                     var file = Request.Form.Files[0];
                     var all = _userService.AddUser(file , modelData);
@@ -164,7 +164,7 @@ namespace IesSchool.Controllers
                 var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
                 //var file = Request.Form.Files[0];
 
-                if (Request.Form.Files != null)
+                if (Request.Form.Files.Count() >0)
                 {
                     var file = Request.Form.Files[0];
                     var all = _userService.EditUser(file, modelData);
