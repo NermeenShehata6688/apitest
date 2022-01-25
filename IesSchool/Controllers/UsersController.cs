@@ -10,7 +10,7 @@ namespace IesSchool.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UsersController : ControllerBase
-    {
+    {        
         private IUserService _userService;
         private IFileService _fileService;
         public UsersController(IUserService userService, IFileService fileService)
