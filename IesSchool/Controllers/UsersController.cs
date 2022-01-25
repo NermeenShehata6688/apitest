@@ -132,8 +132,6 @@ namespace IesSchool.Controllers
         [HttpPost]
         public IActionResult PostUser()
         {
-
-
             try
             {
                 var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
@@ -150,10 +148,6 @@ namespace IesSchool.Controllers
                     var all = _userService.AddUser2(modelData);
                     return Ok(all);
                 }
-
-
-
-        
             }
             catch (Exception ex)
             {
@@ -163,14 +157,26 @@ namespace IesSchool.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut]
-        public IActionResult PutUser(IFormFile file, [FromForm] UserDto userDto)
+        public IActionResult PutUser()
         {
             try
             {
-                var all = _userService.EditUser(file, userDto);
-                return Ok(all);
+                var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
+                //var file = Request.Form.Files[0];
+
+                if (Request.Form.Files != null)
+                {
+                    var file = Request.Form.Files[0];
+                    var all = _userService.EditUser(file, modelData);
+                    return Ok(all);
+                }
+                else
+                {
+                    var all = _userService.EditUser2(modelData);
+                    return Ok(all);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

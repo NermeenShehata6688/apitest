@@ -1099,7 +1099,7 @@ namespace IesSchool.Core.Services
                 _uow.GetRepository<IepProgressReport>().Update(mapper);
                 _uow.SaveChanges();
                 transaction.Commit();
-                return new ResponseDto { Status = 1, Message = "Iep Extra Curricular Deleted Seccessfuly" };
+                return new ResponseDto { Status = 1, Message = "Iep Progress Report Deleted Seccessfuly" };
             }
             catch (Exception ex)
             {

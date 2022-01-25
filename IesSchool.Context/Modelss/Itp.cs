@@ -8,6 +8,7 @@ namespace IesSchool.Context.Modelss
         public Itp()
         {
             ItpObjectives = new HashSet<ItpObjective>();
+            ItpProgressReports = new HashSet<ItpProgressReport>();
             ItpStrategies = new HashSet<ItpStrategy>();
         }
 
@@ -46,6 +47,7 @@ namespace IesSchool.Context.Modelss
         public virtual Term? Term { get; set; }
         public virtual User? Therapist { get; set; }
         public virtual ICollection<ItpObjective> ItpObjectives { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
         public virtual ICollection<ItpStrategy> ItpStrategies { get; set; }
     }
 }

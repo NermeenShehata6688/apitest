@@ -5,6 +5,11 @@ namespace IesSchool.Context.Models
 {
     public partial class ItpObjective
     {
+        public ItpObjective()
+        {
+            ItpObjectiveProgressReports = new HashSet<ItpObjectiveProgressReport>();
+        }
+
         public int Id { get; set; }
         public int? ItpId { get; set; }
         public string? ObjectiveNote { get; set; }
@@ -18,5 +23,6 @@ namespace IesSchool.Context.Models
         public bool? IsDeleted { get; set; }
 
         public virtual Itp? Itp { get; set; }
+        public virtual ICollection<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; }
     }
 }

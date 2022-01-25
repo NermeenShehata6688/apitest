@@ -21,5 +21,13 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddItpObjective(ItpObjectiveDto itpObjectiveDto);
         public ResponseDto DeleteItpObjective(int itpObjectiveId);
 
+        public ResponseDto GetItpProgressReportsByItpId(int itpId);
+        public ResponseDto GetItpProgressReportById(int itpProgressReportId);
+        public ResponseDto AddItpProgressReport(ItpProgressReportDto itpProgressReportDto);
+        public ResponseDto EditItpProgressReport(ItpProgressReportDto itpProgressReportDto);
+        public ResponseDto DeleteItpProgressReport(int itpProgressReportId);
+        public ResponseDto CreateItpProgressReport(int itpId);
+
+
     }
 }

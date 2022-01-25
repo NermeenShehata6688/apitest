@@ -155,5 +155,83 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetItpProgressReportsByItpId(int itpId)
+        {
+            try
+            {
+                var all = _itpService.GetItpProgressReportsByItpId(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetItpProgressReportById(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _itpService.GetItpProgressReportById(itpProgressReportId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public IActionResult PastItpProgressReport(ItpProgressReportDto itpProgressReportDto)
+        {
+            try
+            {
+                var all = _itpService.AddItpProgressReport(itpProgressReportDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult PutItpProgressReport(ItpProgressReportDto itpProgressReportDto)
+        {
+            try
+            {
+                var all = _itpService.EditItpProgressReport(itpProgressReportDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteItpProgressReport(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _itpService.DeleteItpProgressReport(itpProgressReportId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult CreateItpProgressReport(int itpId)
+        {
+            try
+            {
+                var all = _itpService.CreateItpProgressReport(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

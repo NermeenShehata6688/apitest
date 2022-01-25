@@ -362,6 +362,45 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto EditUser2(UserDto userDto)
+        {
+            try
+            {
+                if (userDto != null)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from User_Assistant where UserId={userDto.Id}" +
+                        $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
+                        $"delete from UserAttachment where UserId={userDto.Id}" +
+                        $" delete from Student_Therapist where TherapistId={ userDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    
+                    var mapper = _mapper.Map<User>(userDto);
+
+                    _uow.GetRepository<User>().Update(mapper);
+                    _uow.SaveChanges();
+
+                    AspNetUser aspNetUser = new AspNetUser();
+                    aspNetUser.Id = userDto.Id;
+                    aspNetUser.UserName = userDto.Name;
+                    aspNetUser.Email = userDto.Email;
+                    _uow.GetRepository<AspNetUser>().Update(aspNetUser);
+                    _uow.SaveChanges();
+                    transaction.Commit();
+
+                    userDto.Id = mapper.Id;
+                    userDto.ImageBinary = null;
+                    userDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = userDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
         public ResponseDto DeleteUser(int userId)
         {
             try

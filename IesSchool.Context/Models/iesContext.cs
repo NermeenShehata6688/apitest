@@ -75,6 +75,8 @@ namespace IesSchool.Context.Models
         public virtual DbSet<Term> Terms { get; set; } = null!;
         public virtual DbSet<Itp> Itps { get; set; } = null!;
         public virtual DbSet<ItpObjective> ItpObjectives { get; set; } = null!;
+        public virtual DbSet<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; } = null!;
+        public virtual DbSet<ItpProgressReport> ItpProgressReports { get; set; } = null!;
         public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
         public virtual DbSet<TherapistParamedicalService> TherapistParamedicalServices { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
@@ -834,7 +836,70 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.ItpId)
                     .HasConstraintName("FK_ITP_Objective_ITP");
             });
+            modelBuilder.Entity<ItpObjectiveProgressReport>(entity =>
+            {
+                entity.ToTable("ITP_ObjectiveProgressReport");
 
+                entity.HasOne(d => d.ItpObjective)
+                    .WithMany(p => p.ItpObjectiveProgressReports)
+                    .HasForeignKey(d => d.ItpObjectiveId)
+                    .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_Objective");
+
+                entity.HasOne(d => d.ItpProgressReport)
+                    .WithMany(p => p.ItpObjectiveProgressReports)
+                    .HasForeignKey(d => d.ItpProgressReportId)
+                    .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_ProgressReport");
+            });
+
+            modelBuilder.Entity<ItpProgressReport>(entity =>
+            {
+                entity.ToTable("ITP_ProgressReport");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.HasOne(d => d.AcadmicYear)
+                    .WithMany(p => p.ItpProgressReports)
+                    .HasForeignKey(d => d.AcadmicYearId)
+                    .HasConstraintName("FK_ITP_ProgressReport_AcadmicYears");
+
+                entity.HasOne(d => d.HeadOfEducation)
+                    .WithMany(p => p.ItpProgressReportHeadOfEducations)
+                    .HasForeignKey(d => d.HeadOfEducationId)
+                    .HasConstraintName("FK_ITP_ProgressReport_HeadOfEducation");
+
+                entity.HasOne(d => d.Itp)
+                    .WithMany(p => p.ItpProgressReports)
+                    .HasForeignKey(d => d.ItpId)
+                    .HasConstraintName("FK_ITP_ProgressReport_ITP");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.ItpProgressReports)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_ITP_ProgressReport_Students");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.ItpProgressReportTeachers)
+                    .HasForeignKey(d => d.TeacherId)
+                    .HasConstraintName("FK_ITP_ProgressReport_Teacher");
+
+                entity.HasOne(d => d.Term)
+                    .WithMany(p => p.ItpProgressReports)
+                    .HasForeignKey(d => d.TermId)
+                    .HasConstraintName("FK_ITP_ProgressReport_Term");
+
+                entity.HasOne(d => d.Therapist)
+                    .WithMany(p => p.ItpProgressReportTherapists)
+                    .HasForeignKey(d => d.TherapistId)
+                    .HasConstraintName("FK_ITP_ProgressReport_Therapist");
+            });
             modelBuilder.Entity<ItpStrategy>(entity =>
             {
                 entity.ToTable("ITP_Strategy");

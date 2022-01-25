@@ -9,6 +9,7 @@ namespace IesSchool.Context.Models
         {
             IepProgressReports = new HashSet<IepProgressReport>();
             Ieps = new HashSet<Iep>();
+            ItpProgressReports = new HashSet<ItpProgressReport>();
             Itps = new HashSet<Itp>();
             Settings = new HashSet<Setting>();
         }
@@ -26,6 +27,7 @@ namespace IesSchool.Context.Models
         public virtual AcadmicYear? AcadmicYear { get; set; }
         public virtual ICollection<IepProgressReport> IepProgressReports { get; set; }
         public virtual ICollection<Iep> Ieps { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
         public virtual ICollection<Itp> Itps { get; set; }
         public virtual ICollection<Setting> Settings { get; set; }
     }

@@ -10,6 +10,7 @@ namespace IesSchool.Context.Modelss
             EventStudents = new HashSet<EventStudent>();
             IepProgressReports = new HashSet<IepProgressReport>();
             Ieps = new HashSet<Iep>();
+            ItpProgressReports = new HashSet<ItpProgressReport>();
             Itps = new HashSet<Itp>();
             LogComments = new HashSet<LogComment>();
             Phones = new HashSet<Phone>();
@@ -84,6 +85,7 @@ namespace IesSchool.Context.Modelss
         public virtual ICollection<EventStudent> EventStudents { get; set; }
         public virtual ICollection<IepProgressReport> IepProgressReports { get; set; }
         public virtual ICollection<Iep> Ieps { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
         public virtual ICollection<Itp> Itps { get; set; }
         public virtual ICollection<LogComment> LogComments { get; set; }
         public virtual ICollection<Phone> Phones { get; set; }
