@@ -252,8 +252,33 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult IsEmailExist(string userEmail)
+        {
+            try
+            {
+                var all = _userService.IsEmailExist(userEmail);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-
+        [HttpGet]
+        public IActionResult IsUserCodeExist(string UserCode)
+        {
+            try
+            {
+                var all = _userService.IsUserCodeExist(UserCode);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpGet]
         public IActionResult test(UserDto userDto)

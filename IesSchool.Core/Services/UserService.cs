@@ -444,11 +444,11 @@ namespace IesSchool.Core.Services
             {
                 var userAttachment = _uow.GetRepository<UserAttachment>().GetList(x => x.UserId == userId, null);
                 var mapper = _mapper.Map<PaginateDto<UserAttachmentDto>>(userAttachment);
-                mapper.Items.ToList();
-                //if (mapper.Count() > 0)
-                //{
-                //    mapper = GetFullPathAndBinaryICollictionAtt(mapper);
-                //}
+                
+                if (mapper.Items.Count() > 0)
+                {
+                    mapper = GetFullPathAndBinaryAtt(mapper);
+                }
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -514,6 +514,38 @@ namespace IesSchool.Core.Services
             }
         }
 
+        public bool IsEmailExist(string userEmail)
+        {
+            try
+            {
+                var user = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.Email == userEmail );
+                if (user.Items.Count() >0)
+                    return true;
+
+                else 
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public bool IsUserCodeExist(string UserCode)
+        {
+            try
+            {
+                var user = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.Code == UserCode);
+                if (user.Items.Count() > 0)
+                    return true;
+
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         public ResponseDto IsSuspended(int usertId, bool isSuspended)
         {
             try
