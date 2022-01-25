@@ -197,7 +197,9 @@ namespace IesSchool.Core.Services
             try
             {
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => 
-                x.Include(x => x.StudentTherapists).Include(x=>x.AspNetUser).Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices));
+                x.Include(x => x.StudentTherapists).Include(x=>x.AspNetUser)
+                .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
+                .Include(x => x.AspNetUser));
                 user.ImageBinary = null;
                 var mapper = _mapper.Map<UserDto>(user);
                 mapper.UserName= user.AspNetUser.UserName;
