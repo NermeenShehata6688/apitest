@@ -234,7 +234,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddUser(IFormFile file, UserDto userDto)
+        public async Task<ResponseDto>  AddUser (IFormFile file, UserDto userDto)
         {
             try
             {
@@ -249,7 +249,7 @@ namespace IesSchool.Core.Services
                     ms.Close();
                     ms.Dispose();
                     //upload file in local directory
-                    AspNetUser aspNetUser = new AspNetUser();
+                    //AspNetUser aspNetUser = new AspNetUser();
                     var result = _ifileService.UploadFile(file);
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
@@ -259,16 +259,36 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<User>().Add(mapper);
                     _uow.SaveChanges();
 
-                    aspNetUser.Id = mapper.Id;
-                    aspNetUser.EmailConfirmed = false;
-                    aspNetUser.PhoneNumberConfirmed = false;
-                    aspNetUser.TwoFactorEnabled = false;
-                    aspNetUser.LockoutEnabled = false;
-                    aspNetUser.AccessFailedCount = 0;
-                    aspNetUser.UserName = userDto.UserName==null?"": userDto.UserName;
-                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
-                    _uow.GetRepository<AspNetUser>().Add(aspNetUser);
-                    _uow.SaveChanges();
+
+                    //aspNetUser.Id = mapper.Id;
+                    //aspNetUser.EmailConfirmed = false;
+                    //aspNetUser.PhoneNumberConfirmed = false;
+                    //aspNetUser.TwoFactorEnabled = false;
+                    //aspNetUser.LockoutEnabled = false;
+                    //aspNetUser.AccessFailedCount = 0;
+                    //aspNetUser.UserName = userDto.UserName==null?"": userDto.UserName;
+                    //aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
+                    // _uow.GetRepository<AspNetUser>().Add(aspNetUser);
+
+
+                    var user = new IdentityUser<int>
+                    {
+                        UserName = userDto.UserName,
+                        Email = userDto.Email,
+                        Id = mapper.Id
+                        //Email = model.Email,
+                    };
+
+
+
+                    var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
+
+                    if (resultt.Succeeded)
+                    {
+                        //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+                        //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
+                    }
+                    //_uow.SaveChanges();
 
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
