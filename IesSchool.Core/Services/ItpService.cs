@@ -47,12 +47,59 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetItps()
+        public ResponseDto GetItps(ItpSearchDto itpSearchDto)
         {
             try
             {
-                var allItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true);
-                var mapper = _mapper.Map<PaginateDto<ItpDto>>(allItps);
+                var AllItpsx = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true, null, x => x.Include(x => x.ItpGoalObjectives)
+                     .Include(s => s.Student).ThenInclude(s => s.Department)
+                     .Include(s => s.Therapist)
+                     .Include(s => s.AcadmicYear)
+                     .Include(s => s.Term)
+                     .Include(s => s.ParamedicalService), 0, 100000, true);
+                var AllItps = _mapper.Map<PaginateDto<ItpDto>>(AllItpsx).Items;
+                if (itpSearchDto.Student_Id != null)
+                {
+                    AllItps = AllItps.Where(x => x.StudentId == itpSearchDto.Student_Id).ToList();
+                }
+                if (itpSearchDto.AcadmicYear_Id != null)
+                {
+                    AllItps = AllItps.Where(x => x.AcadmicYearId == itpSearchDto.AcadmicYear_Id).ToList();
+                }
+                if (itpSearchDto.ParamedicalService_Id != null)
+                {
+                    AllItps = AllItps.Where(x => x.ParamedicalServiceId == itpSearchDto.ParamedicalService_Id).ToList();
+                }
+                if (itpSearchDto.Term_Id != null)
+                {
+                    AllItps = AllItps.Where(x => x.TermId == itpSearchDto.Term_Id).ToList();
+                }
+                if (itpSearchDto.Therapist_Id != null)
+                {
+                    AllItps = AllItps.Where(x => x.TherapistId == itpSearchDto.Therapist_Id).ToList();
+                }
+               
+                if (itpSearchDto.Status != null)
+                {
+                    AllItps = AllItps.Where(x => x.Status == itpSearchDto.Status).ToList();
+                }
+                if (itpSearchDto.IsPublished != null)
+                {
+                    AllItps = AllItps.Where(x => x.IsPublished == itpSearchDto.IsPublished).ToList();
+                }
+                
+               
+                //var lstItpDto = _mapper.Map<PaginateDto<ItpDto>>(AllItps).Items;
+                if (itpSearchDto.Index == null || itpSearchDto.Index == 0)
+                {
+                    itpSearchDto.Index = 0;
+                }
+                else
+                {
+                    itpSearchDto.Index += 1;
+                }
+                var mapper = new PaginateDto<ItpDto> { Count = AllItps.Count(), Items = AllItps != null ? AllItps.Skip(itpSearchDto.Index == null || itpSearchDto.PageSize == null ? 0 : ((itpSearchDto.Index.Value - 1) * itpSearchDto.PageSize.Value)).Take(itpSearchDto.PageSize ??= 20).ToList() : AllItps.ToList() };
+
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
             catch (Exception ex)

@@ -9,7 +9,8 @@ namespace IesSchool.Core.IServices
 {
     public interface IItpService
     {
-        public ResponseDto GetItps();
+        public ResponseDto GetItpsHelper();
+        public ResponseDto GetItps(ItpSearchDto itpSearchDto);
         public ResponseDto GetItpById(int itpId);
         public ResponseDto AddItp(ItpDto itpDto);
         public ResponseDto EditItp(ItpDto itpDto);

@@ -16,13 +16,27 @@ namespace IesSchool.Controllers
             _itpService = itpService;
         }
 
-        // GET: api/<ItpsController>
+        //[ResponseCache(Duration = 800)]
         [HttpGet]
-        public IActionResult GetItps()
+        public IActionResult GetItpsHelper()
         {
             try
             {
-                var all = _itpService.GetItps();
+                var all = _itpService.GetItpsHelper();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        // GET: api/<ItpsController>
+        [HttpGet]
+        public IActionResult GetItps([FromQuery] ItpSearchDto itpSearchDto)
+        {
+            try
+            {
+                var all = _itpService.GetItps(itpSearchDto);
                 return Ok(all);
             }
             catch (Exception)
