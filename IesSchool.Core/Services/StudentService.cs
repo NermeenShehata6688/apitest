@@ -127,7 +127,9 @@ namespace IesSchool.Core.Services
             {
                 if (studentId != null)
                 {
-                    var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones).Include(x => x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
+                    var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones)
+                    .Include(x => x.StudentAttachments).ThenInclude(x=> x.AttachmentType)
+                    .Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
                     student.ImageBinary = null;
                     var mapper = _mapper.Map<StudentDetailsDto>(student);
                     if (mapper.StudentAttachments.Count() > 0)
@@ -385,7 +387,7 @@ namespace IesSchool.Core.Services
             {
                 if (studentId != null || studentId != 0)
                 {
-                    var studentAttachment = _uow.GetRepository<StudentAttachment>().GetList(x => x.StudentId == studentId );
+                    var studentAttachment = _uow.GetRepository<StudentAttachment>().GetList(x => x.StudentId == studentId, null, x => x.Include(x => x.AttachmentType));
                     var mapper = _mapper.Map <PaginateDto<StudentAttachmentDto>>(studentAttachment);
                     if (mapper.Items.Count() > 0)
                     {

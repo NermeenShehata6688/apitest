@@ -82,7 +82,12 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Religion, ReligionDto>().ReverseMap();
             CreateMap<Paginate<StudentHistoricalSkill>, Paginate<StudentHistoricalSkillDto>>().ReverseMap();
             CreateMap<Paginate<Phone>, Paginate<PhoneDto>>().ReverseMap();
-            CreateMap<Paginate<StudentAttachment>, Paginate<StudentAttachmentDto>>().ReverseMap();
+            CreateMap<StudentAttachment, StudentAttachmentDto>()
+            .ForMember(dist => dist.AttachmentTypeName, opt => opt.MapFrom(c => c.AttachmentType == null ? "" : c.AttachmentType.Name))
+            .ReverseMap()
+            .ForMember(x => x.Student, op => op.Ignore())
+            .ForMember(x => x.AttachmentType, op => op.Ignore());
+               
             #endregion
             #region User&Assistant
             CreateMap<Assistant, AssistantDto>()
