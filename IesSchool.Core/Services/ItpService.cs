@@ -51,8 +51,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var AllItpsx = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true, null, x => x.Include(x => x.ItpGoalObjectives)
-                     .Include(s => s.Student).ThenInclude(s => s.Department)
+                var AllItpsx = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true, null,
+                    x => x.Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.Therapist)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
