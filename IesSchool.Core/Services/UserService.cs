@@ -550,15 +550,45 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
-        public bool IsUserCodeExist(string UserCode)
+        public bool IsUserCodeExist(string UserCode, int? userId)
         {
             try
             {
-                var user = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.Code == UserCode);
-                if (user.Items.Count() > 0)
-                    return true;
-
-                else
+                if (UserCode != null && userId != null)
+                {
+                    var user = _uow.GetRepository<User>().GetList(x => x.Code == UserCode && x.Id != userId);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                if (UserCode != null && userId == null)
+                {
+                    var user = _uow.GetRepository<User>().GetList(x => x.Code == UserCode);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public bool IsUserNameExist(string UserName, int? userId)
+        {
+            try
+            {
+                if (UserName!= null && userId != null)
+                {
+                    var user = _uow.GetRepository<AspNetUser>().GetList(x => x.UserName == UserName &&  x.Id != userId);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                if (UserName != null && userId == null)
+                {
+                    var user = _uow.GetRepository<AspNetUser>().GetList(x => x.UserName == UserName);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
                     return false;
             }
             catch (Exception ex)

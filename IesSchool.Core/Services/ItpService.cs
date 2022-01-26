@@ -287,7 +287,8 @@ namespace IesSchool.Core.Services
                 var itpProgressReports = _uow.GetRepository<ItpProgressReport>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.Therapist)
-                    .Include(x => x.HeadOfEducation));
+                    .Include(x => x.HeadOfEducation)
+                    .Include(x => x.ItpObjectiveProgressReports));
 
                 var mapper = _mapper.Map<PaginateDto<ItpProgressReportDto>>(itpProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };

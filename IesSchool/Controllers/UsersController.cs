@@ -253,11 +253,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult IsEmailExist(string userEmail)
+        public IActionResult IsUserNameExist(string UserName, int? userId)
         {
             try
             {
-                var all = _userService.IsEmailExist(userEmail);
+                var all = _userService.IsUserNameExist(UserName, userId);
                 return Ok(all);
             }
             catch (Exception)
@@ -267,11 +267,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult IsUserCodeExist(string UserCode)
+        public IActionResult IsUserCodeExist(string UserCode, int? userId)
         {
             try
             {
-                var all = _userService.IsUserCodeExist(UserCode);
+                var all = _userService.IsUserCodeExist(UserCode, userId);
                 return Ok(all);
             }
             catch (Exception)

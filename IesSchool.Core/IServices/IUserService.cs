@@ -28,8 +28,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddUserAttachment(IFormFile file, UserAttachmentDto userAttachmentDto);
         public ResponseDto EditUserAttachment(UserAttachmentDto userAttachmentDto);
         public ResponseDto DeleteUserAttachment(int userAttachmentId);
-        public bool IsEmailExist(string userEmail);
-        public bool IsUserCodeExist(string UserCode);
+        public bool IsUserNameExist(string UserName, int? userId);
+        public bool IsUserCodeExist(string UserCode, int? userId);
         public ResponseDto IsSuspended(int userId, bool isSuspended); 
 
     }
