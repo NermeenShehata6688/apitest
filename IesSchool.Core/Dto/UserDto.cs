@@ -32,6 +32,7 @@ namespace IesSchool.Core.Dto
         public string? UserName { get; set; }
         public string? NormalizedUserName { get; set; }
         public string? UserRoles { get; set; }
+        public string? UserPassword { get; set; }
 
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }
