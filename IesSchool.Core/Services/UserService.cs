@@ -202,7 +202,7 @@ namespace IesSchool.Core.Services
             {
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => 
                 x.Include(x => x.StudentTherapists).Include(x=>x.AspNetUser)
-                .Include(x => x.UserAttachments)
+                .Include(x => x.UserAttachments).ThenInclude(x => x.AttachmentType)
                 .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
                 .Include(x => x.AspNetUser));
                 user.ImageBinary = null;
@@ -442,7 +442,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var userAttachment = _uow.GetRepository<UserAttachment>().GetList(x => x.UserId == userId, null);
+                var userAttachment = _uow.GetRepository<UserAttachment>().GetList(x => x.UserId == userId, null, x=> x.Include(x => x.AttachmentType));
                 var mapper = _mapper.Map<PaginateDto<UserAttachmentDto>>(userAttachment);
                 
                 if (mapper.Items.Count() > 0)

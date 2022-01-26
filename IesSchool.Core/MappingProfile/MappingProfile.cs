@@ -93,7 +93,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<AssistantHelper, AssistantHelperDto>().ReverseMap();
 
 
-            CreateMap<UserAttachment, UserAttachmentDto>().ReverseMap()
+            CreateMap<UserAttachment, UserAttachmentDto>()
+             .ForMember(dist => dist.AttachmentTypeName, opt => opt.MapFrom(c => c.AttachmentType == null ? "" : c.AttachmentType.Name))
+                .ReverseMap()
                 .ForMember(x => x.User, op => op.Ignore())
             .ForMember(x => x.AttachmentType, op => op.Ignore());
 
