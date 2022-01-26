@@ -12,6 +12,7 @@ namespace IesSchool.Core.Dto
         public int? StudentId { get; set; }
         public int? ParamedicalServiceId { get; set; }
         public int? TherapistId { get; set; }
+        public int? TherapistIdDepartmentId { get; set; }
         public int? AcadmicYearId { get; set; }
         public int? TermId { get; set; }
         public DateTime? DateOfPreparation { get; set; }
@@ -26,7 +27,7 @@ namespace IesSchool.Core.Dto
         public int? Status { get; set; }
         public string? FooterNotes { get; set; }
         public int? RoomNumber { get; set; }
-        public string? HistoryImpression { get; set; }
+        public string? CurrentLevel { get; set; }
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -34,7 +35,12 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
-        public virtual ICollection<ItpStrategyDto>? ItpStrategies { get; set; }
-        //public virtual ICollection<ItpObjectiveDto>? ItpObjectives { get; set; }
+
+        public string? StudentName { get; set; }
+        public string? ParamediaclName { get; set; }
+        public string? TherapistName { get; set; }
+        public string? AcadmicYearName { get; set; }
+        public string? TermName { get; set; }
+        public virtual ICollection<ItpGoalDto> ItpGoals { get; set; }
     }
 }

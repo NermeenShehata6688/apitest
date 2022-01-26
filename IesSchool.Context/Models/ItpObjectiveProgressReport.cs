@@ -10,7 +10,7 @@ namespace IesSchool.Context.Models
         public int? ItpObjectiveId { get; set; }
         public string? Comment { get; set; }
 
-        public virtual ItpObjective? ItpObjective { get; set; }
+        public virtual ItpGoalObjective? ItpObjective { get; set; }
         public virtual ItpProgressReport? ItpProgressReport { get; set; }
     }
 }

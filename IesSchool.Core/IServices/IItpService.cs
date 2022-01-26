@@ -17,9 +17,14 @@ namespace IesSchool.Core.IServices
         public ResponseDto ItpStatus(int itpId, int status);
         public ResponseDto ItpIsPublished(int itpId, bool isPublished);
 
-        public ResponseDto GetItpObjectiveByItpId(int itpId);
-        public ResponseDto AddItpObjective(ItpObjectiveDto itpObjectiveDto);
-        public ResponseDto DeleteItpObjective(int itpObjectiveId);
+        public ResponseDto GetItpGoals();
+        public ResponseDto GetItpGoalById(int itpGoalId); 
+        public ResponseDto GetGoalByItpId(int itpId);
+        public ResponseDto AddItpGoal(ItpGoalDto itpGoalDto);
+        public ResponseDto EditItpGoal(ItpGoalDto goalDto);
+        public ResponseDto DeleteItpGoal(int goalId);
+
+        public ResponseDto GetItpObjectiveByGoalId(int goalId);
 
         public ResponseDto GetItpProgressReportsByItpId(int itpId);
         public ResponseDto GetItpProgressReportById(int itpProgressReportId);

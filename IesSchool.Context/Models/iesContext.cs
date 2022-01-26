@@ -74,7 +74,8 @@ namespace IesSchool.Context.Models
         public virtual DbSet<StudentTherapist> StudentTherapists { get; set; } = null!;
         public virtual DbSet<Term> Terms { get; set; } = null!;
         public virtual DbSet<Itp> Itps { get; set; } = null!;
-        public virtual DbSet<ItpObjective> ItpObjectives { get; set; } = null!;
+        public virtual DbSet<ItpGoal> ItpGoals { get; set; } = null!;
+        public virtual DbSet<ItpGoalObjective> ItpGoalObjectives { get; set; } = null!;
         public virtual DbSet<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; } = null!;
         public virtual DbSet<ItpProgressReport> ItpProgressReports { get; set; } = null!;
         public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
@@ -817,9 +818,19 @@ namespace IesSchool.Context.Models
                     .HasConstraintName("FK_ITP_Therapist");
             });
 
-            modelBuilder.Entity<ItpObjective>(entity =>
+            modelBuilder.Entity<ItpGoal>(entity =>
             {
-                entity.ToTable("ITP_Objective");
+                entity.ToTable("ITP_Goal");
+
+                entity.HasOne(d => d.Itp)
+                    .WithMany(p => p.ItpGoals)
+                    .HasForeignKey(d => d.ItpId)
+                    .HasConstraintName("FK_ITP_Goal_ITP_Goal");
+            });
+
+            modelBuilder.Entity<ItpGoalObjective>(entity =>
+            {
+                entity.ToTable("ITP_GoalObjective");
 
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
@@ -831,8 +842,13 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
+                entity.HasOne(d => d.ItpGoal)
+                    .WithMany(p => p.ItpGoalObjectives)
+                    .HasForeignKey(d => d.ItpGoalId)
+                    .HasConstraintName("FK_ITP_GoalObjective_ITP_Goal");
+
                 entity.HasOne(d => d.Itp)
-                    .WithMany(p => p.ItpObjectives)
+                    .WithMany(p => p.ItpGoalObjectives)
                     .HasForeignKey(d => d.ItpId)
                     .HasConstraintName("FK_ITP_Objective_ITP");
             });

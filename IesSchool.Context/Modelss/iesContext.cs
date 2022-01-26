@@ -50,7 +50,8 @@ namespace IesSchool.Context.Modelss
         public virtual DbSet<IepParamedicalService> IepParamedicalServices { get; set; } = null!;
         public virtual DbSet<IepProgressReport> IepProgressReports { get; set; } = null!;
         public virtual DbSet<Itp> Itps { get; set; } = null!;
-        public virtual DbSet<ItpObjective> ItpObjectives { get; set; } = null!;
+        public virtual DbSet<ItpGoal> ItpGoals { get; set; } = null!;
+        public virtual DbSet<ItpGoalObjective> ItpGoalObjectives { get; set; } = null!;
         public virtual DbSet<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; } = null!;
         public virtual DbSet<ItpProgressReport> ItpProgressReports { get; set; } = null!;
         public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
@@ -94,7 +95,7 @@ namespace IesSchool.Context.Modelss
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=192.168.8.148\\sql2016;Database=ies;User Id=sa; Password=P@ss@123@@");
+                optionsBuilder.UseSqlServer("Server=.;Database=ies; Trusted_Connection=True");
             }
         }
 
@@ -750,9 +751,19 @@ namespace IesSchool.Context.Modelss
                     .HasConstraintName("FK_ITP_Therapist");
             });
 
-            modelBuilder.Entity<ItpObjective>(entity =>
+            modelBuilder.Entity<ItpGoal>(entity =>
             {
-                entity.ToTable("ITP_Objective");
+                entity.ToTable("ITP_Goal");
+
+                entity.HasOne(d => d.Itp)
+                    .WithMany(p => p.ItpGoals)
+                    .HasForeignKey(d => d.ItpId)
+                    .HasConstraintName("FK_ITP_Goal_ITP_Goal");
+            });
+
+            modelBuilder.Entity<ItpGoalObjective>(entity =>
+            {
+                entity.ToTable("ITP_GoalObjective");
 
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
@@ -764,8 +775,13 @@ namespace IesSchool.Context.Modelss
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
+                entity.HasOne(d => d.ItpGoal)
+                    .WithMany(p => p.ItpGoalObjectives)
+                    .HasForeignKey(d => d.ItpGoalId)
+                    .HasConstraintName("FK_ITP_GoalObjective_ITP_Goal");
+
                 entity.HasOne(d => d.Itp)
-                    .WithMany(p => p.ItpObjectives)
+                    .WithMany(p => p.ItpGoalObjectives)
                     .HasForeignKey(d => d.ItpId)
                     .HasConstraintName("FK_ITP_Objective_ITP");
             });
@@ -782,6 +798,7 @@ namespace IesSchool.Context.Modelss
                 entity.HasOne(d => d.ItpProgressReport)
                     .WithMany(p => p.ItpObjectiveProgressReports)
                     .HasForeignKey(d => d.ItpProgressReportId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_ProgressReport");
             });
 

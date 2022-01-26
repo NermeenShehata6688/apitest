@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IesSchool.Context.Modelss
+namespace IesSchool.Context.Models
 {
-    public partial class ItpObjective
+    public partial class ItpGoalObjective
     {
-        public ItpObjective()
+        public ItpGoalObjective()
         {
             ItpObjectiveProgressReports = new HashSet<ItpObjectiveProgressReport>();
         }
 
         public int Id { get; set; }
+        public int? ItpGoalId { get; set; }
         public int? ItpId { get; set; }
         public string? ObjectiveNote { get; set; }
         public DateTime? Date { get; set; }
@@ -23,6 +24,7 @@ namespace IesSchool.Context.Modelss
         public bool? IsDeleted { get; set; }
 
         public virtual Itp? Itp { get; set; }
+        public virtual ItpGoal? ItpGoal { get; set; }
         public virtual ICollection<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; }
     }
 }

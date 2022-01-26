@@ -117,11 +117,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetItpObjectiveByItpId(int itpId)
+        public IActionResult GetItpObjectiveByItpId(int itpGoalId)
         {
             try
             {
-                var all = _itpService.GetItpObjectiveByItpId(itpId);
+                var all = _itpService.GetItpGoalById(itpGoalId);
                 return Ok(all);
             }
             catch (Exception)
@@ -130,11 +130,25 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPost]
-        public IActionResult PostItpObjective(ItpObjectiveDto itpObjectiveDto)
+        public IActionResult PostItpGoal(ItpGoalDto itpGoalDto)
         {
             try
             {
-                var all = _itpService.AddItpObjective(itpObjectiveDto);
+                var all = _itpService.AddItpGoal(itpGoalDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutItpGoal(ItpGoalDto goalDto)
+        {
+            try
+            {
+                var all = _itpService.EditItpGoal(goalDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -143,11 +157,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpDelete]
-        public IActionResult DeleteItpObjective(int itpObjectiveId)
+        public IActionResult DeleteItpGoal(int goalId)
         {
             try
             {
-                var all = _itpService.DeleteItpObjective(itpObjectiveId);
+                var all = _itpService.DeleteItpGoal(goalId);
                 return Ok(all);
             }
             catch (Exception)

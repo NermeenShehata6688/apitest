@@ -7,7 +7,8 @@ namespace IesSchool.Context.Models
     {
         public Itp()
         {
-            ItpObjectives = new HashSet<ItpObjective>();
+            ItpGoalObjectives = new HashSet<ItpGoalObjective>();
+            ItpGoals = new HashSet<ItpGoal>();
             ItpProgressReports = new HashSet<ItpProgressReport>();
             ItpStrategies = new HashSet<ItpStrategy>();
         }
@@ -16,6 +17,7 @@ namespace IesSchool.Context.Models
         public int? StudentId { get; set; }
         public int? ParamedicalServiceId { get; set; }
         public int? TherapistId { get; set; }
+        public int? TherapistIdDepartmentId { get; set; }
         public int? AcadmicYearId { get; set; }
         public int? TermId { get; set; }
         public DateTime? DateOfPreparation { get; set; }
@@ -30,7 +32,7 @@ namespace IesSchool.Context.Models
         public int? Status { get; set; }
         public string? FooterNotes { get; set; }
         public int? RoomNumber { get; set; }
-        public string? HistoryImpression { get; set; }
+        public string? CurrentLevel { get; set; }
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -46,7 +48,8 @@ namespace IesSchool.Context.Models
         public virtual Student? Student { get; set; }
         public virtual Term? Term { get; set; }
         public virtual User? Therapist { get; set; }
-        public virtual ICollection<ItpObjective> ItpObjectives { get; set; }
+        public virtual ICollection<ItpGoalObjective> ItpGoalObjectives { get; set; }
+        public virtual ICollection<ItpGoal> ItpGoals { get; set; }
         public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
         public virtual ICollection<ItpStrategy> ItpStrategies { get; set; }
     }

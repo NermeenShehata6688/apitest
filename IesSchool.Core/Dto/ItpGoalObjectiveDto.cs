@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IesSchool.Core.Dto
 {
-    public class ItpObjectiveDto
+    public class ItpGoalObjectiveDto
     {
         public int Id { get; set; }
         public int? ItpId { get; set; }
