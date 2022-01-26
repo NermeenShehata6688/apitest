@@ -130,6 +130,10 @@ namespace IesSchool.Core.Services
                     var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones).Include(x => x.StudentAttachments).Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
                     student.ImageBinary = null;
                     var mapper = _mapper.Map<StudentDetailsDto>(student);
+                    if (mapper.StudentAttachments.Count() > 0)
+                    {
+                        mapper.StudentAttachments = GetFullPathAndBinaryICollictionAtt(mapper.StudentAttachments);
+                    }
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
                     mapper.FullPath = fullpath;
@@ -382,7 +386,11 @@ namespace IesSchool.Core.Services
                 if (studentId != null || studentId != 0)
                 {
                     var studentAttachment = _uow.GetRepository<StudentAttachment>().GetList(x => x.StudentId == studentId );
-                    var mapper = _mapper.Map <Paginate<StudentAttachmentDto>>(studentAttachment);
+                    var mapper = _mapper.Map <PaginateDto<StudentAttachmentDto>>(studentAttachment);
+                    if (mapper.Items.Count() > 0)
+                    {
+                        mapper = GetFullPathAndBinaryAtt(mapper);
+                    }
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
               else
@@ -586,6 +594,97 @@ namespace IesSchool.Core.Services
                 return allStudents; ;
             }
         }
+        public bool IsStudentCodeExist(int StudentCode)
+        {
+            try
+            {
+                var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && x.Code == StudentCode);
+                if (student.Items.Count() > 0)
+                    return true;
+
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        private PaginateDto<StudentAttachmentDto> GetFullPathAndBinaryAtt(PaginateDto<StudentAttachmentDto> allStudentAttachement)
+        {
+            try
+            {
+                if (allStudentAttachement.Items.Count() > 0)
+                {
+                    foreach (var item in allStudentAttachement.Items)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<StudentAttachmentBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allStudentAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allStudentAttachement; ;
+            }
+        }
+        private ICollection<StudentAttachmentDto> GetFullPathAndBinaryICollictionAtt(ICollection<StudentAttachmentDto> allStudentAttachement)
+        {
+            try
+            {
+                if (allStudentAttachement.Count() > 0)
+                {
+                    foreach (var item in allStudentAttachement)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<StudentAttachmentBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allStudentAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allStudentAttachement; ;
+            }
+        }
+
 
     }
 }

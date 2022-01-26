@@ -16,8 +16,9 @@ namespace IesSchool.Core.Dto
         public DateTime? ValidTill { get; set; }
         public int? AttachmentTypeId { get; set; }
         public int? StudentId { get; set; }
-       
-       // public virtual StudentAttachmentBinaryDto IdNavigation { get; set; } = null!;
+        public string? FullPath { get; set; }
+
+        // public virtual StudentAttachmentBinaryDto IdNavigation { get; set; } = null!;
 
     }
 

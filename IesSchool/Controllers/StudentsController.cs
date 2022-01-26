@@ -318,5 +318,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult IsStudentCodeExist(int StudentCode)
+        {
+            try
+            {
+                var all = _studentService.IsStudentCodeExist(StudentCode);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
