@@ -214,7 +214,7 @@ namespace IesSchool.Core.Services
                     var roles = _userManager.GetRolesAsync(appUser).Result;
                     if (roles.Count() > 0)
                     {
-                        mapper.UserRoles = string.Join(",", roles);
+                        mapper.UserRoles = string.Join(Environment.NewLine, roles);
                     }
                 }
                 if (mapper.UserAttachments.Count()>0)

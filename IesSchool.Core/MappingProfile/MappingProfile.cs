@@ -122,12 +122,14 @@ namespace IesSchool.Core.MappingProfile
             #endregion
             #region IEP
             CreateMap<Iep, IepDto>().ReverseMap()
-           //.ForMember(dest => dest.IepAssistants, o =>{  o.Condition(src => src.IepAssistants.Count == 0);
-           //    o.Ignore();
-           //})
-           //.ForMember(x => x.IepAssistants, op => op.Ignore())
-           .ForMember(x => x.IepExtraCurriculars, op => op.Ignore())
-           .ForMember(x => x.IepParamedicalServices, op => op.Ignore())
+           .ForMember(x => x.Student, op => op.Ignore())
+             .ForMember(x => x.Teacher, op => op.Ignore())
+             .ForMember(x => x.AcadmicYear, op => op.Ignore())
+             .ForMember(x => x.Term, op => op.Ignore())
+             .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
+             .ForMember(x => x.HeadOfEducation, op => op.Ignore())
+           //.ForMember(x => x.IepExtraCurriculars, op => op.Ignore())
+           //.ForMember(x => x.IepParamedicalServices, op => op.Ignore())
            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Iep, GetIepDto>()
@@ -335,13 +337,13 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(x => x.ParamedicalService, op => op.Ignore());
 
             CreateMap<ItpHelper, ItpHelperDto>().ReverseMap();
-
             CreateMap<ItpProgressReport, ItpProgressReportDto>().ReverseMap()
             .ForMember(x => x.Itp, op => op.Ignore())
             .ForMember(x => x.AcadmicYear, op => op.Ignore())
             .ForMember(x => x.Term, op => op.Ignore())
             .ForMember(x => x.Therapist, op => op.Ignore())
             .ForMember(x => x.Teacher, op => op.Ignore())
+            .ForMember(x => x.Student, op => op.Ignore())
             .ForMember(x => x.HeadOfEducation, op => op.Ignore());
 
             CreateMap<ItpObjectiveProgressReport, ItpObjectiveProgressReportDto>().ReverseMap()

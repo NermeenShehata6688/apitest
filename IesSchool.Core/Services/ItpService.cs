@@ -392,7 +392,7 @@ namespace IesSchool.Core.Services
 
                     if (itp != null)
                     {
-                        itpProgressReportDto.StudentCode = itp.Student == null ? "" : itp.Student.Code.ToString();
+                        itpProgressReportDto.StudentCode = itp.Student == null ? 0 : itp.Student.Code;
                         itpProgressReportDto.StudentName = itp.Student == null ? "" : itp.Student.Name;
                         itpProgressReportDto.AcadmicYearName = itp.AcadmicYear == null ? "" : itp.AcadmicYear.Name;
                         itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;

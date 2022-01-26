@@ -25,11 +25,11 @@ namespace IesSchool.Core.Dto
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
 
-        public string? StudentCode { get; set; }
+        public int? StudentCode { get; set; }
         public string? StudentName { get; set; }
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
         //public string? TeacherName { get; set; }
-        public virtual ICollection<ItpObjectiveProgressReportDto> ItpObjectiveProgressReports { get; set; }
+        public virtual ICollection<ItpObjectiveProgressReportDto>? ItpObjectiveProgressReports { get; set; }
     }
 }
