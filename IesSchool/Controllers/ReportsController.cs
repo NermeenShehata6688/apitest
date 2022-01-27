@@ -18,20 +18,7 @@ namespace IesSchool.Controllers
         }
 
         // GET api/<ReportsController>/5
-        //[ResponseCache(Duration = 800)]
-        //[HttpGet]
-        //public IActionResult GetReporstHelper()
-        //{
-        //    try
-        //    {
-        //        var all = _reportService.GetReporstHelper();
-        //        return Ok(all);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+        [HttpGet]
         [HttpGet]
         public FileStreamResult LpReport(int iepId)
         {
@@ -131,6 +118,20 @@ namespace IesSchool.Controllers
             {
                 var all = _reportService.IepLpReportHTML(iepId);
                 return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public FileStreamResult ItpReport(int itpId)
+        {
+            try
+            {
+                var all = _reportService.ItpReport(itpId);
+                return all;
             }
             catch (Exception)
             {

@@ -112,7 +112,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
-                    x => x.Include(x => x.ItpGoals)
+                    x => x.Include(x => x.ItpGoals).ThenInclude(x => x.ItpGoalObjectives)
                     .Include(x => x.ItpGoalObjectives)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.Therapist)
