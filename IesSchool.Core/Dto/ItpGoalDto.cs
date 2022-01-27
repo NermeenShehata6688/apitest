@@ -16,6 +16,8 @@ namespace IesSchool.Core.Dto
         public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
+
+        
         public virtual ICollection<ItpGoalObjectiveDto>? ItpGoalObjectives { get; set; }
     }
 }

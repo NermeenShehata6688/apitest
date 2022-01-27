@@ -41,6 +41,13 @@ namespace IesSchool.Core.Dto
         public string? TherapistName { get; set; }
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
+        public string? StudentCodeName { get; set; }
+        public string? StudentBirthdayName { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? TeacherName { get; set; }
+        public string? HeadOfEducationName { get; set; }
+
+
         public virtual ICollection<ItpGoalDto>? ItpGoals { get; set; }
     }
 }

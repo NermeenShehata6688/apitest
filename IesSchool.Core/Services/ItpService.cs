@@ -118,7 +118,8 @@ namespace IesSchool.Core.Services
                      .Include(s => s.Therapist)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
-                     .Include(s => s.ParamedicalService));
+                     .Include(s => s.ParamedicalService)
+                     .Include(s => s.HeadOfEducation));
                 var mapper = _mapper.Map<ItpDto>(itp);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -435,8 +436,7 @@ namespace IesSchool.Core.Services
                 var itpProgressReports = _uow.GetRepository<ItpProgressReport>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.Therapist)
-                    .Include(x => x.HeadOfEducation)
-                    .Include(x => x.ItpObjectiveProgressReports));
+                    .Include(x => x.HeadOfEducation));
 
                 var mapper = _mapper.Map<PaginateDto<ItpProgressReportDto>>(itpProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
