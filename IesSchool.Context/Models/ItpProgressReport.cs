@@ -15,6 +15,7 @@ namespace IesSchool.Context.Models
         public int? StudentId { get; set; }
         public int? AcadmicYearId { get; set; }
         public int? TermId { get; set; }
+        public int? ParamedicalServiceId { get; set; }
         public DateTime? Date { get; set; }
         public string? GeneralComment { get; set; }
         public string? OtherComment { get; set; }
@@ -34,6 +35,7 @@ namespace IesSchool.Context.Models
         public virtual User? Teacher { get; set; }
         public virtual Term? Term { get; set; }
         public virtual User? Therapist { get; set; }
+        public virtual ParamedicalService? ParamedicalService { get; set; }
         public virtual ICollection<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; }
     }
 }

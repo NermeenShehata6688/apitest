@@ -13,6 +13,7 @@ namespace IesSchool.Core.Dto
         public int? StudentId { get; set; }
         public int? AcadmicYearId { get; set; }
         public int? TermId { get; set; }
+        public int? ParamedicalServiceId { get; set; }
         public DateTime? Date { get; set; }
         public string? GeneralComment { get; set; }
         public string? OtherComment { get; set; }
@@ -30,6 +31,11 @@ namespace IesSchool.Core.Dto
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
         public string? TherapistName { get; set; }
+        public string? ParamedicalServiceName { get; set; }
+
+        //public string? StudentBirthDay { get; set; }
+        //public string? StudentDepartmentName { get; set; }
+     
         public virtual ICollection<ItpObjectiveProgressReportDto>? ItpObjectiveProgressReports { get; set; }
     }
 }

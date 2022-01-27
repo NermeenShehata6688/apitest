@@ -95,7 +95,7 @@ namespace IesSchool.Context.Modelss
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=ies; Trusted_Connection=True");
+                optionsBuilder.UseSqlServer("Server=192.168.8.188;Database=ies;User Id=sa; Password=P@ss@123@@");
             }
         }
 
@@ -755,6 +755,14 @@ namespace IesSchool.Context.Modelss
             {
                 entity.ToTable("ITP_Goal");
 
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
                 entity.HasOne(d => d.Itp)
                     .WithMany(p => p.ItpGoals)
                     .HasForeignKey(d => d.ItpId)
@@ -793,13 +801,7 @@ namespace IesSchool.Context.Modelss
                 entity.HasOne(d => d.ItpObjective)
                     .WithMany(p => p.ItpObjectiveProgressReports)
                     .HasForeignKey(d => d.ItpObjectiveId)
-                    .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_Objective");
-
-                entity.HasOne(d => d.ItpProgressReport)
-                    .WithMany(p => p.ItpObjectiveProgressReports)
-                    .HasForeignKey(d => d.ItpProgressReportId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_ProgressReport");
+                    .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_GoalObjective");
             });
 
             modelBuilder.Entity<ItpProgressReport>(entity =>
@@ -830,6 +832,11 @@ namespace IesSchool.Context.Modelss
                     .WithMany(p => p.ItpProgressReports)
                     .HasForeignKey(d => d.ItpId)
                     .HasConstraintName("FK_ITP_ProgressReport_ITP");
+
+                entity.HasOne(d => d.ParamedicalService)
+                    .WithMany(p => p.ItpProgressReports)
+                    .HasForeignKey(d => d.ParamedicalServiceId)
+                    .HasConstraintName("FK_ITP_ProgressReport_ParamedicalService");
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.ItpProgressReports)

@@ -765,6 +765,8 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.IepProgressReports)
                     .HasForeignKey(d => d.TermId)
                     .HasConstraintName("FK_IepProgressReport_Term");
+
+               
             });
             modelBuilder.Entity<Itp>(entity =>
             {
@@ -915,6 +917,11 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.ItpProgressReportTherapists)
                     .HasForeignKey(d => d.TherapistId)
                     .HasConstraintName("FK_ITP_ProgressReport_Therapist");
+
+                entity.HasOne(d => d.ParamedicalService)
+                  .WithMany(p => p.ItpProgressReports)
+                  .HasForeignKey(d => d.ParamedicalServiceId)
+                  .HasConstraintName("FK_ITP_ProgressReport_ParamedicalService");
             });
             modelBuilder.Entity<ItpStrategy>(entity =>
             {

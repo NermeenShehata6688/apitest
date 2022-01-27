@@ -11,6 +11,5 @@ namespace IesSchool.Context.Modelss
         public string? Comment { get; set; }
 
         public virtual ItpGoalObjective? ItpObjective { get; set; }
-        public virtual ItpProgressReport? ItpProgressReport { get; set; }
     }
 }

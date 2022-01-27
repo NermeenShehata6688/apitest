@@ -12,6 +12,7 @@ namespace IesSchool.Context.Models
             ParamedicalStrategies = new HashSet<ParamedicalStrategy>();
             ProgressReportParamedicals = new HashSet<ProgressReportParamedical>();
             TherapistParamedicalServices = new HashSet<TherapistParamedicalService>();
+            ItpProgressReports = new HashSet<ItpProgressReport>();
         }
 
         public int Id { get; set; }
@@ -28,5 +29,6 @@ namespace IesSchool.Context.Models
         public virtual ICollection<ParamedicalStrategy> ParamedicalStrategies { get; set; }
         public virtual ICollection<ProgressReportParamedical> ProgressReportParamedicals { get; set; }
         public virtual ICollection<TherapistParamedicalService> TherapistParamedicalServices { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace IesSchool.Context.Modelss
         public ParamedicalService()
         {
             IepParamedicalServices = new HashSet<IepParamedicalService>();
+            ItpProgressReports = new HashSet<ItpProgressReport>();
             Itps = new HashSet<Itp>();
             ParamedicalStrategies = new HashSet<ParamedicalStrategy>();
             ProgressReportParamedicals = new HashSet<ProgressReportParamedical>();
@@ -24,6 +25,7 @@ namespace IesSchool.Context.Modelss
         public string? CreatedBy { get; set; }
 
         public virtual ICollection<IepParamedicalService> IepParamedicalServices { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
         public virtual ICollection<Itp> Itps { get; set; }
         public virtual ICollection<ParamedicalStrategy> ParamedicalStrategies { get; set; }
         public virtual ICollection<ProgressReportParamedical> ProgressReportParamedicals { get; set; }

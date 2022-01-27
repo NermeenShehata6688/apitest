@@ -435,8 +435,7 @@ namespace IesSchool.Core.Services
             {
                 var itpProgressReports = _uow.GetRepository<ItpProgressReport>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
-                    .Include(x => x.Teacher).Include(x => x.Therapist)
-                    .Include(x => x.HeadOfEducation));
+                    .Include(x => x.ParamedicalService).Include(x => x.Therapist));
 
                 var mapper = _mapper.Map<PaginateDto<ItpProgressReportDto>>(itpProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -454,6 +453,7 @@ namespace IesSchool.Core.Services
                     x => x.Include(x => x.Student)
                   .Include(x => x.AcadmicYear).Include(x => x.Term)
                      .Include(x => x.Teacher)
+                     
                      .Include(x => x.ItpObjectiveProgressReports).ThenInclude(x => x.ItpObjective));
                 var mapper = _mapper.Map<ItpProgressReportDto>(itpProgressReport);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -535,17 +535,20 @@ namespace IesSchool.Core.Services
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
                .Include(s => s.Therapist)
+               .Include(s => s.ParamedicalService)
                .Include(s => s.ItpGoalObjectives.Where(x=> x.IsDeleted!=true)));
                     ItpProgressReportDto itpProgressReportDto = new ItpProgressReportDto();
-                    itpProgressReportDto.ItpId = itpId;
 
                     if (itp != null)
                     {
+                        itpProgressReportDto.ItpId = itp.Id;
                         itpProgressReportDto.StudentCode = itp.Student == null ? 0 : itp.Student.Code;
                         itpProgressReportDto.StudentName = itp.Student == null ? "" : itp.Student.Name;
                         itpProgressReportDto.AcadmicYearName = itp.AcadmicYear == null ? "" : itp.AcadmicYear.Name;
                         itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;
                         itpProgressReportDto.TherapistName = itp.Therapist == null ? "" : itp.Therapist.Name;
+                        itpProgressReportDto.ParamedicalServiceId = itp.ParamedicalService == null ? 0 : itp.ParamedicalService.Id;
+                        itpProgressReportDto.ParamedicalServiceName = itp.ParamedicalService == null ? "" : itp.ParamedicalService.Name;
 
                         if (itp.ItpGoalObjectives.Count > 0)
                         {

@@ -5,16 +5,12 @@ namespace IesSchool.Context.Modelss
 {
     public partial class ItpProgressReport
     {
-        public ItpProgressReport()
-        {
-            ItpObjectiveProgressReports = new HashSet<ItpObjectiveProgressReport>();
-        }
-
         public int Id { get; set; }
         public int? ItpId { get; set; }
         public int? StudentId { get; set; }
         public int? AcadmicYearId { get; set; }
         public int? TermId { get; set; }
+        public int? ParamedicalServiceId { get; set; }
         public DateTime? Date { get; set; }
         public string? GeneralComment { get; set; }
         public string? OtherComment { get; set; }
@@ -30,10 +26,10 @@ namespace IesSchool.Context.Modelss
         public virtual AcadmicYear? AcadmicYear { get; set; }
         public virtual User? HeadOfEducation { get; set; }
         public virtual Itp? Itp { get; set; }
+        public virtual ParamedicalService? ParamedicalService { get; set; }
         public virtual Student? Student { get; set; }
         public virtual User? Teacher { get; set; }
         public virtual Term? Term { get; set; }
         public virtual User? Therapist { get; set; }
-        public virtual ICollection<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; }
     }
 }
