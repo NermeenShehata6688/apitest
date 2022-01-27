@@ -818,6 +818,10 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.ItpTherapists)
                     .HasForeignKey(d => d.TherapistId)
                     .HasConstraintName("FK_ITP_Therapist");
+                entity.HasOne(d => d.TherapistDepartment)
+                   .WithMany(p => p.Itps)
+                   .HasForeignKey(d => d.TherapistDepartmentId)
+                   .HasConstraintName("FK_ITP_ITP");
             });
 
             modelBuilder.Entity<ItpGoal>(entity =>

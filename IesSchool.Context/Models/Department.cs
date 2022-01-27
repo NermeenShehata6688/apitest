@@ -24,6 +24,7 @@ namespace IesSchool.Context.Models
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
 
+        public virtual ICollection<Itp> Itps { get; set; }
         public virtual ICollection<Assistant> Assistants { get; set; }
         public virtual ICollection<Event> Events { get; set; }
         public virtual ICollection<SkillAlowedDepartment> SkillAlowedDepartments { get; set; }

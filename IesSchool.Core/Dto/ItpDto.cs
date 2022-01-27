@@ -12,7 +12,7 @@ namespace IesSchool.Core.Dto
         public int? StudentId { get; set; }
         public int? ParamedicalServiceId { get; set; }
         public int? TherapistId { get; set; }
-        public int? TherapistIdDepartmentId { get; set; }
+        public int? TherapistDepartmentId { get; set; }
         public int? AcadmicYearId { get; set; }
         public int? TermId { get; set; }
         public DateTime? DateOfPreparation { get; set; }
