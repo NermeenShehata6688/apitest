@@ -96,23 +96,7 @@ namespace IesSchool.Core.Services
                 {
                     allIeps = allIeps.Where(x => x.Department_Id == iepSearchDto.Department_Id);
                 }
-                //if (iepSearchDto.RoomNumber != null)
-                //{
-                //    allIeps = allIeps.Where(x => x.RoomNumber.ToString().Contains(iepSearchDto.RoomNumber.ToString()));
-                //}
-                //if (iepSearchDto.StudentNameAr != null)
-                //{
-                //    allIeps = allIeps.Where(x => x.StudentNameAr.Contains(iepSearchDto.StudentNameAr));
-                //}
-                //if (iepSearchDto.StudentName != null)
-                //{
-                //    allIeps = allIeps.Where(x => x.StudentName.Contains(iepSearchDto.StudentName));
-                //}
-                //if (iepSearchDto.StudentCode != null)
-                //{
-                //    allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains(iepSearchDto.StudentCode.ToString()));
-                //}
-              
+                
 
                 var lstIepDto = _mapper.Map<List<VwIepDto>>(allIeps);
                 if (iepSearchDto.Index == null || iepSearchDto.Index == 0)

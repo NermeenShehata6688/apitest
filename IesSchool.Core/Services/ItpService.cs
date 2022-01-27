@@ -30,7 +30,7 @@ namespace IesSchool.Core.Services
                 ItpHelper itpHelper = new ItpHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code }), null, null, null, 0, 100000, true),
+                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DepartmentId = x.DepartmentId, DateOfBirth = x.DateOfBirth }), null, null, null, 0, 100000, true),
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
                     AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
