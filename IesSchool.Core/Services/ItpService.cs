@@ -296,7 +296,7 @@ namespace IesSchool.Core.Services
                 if (itpId != 0)
                 {
                     var goals = _uow.GetRepository<ItpGoal>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null, x => x
-               .Include(s => s.ItpGoalObjectives));
+               .Include(s => s.ItpGoalObjectives.Where(s => s.IsDeleted != true)));
                     var mapper = _mapper.Map<PaginateDto<ItpGoalDto>>(goals);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
