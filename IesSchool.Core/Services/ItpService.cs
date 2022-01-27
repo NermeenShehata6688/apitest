@@ -112,7 +112,8 @@ namespace IesSchool.Core.Services
             try
             {
                 var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
-                    x => x.Include(x => x.ItpGoalObjectives)
+                    x => x.Include(x => x.ItpGoals)
+                    .Include(x => x.ItpGoalObjectives)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.Therapist)
                      .Include(s => s.AcadmicYear)
@@ -534,7 +535,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
                .Include(s => s.Therapist)
-               .Include(s => s.ItpGoalObjectives));
+               .Include(s => s.ItpGoalObjectives.Where(x=> x.IsDeleted!=true)));
                     ItpProgressReportDto itpProgressReportDto = new ItpProgressReportDto();
                     itpProgressReportDto.ItpId = itpId;
 
@@ -544,7 +545,7 @@ namespace IesSchool.Core.Services
                         itpProgressReportDto.StudentName = itp.Student == null ? "" : itp.Student.Name;
                         itpProgressReportDto.AcadmicYearName = itp.AcadmicYear == null ? "" : itp.AcadmicYear.Name;
                         itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;
-                        itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;
+                        itpProgressReportDto.TherapistName = itp.Therapist == null ? "" : itp.Therapist.Name;
 
                         if (itp.ItpGoalObjectives.Count > 0)
                         {
@@ -563,7 +564,6 @@ namespace IesSchool.Core.Services
                             }
                         }
                     }
-                    //var mapper = _mapper.Map<ItpProgressReportDto>(itp);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = itpProgressReportDto };
                 }
                 else
