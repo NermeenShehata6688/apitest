@@ -22,5 +22,6 @@ namespace IesSchool.Core.IServices
         public string BCPReportHTML(int? studentId, int? iepId);
 
         public FileStreamResult ItpReport(int itpId);
+        public FileStreamResult ItpProgressReport(int itpProgressReportId);
     }
 }
