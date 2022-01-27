@@ -9,6 +9,7 @@ namespace IesSchool.Core.Dto
     public class ItpGoalObjectiveDto
     {
         public int Id { get; set; }
+        public int? ItpGoalId { get; set; }
         public int? ItpId { get; set; }
         public string? ObjectiveNote { get; set; }
         public DateTime? Date { get; set; }

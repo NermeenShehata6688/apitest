@@ -29,7 +29,7 @@ namespace IesSchool.Core.Dto
         public string? StudentName { get; set; }
         public string? AcadmicYearName { get; set; }
         public string? TermName { get; set; }
-        //public string? TeacherName { get; set; }
+        public string? TherapistName { get; set; }
         public virtual ICollection<ItpObjectiveProgressReportDto>? ItpObjectiveProgressReports { get; set; }
     }
 }

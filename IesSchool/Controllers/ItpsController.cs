@@ -131,11 +131,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetItpObjectiveByItpId(int itpGoalId)
+        public IActionResult GetItpObjectiveByGoalId(int itpGoalId)
         {
             try
             {
-                var all = _itpService.GetItpGoalById(itpGoalId);
+                var all = _itpService.GetItpObjectiveByGoalId(itpGoalId);
                 return Ok(all);
             }
             catch (Exception)

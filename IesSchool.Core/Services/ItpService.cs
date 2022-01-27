@@ -33,7 +33,7 @@ namespace IesSchool.Core.Services
                     AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code }), null, null, null, 0, 100000, true),
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
+                    AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
                     AllStrategies = _uow.GetRepository<ParamedicalStrategy>().GetList(),
@@ -153,17 +153,10 @@ namespace IesSchool.Core.Services
         {
             if (itpDto != null)
             {
-                using var transaction = _iesContext.Database.BeginTransaction();
-                var cmd = $"delete from ITP_Strategy where ItpId={itpDto.Id}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-               
                 var mapper = _mapper.Map<Itp>(itpDto);
                 _uow.GetRepository<Itp>().Update(mapper);
                 _uow.SaveChanges();
                 itpDto.Id = mapper.Id;
-
-                transaction.Commit();
-
                 itpDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Itp Updated Seccessfuly", Data = itpDto };
             }
@@ -207,10 +200,17 @@ namespace IesSchool.Core.Services
                 if (itpId != 0)
                 {
                     Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId);
-                    itp.Status = status;
-                    _uow.GetRepository<Itp>().Update(itp);
-                    _uow.SaveChanges();
-                    return new ResponseDto { Status = 1, Message = "Itp Status Has Changed" };
+                    if (itp != null)
+                    {
+                        itp.Status = status;
+                        _uow.GetRepository<Itp>().Update(itp);
+                        _uow.SaveChanges();
+                        return new ResponseDto { Status = 1, Message = "Itp Status Has Changed" };
+                    }
+                    else
+                    {
+                        return new ResponseDto { Status = 1, Message = "null" };
+                    }
                 }
                 else
                 {
@@ -230,10 +230,17 @@ namespace IesSchool.Core.Services
                 if (itpId != 0)
                 {
                     Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId);
-                    itp.IsPublished = isPublished;
-                    _uow.GetRepository<Itp>().Update(itp);
-                    _uow.SaveChanges();
-                    return new ResponseDto { Status = 1, Message = "Itp Is Published Status Has Changed" };
+                    if (itp!=null)
+                    {
+                        itp.IsPublished = isPublished;
+                        _uow.GetRepository<Itp>().Update(itp);
+                        _uow.SaveChanges();
+                        return new ResponseDto { Status = 1, Message = "Itp Is Published Status Has Changed" };
+                    }
+                    else
+                    {
+                        return new ResponseDto { Status = 1, Message = "null" };
+                    }
                 }
                 else
                 {
@@ -339,16 +346,21 @@ namespace IesSchool.Core.Services
             {
                 if (goalDto != null)
                 {
-
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from ITP_GoalObjective where ItpGoalId={goalDto.Id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
+
+                    foreach (var objective in goalDto.ItpGoalObjectives)
+                    {
+                        objective.IsDeleted = false;
+                        objective.CreatedOn = DateTime.Now;
+                    }
 
                     var mapper = _mapper.Map<ItpGoal>(goalDto);
                     _uow.GetRepository<ItpGoal>().Update(mapper);
                     _uow.SaveChanges();
                     transaction.Commit();
-                   
+
                     goalDto.Id = mapper.Id;
                     return new ResponseDto { Status = 1, Message = "Goal Updated Seccessfuly", Data = goalDto };
                 }
@@ -400,8 +412,8 @@ namespace IesSchool.Core.Services
             {
                 if (goalId != 0)
                 {
-                    var objectives = _uow.GetRepository<ItpGoalObjective>().Single(x => x.ItpGoalId == goalId && x.IsDeleted != true);
-                    var mapper = _mapper.Map<ItpGoalObjectiveDto>(objectives);
+                    var objectives = _uow.GetRepository<ItpGoalObjective>().GetList(x => x.ItpGoalId == goalId && x.IsDeleted != true);
+                    var mapper = _mapper.Map<PaginateDto<ItpGoalObjectiveDto>>(objectives);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
                 else
@@ -514,50 +526,50 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                // if (itpId > 0)
-                // {
-                //     var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null, x => x
+                if (itpId > 0)
+                {
+                    var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null, x => x
 
-                //.Include(s => s.Student)
-                //.Include(s => s.AcadmicYear)
-                //.Include(s => s.Term)
-                //.Include(s => s.Therapist)
-                //.Include(s => s.ItpObjectives));
-                //     ItpProgressReportDto itpProgressReportDto = new ItpProgressReportDto();
-                //     itpProgressReportDto.ItpId = itpId;
+               .Include(s => s.Student)
+               .Include(s => s.AcadmicYear)
+               .Include(s => s.Term)
+               .Include(s => s.Therapist)
+               .Include(s => s.ItpGoalObjectives));
+                    ItpProgressReportDto itpProgressReportDto = new ItpProgressReportDto();
+                    itpProgressReportDto.ItpId = itpId;
 
-                //     if (itp != null)
-                //     {
-                //         itpProgressReportDto.StudentCode = itp.Student == null ? 0 : itp.Student.Code;
-                //         itpProgressReportDto.StudentName = itp.Student == null ? "" : itp.Student.Name;
-                //         itpProgressReportDto.AcadmicYearName = itp.AcadmicYear == null ? "" : itp.AcadmicYear.Name;
-                //         itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;
+                    if (itp != null)
+                    {
+                        itpProgressReportDto.StudentCode = itp.Student == null ? 0 : itp.Student.Code;
+                        itpProgressReportDto.StudentName = itp.Student == null ? "" : itp.Student.Name;
+                        itpProgressReportDto.AcadmicYearName = itp.AcadmicYear == null ? "" : itp.AcadmicYear.Name;
+                        itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;
+                        itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;
 
-                //         if (itp.ItpObjectives.Count > 0)
-                //         {
-                //             itpProgressReportDto.ItpObjectiveProgressReports = new List<ItpObjectiveProgressReportDto>();
+                        if (itp.ItpGoalObjectives.Count > 0)
+                        {
+                            itpProgressReportDto.ItpObjectiveProgressReports = new List<ItpObjectiveProgressReportDto>();
 
-                //                 for (int i = 0; i < itp.ItpObjectives.Count; i++)
-                //             {
-                //                 itpProgressReportDto.ItpObjectiveProgressReports.Add(new ItpObjectiveProgressReportDto
-                //                 {
-                //                     Id = 0,
-                //                     ItpProgressReportId = 0,
-                //                     ItpObjectiveId = itp.ItpObjectives.ToList()[i].Id == null ? 0 : itp.ItpObjectives.ToList()[i].Id,
-                //                     ItpObjectiveNote = itp.ItpObjectives.ToList()[i].ObjectiveNote == null ? "" : itp.ItpObjectives.ToList()[i].ObjectiveNote,
-                //                     Comment = ""
-                //                 });
-                //             }
-                //         }
-                //     }
-                //     //var mapper = _mapper.Map<ItpProgressReportDto>(itp);
-                //     return new ResponseDto { Status = 1, Message = " Seccess", Data = itpProgressReportDto };
-                // }
-                // else
-                // {
-                //     return new ResponseDto { Status = 1, Message = " null" };
-                // }
-                return new ResponseDto { Status = 1, Message = " null" };
+                            for (int i = 0; i < itp.ItpGoalObjectives.Count; i++)
+                            {
+                                itpProgressReportDto.ItpObjectiveProgressReports.Add(new ItpObjectiveProgressReportDto
+                                {
+                                    Id = 0,
+                                    ItpProgressReportId = 0,
+                                    ItpObjectiveId = itp.ItpGoalObjectives.ToList()[i].Id == null ? 0 : itp.ItpGoalObjectives.ToList()[i].Id,
+                                    ItpObjectiveNote = itp.ItpGoalObjectives.ToList()[i].ObjectiveNote == null ? "" : itp.ItpGoalObjectives.ToList()[i].ObjectiveNote,
+                                    Comment = ""
+                                });
+                            }
+                        }
+                    }
+                    //var mapper = _mapper.Map<ItpProgressReportDto>(itp);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = itpProgressReportDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
             }
             catch (Exception ex)
             {
