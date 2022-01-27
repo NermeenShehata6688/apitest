@@ -143,6 +143,20 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public IActionResult GetGoalByItpId(int itpId)
+        {
+            try
+            {
+                var all = _itpService.GetGoalByItpId(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost]
         public IActionResult PostItpGoal(ItpGoalDto itpGoalDto)
         {
