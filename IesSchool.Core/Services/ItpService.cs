@@ -453,7 +453,8 @@ namespace IesSchool.Core.Services
                     x => x.Include(x => x.Student)
                   .Include(x => x.AcadmicYear).Include(x => x.Term)
                      .Include(x => x.Teacher)
-                     
+                      .Include(x => x.Therapist)
+                      .Include(x => x.ParamedicalService)
                      .Include(x => x.ItpObjectiveProgressReports).ThenInclude(x => x.ItpObjective));
                 var mapper = _mapper.Map<ItpProgressReportDto>(itpProgressReport);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };

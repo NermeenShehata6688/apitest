@@ -1981,13 +1981,6 @@ namespace IesSchool.Core.Services
 
 
 
-					
-
-
-
-
-
-
 					var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
 
 					if (!Directory.Exists(target))
@@ -3954,6 +3947,741 @@ namespace IesSchool.Core.Services
 
 					return fileStreamResult;
 				}
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
+		}
+
+		public string ItpReportHTML(int itpId)
+		{
+			try
+			{
+				using (ExcelEngine excelEngine = new ExcelEngine())
+				{
+					IApplication application = excelEngine.Excel;
+					application.DefaultVersion = ExcelVersion.Excel2016;
+					int lastRow = 0;
+
+					var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
+						x => x.Include(x => x.Student).ThenInclude(x => x.Department)
+					.Include(x => x.Student).ThenInclude(x => x.Teacher)
+					.Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+					.Include(x => x.AcadmicYear).Include(x => x.Term)
+					.Include(x => x.HeadOfEducation)
+					.Include(x => x.ParamedicalService)
+					.Include(x => x.ItpGoals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ItpGoalObjectives.Where(x => x.IsDeleted != true)));
+					//var mapper = _mapper.Map<ItpDto>(itp);
+
+					IWorkbook workbook = application.Workbooks.Create(0);
+					IWorksheet worksheet;
+					string studentName = "";
+
+					if (itp != null)
+					{
+						string studentTeacherName = "";
+						string itpTherapistName = "";
+						string itpHeadOfEducationName = "";
+						string acadmicYearName = "";
+						string termName = "";
+						string dateOfBirthName = "";
+						string studentCodeName = "";
+						string studentDepartmentName = "";
+						string therapistDepartmentName = "";
+						if (itp.Student != null)
+						{
+							studentName = itp.Student.Name == null ? "" : itp.Student.Name;
+							studentDepartmentName = itp.Student.Department == null ? "" : itp.Student.Department.Name == null ? "" : itp.Student.Department.Name;
+							studentTeacherName = itp.Student.Teacher == null ? "" : itp.Student.Teacher.Name == null ? "" : itp.Student.Teacher.Name;
+							dateOfBirthName = itp.Student.DateOfBirth == null ? "" : itp.Student.DateOfBirth.Value.ToShortDateString();
+							studentCodeName = itp.Student.Code == null ? "" : itp.Student.Code.ToString();
+						}
+
+						if (itp.AcadmicYear != null)
+							acadmicYearName = itp.AcadmicYear.Name == null ? "" : itp.AcadmicYear.Name;
+						else
+							acadmicYearName = "Sheet1";
+						if (itp.Therapist != null)
+						{
+							itpTherapistName = itp.Therapist.Name == null ? "" : itp.Therapist.Name;
+							therapistDepartmentName = itp.TherapistDepartment == null ? "" : itp.TherapistDepartment.Name;
+						}
+
+						if (itp.HeadOfEducation != null)
+						{
+							itpHeadOfEducationName = itp.HeadOfEducation.Name == null ? "" : itp.HeadOfEducation.Name;
+						}
+						if (itp.Term != null)
+						{
+							termName = itp.Term.Name == null ? "" : itp.Term.Name;
+						}
+						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						#region General
+						//Disable gridlines in the worksheet
+						worksheet.IsGridLinesVisible = true;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1"].RowHeight = 17;
+
+						#endregion
+						#region ITP
+						worksheet.Range["A1:BE12"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE1:BE12"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AH2:AH4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AL2:AL4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["J3:J4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AS2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AW2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["R5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AV3:AV4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AZ3:AZ4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["A1:BE1"].Merge();
+						worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
+						worksheet.Range["A2:AH2"].Merge();
+						worksheet.Range["A2:AH2"].Text = "INDIVIDUAL THERAPY PLAN (ITP)";
+						worksheet.Range["A2:AH2"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+						worksheet.Range["AI2:AL2"].Merge();
+						worksheet.Range["AI2:AL2"].Text = "YEAR:";
+						worksheet.Range["AI2:AL2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AM2:AS2"].Merge();
+						worksheet.Range["AM2:AS2"].Text = acadmicYearName;
+						worksheet.Range["AT2:AW2"].Merge();
+						worksheet.Range["AT2:AW2"].Text = "Term:";
+						worksheet.Range["AT2:AW2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AX2:BE2"].Merge();
+						worksheet.Range["AX2:BE2"].Text = termName;
+
+
+						worksheet.Range["A3:J3"].Merge();
+						worksheet.Range["A3:J3"].Text = "STUDENT NAME:";
+						worksheet.Range["A3:J3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["K3:AH3"].Merge();
+						worksheet.Range["K3:AH3"].Text = studentName;
+						worksheet.Range["AI3:AL3"].Merge();
+						worksheet.Range["AI3:AL3"].Text = "D.O.B:";
+						worksheet.Range["AI3:AL3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AM3:AV3"].Merge();
+						worksheet.Range["AM3:AV3"].Text = dateOfBirthName;
+						worksheet.Range["AW3:AZ3"].Merge();
+						worksheet.Range["AW3:AZ3"].Text = "REF#:";
+						worksheet.Range["AW3:AZ3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["BA3:BE3"].Merge();
+						worksheet.Range["BA3:BE3"].Text = studentCodeName;
+
+						worksheet.Range["A4:J4"].Merge();
+						worksheet.Range["A4:J4"].Text = "Therapist:";
+						worksheet.Range["A4:J4"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["K4:AH4"].Merge();
+						worksheet.Range["K4:AH4"].Text = itpTherapistName;
+						worksheet.Range["AI4:AO4"].Merge();
+						worksheet.Range["AI4:AO4"].Text = "Therapist Dep:";
+						worksheet.Range["AI4:AO4"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AI4:AO4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["AP4:BE4"].Merge();
+						worksheet.Range["AP4:BE4"].Text = therapistDepartmentName;
+						worksheet.Range["AP4:BE4"].Merge();
+
+						worksheet.Range["A5:J5"].Merge();
+						worksheet.Range["A5:J5"].Text = "Date oF Preparation:";
+						worksheet.Range["A5:J5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["J5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["k5:AH5"].Merge();
+						worksheet.Range["k5:AH5"].Text = itp.DateOfPreparation == null ? "" : itp.DateOfPreparation.Value.ToShortDateString();
+						worksheet.Range["AH5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["AI5:AL5"].Merge();
+						worksheet.Range["AI5:AL5"].Text = "Teacher:";
+						worksheet.Range["AI5:AL5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AL5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["AM5:AV5"].Merge();
+						worksheet.Range["AM5:AV5"].Text = studentTeacherName;
+						worksheet.Range["AV5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+						worksheet.Range["Aw5:AZ5"].Merge();
+						worksheet.Range["Aw5:AZ5"].Text = "Dep:";
+						worksheet.Range["Aw5:AZ5"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AZ5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["BA5:BE5"].Merge();
+						worksheet.Range["BA5:BE5"].Text = studentDepartmentName;
+
+
+						worksheet.Range["A6:BE6"].Merge();
+						worksheet.Range["A6:BE6"].Text = itp.ParamedicalService == null ? "" : itp.ParamedicalService.Name == null ? "" : itp.ParamedicalService.Name;
+
+						worksheet.Range["A6:BE6"].CellStyle.Color = Color.FromArgb(230, 214, 242);
+
+						worksheet.Range["A7:BE7"].Merge();
+						worksheet.Range["A7:BE7"].Text = "Current Level";
+						worksheet.Range["A7:BE7"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+						worksheet.Range["A8:BE12"].Merge();
+						worksheet.Range["A8:BE12"].Text = itp.CurrentLevel == null ? "" : itp.CurrentLevel;
+
+						#endregion
+
+						lastRow = worksheet.Rows.Length;
+						if (itp.ItpGoals.Count() > 0)
+						{
+							int goalCount = 1;
+							foreach (var goal in itp.ItpGoals)
+							{
+								#region Goals
+								worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["A" + (lastRow + 2) + ":K" + (lastRow + 3)].Merge();
+								worksheet.Range["A" + (lastRow + 2) + ":K" + (lastRow + 3)].Text = goalCount + " - " + "Goal:";
+								worksheet.Range["A" + (lastRow + 2) + ":K" + (lastRow + 3)].CellStyle.Color = Color.FromArgb(230, 214, 242);
+								worksheet.Range["A" + (lastRow + 2) + ":K" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+								worksheet.Range["L" + (lastRow + 2) + ":BE" + (lastRow + 3)].Merge();
+								worksheet.Range["L" + (lastRow + 2) + ":BE" + (lastRow + 3)].Text = goal.Goal == null ? "" : goal.Goal;
+								goalCount++;
+								#endregion
+								#region Objectives
+								if (goal.ItpGoalObjectives != null && goal.ItpGoalObjectives.Count() > 0)
+								{
+									var goalObjectives = goal.ItpGoalObjectives.Where(x => x.IsDeleted != true).ToList();
+									if (goalObjectives.Count() > 0)
+									{
+										int noOfObj = 1;
+										lastRow = worksheet.Rows.Length;
+										foreach (var objective in goalObjectives)
+										{
+
+											//worksheet.Range["A" + (lastRow + 1) + ":AE300" ].CellStyle.Font.Size = 9;
+											worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].Merge();
+											worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].Text = noOfObj.ToString();
+											worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+											worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+											worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].Merge();
+											worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].Text = "Objective  " + noOfObj;
+											worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+											worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+											worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+											worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
+											worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = "Approach/ Resources :";
+											worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+											worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+											worksheet.Range["B" + (lastRow + 2) + ":AD" + (lastRow + 5)].Merge();
+											worksheet.Range["B" + (lastRow + 2) + ":AD" + (lastRow + 5)].Text = objective.ObjectiveNote == null ? "" : objective.ObjectiveNote;
+											worksheet.Range["B" + (lastRow + 2) + ":AD" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+											worksheet.Range["AE" + (lastRow + 2) + ":BE" + (lastRow + 5)].Merge();
+											worksheet.Range["AE" + (lastRow + 2) + ":BE" + (lastRow + 5)].Text = objective.ResourcesRequired == null ? "" : objective.ResourcesRequired;
+											worksheet.Range["AE" + (lastRow + 2) + ":BE" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+											worksheet.Range["A" + (lastRow + 5) + ":BE" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+											noOfObj++;
+											lastRow = lastRow + 5;
+										}
+									}
+									lastRow = worksheet.Rows.Length;
+								}
+								else
+								{
+									lastRow = worksheet.Rows.Length;
+
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Merge();
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Text = " No Objects Found";
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+									lastRow = worksheet.Rows.Length + 3;
+								}
+
+								#endregion
+								lastRow = worksheet.Rows.Length;
+							}
+						}
+						else
+						{
+							lastRow = worksheet.Rows.Length;
+							worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
+							worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = " No Goals Found";
+							worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+							lastRow = worksheet.Rows.Length;
+
+						}
+
+						#region FooterNote
+						lastRow = worksheet.Rows.Length;
+
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = itp.StudentNotes;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						lastRow = worksheet.Rows.Length;
+						#endregion
+						#region Footer
+						lastRow = worksheet.Rows.Length;
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["A" + (lastRow + 2) + ":G" + (lastRow + 2)].Merge();
+						worksheet.Range["A" + (lastRow + 2) + ":G" + (lastRow + 2)].Text = "Report Card";
+						worksheet.Range["A" + (lastRow + 2) + ":G" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["A" + (lastRow + 2) + ":G" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["H" + (lastRow + 2) + ":I" + (lastRow + 2)].Merge();
+						worksheet.Range["H" + (lastRow + 2) + ":I" + (lastRow + 2)].Text = itp.ReportCard == false ? "✘" : itp.ReportCard == true ? "✔" : "";
+						worksheet.Range["H" + (lastRow + 2) + ":I" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						worksheet.Range["J" + (lastRow + 2) + ":W" + (lastRow + 2)].Merge();
+						worksheet.Range["J" + (lastRow + 2) + ":W" + (lastRow + 2)].Text = "Progress Report";
+						worksheet.Range["J" + (lastRow + 2) + ":W" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["J" + (lastRow + 2) + ":W" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["X" + (lastRow + 2) + ":Y" + (lastRow + 2)].Merge();
+						worksheet.Range["X" + (lastRow + 2) + ":Y" + (lastRow + 2)].Text = itp.ProgressReport == false ? "✘" : itp.ProgressReport == true ? "✔" : "";
+						worksheet.Range["X" + (lastRow + 2) + ":Y" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["Z" + (lastRow + 2) + ":AM" + (lastRow + 2)].Merge();
+						worksheet.Range["Z" + (lastRow + 2) + ":AM" + (lastRow + 2)].Text = "Parents meeting";
+						worksheet.Range["Z" + (lastRow + 2) + ":AM" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["Z" + (lastRow + 2) + ":AM" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["AN" + (lastRow + 2) + ":AO" + (lastRow + 2)].Merge();
+						worksheet.Range["AN" + (lastRow + 2) + ":AO" + (lastRow + 2)].Text = itp.ParentsMeeting == false ? "✘" : itp.ParentsMeeting == true ? "✔" : "";
+						worksheet.Range["AN" + (lastRow + 2) + ":AO" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["AP" + (lastRow + 2) + ":BC" + (lastRow + 2)].Merge();
+						worksheet.Range["AP" + (lastRow + 2) + ":BC" + (lastRow + 2)].Text = "Other";
+						worksheet.Range["AP" + (lastRow + 2) + ":BC" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["AP" + (lastRow + 2) + ":BC" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["BD" + (lastRow + 2) + ":BE" + (lastRow + 2)].Merge();
+						worksheet.Range["BD" + (lastRow + 2) + ":BE" + (lastRow + 2)].Text = itp.Others == false ? "✘" : itp.Others == true ? "✔" : "";
+						worksheet.Range["BD" + (lastRow + 2) + ":BE" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["A" + (lastRow + 3) + ":Y" + (lastRow + 3)].Merge();
+						worksheet.Range["A" + (lastRow + 3) + ":Y" + (lastRow + 3)].Text = "Parents Involved in setting up suggestions";
+						worksheet.Range["A" + (lastRow + 3) + ":Y" + (lastRow + 3)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["A" + (lastRow + 3) + ":Y" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+						worksheet.Range["Z" + (lastRow + 3) + ":BE" + (lastRow + 3)].Merge();
+						worksheet.Range["Z" + (lastRow + 3) + ":BE" + (lastRow + 3)].Text = itp.ParentsInvolvedInSettingUpSuggestions == false ? "" : itp.ParentsInvolvedInSettingUpSuggestions == true ? "Yes, refer parent meeting record form" : "";
+						worksheet.Range["Z" + (lastRow + 3) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["A" + (lastRow + 4) + ":Y" + (lastRow + 4)].Merge();
+						worksheet.Range["A" + (lastRow + 4) + ":Y" + (lastRow + 4)].Text = "Date of Review";
+						worksheet.Range["A" + (lastRow + 4) + ":Y" + (lastRow + 4)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["A" + (lastRow + 4) + ":Y" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+						worksheet.Range["Z" + (lastRow + 4) + ":BE" + (lastRow + 4)].Merge();
+						worksheet.Range["Z" + (lastRow + 4) + ":BE" + (lastRow + 4)].Text = itp.LastDateOfReview == null ? "" : itp.LastDateOfReview.Value.ToShortDateString();
+						worksheet.Range["Z" + (lastRow + 4) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+						worksheet.Range["A" + (lastRow + 6) + ":H" + (lastRow + 6)].Merge();
+						worksheet.Range["A" + (lastRow + 6) + ":H" + (lastRow + 6)].Text = "Therapist :";
+						worksheet.Range["A" + (lastRow + 6) + ":H" + (lastRow + 6)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["I" + (lastRow + 6) + ":S" + (lastRow + 6)].Merge();
+						worksheet.Range["I" + (lastRow + 6) + ":S" + (lastRow + 6)].Text = itpTherapistName;
+
+						worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Merge();
+						worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Text = "Parent:";
+						worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AB" + (lastRow + 6) + ":AL" + (lastRow + 6)].Merge();
+						worksheet.Range["AB" + (lastRow + 6) + ":AL" + (lastRow + 6)].Text = "";
+
+						worksheet.Range["AM" + (lastRow + 6) + ":AT" + (lastRow + 6)].Merge();
+						worksheet.Range["AM" + (lastRow + 6) + ":AT" + (lastRow + 6)].Text = "HOE:";
+						worksheet.Range["AM" + (lastRow + 6) + ":AT" + (lastRow + 6)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AU" + (lastRow + 6) + ":BE" + (lastRow + 6)].Merge();
+						worksheet.Range["AU" + (lastRow + 6) + ":BE" + (lastRow + 6)].Text = itpHeadOfEducationName;
+
+
+						worksheet.Range["A" + (lastRow + 7) + ":H" + (lastRow + 7)].Merge();
+						worksheet.Range["A" + (lastRow + 7) + ":H" + (lastRow + 7)].Text = "Signature:";
+						worksheet.Range["A" + (lastRow + 7) + ":H" + (lastRow + 7)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["I" + (lastRow + 7) + ":S" + (lastRow + 7)].Merge();
+						worksheet.Range["I" + (lastRow + 7) + ":S" + (lastRow + 7)].Text = "";
+
+						worksheet.Range["T" + (lastRow + 7) + ":AA" + (lastRow + 7)].Merge();
+						worksheet.Range["T" + (lastRow + 7) + ":AA" + (lastRow + 7)].Text = "Signature:";
+						worksheet.Range["T" + (lastRow + 7) + ":AA" + (lastRow + 7)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AB" + (lastRow + 7) + ":AL" + (lastRow + 7)].Merge();
+						worksheet.Range["AB" + (lastRow + 7) + ":AL" + (lastRow + 7)].Text = "";
+
+						worksheet.Range["AM" + (lastRow + 7) + ":AT" + (lastRow + 7)].Merge();
+						worksheet.Range["AM" + (lastRow + 7) + ":AT" + (lastRow + 7)].Text = "Signature:";
+						worksheet.Range["AM" + (lastRow + 7) + ":AT" + (lastRow + 7)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+
+						worksheet.Range["AU" + (lastRow + 7) + ":BE" + (lastRow + 7)].Merge();
+						worksheet.Range["AU" + (lastRow + 7) + ":BE" + (lastRow + 7)].Text = "";
+
+						worksheet.Range["H" + (lastRow + 6) + ":H" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["S" + (lastRow + 6) + ":S" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AA" + (lastRow + 6) + ":AA" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AL" + (lastRow + 6) + ":AL" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AT" + (lastRow + 6) + ":AT" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 6) + ":BE" + (lastRow + 7)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["Y" + (lastRow + 2) + ":Y" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						#endregion
+					}
+					else
+					{
+						return "";
+					}
+					lastRow = worksheet.Rows.Length;
+					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
+
+
+					var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+
+					if (!Directory.Exists(target))
+					{
+						Directory.CreateDirectory(target);
+					}
+					string fullpath = "";
+					if (workbook != null)
+					{
+						//var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(workbook.CodeName);
+						var fileName = Guid.NewGuid().ToString().Replace("-", "");
+						var filePath = Path.Combine(target, fileName + ".html");
+						using (var stream1 = new FileStream(filePath, FileMode.Create))
+						{
+							//stream1.WriteTimeout = 3000;
+							workbook.SaveAsHtml(stream1, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
+							//file.CopyToAsync(stream);
+						}
+						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.html";
+					}
+					return fullpath;
+
+				}
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
+		}
+		public string ItpProgressReportHTML(int itpProgressReportId)
+		{
+			try
+			{
+				using (ExcelEngine excelEngine = new ExcelEngine())
+				{
+					IApplication application = excelEngine.Excel;
+					application.DefaultVersion = ExcelVersion.Excel2016;
+					int lastRow = 9;
+
+					var itpProgressReport = _uow.GetRepository<ItpProgressReport>().Single(x => x.Id == itpProgressReportId && x.IsDeleted != true, null,
+						x => x.Include(x => x.Student).ThenInclude(x => x.Department)
+					.Include(x => x.Student).ThenInclude(x => x.Teacher)
+					.Include(x => x.Therapist).ThenInclude(x => x.Department)
+					.Include(x => x.AcadmicYear).Include(x => x.Term)
+					.Include(x => x.HeadOfEducation)
+					.Include(x => x.ParamedicalService)
+					.Include(x => x.ItpObjectiveProgressReports).ThenInclude(x => x.ItpObjective));
+					//var mapper = _mapper.Map<ItpDto>(itp);
+
+					IWorkbook workbook = application.Workbooks.Create(0);
+					IWorksheet worksheet;
+					string studentName = "";
+
+					if (itpProgressReport != null)
+					{
+						string studentTeacherName = "";
+						string itpTherapistName = "";
+						string itpHeadOfEducationName = "";
+						string acadmicYearName = "";
+						string termName = "";
+						string dateOfBirthName = "";
+						string studentCodeName = "";
+						string studentDepartmentName = "";
+						string therapistDepartmentName = "";
+						if (itpProgressReport.Student != null)
+						{
+							studentName = itpProgressReport.Student.Name == null ? "" : itpProgressReport.Student.Name;
+							studentDepartmentName = itpProgressReport.Student.Department == null ? "" : itpProgressReport.Student.Department.Name == null ? "" : itpProgressReport.Student.Department.Name;
+							studentTeacherName = itpProgressReport.Student.Teacher == null ? "" : itpProgressReport.Student.Teacher.Name == null ? "" : itpProgressReport.Student.Teacher.Name;
+							dateOfBirthName = itpProgressReport.Student.DateOfBirth == null ? "" : itpProgressReport.Student.DateOfBirth.Value.ToShortDateString();
+							studentCodeName = itpProgressReport.Student.Code == null ? "" : itpProgressReport.Student.Code.ToString();
+						}
+
+						if (itpProgressReport.AcadmicYear != null)
+							acadmicYearName = itpProgressReport.AcadmicYear.Name == null ? "" : itpProgressReport.AcadmicYear.Name;
+						else
+							acadmicYearName = "Sheet1";
+						if (itpProgressReport.Therapist != null)
+						{
+							itpTherapistName = itpProgressReport.Therapist.Name == null ? "" : itpProgressReport.Therapist.Name;
+							therapistDepartmentName = itpProgressReport.Therapist.Department == null ? "" : itpProgressReport.Therapist.Department.Name == null ? "" : itpProgressReport.Therapist.Department.Name;
+						}
+
+						if (itpProgressReport.HeadOfEducation != null)
+						{
+							itpHeadOfEducationName = itpProgressReport.HeadOfEducation.Name == null ? "" : itpProgressReport.HeadOfEducation.Name;
+						}
+						if (itpProgressReport.Term != null)
+						{
+							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
+						}
+						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						#region General
+						//Disable gridlines in the worksheet
+						worksheet.IsGridLinesVisible = true;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1"].RowHeight = 17;
+						#endregion
+
+						#region General Data
+						FileStream AllLogo = new FileStream("wwwroot/staticFiles/AllLogos.jpg", FileMode.Open, FileAccess.Read);
+						IPictureShape AllLogoShape = worksheet.Pictures.AddPicture(1, 1, AllLogo, 107, 100);
+
+						lastRow = worksheet.Rows.Length + 9;
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Merge();
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Text = "Therapy Progress Report " + Environment.NewLine + acadmicYearName;
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Color = Color.FromArgb(202, 215, 238);
+
+						worksheet.Range["A" + (lastRow + 3) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+						lastRow = worksheet.Rows.Length;
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 13)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 1) + ":BE" + (lastRow + 13)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AB" + (lastRow + 1) + ":AB" + (lastRow + 8)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow + 1) + ":AB" + (lastRow + 8)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["A" + (lastRow + 1) + ":AB" + (lastRow + 1)].Merge();
+						worksheet.Range["A" + (lastRow + 1) + ":AB" + (lastRow + 1)].Text = "Student's Name:";
+
+						worksheet.Range["AC" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
+						worksheet.Range["AC" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = studentName;
+
+						worksheet.Range["A" + (lastRow + 2) + ":AB" + (lastRow + 2)].Merge();
+						worksheet.Range["A" + (lastRow + 2) + ":AB" + (lastRow + 2)].Text = "REF#:";
+
+						worksheet.Range["AC" + (lastRow + 2) + ":BE" + (lastRow + 2)].Merge();
+						worksheet.Range["AC" + (lastRow + 2) + ":BE" + (lastRow + 2)].Text = studentCodeName;
+
+						worksheet.Range["A" + (lastRow + 3) + ":AB" + (lastRow + 3)].Merge();
+						worksheet.Range["A" + (lastRow + 3) + ":AB" + (lastRow + 3)].Text = "Date Of Birth:";
+
+						worksheet.Range["AC" + (lastRow + 3) + ":BE" + (lastRow + 3)].Merge();
+						worksheet.Range["AC" + (lastRow + 3) + ":BE" + (lastRow + 3)].Text = dateOfBirthName;
+
+						worksheet.Range["A" + (lastRow + 4) + ":AB" + (lastRow + 4)].Merge();
+						worksheet.Range["A" + (lastRow + 4) + ":AB" + (lastRow + 4)].Text = "Therapist:";
+
+						worksheet.Range["AC" + (lastRow + 4) + ":BE" + (lastRow + 4)].Merge();
+						worksheet.Range["AC" + (lastRow + 4) + ":BE" + (lastRow + 4)].Text = itpTherapistName;
+
+						worksheet.Range["A" + (lastRow + 5) + ":AB" + (lastRow + 5)].Merge();
+						worksheet.Range["A" + (lastRow + 5) + ":AB" + (lastRow + 5)].Text = "Therapist Department:";
+
+						worksheet.Range["AC" + (lastRow + 5) + ":BE" + (lastRow + 5)].Merge();
+						worksheet.Range["AC" + (lastRow + 5) + ":BE" + (lastRow + 5)].Text = therapistDepartmentName;
+
+						worksheet.Range["A" + (lastRow + 6) + ":AB" + (lastRow + 6)].Merge();
+						worksheet.Range["A" + (lastRow + 6) + ":AB" + (lastRow + 6)].Text = "AcadmicYear:";
+
+						worksheet.Range["AC" + (lastRow + 6) + ":BE" + (lastRow + 6)].Merge();
+						worksheet.Range["AC" + (lastRow + 6) + ":BE" + (lastRow + 6)].Text = acadmicYearName;
+
+						worksheet.Range["A" + (lastRow + 7) + ":AB" + (lastRow + 7)].Merge();
+						worksheet.Range["A" + (lastRow + 7) + ":AB" + (lastRow + 7)].Text = "Term:";
+
+						worksheet.Range["AC" + (lastRow + 7) + ":BE" + (lastRow + 7)].Merge();
+						worksheet.Range["AC" + (lastRow + 7) + ":BE" + (lastRow + 7)].Text = termName;
+
+						worksheet.Range["A" + (lastRow + 8) + ":AB" + (lastRow + 8)].Merge();
+						worksheet.Range["A" + (lastRow + 8) + ":AB" + (lastRow + 8)].Text = "Date:";
+
+						worksheet.Range["AC" + (lastRow + 8) + ":BE" + (lastRow + 8)].Merge();
+						worksheet.Range["AC" + (lastRow + 8) + ":BE" + (lastRow + 8)].Text = itpProgressReport.Date == null ? "" : itpProgressReport.Date.Value.ToShortDateString();
+
+						worksheet.Range["A" + (lastRow + 9) + ":BE" + (lastRow + 9)].Merge();
+						worksheet.Range["A" + (lastRow + 9) + ":BE" + (lastRow + 9)].Text = "General Comment";
+						worksheet.Range["A" + (lastRow + 9) + ":BE" + (lastRow + 9)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+						worksheet.Range["A" + (lastRow + 10) + ":BE" + (lastRow + 13)].Merge();
+						worksheet.Range["A" + (lastRow + 10) + ":BE" + (lastRow + 13)].Text = itpProgressReport.GeneralComment == null ? "" : itpProgressReport.GeneralComment;
+						#endregion
+						#region Objectives
+
+						lastRow = worksheet.Rows.Length;
+
+						if (itpProgressReport.ItpObjectiveProgressReports != null && itpProgressReport.ItpObjectiveProgressReports.Count() > 0)
+						{
+							var objectives = itpProgressReport.ItpObjectiveProgressReports.ToList();
+							if (objectives.Count() > 0)
+							{
+								int noOfObj = 1;
+								lastRow = worksheet.Rows.Length + 1;
+								foreach (var objective in objectives)
+								{
+									worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].Merge();
+									worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].Text = noOfObj.ToString();
+									worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].CellStyle.Color = Color.FromArgb(255, 255, 200);
+									worksheet.Range["A" + (lastRow + 1) + ":A" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+									worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].Merge();
+									worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].Text = "Objective  " + noOfObj;
+									worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+									worksheet.Range["B" + (lastRow + 1) + ":AD" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+									worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+
+									worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
+									worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = "Achievement :";
+									worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+									worksheet.Range["AE" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+									worksheet.Range["B" + (lastRow + 2) + ":AD" + (lastRow + 5)].Merge();
+									worksheet.Range["B" + (lastRow + 2) + ":AD" + (lastRow + 5)].Text = objective.ItpObjective == null ? "" : objective.ItpObjective.ObjectiveNote == null ? "" : objective.ItpObjective.ObjectiveNote;
+									worksheet.Range["B" + (lastRow + 2) + ":AD" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+									worksheet.Range["AE" + (lastRow + 2) + ":BE" + (lastRow + 5)].Merge();
+									worksheet.Range["AE" + (lastRow + 2) + ":BE" + (lastRow + 5)].Text = objective.Comment == null ? "" : objective.Comment;
+									worksheet.Range["AE" + (lastRow + 2) + ":BE" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+									worksheet.Range["A" + (lastRow + 5) + ":BE" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+									noOfObj++;
+									lastRow = lastRow + 5;
+								}
+							}
+							lastRow = worksheet.Rows.Length;
+						}
+						else
+						{
+							lastRow = worksheet.Rows.Length + 1;
+
+							worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Merge();
+							worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Text = " No Objects Found";
+							worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+							lastRow = worksheet.Rows.Length + 3;
+						}
+						#endregion
+						#region signature
+						lastRow = worksheet.Rows.Length + 1;
+
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["H" + (lastRow + 1) + ":H" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AL" + (lastRow + 1) + ":AL" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AD" + (lastRow + 1) + ":AD" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 1) + ":BE" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+						worksheet.Range["A" + (lastRow + 1) + ":H" + (lastRow + 1)].Merge();
+						worksheet.Range["A" + (lastRow + 1) + ":H" + (lastRow + 1)].Text = "Therapist:";
+						worksheet.Range["A" + (lastRow + 1) + ":H" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["I" + (lastRow + 1) + ":AD" + (lastRow + 1)].Merge();
+						worksheet.Range["I" + (lastRow + 1) + ":AD" + (lastRow + 1)].Text = itpTherapistName;
+
+
+
+						worksheet.Range["AE" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
+						worksheet.Range["AE" + (lastRow + 1) + ":AL" + (lastRow + 1)].Text = "H.O.E :";
+						worksheet.Range["AE" + (lastRow + 1) + ":AL" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AM" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
+						worksheet.Range["AM" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = itpHeadOfEducationName;
+
+						worksheet.Range["A" + (lastRow + 2) + ":H" + (lastRow + 2)].Merge();
+						worksheet.Range["A" + (lastRow + 2) + ":H" + (lastRow + 2)].Text = "Signature :";
+						worksheet.Range["A" + (lastRow + 2) + ":H" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["I" + (lastRow + 2) + ":AD" + (lastRow + 2)].Merge();
+						worksheet.Range["I" + (lastRow + 2) + ":AD" + (lastRow + 2)].Text = "";
+
+
+
+						worksheet.Range["AE" + (lastRow + 2) + ":AL" + (lastRow + 2)].Merge();
+						worksheet.Range["AE" + (lastRow + 2) + ":AL" + (lastRow + 2)].Text = "Signature :";
+						worksheet.Range["AE" + (lastRow + 2) + ":AL" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AM" + (lastRow + 2) + ":BE" + (lastRow + 2)].Merge();
+						worksheet.Range["AM" + (lastRow + 2) + ":BE" + (lastRow + 2)].Text = "";
+						#endregion
+
+
+					}
+					else
+					{
+						return "";
+					}
+					lastRow = worksheet.Rows.Length;
+					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Size = 11;
+
+					var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+
+					if (!Directory.Exists(target))
+					{
+						Directory.CreateDirectory(target);
+					}
+					string fullpath = "";
+					if (workbook != null)
+					{
+						var fileName = Guid.NewGuid().ToString().Replace("-", "");
+						var filePath = Path.Combine(target, fileName + ".html");
+						using (var stream1 = new FileStream(filePath, FileMode.Create))
+						{
+							workbook.SaveAsHtml(stream1, Syncfusion.XlsIO.Implementation.HtmlSaveOptions.Default);
+						}
+						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.html";
+					}
+					return fullpath;
+				}
+				
 			}
 			catch (Exception ex)
 			{

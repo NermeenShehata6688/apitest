@@ -152,5 +152,33 @@ namespace IesSchool.Controllers
             }
         }
 
+        [HttpGet]
+        public string ItpReportHTML(int itpId)
+        {
+            try
+            {
+                var all = _reportService.ItpReportHTML(itpId);
+                return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public string ItpProgressReportHTML(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ItpProgressReportHTML(itpProgressReportId);
+                return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }
