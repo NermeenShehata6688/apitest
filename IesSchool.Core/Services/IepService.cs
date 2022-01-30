@@ -1107,7 +1107,6 @@ namespace IesSchool.Core.Services
                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
                );
                     IepProgressReportDto iepProgressReportDto = new IepProgressReportDto();
-                    iepProgressReportDto.IepId= iepId;
 
                     if (iep != null)
                     {
@@ -1116,6 +1115,13 @@ namespace IesSchool.Core.Services
                         iepProgressReportDto.StudentName = iep.Student == null ? "" : iep.Student.Name;
                         iepProgressReportDto.AcadmicYearName = iep.AcadmicYear == null ? "" : iep.AcadmicYear.Name;
                         iepProgressReportDto.TermName = iep.Term == null ? "" : iep.Term.Name;
+
+
+                        iepProgressReportDto.IepId = iep.Id;
+                        iepProgressReportDto.StudentId = iep.StudentId;
+                        iepProgressReportDto.AcadmicYearId = iep.AcadmicYearId;
+                        iepProgressReportDto.TermId = iep.TermId;
+                        iepProgressReportDto.TeacherId = iep.TeacherId;
 
                         if (iep.IepExtraCurriculars.Count > 0)
                         {

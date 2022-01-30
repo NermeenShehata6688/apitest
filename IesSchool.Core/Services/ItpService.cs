@@ -551,6 +551,14 @@ namespace IesSchool.Core.Services
                         itpProgressReportDto.ParamedicalServiceId = itp.ParamedicalService == null ? 0 : itp.ParamedicalService.Id;
                         itpProgressReportDto.ParamedicalServiceName = itp.ParamedicalService == null ? "" : itp.ParamedicalService.Name;
 
+
+                        itpProgressReportDto.ItpId = itp.Id;
+                        itpProgressReportDto.StudentId = itp.StudentId;
+                        itpProgressReportDto.AcadmicYearId = itp.AcadmicYearId;
+                        itpProgressReportDto.TermId = itp.TermId;
+                        itpProgressReportDto.ParamedicalServiceId = itp.ParamedicalServiceId;
+                        itpProgressReportDto.TherapistId = itp.TherapistId;
+
                         if (itp.ItpGoalObjectives.Count > 0)
                         {
                             itpProgressReportDto.ItpObjectiveProgressReports = new List<ItpObjectiveProgressReportDto>();
