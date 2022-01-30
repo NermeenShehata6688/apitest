@@ -369,7 +369,9 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.ParamedicalService, op => op.Ignore())
             .ForMember(x => x.HeadOfEducation, op => op.Ignore());
 
-            CreateMap<ItpObjectiveProgressReport, ItpObjectiveProgressReportDto>().ReverseMap()
+            CreateMap<ItpObjectiveProgressReport, ItpObjectiveProgressReportDto>()
+             .ForMember(dist => dist.ItpObjectiveNote, opt => opt.MapFrom(c => c.ItpObjective == null ? "" : c.ItpObjective.ObjectiveNote == null ? "" : c.ItpObjective.ObjectiveNote))
+                .ReverseMap()
             .ForMember(x => x.ItpProgressReport, op => op.Ignore())
             .ForMember(x => x.ItpObjective, op => op.Ignore());
 

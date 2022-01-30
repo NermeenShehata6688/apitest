@@ -3886,12 +3886,20 @@ namespace IesSchool.Core.Services
 						#endregion
 						#region signature
 						lastRow = worksheet.Rows.Length+1;
+
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["H" + (lastRow + 1) + ":H" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AL" + (lastRow + 1) + ":AL" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["AD" + (lastRow + 1) + ":AD" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+						worksheet.Range["BE" + (lastRow + 1) + ":BE" + (lastRow + 2)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
 						worksheet.Range["A" + (lastRow + 1) + ":H" + (lastRow + 1)].Merge();
 						worksheet.Range["A" + (lastRow + 1) + ":H" + (lastRow + 1)].Text = "Therapist:";
 						worksheet.Range["A" + (lastRow + 1) + ":H" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 						worksheet.Range["I" + (lastRow + 1) + ":AD" + (lastRow + 1)].Merge();
-						worksheet.Range["I" + (lastRow + 1) + ":AD" + (lastRow + 1)].Text = "sss";
+						worksheet.Range["I" + (lastRow + 1) + ":AD" + (lastRow + 1)].Text = itpTherapistName;
 
 						
 
@@ -3900,22 +3908,27 @@ namespace IesSchool.Core.Services
 						worksheet.Range["AE" + (lastRow + 1) + ":AL" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
                         worksheet.Range["AM" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
-                        worksheet.Range["AM" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = "";
+                        worksheet.Range["AM" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = itpHeadOfEducationName;
 
-                        //worksheet.Range["T" + (lastRow + 7) + ":AA" + (lastRow + 7)].Merge();
-                        //worksheet.Range["T" + (lastRow + 7) + ":AA" + (lastRow + 7)].Text = "Signature:";
-                        //worksheet.Range["T" + (lastRow + 7) + ":AA" + (lastRow + 7)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+						worksheet.Range["A" + (lastRow + 2) + ":H" + (lastRow + 2)].Merge();
+						worksheet.Range["A" + (lastRow + 2) + ":H" + (lastRow + 2)].Text = "Signature :";
+						worksheet.Range["A" + (lastRow + 2) + ":H" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
-                        //worksheet.Range["AB" + (lastRow + 7) + ":AL" + (lastRow + 7)].Merge();
-                        //worksheet.Range["AB" + (lastRow + 7) + ":AL" + (lastRow + 7)].Text = "";
-
-                        //worksheet.Range["AM" + (lastRow + 7) + ":AT" + (lastRow + 7)].Merge();
-                        //worksheet.Range["AM" + (lastRow + 7) + ":AT" + (lastRow + 7)].Text = "Signature:";
-                        //worksheet.Range["AM" + (lastRow + 7) + ":AT" + (lastRow + 7)].CellStyle.Color = Color.FromArgb(255, 205, 205);
-                        #endregion
+						worksheet.Range["I" + (lastRow + 2) + ":AD" + (lastRow + 2)].Merge();
+						worksheet.Range["I" + (lastRow + 2) + ":AD" + (lastRow + 2)].Text = "";
 
 
-                    }
+
+						worksheet.Range["AE" + (lastRow + 2) + ":AL" + (lastRow + 2)].Merge();
+						worksheet.Range["AE" + (lastRow + 2) + ":AL" + (lastRow + 2)].Text = "Signature :";
+						worksheet.Range["AE" + (lastRow + 2) + ":AL" + (lastRow + 2)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+						worksheet.Range["AM" + (lastRow + 2) + ":BE" + (lastRow + 2)].Merge();
+						worksheet.Range["AM" + (lastRow + 2) + ":BE" + (lastRow + 2)].Text = "";
+						#endregion
+
+
+					}
                     else
 					{
 						MemoryStream stream1 = new MemoryStream();
