@@ -79,6 +79,8 @@ namespace IesSchool.Context.Models
         public virtual DbSet<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; } = null!;
         public virtual DbSet<ItpProgressReport> ItpProgressReports { get; set; } = null!;
         public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
+        public virtual DbSet<Ixp> Ixps { get; set; } = null!;
+        public virtual DbSet<IxpExtraCurricular> IxpExtraCurriculars { get; set; } = null!;
         public virtual DbSet<TherapistParamedicalService> TherapistParamedicalServices { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserAssistant> UserAssistants { get; set; } = null!;
@@ -941,7 +943,69 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.ParamedicalStrategyId)
                     .HasConstraintName("FK_ITP_Strategy_Paramedical_Strategy");
             });
+            modelBuilder.Entity<Ixp>(entity =>
+            {
+                entity.ToTable("IXP");
 
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DateOfPreparation).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
+
+                entity.HasOne(d => d.AcadmicYear)
+                    .WithMany(p => p.Ixps)
+                    .HasForeignKey(d => d.AcadmicYearId)
+                    .HasConstraintName("FK_IXP_AcadmicYears");
+
+                entity.HasOne(d => d.Term)
+                   .WithMany(p => p.Ixps)
+                   .HasForeignKey(d => d.AcadmicYearId)
+                   .HasConstraintName("FK_IXP_Terms");
+
+                entity.HasOne(d => d.HeadOfDepartment)
+                    .WithMany(p => p.IxpHeadOfDepartments)
+                    .HasForeignKey(d => d.HeadOfDepartmentId)
+                    .HasConstraintName("FK_IXP_HeadOfDepartment");
+
+                entity.HasOne(d => d.HeadOfEducation)
+                    .WithMany(p => p.IxpHeadOfEducations)
+                    .HasForeignKey(d => d.HeadOfEducationId)
+                    .HasConstraintName("FK_IXP_HeadOfEducation");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.Ixps)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_IXP_Students");
+            });
+
+            modelBuilder.Entity<IxpExtraCurricular>(entity =>
+            {
+                entity.ToTable("IXP_ExtraCurricular");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ExtraCurricular)
+                    .WithMany(p => p.IxpExtraCurriculars)
+                    .HasForeignKey(d => d.ExtraCurricularId)
+                    .HasConstraintName("FK_IXP_ExtraCurricular_ExtraCurricular");
+
+                entity.HasOne(d => d.Ixp)
+                    .WithMany(p => p.IxpExtraCurriculars)
+                    .HasForeignKey(d => d.IxpId)
+                    .HasConstraintName("FK_IXP_ExtraCurricular_IXP");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.IxpExtraCurriculars)
+                    .HasForeignKey(d => d.TeacherId)
+                    .HasConstraintName("FK_IXP_ExtraCurricular_User");
+            });
 
             modelBuilder.Entity<Objective>(entity =>
             {

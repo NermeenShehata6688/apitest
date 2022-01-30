@@ -377,6 +377,39 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.ItpObjective, op => op.Ignore());
 
             #endregion
+            #region IXP
+            CreateMap<Ixp, IxpDto>()
+           .ForMember(dist => dist.IxpExtraCurricularsName, opt => opt.MapFrom(c => c.IxpExtraCurriculars.ToList().Select(x => x.ExtraCurricular == null ? "" : x.ExtraCurricular.Name).Distinct()))
+
+            .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name == null ? "" : c.AcadmicYear.Name))
+            .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Term == null ? "" : c.Term.Name == null ? "" : c.Term.Name))
+
+             .ForMember(dist => dist.StudentCodeName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
+             .ForMember(dist => dist.StudentBirthdayName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth == null ? "" : c.Student.DateOfBirth.Value.ToShortDateString()))
+             .ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department == null ? "" : c.Student.Department.Name))
+             .ForMember(dist => dist.HeadOfEducationName, opt => opt.MapFrom(c => c.HeadOfEducation == null ? "" : c.HeadOfEducation.Name))
+            .ReverseMap()
+
+             .ForMember(x => x.Student, op => op.Ignore())
+             .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
+             .ForMember(x => x.HeadOfEducation, op => op.Ignore())
+             .ForMember(x => x.AcadmicYear, op => op.Ignore())
+             .ForMember(x => x.Term, op => op.Ignore());
+
+            CreateMap<IxpExtraCurricular, IxpExtraCurricularDto>()
+             .ForMember(dist => dist.ExtraCurricularName, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" : c.ExtraCurricular.Name))
+             .ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name == null ? "" : c.Teacher.Name))
+             
+            .ReverseMap()
+            .ForMember(x => x.Ixp, op => op.Ignore())
+            .ForMember(x => x.ExtraCurricular, op => op.Ignore())
+            .ForMember(x => x.Teacher, op => op.Ignore());
+
+            CreateMap<IxpHelper, IxpHelperDto>().ReverseMap();
+
+
+
+            #endregion
             #region General
             CreateMap<ApplicationGroup, ApplicationGroupDto>().ReverseMap();
             CreateMap<ApplicationGroupRole, ApplicationGroupRoleDto>().ReverseMap();

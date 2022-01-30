@@ -36,7 +36,7 @@ namespace IesSchool.Core.Services
                     AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-                    AllStrategies = _uow.GetRepository<ParamedicalStrategy>().GetList(),
+                    //AllStrategies = _uow.GetRepository<ParamedicalStrategy>().GetList(),
                 };
                 var mapper = _mapper.Map<ItpHelperDto>(itpHelper);
 
