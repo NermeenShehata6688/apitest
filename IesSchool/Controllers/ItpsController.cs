@@ -92,11 +92,11 @@ namespace IesSchool.Controllers
 
         // DELETE api/<ItpsController>/5
         [HttpDelete]
-        public IActionResult DeleteItp(List<ItpDto> itpDto)
+        public IActionResult DeleteItp(int itpId)
         {
             try
             {
-                var all = _itpService.DeleteItp(itpDto);
+                var all = _itpService.DeleteItp(itpId);
                 return Ok(all);
             }
             catch (Exception)

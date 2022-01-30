@@ -25,5 +25,6 @@ namespace IesSchool.Core.IServices
         public FileStreamResult ItpProgressReport(int itpProgressReportId);
         public string ItpReportHTML(int itpId);
         public string ItpProgressReportHTML(int itpProgressReportId);
+        public FileStreamResult IxpReport(int ixpId);
     }
 }

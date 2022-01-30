@@ -14,7 +14,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetItpById(int itpId);
         public ResponseDto AddItp(ItpDto itpDto);
         public ResponseDto EditItp(ItpDto itpDto);
-        public ResponseDto DeleteItp(List<ItpDto> itpDto);
+        public ResponseDto DeleteItp(int itpId);
         public ResponseDto ItpStatus(int itpId, int status);
         public ResponseDto ItpIsPublished(int itpId, bool isPublished);
 

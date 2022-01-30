@@ -179,6 +179,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public FileStreamResult IxpReport(int ixpId)
+        {
+            try
+            {
+                var all = _reportService.IxpReport(ixpId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

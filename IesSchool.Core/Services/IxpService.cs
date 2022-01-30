@@ -157,19 +157,19 @@ namespace IesSchool.Core.Services
             }
 
         }
-        public ResponseDto DeleteIxp(List<IxpDto> ixpDto)
+        public ResponseDto DeleteIxp(int ixpId)
         {
             try
             {
-                if (ixpDto != null)
+
+                if (ixpId > 0)
                 {
-                    foreach (var ixp in ixpDto)
-                    {
-                        ixp.IsDeleted = true;
-                        ixp.DeletedOn = DateTime.Now;
-                        var mapper = _mapper.Map<Ixp>(ixp);
-                        _uow.GetRepository<Ixp>().Update(mapper);
-                    }
+                    var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId);
+                    ixp.IsDeleted = true;
+                    ixp.DeletedOn = DateTime.Now;
+                    var mapper = _mapper.Map<Ixp>(ixp);
+                    _uow.GetRepository<Ixp>().Update(mapper);
+
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Ixp Deleted Seccessfuly" };
                 }

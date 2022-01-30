@@ -168,19 +168,18 @@ namespace IesSchool.Core.Services
             }
 
         }
-        public ResponseDto DeleteItp(List<ItpDto> itpDto)
+        public ResponseDto DeleteItp(int itpId)
         {
             try
             {
-                if (itpDto != null)
+                if (itpId >0)
                 {
-                    foreach (var itp in itpDto)
-                    {
+                    var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId);
                         itp.IsDeleted = true;
                         itp.DeletedOn = DateTime.Now;
                         var mapper = _mapper.Map<Itp>(itp);
                         _uow.GetRepository<Itp>().Update(mapper);
-                    }
+                    
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Itp Deleted Seccessfuly" };
                 }
@@ -666,6 +665,34 @@ namespace IesSchool.Core.Services
         //    }
 
 
+        //}
+
+        //public ResponseDto DeleteItp(List<ItpDto> itpDto)
+        //{
+        //    try
+        //    {
+        //        if (itpDto != null)
+        //        {
+        //            foreach (var itp in itpDto)
+        //            {
+        //                itp.IsDeleted = true;
+        //                itp.DeletedOn = DateTime.Now;
+        //                var mapper = _mapper.Map<Itp>(itp);
+        //                _uow.GetRepository<Itp>().Update(mapper);
+        //            }
+        //            _uow.SaveChanges();
+        //            return new ResponseDto { Status = 1, Message = "Itp Deleted Seccessfuly" };
+        //        }
+        //        else
+        //        {
+        //            return new ResponseDto { Status = 1, Message = "null" };
+        //        }
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
         //}
         #endregion
     }
