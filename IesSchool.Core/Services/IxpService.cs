@@ -103,11 +103,12 @@ namespace IesSchool.Core.Services
             try
             {
                 var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
-                    x => x.Include(x => x.IxpExtraCurriculars)
+                    x => x
+                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
-                     .Include(s => s.Term)
-                     .Include(s => s.HeadOfEducation));
+                     .Include(s => s.Term));
                 var mapper = _mapper.Map<IxpDto>(ixp);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -332,9 +333,8 @@ namespace IesSchool.Core.Services
                 if (ixpExtraCurricularId != 0)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
-                    //var cmd = $"delete from ITP_GoalObjective where ItpGoalId={goalId}";
-                    //_iesContext.Database.ExecuteSqlRaw(cmd);
-
+                    var cmd = $"delete from IXP_ExtraCurricular where Id={ixpExtraCurricularId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
 
                     transaction.Commit();
 

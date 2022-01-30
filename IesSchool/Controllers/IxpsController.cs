@@ -128,5 +128,71 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetIxpExtraCurricularByIxpId(int ixpId)
+        {
+            try
+            {
+                var all = _ixpService.GetIxpExtraCurricularByIxpId(ixpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetIxpExtraCurricularById(int ixpExtraCurricularId)
+        {
+            try
+            {
+                var all = _ixpService.GetIxpExtraCurricularById(ixpExtraCurricularId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public IActionResult PostIxpExtraCurricular(IxpExtraCurricularDto ixpExtraCurricularDto)
+        {
+            try
+            {
+                var all = _ixpService.AddIxpExtraCurricular(ixpExtraCurricularDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult PutIxpExtraCurricular(IxpExtraCurricularDto ixpExtraCurricularDto)
+        {
+            try
+            {
+                var all = _ixpService.EditIxpExtraCurricular(ixpExtraCurricularDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteIxpExtraCurricular(int ixpExtraCurricularId)
+        {
+            try
+            {
+                var all = _ixpService.DeleteIxpExtraCurricular(ixpExtraCurricularId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
