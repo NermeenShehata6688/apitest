@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
     public partial class ExtraCurricular
     {
         public ExtraCurricular()
         {
-            IepExtraCurriculars = new HashSet<IepExtraCurricular>();
-            ProgressReportExtraCurriculars = new HashSet<ProgressReportExtraCurricular>();
-            IxpExtraCurriculars = new HashSet<IxpExtraCurricular>();
             UserExtraCurriculars = new HashSet<UserExtraCurricular>();
         }
 
@@ -22,10 +19,6 @@ namespace IesSchool.Context.Models
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
 
-        public virtual ICollection<IepExtraCurricular> IepExtraCurriculars { get; set; }
-        public virtual ICollection<ProgressReportExtraCurricular> ProgressReportExtraCurriculars { get; set; }
-        public virtual ICollection<IxpExtraCurricular> IxpExtraCurriculars { get; set; }
         public virtual ICollection<UserExtraCurricular> UserExtraCurriculars { get; set; }
-
     }
 }

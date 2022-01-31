@@ -29,6 +29,7 @@ namespace IesSchool.Context.Models
             TherapistParamedicalServices = new HashSet<TherapistParamedicalService>();
             UserAssistants = new HashSet<UserAssistant>();
             UserAttachments = new HashSet<UserAttachment>();
+            UserExtraCurriculars = new HashSet<UserExtraCurricular>();
         }
 
         public int Id { get; set; }
@@ -82,5 +83,6 @@ namespace IesSchool.Context.Models
         public virtual ICollection<TherapistParamedicalService> TherapistParamedicalServices { get; set; }
         public virtual ICollection<UserAssistant> UserAssistants { get; set; }
         public virtual ICollection<UserAttachment> UserAttachments { get; set; }
+        public virtual ICollection<UserExtraCurricular> UserExtraCurriculars { get; set; }
     }
 }

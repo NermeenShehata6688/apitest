@@ -83,6 +83,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<IxpExtraCurricular> IxpExtraCurriculars { get; set; } = null!;
         public virtual DbSet<TherapistParamedicalService> TherapistParamedicalServices { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UserExtraCurricular> UserExtraCurriculars { get; set; } = null!;
         public virtual DbSet<UserAssistant> UserAssistants { get; set; } = null!;
         public virtual DbSet<UserAttachment> UserAttachments { get; set; } = null!;
         public virtual DbSet<UserAttachmentBinary> UserAttachmentBinaries { get; set; } = null!;
@@ -1486,6 +1487,20 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.NationalityId)
                     .HasConstraintName("FK_User_Country");
+            });
+            modelBuilder.Entity<UserExtraCurricular>(entity =>
+            {
+                entity.ToTable("User_ExtraCurricular");
+
+                entity.HasOne(d => d.ExtraCurricular)
+                    .WithMany(p => p.UserExtraCurriculars)
+                    .HasForeignKey(d => d.ExtraCurricularId)
+                    .HasConstraintName("FK_User_ExtraCurricular_User_ExtraCurricular");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserExtraCurriculars)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_User_ExtraCurricular_User");
             });
 
             modelBuilder.Entity<UserAssistant>(entity =>
