@@ -316,8 +316,8 @@ namespace IesSchool.Controllers
 
                 try
                 {
-                    var user = await _userManager.FindByNameAsync(model.UserName );
-                    //var user = await _userManager.FindByIdAsync(model.Id );
+                  var user = await _userManager.FindByNameAsync(model.UserName );
+                  //  var user = await _userManager.FindByIdAsync(model.Id. );
                     //user.FullName = model.FullName;
                     user.UserName = model.UserName;
                     user.Email = model.Email;
