@@ -29,6 +29,7 @@ namespace IesSchool.Core.Dto
         public string?[] EvaluationProcessName { get; set; }
         //public int?[] ObjSkillsIds { get; set; }
         public int?[] ObjSkillsNumbers { get; set; }
+        public string?[] ObjSkillsNames { get; set; }
 
 
     }

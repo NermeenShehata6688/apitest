@@ -244,6 +244,25 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto IxpDuplicate(int ixpId)
+        {
+            try
+            {
+                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
+                    x => x
+                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
+                     .Include(s => s.Student).ThenInclude(s => s.Department)
+                     .Include(s => s.AcadmicYear)
+                     .Include(s => s.Term));
+                var mapper = _mapper.Map<IxpDto>(ixp);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
 
         public ResponseDto GetIxpExtraCurricularByIxpId(int ixpId)
         {

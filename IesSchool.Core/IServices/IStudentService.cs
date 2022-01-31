@@ -35,7 +35,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteStudentPhone(int phoneId);
         public ResponseDto IsSuspended(int studentId, bool isSuspended);
         public ResponseDto IsActive(int studentId, bool isActive);
-        public bool IsStudentCodeExist(int StudentCode);
+        public bool IsStudentCodeExist(int StudentCode, int? StudentId);
+        public ResponseDto GetStudentHistoricalSkills(int studentId);
 
     }
 }

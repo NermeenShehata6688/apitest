@@ -131,6 +131,19 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public IActionResult ItpDuplicate(int itpId)
+        {
+            try
+            {
+                var all = _itpService.ItpDuplicate(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public IActionResult GetItpObjectiveByGoalId(int itpGoalId)
         {
             try

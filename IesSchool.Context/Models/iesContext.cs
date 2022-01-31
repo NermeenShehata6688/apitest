@@ -68,6 +68,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<State> States { get; set; } = null!;
         public virtual DbSet<Strand> Strands { get; set; } = null!;
         public virtual DbSet<Student> Students { get; set; } = null!;
+        public virtual DbSet<StudentExtraTeacher> StudentExtraTeachers { get; set; } = null!;
         public virtual DbSet<StudentAttachment> StudentAttachments { get; set; } = null!;
         public virtual DbSet<StudentAttachmentBinary> StudentAttachmentBinaries { get; set; } = null!;
         public virtual DbSet<StudentHistoricalSkill> StudentHistoricalSkills { get; set; } = null!;
@@ -1356,6 +1357,20 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.Students)
                     .HasForeignKey(d => d.TeacherId)
                     .HasConstraintName("FK_Students_Teacher");
+            });
+            modelBuilder.Entity<StudentExtraTeacher>(entity =>
+            {
+                entity.ToTable("Student_ExtraTeacher");
+
+                entity.HasOne(d => d.ExtraTeacher)
+                    .WithMany(p => p.StudentExtraTeachers)
+                    .HasForeignKey(d => d.ExtraTeacherId)
+                    .HasConstraintName("FK_Student_ExtraTeacher_User");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.StudentExtraTeachers)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK_Student_ExtraTeacher_Students");
             });
 
             modelBuilder.Entity<StudentAttachment>(entity =>

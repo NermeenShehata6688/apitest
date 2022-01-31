@@ -20,6 +20,7 @@ namespace IesSchool.Context.Models
             StudentAttachments = new HashSet<StudentAttachment>();
             StudentHistoricalSkills = new HashSet<StudentHistoricalSkill>();
             StudentTherapists = new HashSet<StudentTherapist>();
+            StudentExtraTeachers = new HashSet<StudentExtraTeacher>();
         }
 
         public int Id { get; set; }
@@ -96,5 +97,6 @@ namespace IesSchool.Context.Models
         public virtual ICollection<StudentAttachment> StudentAttachments { get; set; }
         public virtual ICollection<StudentHistoricalSkill> StudentHistoricalSkills { get; set; }
         public virtual ICollection<StudentTherapist> StudentTherapists { get; set; }
+        public virtual ICollection<StudentExtraTeacher> StudentExtraTeachers { get; set; }
     }
 }

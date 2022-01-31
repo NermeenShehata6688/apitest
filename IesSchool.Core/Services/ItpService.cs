@@ -253,8 +253,28 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto ItpDuplicate(int itpId)
+        {
+            try
+            {
+                var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
+                    x => x.Include(x => x.ItpGoals.Where(s => s.IsDeleted != true)).ThenInclude(x => x.ItpGoalObjectives.Where(s => s.IsDeleted != true))
+                    .Include(x => x.ItpGoalObjectives)
+                     .Include(s => s.Student).ThenInclude(s => s.Department)
+                     .Include(s => s.Therapist)
+                     .Include(s => s.AcadmicYear)
+                     .Include(s => s.Term)
+                     .Include(s => s.ParamedicalService)
+                     .Include(s => s.HeadOfEducation));
+                var mapper = _mapper.Map<ItpDto>(itp);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
 
-       
         public ResponseDto GetItpGoals()
         {
             try

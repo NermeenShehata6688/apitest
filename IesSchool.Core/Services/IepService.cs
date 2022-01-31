@@ -1306,7 +1306,80 @@ namespace IesSchool.Core.Services
             }
 
         }
-       
+
+
+        public ResponseDto GetProgressReportParamedicalByParamedicalServiceId(int paramedicalServiceId)
+        {
+            try
+            {
+                var progressReportParamedicals = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.ParamedicalServiceId == paramedicalServiceId , null,
+                    x=> x.Include(x=> x.ProgressReport).ThenInclude(x => x.Student)
+                    .Include(x => x.ProgressReport).ThenInclude(x => x.AcadmicYear)
+                    .Include(x => x.ProgressReport).ThenInclude(x => x.Term)
+                    .Include(x => x.ParamedicalService));
+
+                var mapper = _mapper.Map<PaginateDto<ProgressReportParamedicalDto>>(progressReportParamedicals);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetProgressReportParamedicalById(int progressReportParamedicalId)
+        {
+            try
+            {
+                var progressReportParamedicals = _uow.GetRepository<ProgressReportParamedical>().Single(x => x.Id == progressReportParamedicalId, null,
+                    x => x.Include(x => x.ProgressReport).ThenInclude(x => x.Student)
+                    .Include(x => x.ProgressReport).ThenInclude(x => x.AcadmicYear)
+                    .Include(x => x.ProgressReport).ThenInclude(x => x.Term)
+                    .Include(x => x.ParamedicalService));
+
+                var mapper = _mapper.Map<ProgressReportParamedicalDto>(progressReportParamedicals);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto EditProgressReportParamedical(ProgressReportParamedicalDto progressReportParamedicalDto)
+        {
+            try
+            {
+                if (progressReportParamedicalDto!= null)
+                {
+                    var mapper = _mapper.Map<ProgressReportParamedical>(progressReportParamedicalDto);
+                    _uow.GetRepository<ProgressReportParamedical>().Update(mapper);
+                    _uow.SaveChanges();
+
+                    return new ResponseDto { Status = 1, Message = "(Progress Report Paramedical Updated Seccessfuly", Data = progressReportParamedicalDto };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = "null" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto DeleteProgressReportParamedicalt(int progressReportParamedicalId)
+        {
+            try
+            {
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"delete from ProgressReportParamedical where Id={progressReportParamedicalId}" ;
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                transaction.Commit();
+                return new ResponseDto { Status = 1, Message = "(Progress Report Paramedical Deleted Seccessfuly" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
     }
 }
 

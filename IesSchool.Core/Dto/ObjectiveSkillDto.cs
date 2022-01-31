@@ -12,5 +12,6 @@ namespace IesSchool.Core.Dto
         public int? ObjectiveId { get; set; }
         public int? SkillId { get; set; }
         public int? SkillNumber { get; set; }
+        public string? SkillName { get; set; }
     }
 }

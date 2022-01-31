@@ -30,6 +30,7 @@ namespace IesSchool.Context.Models
             UserAssistants = new HashSet<UserAssistant>();
             UserAttachments = new HashSet<UserAttachment>();
             UserExtraCurriculars = new HashSet<UserExtraCurricular>();
+            StudentExtraTeachers = new HashSet<StudentExtraTeacher>();
         }
 
         public int Id { get; set; }
@@ -84,5 +85,6 @@ namespace IesSchool.Context.Models
         public virtual ICollection<UserAssistant> UserAssistants { get; set; }
         public virtual ICollection<UserAttachment> UserAttachments { get; set; }
         public virtual ICollection<UserExtraCurricular> UserExtraCurriculars { get; set; }
+        public virtual ICollection<StudentExtraTeacher> StudentExtraTeachers { get; set; }
     }
 }
