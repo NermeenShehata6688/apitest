@@ -37,6 +37,7 @@ namespace IesSchool.Core.Services
                     AllExTeacher = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                    UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<IxpHelperDto>(ixpHelper);
 
