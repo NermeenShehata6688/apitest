@@ -9,9 +9,9 @@ namespace IesSchool.Context.Models
 {
     public partial class iesContext : DbContext
     {
-        public iesContext()
-        {
-        }
+        //public iesContext()
+        //{
+        //}
 
         public iesContext(DbContextOptions<iesContext> options)
             : base(options)

@@ -208,7 +208,7 @@ namespace IesSchool.Core.Services
                 user.ImageBinary = null;
                 var mapper = _mapper.Map<UserDto>(user);
                
-                var appUser = _userManager.Users.SingleOrDefault(r => r.Email == user.Email);
+                var appUser = _userManager.Users.FirstOrDefault(r => r.Email == user.Email);
                 if (appUser!= null)
                 {
                     var roles = _userManager.GetRolesAsync(appUser).Result;
@@ -236,20 +236,19 @@ namespace IesSchool.Core.Services
         }
         public async Task<ResponseDto>  AddUser (IFormFile file, UserDto userDto)
         {
+            //using var transaction = _iesContext.Database.BeginTransaction();
+
             try
             {
 
                 if (userDto != null)
                 {
-                    using var transaction = _iesContext.Database.BeginTransaction();
-
                     MemoryStream ms = new MemoryStream();
                     file.CopyTo(ms);
                     userDto.ImageBinary = ms.ToArray();
                     ms.Close();
                     ms.Dispose();
                     //upload file in local directory
-                    //AspNetUser aspNetUser = new AspNetUser();
                     var result = _ifileService.UploadFile(file);
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
@@ -258,19 +257,7 @@ namespace IesSchool.Core.Services
                     mapper.IsSuspended = false;
                     _uow.GetRepository<User>().Add(mapper);
                     _uow.SaveChanges();
-
-
-                    //aspNetUser.Id = mapper.Id;
-                    //aspNetUser.EmailConfirmed = false;
-                    //aspNetUser.PhoneNumberConfirmed = false;
-                    //aspNetUser.TwoFactorEnabled = false;
-                    //aspNetUser.LockoutEnabled = false;
-                    //aspNetUser.AccessFailedCount = 0;
-                    //aspNetUser.UserName = userDto.UserName==null?"": userDto.UserName;
-                    //aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
-                    // _uow.GetRepository<AspNetUser>().Add(aspNetUser);
-
-
+                    userDto.Id = mapper.Id;
                     var user = new IdentityUser<int>
                     {
                         UserName = userDto.UserName,
@@ -278,6 +265,9 @@ namespace IesSchool.Core.Services
                         Id = mapper.Id
                         //Email = model.Email,
                     };
+                    //transaction.CreateSavepoint("AfterSavingUser");
+
+                    //transaction.Commit();
 
 
 
@@ -288,12 +278,17 @@ namespace IesSchool.Core.Services
                         //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
                         //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
                     }
+                    else
+                    {
+                        var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
+                        _ = _iesContext.Database.ExecuteSqlRaw(cmd);
+
+                    }
                     //_uow.SaveChanges();
 
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
                     userDto.FullPath = result.virtualPath;
-                    transaction.Commit();
 
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
                 }
@@ -303,19 +298,23 @@ namespace IesSchool.Core.Services
             }
             catch (Exception ex)
             {
+                //transaction.RollbackToSavepoint("AfterSavingUser");
+                var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
+                _ = _iesContext.Database.ExecuteSqlRaw(cmd);
+
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }   
-        public ResponseDto AddUser2( UserDto userDto)
+        public async Task<ResponseDto> AddUser2( UserDto userDto)
         {
-            try
-            {
-
-                if (userDto != null)
+           //using var transaction = _iesContext.Database.BeginTransaction();
+                try
                 {
-                    using var transaction = _iesContext.Database.BeginTransaction();
 
-                    AspNetUser aspNetUser = new AspNetUser();
+                    if (userDto != null)
+                    {
+                    //transaction.CreateSavepoint("AfterSavingUser");
+
                     
                     var mapper = _mapper.Map<User>(userDto);
                     mapper.IsDeleted = false;
@@ -324,21 +323,33 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<User>().Add(mapper);
                     _uow.SaveChanges();
 
-                    aspNetUser.Id = mapper.Id;
-                    aspNetUser.EmailConfirmed = false;
-                    aspNetUser.PhoneNumberConfirmed = false;
-                    aspNetUser.TwoFactorEnabled = false;
-                    aspNetUser.LockoutEnabled = false;
-                    aspNetUser.AccessFailedCount = 0;
-                    aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
-                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
-                    _uow.GetRepository<AspNetUser>().Add(aspNetUser);
-                    _uow.SaveChanges();
+                    userDto.Id = mapper.Id;
+
+
+                    var user = new IdentityUser<int>
+                    {
+                        UserName = userDto.UserName,
+                        Email = userDto.Email,
+                        Id = mapper.Id
+                        //Email = model.Email,
+                    };
+
+                    var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
+
+                    if (resultt.Succeeded)
+                    {
+                        //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+                        //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
+                    }
+                    else
+                    {
+                        var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
+                        _ = _iesContext.Database.ExecuteSqlRaw(cmd);
+                        //transaction.RollbackToSavepoint("AfterSavingUser");
+                    }
 
                     userDto.Id = mapper.Id;
-                    //userDto.ImageBinary = null;
-                    //userDto.FullPath = result.virtualPath;
-                    transaction.Commit();
+            
 
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
                 }
@@ -348,8 +359,11 @@ namespace IesSchool.Core.Services
             }
             catch (Exception ex)
             {
+                var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
+                _ = _iesContext.Database.ExecuteSqlRaw(cmd);
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
+
         }
         public ResponseDto EditUser(IFormFile file, UserDto userDto)
         {

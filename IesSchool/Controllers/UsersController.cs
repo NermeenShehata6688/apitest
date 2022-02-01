@@ -141,12 +141,13 @@ namespace IesSchool.Controllers
                 {
                     var file = Request.Form.Files[0];
                     var all = _userService.AddUser(file , modelData);
-                    return Ok(all);
+                    return Ok(all.Result);
+
                 }
                 else
                 {
                     var all = _userService.AddUser2(modelData);
-                    return Ok(all);
+                    return Ok(all.Result);
                 }
             }
             catch (Exception ex)

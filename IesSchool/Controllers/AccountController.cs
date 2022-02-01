@@ -85,7 +85,7 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Login([FromBody] LoginDto model)
+        public async Task<ResponseDto> Login([FromBody] LoginDto model)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace IesSchool.Controllers
 
                     var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Email);
                     var roles = _userManager.GetRolesAsync(appUser).Result;
-                    var token = await GenerateJwtToken(model.Email, appUser);
+                   // var token = await GenerateJwtToken(model.Email, appUser);
                     //_userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Name, appUser.UserName));
                     var user = _userManager.GetUserAsync(User).Result;
 
@@ -104,14 +104,14 @@ namespace IesSchool.Controllers
 
                     var CreateBy = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     // will give the user's userId
-                    return new { token = token, roles = roles };
+                    return new ResponseDto {Status=1, Data = new{ roles = roles ,UserName= appUser.UserName,} };
                 }
-                return new { error = "Invalid Username or Password" };
+                return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
             catch (Exception lo)
             {
 
-                return new { error = "Invalid Username or Password", ex = lo };
+                return new ResponseDto { Errormessage = "Invalid Username or Password",Status=0, Data = lo };
             }
         }
 
