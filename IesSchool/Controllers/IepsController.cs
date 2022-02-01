@@ -199,7 +199,7 @@ namespace IesSchool.Controllers
         }
 
         // PUT api/<IepsController>/5
-        [HttpPut]
+        [HttpPut]   
         public IActionResult PutGoal(GoalDto goalDto)
         {
             try
@@ -560,6 +560,60 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iepService.CreateIepProgressReport(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetProgressReportParamedicalByParamedicalServiceId(int paramedicalServiceId)
+        {
+            try
+            {
+                var all = _iepService.GetProgressReportParamedicalByParamedicalServiceId(paramedicalServiceId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetProgressReportParamedicalById(int progressReportParamedicalId)
+        {
+            try
+            {
+                var all = _iepService.GetProgressReportParamedicalById(progressReportParamedicalId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public IActionResult PutIProgressReportParamedical(ProgressReportParamedicalDto progressReportParamedicalDto)
+        {
+            try
+            {
+                var all = _iepService.EditProgressReportParamedical(progressReportParamedicalDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteProgressReportParamedicalt(int progressReportParamedicalId)
+        {
+            try
+            {
+                var all = _iepService.DeleteProgressReportParamedicalt(progressReportParamedicalId);
                 return Ok(all);
             }
             catch (Exception)

@@ -37,6 +37,7 @@ namespace IesSchool.Core.Services
                     AllExTeacher = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                    UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<IxpHelperDto>(ixpHelper);
 
@@ -241,6 +242,25 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public ResponseDto IxpDuplicate(int ixpId)
+        {
+            try
+            {
+                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
+                    x => x
+                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
+                     .Include(s => s.Student).ThenInclude(s => s.Department)
+                     .Include(s => s.AcadmicYear)
+                     .Include(s => s.Term));
+                var mapper = _mapper.Map<IxpDto>(ixp);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
 

@@ -16,7 +16,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<AcadmicYear> AllAcadmicYears { get; set; }
         public IPaginate<Term> AllTerms { get; set; }
         public IPaginate<User> AllHeadOfEducations { get; set; }
-      //  public IPaginate<ParamedicalStrategy> AllStrategies { get; set; }
+        public IPaginate<TherapistParamedicalService> TherapistParamedicalService { get; set; }
         public IPaginate<Department> AllDepartments { get; set; }
     }
     public class ItpHelperDto
@@ -27,7 +27,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<AcadmicYearDto> AllAcadmicYears { get; set; }
         public PaginateDto<TermDto> AllTerms { get; set; }
         public PaginateDto<UserDto> AllHeadOfEducations { get; set; }
-       // public PaginateDto<ParamedicalStrategyDto> AllStrategies { get; set; }
+       public PaginateDto<TherapistParamedicalServiceDto> TherapistParamedicalService { get; set; }
         public PaginateDto<DepartmentDto> AllDepartments { get; set; }
     }
 }

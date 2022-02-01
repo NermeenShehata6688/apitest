@@ -319,11 +319,25 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult IsStudentCodeExist(int StudentCode)
+        public IActionResult IsStudentCodeExist(int StudentCode, int? StudentId)
         {
             try
             {
-                var all = _studentService.IsStudentCodeExist(StudentCode);
+                var all = _studentService.IsStudentCodeExist(StudentCode, StudentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [ResponseCache(Duration = 800)]
+        [HttpGet]
+        public IActionResult GetStudentHistoricalSkills(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetStudentHistoricalSkills(studentId);
                 return Ok(all);
             }
             catch (Exception)

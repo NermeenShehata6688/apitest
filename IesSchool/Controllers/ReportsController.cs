@@ -193,5 +193,19 @@ namespace IesSchool.Controllers
             }
         }
 
+        [HttpGet]
+        public string IxpReportHTML(int ixpId)
+        {
+            try
+            {
+                var all = _reportService.IxpReportHTML(ixpId);
+                return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

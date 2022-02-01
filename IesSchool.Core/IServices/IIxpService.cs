@@ -17,8 +17,9 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteIxp(int ixpId);
         public ResponseDto IxpStatus(int ixpId, int status);
         public ResponseDto IxpIsPublished(int ixpId, bool isPublished);
+        public ResponseDto IxpDuplicate(int ixpId);
 
-       // public ResponseDto GetIxpExtraCurriculars();
+        // public ResponseDto GetIxpExtraCurriculars();
         public ResponseDto GetIxpExtraCurricularByIxpId(int ixpId);
         public ResponseDto GetIxpExtraCurricularById(int ixpExtraCurricularId);
         public ResponseDto AddIxpExtraCurricular(IxpExtraCurricularDto ixpExtraCurricularDto);

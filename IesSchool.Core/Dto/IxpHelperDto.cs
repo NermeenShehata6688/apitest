@@ -18,6 +18,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<Term> AllTerms { get; set; }
         public IPaginate<User> AllHeadOfEducations { get; set; }
         public IPaginate<Department> AllDepartments { get; set; }
+        public IPaginate<UserExtraCurricular> UserExtraCurricular { get; set; }
     }
 
     public class IxpHelperDto
@@ -29,6 +30,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<TermDto> AllTerms { get; set; }
         public PaginateDto<UserDto> AllHeadOfEducations { get; set; }
         public PaginateDto<DepartmentDto> AllDepartments { get; set; }
+        public PaginateDto<UserExtraCurricularDto> UserExtraCurricular { get; set; }
     }
 }
     

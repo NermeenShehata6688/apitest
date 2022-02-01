@@ -62,6 +62,10 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteIepProgressReport(int iepProgressReportId);
         public ResponseDto CreateIepProgressReport(int iepId);
         //public ResponseDto SyncData(int iepId);
+        public ResponseDto GetProgressReportParamedicalByParamedicalServiceId(int paramedicalServiceId);
+        public ResponseDto GetProgressReportParamedicalById(int progressReportParamedicalId);
+        public ResponseDto EditProgressReportParamedical(ProgressReportParamedicalDto progressReportParamedicalDto);
+        public ResponseDto DeleteProgressReportParamedicalt(int progressReportParamedicalId);
 
     }
 }

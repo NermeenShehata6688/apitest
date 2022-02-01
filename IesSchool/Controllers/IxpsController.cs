@@ -129,6 +129,19 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public IActionResult IxpDuplicate(int ixpId)
+        {
+            try
+            {
+                var all = _ixpService.IxpDuplicate(ixpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public IActionResult GetIxpExtraCurricularByIxpId(int ixpId)
         {
             try

@@ -66,19 +66,28 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Student, StudentDto>().ReverseMap()
            .ForMember(x => x.Department, op => op.Ignore())
            .ForMember(x => x.Nationality, op => op.Ignore());
+
             CreateMap<StudentTherapist, StudentTherapistDto>()
              .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
              .ForMember(dist => dist.StudentNameAr, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.NameAr))
              .ForMember(dist => dist.DepartmentId, opt => opt.MapFrom(c => c.Student == null ? 0 : c.Student.DepartmentId))
-             .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? 0 : c.Student.Code)).ReverseMap();
-            CreateMap<StudentHistoricalSkill, StudentHistoricalSkillDto>().ReverseMap();
+             .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? 0 : c.Student.Code)).ReverseMap()
+             .ForMember(x => x.Student, op => op.Ignore())
+           .ForMember(x => x.Therapist, op => op.Ignore());
+
+            CreateMap<StudentHistoricalSkill, StudentHistoricalSkillDto>().ReverseMap()
+            .ForMember(x => x.Student, op => op.Ignore())
+           .ForMember(x => x.HistoricalSkilldNavigation, op => op.Ignore());
+
             //CreateMap<List<StudentHistoricalSkill>,List< StudentHistoricalSkillDto>>().ReverseMap();
-            CreateMap<StudentAttachment, StudentAttachmentDto>().ReverseMap();
+
             CreateMap<StudentHelper, StudentHelperDto>().ReverseMap();
             CreateMap<VwStudent, VwStudentDto>().ReverseMap();
             CreateMap<Student, StudentDetailsDto>().ReverseMap();
             CreateMap<StudentAttachmentBinary, StudentAttachmentBinaryDto>().ReverseMap();
-            CreateMap<Phone, PhoneDto>().ReverseMap();
+            CreateMap<Phone, PhoneDto>().ReverseMap()
+                .ForMember(x => x.Student, op => op.Ignore());
+
             CreateMap<Religion, ReligionDto>().ReverseMap();
             CreateMap<Paginate<StudentHistoricalSkill>, Paginate<StudentHistoricalSkillDto>>().ReverseMap();
             CreateMap<Paginate<Phone>, Paginate<PhoneDto>>().ReverseMap();
@@ -114,10 +123,22 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(dist => dist.AssistantName, opt => opt.MapFrom(c => c.Assistant == null ? "" : c.Assistant.Name))
                 .ReverseMap()
            .ForMember(x => x.Assistant, op => op.Ignore()).ForMember(x => x.User, op => op.Ignore());
+
             CreateMap<TherapistParamedicalService, TherapistParamedicalServiceDto>()
              .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))
              .ForMember(dist => dist.ParamedicalServiceNameAr, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.NameAr))
-             .ReverseMap();
+             .ReverseMap()
+             .ForMember(x => x.ParamedicalService, op => op.Ignore())
+             .ForMember(x => x.User, op => op.Ignore());
+
+
+            CreateMap<UserExtraCurricular, UserExtraCurricularDto>().ReverseMap()
+           .ForMember(x => x.User, op => op.Ignore())
+           .ForMember(x => x.ExtraCurricular, op => op.Ignore());
+
+            CreateMap<StudentExtraTeacher, StudentExtraTeacherDto>().ReverseMap()
+         .ForMember(x => x.ExtraTeacher, op => op.Ignore())
+         .ForMember(x => x.Student, op => op.Ignore());
 
             #endregion
             #region IEP
@@ -189,6 +210,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ProgressReportParamedical, ProgressReportParamedicalDto>()
             .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name))
             .ForMember(dist => dist.ParamedicalServiceNameAr, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.NameAr))
+            .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.ProgressReport == null ? "" : c.ProgressReport.Student == null ? "" : c.ProgressReport.Student.Name))
+            .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.ProgressReport == null ? "" : c.ProgressReport.AcadmicYear == null ? "" : c.ProgressReport.AcadmicYear.Name))
+            .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.ProgressReport == null ? "" : c.ProgressReport.Term == null ? "" : c.ProgressReport.Term.Name))
                 .ReverseMap()
              .ForMember(x => x.ParamedicalService, op => op.Ignore());
 
@@ -245,6 +269,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Objective, ObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))
            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber)))
+           .ForMember(dist => dist.ObjSkillsNames, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? "": c.Skill.Name == null ?"" : c.Skill.Name)))
            .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Area == null ? "" : c.Goal.Area.Name))
            .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Name))
            .ForMember(dist => dist.ObjActivitiesCount, opt => opt.MapFrom(c => c.Activities == null ? 0 : c.Activities.Count())).ReverseMap()
@@ -255,7 +280,8 @@ namespace IesSchool.Core.MappingProfile
 
             CreateMap<Objective, GetObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))
-            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber))).ReverseMap()
+            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber)))
+            .ForMember(dist => dist.ObjSkillsNames, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? "" : c.Skill.Name == null ? "" : c.Skill.Name))).ReverseMap()
            .ForMember(x => x.Goal, op => op.Ignore());
 
 
@@ -263,7 +289,10 @@ namespace IesSchool.Core.MappingProfile
 
             CreateMap<ObjectiveSkill, ObjectiveSkillDto>()
             .ForMember(dist => dist.SkillNumber, opt => opt.MapFrom(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber))
-            .ReverseMap();
+            .ForMember(dist => dist.SkillName, opt => opt.MapFrom(c => c.Skill == null ? "" : c.Skill.Name == null ? "": c.Skill.Name))
+            .ReverseMap()
+            .ForMember(x => x.Objective, op => op.Ignore())
+             .ForMember(x => x.Skill, op => op.Ignore());
 
             CreateMap<Activity, ActivityDto>()
              .ForMember(dist => dist.ObjectiveNote, opt => opt.MapFrom(c => c.Objective == null ? "" : c.Objective.ObjectiveNote))
