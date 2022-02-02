@@ -19,6 +19,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto IepStatus(StatusDto statusDto); 
         public ResponseDto IepIsPublished(IsPuplishedDto isPuplishedDto);
         public decimal IepObjectiveMasterdPercentage(int iepId);
+        public ResponseDto DuplicateIEP(int iepId);
 
         public ResponseDto GetGoals();
         public ResponseDto GetGoalById(int goalId);

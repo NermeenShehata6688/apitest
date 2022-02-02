@@ -139,6 +139,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult DuplicateIEP(int iepId)
+        {
+            try
+            {
+                var all = _iepService.DuplicateIEP(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         // GET: api/<IepsController>
         [HttpGet]

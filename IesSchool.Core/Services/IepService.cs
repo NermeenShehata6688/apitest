@@ -313,47 +313,58 @@ namespace IesSchool.Core.Services
                .Include(s => s.IepAssistants)
                .Include(s => s.IepParamedicalServices)
                .Include(s => s.IepExtraCurriculars)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills));
+               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses));
 
                     if (oldIep != null)
                     {
                         oldIep.Id = 0;
-                        //if (oldIep.IepAssistants.Count() > 0)
-                        //{
-                        //    oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
-                        //}
-                        //if (oldIep.IepParamedicalServices.Count() > 0)
-                        //{
-                        //    oldIep.IepParamedicalServices.ToList().ForEach(x => x.Id = 0);
-                        //}
-                        //if (oldIep.IepExtraCurriculars.Count() > 0)
-                        //{
-                        //    oldIep.IepExtraCurriculars.ToList().ForEach(x => x.Id = 0);
-                        //}
-                        //if (oldIep.Goals.Count() > 0)
-                        //{
-                        //    foreach (var goal in oldIep.Goals)
-                        //    {
-                        //        goal.Id = 0;
-                        //        if (goal.Objectives.Count()>0)
-                        //        {
-                        //            foreach (var obj in goal.Objectives)
-                        //            {
-                        //                obj.Id = 0;
-                        //            }
-                        //    }
-                        //    oldIep.Goals.ToList().ForEach(x => x.Id = 0);
-                        //}
-
-                            return new ResponseDto { Status = 1, Message = " null" };
-
-
+                        if (oldIep.IepAssistants.Count() > 0)
+                        {
+                            oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
+                        }
+                        if (oldIep.IepParamedicalServices.Count() > 0)
+                        {
+                            oldIep.IepParamedicalServices.ToList().ForEach(x => x.Id = 0);
+                        }
+                        if (oldIep.IepExtraCurriculars.Count() > 0)
+                        {
+                            oldIep.IepExtraCurriculars.ToList().ForEach(x => x.Id = 0);
+                        }
+                        if (oldIep.Goals.Count() > 0)
+                        {
+                            foreach (var goal in oldIep.Goals)
+                            {
+                                goal.Id = 0;
+                                if (goal.Objectives.Count() > 0)
+                                {
+                                    foreach (var obj in goal.Objectives)
+                                    {
+                                        obj.Id = 0;
+                                        if (obj.ObjectiveSkills.Count() > 0)
+                                        {
+                                            obj.ObjectiveSkills.ToList().ForEach(x => x.Id = 0);
+                                        }
+                                        if (obj.ObjectiveEvaluationProcesses.Count() > 0)
+                                        {
+                                            obj.ObjectiveEvaluationProcesses.ToList().ForEach(x => x.Id = 0);
+                                        }
+                                    }
+                                }
+                                oldIep.Goals.ToList().ForEach(x => x.Id = 0);
+                            }
                         }
 
-
+                        _uow.GetRepository<Iep>().Add(oldIep);
+                        _uow.SaveChanges();
 
                         var mapper = _mapper.Map<GetIepDto>(oldIep);
-                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    }
+                    else
+                    {
+                        return new ResponseDto { Status = 1, Message = " null" };
+                    }
                 }
                 else
                 {
