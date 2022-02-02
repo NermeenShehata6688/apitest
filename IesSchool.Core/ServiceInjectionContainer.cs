@@ -33,7 +33,8 @@ namespace IesSchool.Core
             services.AddScoped<IImportExcelToSqlService, ImportExcelToSqlService>();
             services.AddScoped<ILogCommentService, LogCommentService>();
             services.AddScoped<IItpService, ItpService>();
-            services.AddScoped<IIxpService, IxpService>();
+            services.AddScoped<IIxpService, IxpService>(); 
+            services.AddScoped<IMobileService, MobileService>(); 
 
             return services; 
         }
