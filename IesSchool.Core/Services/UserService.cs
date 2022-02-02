@@ -207,7 +207,7 @@ namespace IesSchool.Core.Services
                 .Include(x => x.UserExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
                 .Include(x => x.StudentExtraTeachers)
                 .Include(x => x.AspNetUser));
-                user.ImageBinary = null;
+                user.ImageBinary = null;       
                 var mapper = _mapper.Map<UserDto>(user);
                
                 var appUser = _userManager.Users.FirstOrDefault(r => r.Email == user.Email);
