@@ -317,17 +317,42 @@ namespace IesSchool.Core.Services
 
                     if (oldIep != null)
                     {
-                        Iep newIep = oldIep;
-                        newIep.Id = 0;
-                        if (oldIep.IepAssistants.Count()>0)
-                        {
-                           // newIep = oldIep.IepAssistants;
+                        oldIep.Id = 0;
+                        //if (oldIep.IepAssistants.Count() > 0)
+                        //{
+                        //    oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
+                        //}
+                        //if (oldIep.IepParamedicalServices.Count() > 0)
+                        //{
+                        //    oldIep.IepParamedicalServices.ToList().ForEach(x => x.Id = 0);
+                        //}
+                        //if (oldIep.IepExtraCurriculars.Count() > 0)
+                        //{
+                        //    oldIep.IepExtraCurriculars.ToList().ForEach(x => x.Id = 0);
+                        //}
+                        //if (oldIep.Goals.Count() > 0)
+                        //{
+                        //    foreach (var goal in oldIep.Goals)
+                        //    {
+                        //        goal.Id = 0;
+                        //        if (goal.Objectives.Count()>0)
+                        //        {
+                        //            foreach (var obj in goal.Objectives)
+                        //            {
+                        //                obj.Id = 0;
+                        //            }
+                        //    }
+                        //    oldIep.Goals.ToList().ForEach(x => x.Id = 0);
+                        //}
+
+                            return new ResponseDto { Status = 1, Message = " null" };
+
+
                         }
-                    }
 
 
 
-                    var mapper = _mapper.Map<GetIepDto>(oldIep);
+                        var mapper = _mapper.Map<GetIepDto>(oldIep);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
                 else

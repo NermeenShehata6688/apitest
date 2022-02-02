@@ -271,7 +271,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Objective, ObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))
            .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c =>  c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber)))
-         //  .ForMember(dist => dist.ObjSkillsNames, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? "": c.Skill.Name == null ?"" : c.Skill.Name)))
+           .ForMember(dist => dist.ObjSkillsNames, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? "": c.Skill.Name == null ?"" : c.Skill.Name)))
            .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Area == null ? "" : c.Goal.Area.Name))
            .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Name))
            .ForMember(dist => dist.ObjActivitiesCount, opt => opt.MapFrom(c => c.Activities == null ? 0 : c.Activities.Count())).ReverseMap()
@@ -285,7 +285,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<Objective, GetObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))
             .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber)))
-           // .ForMember(dist => dist.ObjSkillsNames, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? "" : c.Skill.Name == null ? "" : c.Skill.Name)))
+            .ForMember(dist => dist.ObjSkillsNames, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? "" : c.Skill.Name == null ? "" : c.Skill.Name)))
            .ReverseMap()
            .ForMember(x => x.Goal, op => op.Ignore());
 
