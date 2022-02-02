@@ -140,6 +140,8 @@ namespace IesSchool.Core.MappingProfile
          .ForMember(x => x.ExtraTeacher, op => op.Ignore())
          .ForMember(x => x.Student, op => op.Ignore());
 
+            CreateMap<User, ParentDto>().ReverseMap();
+
             #endregion
             #region IEP
             CreateMap<Iep, IepDto>().ReverseMap()

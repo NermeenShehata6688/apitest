@@ -18,11 +18,24 @@ namespace IesSchool.Controllers
 
         // GET: api/<MobileController>
         [HttpGet]
-        public IActionResult IsUserCodeExist(string UserName, string Password)
+        public IActionResult IsParentExist(string UserName, string Password)
         {
             try
             {
                 var all = _iMobileService.IsParentExist(UserName, Password);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetParentById(int parentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetParentById(parentId);
                 return Ok(all);
             }
             catch (Exception)

@@ -1,28 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
     public partial class Student
     {
-        public Student()
-        {
-            EventStudents = new HashSet<EventStudent>();
-            IepProgressReports = new HashSet<IepProgressReport>();
-            Ieps = new HashSet<Iep>();
-            ItpProgressReports = new HashSet<ItpProgressReport>();
-            Itps = new HashSet<Itp>();
-            Ixps = new HashSet<Ixp>();
-            LogComments = new HashSet<LogComment>();
-            Phones = new HashSet<Phone>();
-            StudentAttachments = new HashSet<StudentAttachment>();
-            StudentHistoricalSkills = new HashSet<StudentHistoricalSkill>();
-            StudentTherapists = new HashSet<StudentTherapist>();
-            StudentExtraTeachers = new HashSet<StudentExtraTeacher>();
-        }
-
         public int Id { get; set; }
         public string? NameAr { get; set; }
         public string? Name { get; set; }
@@ -78,26 +60,7 @@ namespace IesSchool.Context.Models
         public bool? IsActive { get; set; }
         public string? InactiveReason { get; set; }
 
-        public virtual Country? BirthCountry { get; set; }
-        public virtual City? City { get; set; }
-        public virtual Department? Department { get; set; }
-        public virtual Country? FatherNationality { get; set; }
-        public virtual Country? MotherNationality { get; set; }
-        public virtual Country? Nationality { get; set; }
-        public virtual State? State { get; set; }
         public virtual User? Parent { get; set; }
         public virtual User? Teacher { get; set; }
-        public virtual ICollection<EventStudent> EventStudents { get; set; }
-        public virtual ICollection<IepProgressReport> IepProgressReports { get; set; }
-        public virtual ICollection<Iep> Ieps { get; set; }
-        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
-        public virtual ICollection<Itp> Itps { get; set; }
-        public virtual ICollection<Ixp> Ixps { get; set; }
-        public virtual ICollection<LogComment> LogComments { get; set; }
-        public virtual ICollection<Phone> Phones { get; set; }
-        public virtual ICollection<StudentAttachment> StudentAttachments { get; set; }
-        public virtual ICollection<StudentHistoricalSkill> StudentHistoricalSkills { get; set; }
-        public virtual ICollection<StudentTherapist> StudentTherapists { get; set; }
-        public virtual ICollection<StudentExtraTeacher> StudentExtraTeachers { get; set; }
     }
 }

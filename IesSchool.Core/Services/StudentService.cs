@@ -257,6 +257,42 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        public ResponseDto GetStudentItps(int studentId)
+        {
+            try
+            {
+                var allStudentItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId, null, 
+                    x=> x.Include(x=> x.Student)
+                    .Include(x => x.Therapist)
+                    .Include(x => x.AcadmicYear)
+                    .Include(x => x.Term)
+                    .Include(x => x.ParamedicalService)
+                    , 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<ItpDto>>(allStudentItps);
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentIxps(int studentId)
+        {
+            try
+            {
+                var allStudentIxps = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId, null, 
+                    x=> x.Include(x => x.Student)
+                    .Include(x => x.AcadmicYear)
+                    .Include(x => x.Term)
+                    , 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<IxpDto>>(allStudentIxps);
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
 
         public ResponseDto GetStudentTherapistsById(int studentTherapistId)
         {
