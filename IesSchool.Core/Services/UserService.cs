@@ -205,7 +205,7 @@ namespace IesSchool.Core.Services
                 .Include(x => x.UserAttachments).ThenInclude(x => x.AttachmentType)
                 .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
                 .Include(x => x.UserExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                .Include(x => x.StudentExtraTeachers).ThenInclude(x => x.ExtraTeacher)
+                .Include(x => x.StudentExtraTeachers)
                 .Include(x => x.AspNetUser));
                 user.ImageBinary = null;
                 var mapper = _mapper.Map<UserDto>(user);
