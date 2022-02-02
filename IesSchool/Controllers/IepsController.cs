@@ -114,11 +114,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult IepIsPublished(int iepId, bool isPublished)
+        public IActionResult IepIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                var all = _iepService.IepIsPublished(iepId, isPublished);
+                var all = _iepService.IepIsPublished(isPuplishedDto);
                 return Ok(all);
             }
             catch (Exception)

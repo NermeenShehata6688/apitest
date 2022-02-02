@@ -215,16 +215,16 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IxpIsPublished(int ixpId, bool isPublished)
+        public ResponseDto IxpIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                if (ixpId != 0)
+                if (isPuplishedDto.Id != 0)
                 {
-                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId);
+                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == isPuplishedDto.Id);
                     if (ixp != null)
                     {
-                        ixp.IsPublished = isPublished;
+                        ixp.IsPublished = isPuplishedDto.IsPuplished;
                         _uow.GetRepository<Ixp>().Update(ixp);
                         _uow.SaveChanges();
                         return new ResponseDto { Status = 1, Message = "Ixp Is Published Status Has Changed" };

@@ -256,14 +256,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IepIsPublished(int iepId, bool isPublished)
+        public ResponseDto IepIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                if (iepId != 0)
+                if (isPuplishedDto.Id != 0)
                 {
-                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                    iep.IsPublished = isPublished;
+                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == isPuplishedDto.Id);
+                    iep.IsPublished = isPuplishedDto.IsPuplished;
                     _uow.GetRepository<Iep>().Update(iep);
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Is Published Status Has Changed" };

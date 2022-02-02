@@ -116,11 +116,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult IxpIsPublished(int ixpId, bool isPublished)
+        public IActionResult IxpIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                var all = _ixpService.IxpIsPublished(ixpId, isPublished);
+                var all = _ixpService.IxpIsPublished(isPuplishedDto);
                 return Ok(all);
             }
             catch (Exception)

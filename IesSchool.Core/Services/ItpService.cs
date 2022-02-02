@@ -224,16 +224,16 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto ItpIsPublished(int itpId, bool isPublished)
+        public ResponseDto ItpIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                if (itpId != 0)
+                if (isPuplishedDto.Id != 0)
                 {
-                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId);
+                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == isPuplishedDto.Id);
                     if (itp!=null)
                     {
-                        itp.IsPublished = isPublished;
+                        itp.IsPublished = isPuplishedDto.IsPuplished;
                         _uow.GetRepository<Itp>().Update(itp);
                         _uow.SaveChanges();
                         return new ResponseDto { Status = 1, Message = "Itp Is Published Status Has Changed" };
