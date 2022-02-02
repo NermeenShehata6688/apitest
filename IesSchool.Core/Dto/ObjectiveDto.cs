@@ -32,6 +32,8 @@ namespace IesSchool.Core.Dto
         public string? AreaName { get; set; }
         public string? StrandName { get; set; }
         public int? ObjActivitiesCount { get; set; }
+        public int? randomId { get; set; }
+        
 
 
 
