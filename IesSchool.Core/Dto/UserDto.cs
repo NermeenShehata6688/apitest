@@ -39,5 +39,8 @@ namespace IesSchool.Core.Dto
         public virtual ICollection<TherapistParamedicalServiceDto>? TherapistParamedicalServices { get; set; }
         public virtual ICollection<UserAttachmentDto>? UserAttachments { get; set; }
 
+        public virtual ICollection<UserExtraCurricularDto>? UserExtraCurriculars { get; set; }
+        public virtual ICollection<StudentExtraTeacherDto>? StudentExtraTeachers { get; set; }
+
     }
 }

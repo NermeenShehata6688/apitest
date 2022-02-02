@@ -16,6 +16,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<Student> AllStudents { get; set; }
         public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
         public IPaginate<AttachmentType> AllAttachmentTypes { get; set; }
+        public IPaginate<ExtraCurricular> AllExtraCurriculars { get; set; }
     }
     public class UserHelperDto
     {
@@ -25,6 +26,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<StudentDto> AllStudents { get; set; }
         public PaginateDto<ParamedicalServiceDto> AllParamedicalServices { get; set; }
         public PaginateDto<AttachmentTypeDto> AllAttachmentTypes { get; set; }
+        public PaginateDto<ExtraCurricularDto> AllExtraCurriculars { get; set; }
 
     }
 }
