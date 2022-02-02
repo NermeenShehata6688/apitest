@@ -194,16 +194,16 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto ItpStatus(int itpId, int status)
+        public ResponseDto ItpStatus(StatusDto statusDto)
         {
             try
             {
-                if (itpId != 0)
+                if (statusDto.Id != 0)
                 {
-                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId);
+                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == statusDto.Id);
                     if (itp != null)
                     {
-                        itp.Status = status;
+                        itp.Status = statusDto.StatusNo;
                         _uow.GetRepository<Itp>().Update(itp);
                         _uow.SaveChanges();
                         return new ResponseDto { Status = 1, Message = "Itp Status Has Changed" };

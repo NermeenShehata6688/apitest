@@ -233,14 +233,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IepStatus(int iepId, int status)
+        public ResponseDto IepStatus(StatusDto statusDto)
         {
             try
             {
-                if (iepId != 0)
+                if (statusDto.Id != 0)
                 {
-                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                    iep.Status = status;
+                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == statusDto.Id);
+                    iep.Status = statusDto.StatusNo;
                     _uow.GetRepository<Iep>().Update(iep);
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Status Has Changed" };

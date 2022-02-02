@@ -101,11 +101,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult IepStatus(int iepId, int status)
+        public IActionResult IepStatus(StatusDto statusDto)
         {
             try
             {
-                var all = _iepService.IepStatus(iepId, status);
+                var all = _iepService.IepStatus(statusDto);
                 return Ok(all);
             }
             catch (Exception)

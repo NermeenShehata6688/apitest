@@ -185,16 +185,16 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IxpStatus(int ixpId, int status)
+        public ResponseDto IxpStatus(StatusDto statusDto)
         {
             try
             {
-                if (ixpId != 0)
+                if (statusDto.Id != 0)
                 {
-                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId);
+                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == statusDto.Id);
                     if (ixp != null)
                     {
-                        ixp.Status = status;
+                        ixp.Status = statusDto.StatusNo;
                         _uow.GetRepository<Ixp>().Update(ixp);
                         _uow.SaveChanges();
                         return new ResponseDto { Status = 1, Message = "Ixp Status Has Changed" };

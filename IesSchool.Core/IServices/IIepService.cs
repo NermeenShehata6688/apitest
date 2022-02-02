@@ -16,7 +16,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddIep(IepDto iepDto);
         public ResponseDto EditIep(IepDto iepDto); 
         public ResponseDto DeleteIep(List<IepDto> iepDto);
-        public ResponseDto IepStatus(int iepId, int status); 
+        public ResponseDto IepStatus(StatusDto statusDto); 
         public ResponseDto IepIsPublished(int iepId, bool isPublished);
         public decimal IepObjectiveMasterdPercentage(int iepId);
 
