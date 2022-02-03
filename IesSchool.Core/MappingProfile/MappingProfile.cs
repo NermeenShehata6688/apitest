@@ -114,9 +114,8 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.AttachmentType, op => op.Ignore());
 
             CreateMap<User, UserDto>()
-             //.ForMember(dist => dist.StudentsIdsForParent, opt => opt.MapFrom(c => c.StudentParents == null ? 0 : c.StudentParents.Select(x => x.Id).ToArray())
-          // .ForMember(dist => dist.StudentsIdsForParent, opt => opt.MapFrom(c => c.StudentParents==null?0: c.StudentParents.ToList().Select(x => x.Id).Distinct()))
-
+             .ForMember(dist => dist.StudentsIdsForParent, opt => opt.MapFrom(c =>  c.StudentParents.Select(x => x.Id).ToArray()))
+         
                 .ReverseMap()
             .ForMember(x => x.Department, op => op.Ignore())
             .ForMember(x => x.Nationality, op => op.Ignore());

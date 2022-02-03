@@ -1347,18 +1347,27 @@ namespace IesSchool.Core.Services
         }
 
 
-        public ResponseDto GetProgressReportParamedicalByParamedicalServiceId(int paramedicalServiceId)
+        public ResponseDto GetProgressReportParamedicalByUserId(int userId)
         {
             try
             {
-                var progressReportParamedicals = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.ParamedicalServiceId == paramedicalServiceId , null,
-                    x=> x.Include(x=> x.ProgressReport).ThenInclude(x => x.Student)
-                    .Include(x => x.ProgressReport).ThenInclude(x => x.AcadmicYear)
-                    .Include(x => x.ProgressReport).ThenInclude(x => x.Term)
-                    .Include(x => x.ParamedicalService));
+                var paramedicalIds = _uow.GetRepository<TherapistParamedicalService>().GetList(x => x.UserId == userId).Items.Select(x => x.ParamedicalServiceId).ToArray();
+                if (paramedicalIds!=null)
+                {
 
-                var mapper = _mapper.Map<PaginateDto<ProgressReportParamedicalDto>>(progressReportParamedicals);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    var progressReportParamedicals = _uow.GetRepository<ProgressReportParamedical>().GetList(x => paramedicalIds.Contains(x.ParamedicalServiceId.Value == null ? 0 : x.ParamedicalServiceId.Value), null,
+                   x => x.Include(x => x.ProgressReport).ThenInclude(x => x.Student)
+                   .Include(x => x.ProgressReport).ThenInclude(x => x.AcadmicYear)
+                   .Include(x => x.ProgressReport).ThenInclude(x => x.Term)
+                   .Include(x => x.ParamedicalService));
+
+                    var mapper = _mapper.Map<PaginateDto<ProgressReportParamedicalDto>>(progressReportParamedicals);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = " null" };
+
+
             }
             catch (Exception ex)
             {

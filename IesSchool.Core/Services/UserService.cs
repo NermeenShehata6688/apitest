@@ -284,7 +284,7 @@ namespace IesSchool.Core.Services
                     };
                     //transaction.CreateSavepoint("AfterSavingUser");
 
-                    transaction.Commit();
+                  
 
 
 
@@ -302,7 +302,7 @@ namespace IesSchool.Core.Services
 
                     }
                     //_uow.SaveChanges();
-
+                    transaction.Commit();
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
                     userDto.FullPath = result.virtualPath;
@@ -324,15 +324,13 @@ namespace IesSchool.Core.Services
         }   
         public async Task<ResponseDto> AddUser2( UserDto userDto)
         {
-           //using var transaction = _iesContext.Database.BeginTransaction();
+           using var transaction = _iesContext.Database.BeginTransaction();
                 try
                 {
 
                     if (userDto != null)
                     {
-                    //transaction.CreateSavepoint("AfterSavingUser");
-
-                    
+                   
                     var mapper = _mapper.Map<User>(userDto);
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
@@ -373,8 +371,8 @@ namespace IesSchool.Core.Services
                     }
 
                     userDto.Id = mapper.Id;
-            
 
+                    transaction.Commit();
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
                 }
                 else

@@ -582,11 +582,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProgressReportParamedicalByParamedicalServiceId(int paramedicalServiceId)
+        public IActionResult GetProgressReportParamedicalByUserId(int userId)
         {
             try
             {
-                var all = _iepService.GetProgressReportParamedicalByParamedicalServiceId(paramedicalServiceId);
+                var all = _iepService.GetProgressReportParamedicalByUserId(userId);
                 return Ok(all);
             }
             catch (Exception)
