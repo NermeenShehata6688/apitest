@@ -308,6 +308,7 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<VwIep, IepReportDto>().ReverseMap();
             CreateMap<LogComment, LogCommentDto>()
              .ForMember(dist => dist.UserImage, opt => opt.MapFrom(c => c.User == null ? "" : c.User.Image == null ? "" : c.User.Image))
+             .ForMember(dist => dist.UserName, opt => opt.MapFrom(c => c.User == null ? "" : c.User.Name == null ? "" : c.User.Name))
 
                 .ReverseMap()
              .ForMember(x => x.Iep, op => op.Ignore())
