@@ -31,20 +31,26 @@ namespace IesSchool.Core.Services
             try
             {
                 var studentLogComments = _uow.GetRepository<LogComment>().GetList(x => x.IsDeleted != true && x.StudentId == studentId, null,
-                    x => x.Include(x => x.User));            
+                    x => x.Include(x => x.User));
 
-                var mapper = _mapper.Map<PaginateDto<LogCommentDto>>(studentLogComments);
+                var mapper = _mapper.Map<PaginateDto<LogCommentDto>>(studentLogComments).Items;
 
-                foreach (var log in mapper.Items)
+                foreach (var log in studentLogComments.Items)
                 {
-                    if (log.UserImage != null)
+                    if (log.User.Image != null)
                     {
                         string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                        if (File.Exists("wwwRoot/tempFiles/" + log.UserImage))
+                        if (File.Exists("wwwRoot/tempFiles/" + log.User.Image))
                         {
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{log.UserImage}";
-                            log.UserImagePath = fullpath;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{log.User.Image}";
+                            mapper.Where(x => x.UserId == log.User.Id).First().UserImagePath = fullpath;
                         }
+                        //if (log.CreatedOn!= null)
+                        //{
+                        //    mapper.Where(x => x.UserId == log.User.Id).First().UserCommentTime = log.CreatedOn.ToUniversalTime();
+
+                        //    //univDateTime = localDateTime.ToUniversalTime();
+                        //}
                     }
                 }
 
@@ -52,6 +58,7 @@ namespace IesSchool.Core.Services
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
+
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
@@ -61,8 +68,21 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepLogComments = _uow.GetRepository<LogComment>().GetList(x => x.IsDeleted != true && x.IepId == iepId);
-                var mapper = _mapper.Map<PaginateDto<LogCommentDto>>(iepLogComments);
+                var iepLogComments = _uow.GetRepository<LogComment>().GetList(x => x.IsDeleted != true && x.IepId == iepId, null,
+                    x => x.Include(x => x.User));
+                var mapper = _mapper.Map<PaginateDto<LogCommentDto>>(iepLogComments).Items;
+                foreach (var log in iepLogComments.Items)
+                {
+                    if (log.User.Image != null)
+                    {
+                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                        if (File.Exists("wwwRoot/tempFiles/" + log.User.Image))
+                        {
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{log.User.Image}";
+                            mapper.Where(x => x.UserId == log.User.Id).First().UserImagePath = fullpath;
+                        }
+                    }
+                }
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -92,7 +112,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (logCommentDto!= null)
+                if (logCommentDto != null)
                 {
                     var mapper = _mapper.Map<LogComment>(logCommentDto);
                     _uow.GetRepository<LogComment>().Update(mapper);
@@ -129,45 +149,5 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        //public UserDto GetFullPathAndBinary(UserDto allUsers)
-        //{
-        //    try
-        //    {
-        //        if (allUsers.Count() > 0)
-        //        {
-        //            foreach (var item in allUsers)
-        //            {
-        //                if (File.Exists("wwwRoot/tempFiles/" + item.Image))
-        //                {
-        //                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-
-        //                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
-        //                    //var target = Path.Combine(Environment.CurrentDirectory, "wwwRoot/tempFiles"+$"{item.Image}");
-        //                    item.FullPath = fullpath;
-        //                }
-        //                else
-        //                {
-        //                    if (item != null && item.Image != null)
-        //                    {
-        //                        var user = _uow.GetRepository<User>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
-        //                        if (user.ImageBinary != null)
-        //                        {
-        //                            System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, user.ImageBinary);
-        //                        }
-        //                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-        //                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
-        //                        item.FullPath = fullpath;
-        //                    }
-        //                }
-
-        //            }
-        //        }
-        //        return allUsers;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return allUsers;
-        //    }
-        //}
     }
 }

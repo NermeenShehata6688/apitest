@@ -113,7 +113,11 @@ namespace IesSchool.Core.MappingProfile
                 .ForMember(x => x.User, op => op.Ignore())
             .ForMember(x => x.AttachmentType, op => op.Ignore());
 
-            CreateMap<User, UserDto>().ReverseMap()
+            CreateMap<User, UserDto>()
+             //.ForMember(dist => dist.StudentsIdsForParent, opt => opt.MapFrom(c => c.StudentParents == null ? 0 : c.StudentParents.Select(x => x.Id).ToArray())
+          // .ForMember(dist => dist.StudentsIdsForParent, opt => opt.MapFrom(c => c.StudentParents==null?0: c.StudentParents.ToList().Select(x => x.Id).Distinct()))
+
+                .ReverseMap()
             .ForMember(x => x.Department, op => op.Ignore())
             .ForMember(x => x.Nationality, op => op.Ignore());
             CreateMap<AspNetUser, AspNetUserDto>().ReverseMap();
@@ -309,6 +313,8 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<LogComment, LogCommentDto>()
              .ForMember(dist => dist.UserImage, opt => opt.MapFrom(c => c.User == null ? "" : c.User.Image == null ? "" : c.User.Image))
              .ForMember(dist => dist.UserName, opt => opt.MapFrom(c => c.User == null ? "" : c.User.Name == null ? "" : c.User.Name))
+            // .ForMember(dist => dist.UserCommentTime, opt => opt.MapFrom( model => (DateTime.UtcNow - model.CreatedOn) ))
+             //.ForMember(dist => dist.UserCommentTime, opt => opt.MapFrom( model => (DateTime.UtcNow - dist.cre).TotalDays ))
 
                 .ReverseMap()
              .ForMember(x => x.Iep, op => op.Ignore())

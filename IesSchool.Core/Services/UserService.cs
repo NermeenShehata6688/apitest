@@ -206,7 +206,8 @@ namespace IesSchool.Core.Services
                 .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
                 .Include(x => x.UserExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
                 .Include(x => x.StudentExtraTeachers)
-                .Include(x => x.AspNetUser));
+                .Include(x => x.AspNetUser)
+                .Include(x => x.StudentParents));
                 if (user!=null)
                 {
                     user.ImageBinary = null;
@@ -242,7 +243,7 @@ namespace IesSchool.Core.Services
         }
         public async Task<ResponseDto>  AddUser (IFormFile file, UserDto userDto)
         {
-            //using var transaction = _iesContext.Database.BeginTransaction();
+            using var transaction = _iesContext.Database.BeginTransaction();
 
             try
             {
@@ -262,12 +263,17 @@ namespace IesSchool.Core.Services
                     mapper.CreatedOn = DateTime.Now;
                     mapper.IsSuspended = false;
 
-                    if (userDto.StudentsIdsForParent !=null && userDto.StudentsIdsForParent.Count()>0)
-                    {
-
-                    }
+                   
                     _uow.GetRepository<User>().Add(mapper);
                     _uow.SaveChanges();
+                    if (userDto.StudentsIdsForParent != null && userDto.StudentsIdsForParent.Count() > 0)
+                    {
+                        var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && userDto.StudentsIdsForParent.Contains(x.Id), null).Items;
+                        string numbersToUpdate = string.Join(",", userDto.StudentsIdsForParent);
+                        
+                        var cmd = $"UPDATE Students SET Students.ParentId = { mapper.Id} Where Id IN ({numbersToUpdate})";
+                        _iesContext.Database.ExecuteSqlRaw(cmd);
+                    }
                     userDto.Id = mapper.Id;
                     var user = new IdentityUser<int>
                     {
@@ -278,7 +284,7 @@ namespace IesSchool.Core.Services
                     };
                     //transaction.CreateSavepoint("AfterSavingUser");
 
-                    //transaction.Commit();
+                    transaction.Commit();
 
 
 
@@ -335,7 +341,14 @@ namespace IesSchool.Core.Services
                     _uow.SaveChanges();
 
                     userDto.Id = mapper.Id;
+                    if (userDto.StudentsIdsForParent != null && userDto.StudentsIdsForParent.Count() > 0)
+                    {
+                        var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && userDto.StudentsIdsForParent.Contains(x.Id), null).Items;
+                        string numbersToUpdate = string.Join(",", userDto.StudentsIdsForParent);
 
+                        var cmd = $"UPDATE Students SET Students.ParentId = { mapper.Id} Where Id IN ({numbersToUpdate})";
+                        _iesContext.Database.ExecuteSqlRaw(cmd);
+                    }
 
                     var user = new IdentityUser<int>
                     {
