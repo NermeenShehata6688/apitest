@@ -284,7 +284,8 @@ namespace IesSchool.Core.Services
                     };
                     //transaction.CreateSavepoint("AfterSavingUser");
 
-                  
+                    transaction.Commit();
+
 
 
 
@@ -302,7 +303,6 @@ namespace IesSchool.Core.Services
 
                     }
                     //_uow.SaveChanges();
-                    transaction.Commit();
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
                     userDto.FullPath = result.virtualPath;
@@ -353,8 +353,8 @@ namespace IesSchool.Core.Services
                         UserName = userDto.UserName,
                         Email = userDto.Email,
                         Id = mapper.Id
-                        //Email = model.Email,
                     };
+                    transaction.Commit();
 
                     var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
 
@@ -372,7 +372,6 @@ namespace IesSchool.Core.Services
 
                     userDto.Id = mapper.Id;
 
-                    transaction.Commit();
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
                 }
                 else
@@ -417,6 +416,22 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<User>().Update(mapper);
                     _uow.SaveChanges();
 
+                    if (userDto.StudentsIdsForParent != null && userDto.StudentsIdsForParent.Count() > 0)
+                    {
+                        var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && userDto.StudentsIdsForParent.Contains(x.Id), null).Items;
+                        string numbersToUpdate = string.Join(",", userDto.StudentsIdsForParent);
+
+                        var cmd2 = $"UPDATE Students SET Students.ParentId =Null where  Students.ParentId={ mapper.Id}" +
+                            $"UPDATE Students SET Students.ParentId = { mapper.Id} Where Id IN ({numbersToUpdate})";
+                        _iesContext.Database.ExecuteSqlRaw(cmd2);
+                    }
+                    else
+                    {
+
+                        var cmd2 = $"UPDATE Students SET Students.ParentId =Null where  Students.ParentId={ mapper.Id}" ;
+                        _iesContext.Database.ExecuteSqlRaw(cmd2);
+                    }
+
                     AspNetUser aspNetUser = new AspNetUser();
                     aspNetUser.Id = userDto.Id;
                     aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
@@ -453,10 +468,7 @@ namespace IesSchool.Core.Services
                          $"delete from User_ExtraCurricular where UserId={userDto.Id}" +
                         $" delete from Student_ExtraTeacher where ExtraTeacherId={ userDto.Id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
-                    if (userDto.Image==null)
-                    {
-                        userDto.ImageBinary = null;
-                    }
+                    
                     var mapper = _mapper.Map<User>(userDto);
 
                     _uow.GetRepository<User>().Update(mapper);
@@ -468,6 +480,22 @@ namespace IesSchool.Core.Services
                     aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
                     _uow.GetRepository<AspNetUser>().Update(aspNetUser);
                     _uow.SaveChanges();
+
+                    if (userDto.StudentsIdsForParent != null && userDto.StudentsIdsForParent.Count() > 0)
+                    {
+                        var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && userDto.StudentsIdsForParent.Contains(x.Id), null).Items;
+                        string numbersToUpdate = string.Join(",", userDto.StudentsIdsForParent);
+
+                        var cmd2 = $"UPDATE Students SET Students.ParentId =Null where  Students.ParentId={ mapper.Id}" +
+                            $"UPDATE Students SET Students.ParentId = { mapper.Id} Where Id IN ({numbersToUpdate})";
+                        _iesContext.Database.ExecuteSqlRaw(cmd2);
+                    }
+                    else
+                    {
+
+                        var cmd2 = $"UPDATE Students SET Students.ParentId =Null where  Students.ParentId={ mapper.Id}";
+                        _iesContext.Database.ExecuteSqlRaw(cmd2);
+                    }
                     transaction.Commit();
 
                     userDto.Id = mapper.Id;
