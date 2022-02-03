@@ -266,8 +266,35 @@ namespace IesSchool.Core.Services
                      .Include(s => s.Term)
                      .Include(s => s.ParamedicalService)
                      .Include(s => s.HeadOfEducation));
-                var mapper = _mapper.Map<ItpDto>(itp);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+
+                if (itp != null)
+                {
+                    itp.Id = 0;
+                   
+                    if (itp.ItpGoals.Count() > 0)
+                    {
+                        foreach (var goal in itp.ItpGoals)
+                        {
+                            goal.Id = 0;
+                            if (goal.ItpGoalObjectives.Count() > 0)
+                            {
+
+                                goal.ItpGoalObjectives.ToList().ForEach(x => x.Id = 0);
+                            }
+                        }
+                    }
+
+                    _uow.GetRepository<Itp>().Add(itp);
+                    _uow.SaveChanges();
+
+                    var mapper = _mapper.Map<ItpDto>(itp);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
+
             }
             catch (Exception ex)
             {

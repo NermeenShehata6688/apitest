@@ -313,12 +313,13 @@ namespace IesSchool.Core.Services
                .Include(s => s.IepAssistants)
                .Include(s => s.IepParamedicalServices)
                .Include(s => s.IepExtraCurriculars)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
-                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses));
+               .Include(s => s.Goals.Where(x=> x.IsDeleted!= true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveSkills)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses));
 
                     if (oldIep != null)
                     {
                         oldIep.Id = 0;
+                       // oldIep.TermId = null;
                         if (oldIep.IepAssistants.Count() > 0)
                         {
                             oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
@@ -351,7 +352,6 @@ namespace IesSchool.Core.Services
                                         }
                                     }
                                 }
-                                oldIep.Goals.ToList().ForEach(x => x.Id = 0);
                             }
                         }
 
