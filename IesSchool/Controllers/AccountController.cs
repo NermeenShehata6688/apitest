@@ -136,7 +136,7 @@ namespace IesSchool.Controllers
                     var userName2 = User.FindFirstValue(ClaimTypes.Name);
                     var role = User.FindFirstValue(ClaimTypes.Role);
 
-                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2, UserName= appUser.UserName,} };
+                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName,} };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
