@@ -31,7 +31,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var studentLogComments = _uow.GetRepository<LogComment>().GetList(x => x.IsDeleted != true && x.StudentId == studentId, null,
-                    x => x.Include(x => x.User));
+                    x => x.Include(x => x.User));            
 
                 var mapper = _mapper.Map<PaginateDto<LogCommentDto>>(studentLogComments);
 
