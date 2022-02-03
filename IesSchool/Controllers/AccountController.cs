@@ -123,7 +123,7 @@ namespace IesSchool.Controllers
                     //    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     //    );
 
-                //    _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Name, appUser.UserName));
+                    //    _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Name, appUser.UserName));
                     //var user = _userManager.GetUserAsync(User).Result;
 
                     //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -131,6 +131,11 @@ namespace IesSchool.Controllers
 
                     //var CreateBy = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     // will give the user's userId
+
+                    var userName22 = User?.Identity?.Name;
+                    var userName2 = User.FindFirstValue(ClaimTypes.Name);
+                    var role = User.FindFirstValue(ClaimTypes.Role);
+
                     return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2, UserName= appUser.UserName,} };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
