@@ -4,6 +4,7 @@ using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -94,17 +95,43 @@ namespace IesSchool.Controllers
                 {
 
                     var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Email);
-                    var roles = _userManager.GetRolesAsync(appUser).Result;
-                   // var token = await GenerateJwtToken(model.Email, appUser);
-                    //_userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Name, appUser.UserName));
-                    var user = _userManager.GetUserAsync(User).Result;
+                    List<string> roles = _userManager.GetRolesAsync(appUser).Result.ToList();
+                    string token2 = CreateToken(appUser, roles );
+
+                    //       var token = await GenerateJwtToken(model.Email, appUser);
+
+
+                    //var authClaims = new List<Claim>
+                    //    {
+                    //        new Claim(ClaimTypes.Name, appUser.UserName),
+                    //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    //    };
+
+                    //foreach (var userRole in roles)
+                    //{
+                    //    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    //}
+                    //var asd= _configuration["JWT:Secret"];
+                    //var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+                    //var token = new JwtSecurityToken(
+                    //    issuer: _configuration["JWT:ValidIssuer"],
+                    //    audience: _configuration["JWT:ValidAudience"],
+                    //    //expires: DateTime.Now.AddHours(3),
+                    //    expires: DateTime.Now.AddDays(3),
+                    //    claims: authClaims,
+                    //    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                    //    );
+
+                //    _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Name, appUser.UserName));
+                    //var user = _userManager.GetUserAsync(User).Result;
 
                     //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     //var usersId = User.Claims.ToList();
 
-                    var CreateBy = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    //var CreateBy = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     // will give the user's userId
-                    return new ResponseDto {Status=1, Data = new{ roles = roles ,UserName= appUser.UserName,} };
+                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2, UserName= appUser.UserName,} };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
@@ -115,6 +142,36 @@ namespace IesSchool.Controllers
             }
         }
 
+        private string CreateToken(IdentityUser<int> user,List<string>roles)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+            };
+            if (roles!=null)
+            {
+                foreach (var userRole in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, userRole));
+                }
+            }
+          
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                 _configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
+      
         //[HttpPost]
         //public async Task<object> Register([FromBody]RegisterDto model)
         //{
@@ -249,29 +306,7 @@ namespace IesSchool.Controllers
         //    return new { error = "Invalid Username or Password" };
         //}
 
-        private async Task<object> GenerateJwtToken(string email, IdentityUser<int> user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier,  user.Id.ToString())
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
-
-            var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+     
 
         //////////////asssssssssssssdddddddddddddddddddddddd
 
@@ -583,3 +618,18 @@ namespace IesSchool.Controllers
 
 
 }
+
+//[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+//public class AuthorizeAttribute : Attribute, IAuthorizationFilter
+//{
+//    public void OnAuthorization(AuthorizationFilterContext context)
+//    {
+//        var user = (User)context.HttpContext.Items["User"];
+//        if (user == null)
+//        {
+//            // not logged in
+//            context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+//        }
+//    }
+//}
+

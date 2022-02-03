@@ -1,11 +1,13 @@
 ﻿using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace IesSchool.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AcadmicYearsController : ControllerBase
@@ -20,6 +22,8 @@ namespace IesSchool.Controllers
         /// This is method summary I want displayed
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult GetAcadmicYears()
         {
             try
