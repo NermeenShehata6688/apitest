@@ -43,7 +43,7 @@ namespace IesSchool.Core.Dto
         public virtual ICollection<UserExtraCurricularDto>? UserExtraCurriculars { get; set; }
         public virtual ICollection<StudentExtraTeacherDto>? StudentExtraTeachers { get; set; }
 
-        public virtual ICollection<StudentDto> StudentParents { get; set; }
+        public virtual ICollection<StudentParentDto>? StudentParents { get; set; }
 
     }
 }
