@@ -145,6 +145,32 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public IActionResult GetStudentItps(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetStudentItps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetStudentIxps(int studentId)
+        {
+            try
+            {
+                var all = _studentService.GetStudentIxps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public IActionResult GetHistoricalSkillsBystudentId(int studentId)
         {
             try

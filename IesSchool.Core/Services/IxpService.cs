@@ -185,16 +185,16 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IxpStatus(int ixpId, int status)
+        public ResponseDto IxpStatus(StatusDto statusDto)
         {
             try
             {
-                if (ixpId != 0)
+                if (statusDto.Id != 0)
                 {
-                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId);
+                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == statusDto.Id);
                     if (ixp != null)
                     {
-                        ixp.Status = status;
+                        ixp.Status = statusDto.StatusNo;
                         _uow.GetRepository<Ixp>().Update(ixp);
                         _uow.SaveChanges();
                         return new ResponseDto { Status = 1, Message = "Ixp Status Has Changed" };
@@ -215,16 +215,16 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IxpIsPublished(int ixpId, bool isPublished)
+        public ResponseDto IxpIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                if (ixpId != 0)
+                if (isPuplishedDto.Id != 0)
                 {
-                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId);
+                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == isPuplishedDto.Id);
                     if (ixp != null)
                     {
-                        ixp.IsPublished = isPublished;
+                        ixp.IsPublished = isPuplishedDto.IsPuplished;
                         _uow.GetRepository<Ixp>().Update(ixp);
                         _uow.SaveChanges();
                         return new ResponseDto { Status = 1, Message = "Ixp Is Published Status Has Changed" };
@@ -248,15 +248,36 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
-                    x => x
-                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
-                     .Include(s => s.Student).ThenInclude(s => s.Department)
-                     .Include(s => s.AcadmicYear)
-                     .Include(s => s.Term));
-                var mapper = _mapper.Map<IxpDto>(ixp);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                if (ixpId > 0)
+                {
+                    var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
+                                       x => x.Include(x => x.IxpExtraCurriculars));
+
+                    if (ixp != null)
+                    {
+                        ixp.Id = 0;
+                        if (ixp.IxpExtraCurriculars.Count() > 0)
+                        {
+                            ixp.IxpExtraCurriculars.ToList().ForEach(x => x.Id = 0);
+                        }
+
+                        _uow.GetRepository<Ixp>().Add(ixp);
+                        _uow.SaveChanges();
+
+                        var mapper = _mapper.Map<IxpDto>(ixp);
+                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    }
+                    else
+                    {
+                        return new ResponseDto { Status = 1, Message = " null" };
+                    }
+                }
+
+
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
             }
             catch (Exception ex)
             {

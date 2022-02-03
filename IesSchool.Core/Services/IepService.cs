@@ -233,14 +233,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IepStatus(int iepId, int status)
+        public ResponseDto IepStatus(StatusDto statusDto)
         {
             try
             {
-                if (iepId != 0)
+                if (statusDto.Id != 0)
                 {
-                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                    iep.Status = status;
+                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == statusDto.Id);
+                    iep.Status = statusDto.StatusNo;
                     _uow.GetRepository<Iep>().Update(iep);
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Status Has Changed" };
@@ -256,14 +256,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IepIsPublished(int iepId, bool isPublished)
+        public ResponseDto IepIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                if (iepId != 0)
+                if (isPuplishedDto.Id != 0)
                 {
-                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
-                    iep.IsPublished = isPublished;
+                    Iep iep = _uow.GetRepository<Iep>().Single(x => x.Id == isPuplishedDto.Id);
+                    iep.IsPublished = isPuplishedDto.IsPuplished;
                     _uow.GetRepository<Iep>().Update(iep);
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Is Published Status Has Changed" };
@@ -309,23 +309,62 @@ namespace IesSchool.Core.Services
             {
                 if (iepId != 0)
                 {
-                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
-               .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
-               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
-               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
-               .Include(s => s.Student).ThenInclude(s => s.Department)
-               .Include(s => s.Teacher)
-               .Include(s => s.HeadOfDepartmentNavigation)
-               .Include(s => s.HeadOfEducationNavigation)
-               .Include(s => s.AcadmicYear)
-               .Include(s => s.Term)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
-               .Include(s => s.Goals).ThenInclude(s => s.Strand)
-               .Include(s => s.Goals).ThenInclude(s => s.Area)
-               );
-                    var mapper = _mapper.Map<GetIepDto>(iep);
-                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    var oldIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
+               .Include(s => s.IepAssistants)
+               .Include(s => s.IepParamedicalServices)
+               .Include(s => s.IepExtraCurriculars)
+               .Include(s => s.Goals.Where(x=> x.IsDeleted!= true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveSkills)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses));
+
+                    if (oldIep != null)
+                    {
+                        oldIep.Id = 0;
+                       // oldIep.TermId = null;
+                        if (oldIep.IepAssistants.Count() > 0)
+                        {
+                            oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
+                        }
+                        if (oldIep.IepParamedicalServices.Count() > 0)
+                        {
+                            oldIep.IepParamedicalServices.ToList().ForEach(x => x.Id = 0);
+                        }
+                        if (oldIep.IepExtraCurriculars.Count() > 0)
+                        {
+                            oldIep.IepExtraCurriculars.ToList().ForEach(x => x.Id = 0);
+                        }
+                        if (oldIep.Goals.Count() > 0)
+                        {
+                            foreach (var goal in oldIep.Goals)
+                            {
+                                goal.Id = 0;
+                                if (goal.Objectives.Count() > 0)
+                                {
+                                    foreach (var obj in goal.Objectives)
+                                    {
+                                        obj.Id = 0;
+                                        if (obj.ObjectiveSkills.Count() > 0)
+                                        {
+                                            obj.ObjectiveSkills.ToList().ForEach(x => x.Id = 0);
+                                        }
+                                        if (obj.ObjectiveEvaluationProcesses.Count() > 0)
+                                        {
+                                            obj.ObjectiveEvaluationProcesses.ToList().ForEach(x => x.Id = 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        _uow.GetRepository<Iep>().Add(oldIep);
+                        _uow.SaveChanges();
+
+                        var mapper = _mapper.Map<GetIepDto>(oldIep);
+                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    }
+                    else
+                    {
+                        return new ResponseDto { Status = 1, Message = " null" };
+                    }
                 }
                 else
                 {

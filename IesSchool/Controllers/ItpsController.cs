@@ -105,11 +105,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult ItpStatus(int itpId, int status)
+        public IActionResult ItpStatus(StatusDto statusDto)
         {
             try
             {
-                var all = _itpService.ItpStatus(itpId, status);
+                var all = _itpService.ItpStatus(statusDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -118,11 +118,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult ItpIsPublished(int itpId, bool isPublished)
+        public IActionResult ItpIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                var all = _itpService.ItpIsPublished(itpId, isPublished);
+                var all = _itpService.ItpIsPublished(isPuplishedDto);
                 return Ok(all);
             }
             catch (Exception)

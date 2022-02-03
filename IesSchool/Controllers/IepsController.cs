@@ -101,11 +101,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult IepStatus(int iepId, int status)
+        public IActionResult IepStatus(StatusDto statusDto)
         {
             try
             {
-                var all = _iepService.IepStatus(iepId, status);
+                var all = _iepService.IepStatus(statusDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -114,11 +114,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult IepIsPublished(int iepId, bool isPublished)
+        public IActionResult IepIsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                var all = _iepService.IepIsPublished(iepId, isPublished);
+                var all = _iepService.IepIsPublished(isPuplishedDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -132,6 +132,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iepService.IepObjectiveMasterdPercentage(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult DuplicateIEP(int iepId)
+        {
+            try
+            {
+                var all = _iepService.DuplicateIEP(iepId);
                 return Ok(all);
             }
             catch (Exception)
