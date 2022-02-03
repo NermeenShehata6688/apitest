@@ -19,5 +19,7 @@ namespace IesSchool.Core.Dto
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
         public string? CreatedBy { get; set; }
+        public string? UserImage { get; set; }
+        public string? UserImagePath { get; set; }
     }
 }

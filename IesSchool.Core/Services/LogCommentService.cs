@@ -27,8 +27,19 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var studentLogComments = _uow.GetRepository<LogComment>().GetList(x => x.IsDeleted != true && x.StudentId == studentId);
+                var studentLogComments = _uow.GetRepository<LogComment>().GetList(x => x.IsDeleted != true && x.StudentId == studentId, null,
+                    x=> x.Include(x=> x.User));
+
                 var mapper = _mapper.Map<PaginateDto<LogCommentDto>>(studentLogComments);
+
+                foreach (var log in mapper.Items)
+                {
+                    if (log.UserImage!=null)
+                    {
+
+                    }
+                }
+               // var lstToSend = GetFullPathAndBinary(lstUserDto);
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -107,6 +118,46 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public List<UserDto> GetFullPathAndBinary(List<UserDto> allUsers)
+        {
+            try
+            {
+                if (allUsers.Count() > 0)
+                {
+                    foreach (var item in allUsers)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.Image))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+                            //var target = Path.Combine(Environment.CurrentDirectory, "wwwRoot/tempFiles"+$"{item.Image}");
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.Image != null)
+                            {
+                                var user = _uow.GetRepository<User>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
+                                if (user.ImageBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, user.ImageBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+
+                    }
+                }
+                return allUsers;
+            }
+            catch (Exception ex)
+            {
+                return allUsers;
             }
         }
     }

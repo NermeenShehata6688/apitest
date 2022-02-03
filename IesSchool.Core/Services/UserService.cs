@@ -261,6 +261,11 @@ namespace IesSchool.Core.Services
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
                     mapper.IsSuspended = false;
+
+                    if (userDto.StudentsIdsForParent !=null && userDto.StudentsIdsForParent.Count()>0)
+                    {
+
+                    }
                     _uow.GetRepository<User>().Add(mapper);
                     _uow.SaveChanges();
                     userDto.Id = mapper.Id;
@@ -437,7 +442,10 @@ namespace IesSchool.Core.Services
                          $"delete from User_ExtraCurricular where UserId={userDto.Id}" +
                         $" delete from Student_ExtraTeacher where ExtraTeacherId={ userDto.Id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
-                    
+                    if (userDto.Image==null)
+                    {
+                        userDto.ImageBinary = null;
+                    }
                     var mapper = _mapper.Map<User>(userDto);
 
                     _uow.GetRepository<User>().Update(mapper);
