@@ -33,7 +33,7 @@ namespace IesSchool.Core.Dto
         public string? NormalizedUserName { get; set; }
         public string? UserRoles { get; set; }
         public string? UserPassword { get; set; }
-       // public int[]? StudentsIdsForParent { get; set; }
+        public int[]? StudentsIdsForParent { get; set; }
 
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }
@@ -43,7 +43,7 @@ namespace IesSchool.Core.Dto
         public virtual ICollection<UserExtraCurricularDto>? UserExtraCurriculars { get; set; }
         public virtual ICollection<StudentExtraTeacherDto>? StudentExtraTeachers { get; set; }
 
-        public virtual ICollection<StudentDto> StudentParents { get; set; }
+       // public virtual ICollection<StudentParentDto>? StudentParents { get; set; }
 
     }
 }

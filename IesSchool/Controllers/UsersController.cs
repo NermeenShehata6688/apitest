@@ -162,7 +162,12 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var modelData = JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
+                var modelData =JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
+
+                //var modelData =(UserDto)Newtonsoft.Json.JsonConvert.DeserializeObject<UserDto>(Request.Form["user"]);
+                //var report = (HRDashboardViewModel)Newtonsoft.Json.JsonConvert.DeserializeObject(response, typeof(HRDashboardViewModel));
+                //return report.data.Count.ToString();
+                ////List<MyStok> myDeserializedObjList = (List<MyStok>)Newtonsoft.Json.JsonConvert.DeserializeObject(sc, typeof(List<MyStok>));
                 //var file = Request.Form.Files[0];
 
                 if (Request.Form.Files.Count() >0)

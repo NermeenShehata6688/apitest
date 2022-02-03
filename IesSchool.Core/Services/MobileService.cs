@@ -33,7 +33,9 @@ namespace IesSchool.Core.Services
             {
                 if (UserName != null && Password != null)
                 {
-                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Equals(x.ParentPassword, Password) && x.IsSuspended != true);
+                   // obj.Password.CompareTo(pass) == 0/
+                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsSuspended != true);
+                    //var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Equals(x.ParentPassword, Password) && x.IsSuspended != true);
                     if (user!= null)
                         return true;
                 }
