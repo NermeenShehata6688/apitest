@@ -1,6 +1,10 @@
 ﻿using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,9 +21,16 @@ namespace IesSchool.Controllers
         }
 
         // GET: api/<CurriculumsController>
-        [HttpGet]
+            [HttpGet]
+        [Authorize]
         public IActionResult GetAreas()
         {
+
+            var userName22 = User?.Identity?.Name;
+            var userName2 = User.FindFirstValue(ClaimTypes.Name);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+
             try
             {
                 var all = _curriculumService.GetAreas();

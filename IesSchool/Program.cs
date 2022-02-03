@@ -10,6 +10,8 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -19,7 +21,7 @@ builder.Services.AddApplicationServices();
 builder.Services.ServiceInjection();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddMemoryCache();
+//builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "Iespolice",
@@ -47,59 +49,60 @@ builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(config =>
                 config.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<iesIdentityContext>()
              .AddDefaultTokenProviders();
-//services.Configure<ApplicationDbContext>(o =>
-//{
-//  o.Database.Migrate();
-//});
+        builder.Services.AddAuthentication(opt=> {
+            //JwtBearerDefaults.AuthenticationScheme
 
-// Add JWT Authentication 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
-builder.Services.AddAuthentication(options =>
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+    .AddJwtBearer(options =>
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-    })
-
-    .AddJwtBearer(cfg =>
-    {
-        cfg.RequireHttpsMetadata = false;
-        cfg.SaveToken = true;
-
-        //cfg.TokenValidationParameters = new TokenValidationParameters
-        //{
-        //    ValidIssuer = Configuration["JwtIssuer"],
-        //    ValidAudience = Configuration["JwtIssuer"],
-        //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-        //    ClockSkew = TimeSpan.Zero, // remove delay of token when expire
-        //                ValidateIssuerSigningKey = true,
-        //    ValidateLifetime = true,
-        //};
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
     });
+
+
 
 
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
-builder.Services.Configure<IdentityOptions>(options =>
-options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
+
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.Configure<FormOptions>(o => {
+builder.Services.Configure<FormOptions>(o =>
+{
     o.ValueLengthLimit = int.MaxValue;
     o.MultipartBodyLengthLimit = int.MaxValue;
     o.MemoryBufferThreshold = int.MaxValue;
 });
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTUzMDQwQDMxMzkyZTM0MmUzMGlHSVBGS0VVekpkZ0xoTmFkUnp3WU5mOEFwaTd2M2tjNHo4cnB1NU5XUzQ9");
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+
+//builder.Services.AddSwaggerGen();
 var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
     app.UseSwagger().UseSwaggerUI(options =>
     {
         options.DocExpansion(DocExpansion.None);
@@ -108,9 +111,10 @@ if (app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseCors("Iespolice");
+app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
