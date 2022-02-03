@@ -22,7 +22,6 @@ namespace IesSchool.Controllers
 
         // GET: api/<CurriculumsController>
             [HttpGet]
-        [Authorize]
         public IActionResult GetAreas()
         {
 

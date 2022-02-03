@@ -319,7 +319,7 @@ namespace IesSchool.Core.Services
                     if (oldIep != null)
                     {
                         oldIep.Id = 0;
-                       // oldIep.TermId = null;
+                        oldIep.TermId = null;
                         if (oldIep.IepAssistants.Count() > 0)
                         {
                             oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
