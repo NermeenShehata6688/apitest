@@ -20,7 +20,6 @@ builder.Services.AddPersistenceServices(connString);
 builder.Services.AddApplicationServices();
 builder.Services.ServiceInjection();
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
 {
@@ -30,45 +29,6 @@ builder.Services.AddCors(options =>
                           builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                       });
 });
-
-/// <summary>
-/// identity
-/// </summary>
-///
-
-builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(config =>
-            {
-                config.SignIn.RequireConfirmedEmail = false;
-                config.User.RequireUniqueEmail = false;
-                //Password requirements
-                config.Password.RequireDigit = false;
-                config.Password.RequiredLength = 6;
-                config.Password.RequiredUniqueChars = 0;
-                config.Password.RequireLowercase = false;
-                config.Password.RequireNonAlphanumeric = false;
-                config.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<iesIdentityContext>()
-             .AddDefaultTokenProviders();
-        builder.Services.AddAuthentication(opt=> {
-            //JwtBearerDefaults.AuthenticationScheme
-
-            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
-
-
-
 
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -83,6 +43,7 @@ builder.Services.Configure<FormOptions>(o =>
     o.MultipartBodyLengthLimit = int.MaxValue;
     o.MemoryBufferThreshold = int.MaxValue;
 });
+
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTUzMDQwQDMxMzkyZTM0MmUzMGlHSVBGS0VVekpkZ0xoTmFkUnp3WU5mOEFwaTd2M2tjNHo4cnB1NU5XUzQ9");
 
 builder.Services.AddSwaggerGen(options => {
@@ -95,6 +56,51 @@ builder.Services.AddSwaggerGen(options => {
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
+builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(config =>
+{
+    config.SignIn.RequireConfirmedEmail = false;
+    config.User.RequireUniqueEmail = false;
+    //Password requirements
+    config.Password.RequireDigit = false;
+    config.Password.RequiredLength = 6;
+    config.Password.RequiredUniqueChars = 0;
+    config.Password.RequireLowercase = false;
+    config.Password.RequireNonAlphanumeric = false;
+    config.Password.RequireUppercase = false;
+}).AddEntityFrameworkStores<iesIdentityContext>()
+             .AddDefaultTokenProviders();
+
+
+builder.Services.AddAuthentication(opt=> {
+
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+
+
+.AddJwtBearer(options =>
+{
+    options.SecurityTokenValidators.Clear();
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+
+
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+        .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+     options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
+    {
+        // Disable the built-in JWT claims mapping feature.
+        InboundClaimTypeMap = new Dictionary<string, string>()
+    });
+});
+builder.Services.AddAuthorization();
+builder.Services.AddEndpointsApiExplorer();
 
 
 //builder.Services.AddSwaggerGen();
@@ -112,9 +118,7 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseCors("Iespolice");
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

@@ -1,5 +1,6 @@
 ﻿using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IesSchool.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AcadmicYearsController : ControllerBase
@@ -22,8 +22,6 @@ namespace IesSchool.Controllers
         /// This is method summary I want displayed
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-
         public IActionResult GetAcadmicYears()
         {
             try

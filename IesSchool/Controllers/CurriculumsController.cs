@@ -21,14 +21,14 @@ namespace IesSchool.Controllers
         }
 
         // GET: api/<CurriculumsController>
-            [HttpGet]
-        [Authorize]
+
+        [HttpGet]
         public IActionResult GetAreas()
         {
 
-            var userName22 = User?.Identity?.Name;
-            var userName2 = User.FindFirstValue(ClaimTypes.Name);
-            var role = User.FindFirstValue(ClaimTypes.Role);
+            //var userName22 = User?.Identity?.Name;
+            //var userName2 = User.FindFirstValue(ClaimTypes.Name);
+            //var role = User.FindFirstValue(ClaimTypes.Role);
 
 
             try
