@@ -248,15 +248,36 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
-                    x => x
-                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
-                     .Include(s => s.Student).ThenInclude(s => s.Department)
-                     .Include(s => s.AcadmicYear)
-                     .Include(s => s.Term));
-                var mapper = _mapper.Map<IxpDto>(ixp);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                if (ixpId > 0)
+                {
+                    var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
+                                       x => x.Include(x => x.IxpExtraCurriculars));
+
+                    if (ixp != null)
+                    {
+                        ixp.Id = 0;
+                        if (ixp.IxpExtraCurriculars.Count() > 0)
+                        {
+                            ixp.IxpExtraCurriculars.ToList().ForEach(x => x.Id = 0);
+                        }
+
+                        _uow.GetRepository<Ixp>().Add(ixp);
+                        _uow.SaveChanges();
+
+                        var mapper = _mapper.Map<IxpDto>(ixp);
+                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    }
+                    else
+                    {
+                        return new ResponseDto { Status = 1, Message = " null" };
+                    }
+                }
+
+
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = " null" };
+                }
             }
             catch (Exception ex)
             {
