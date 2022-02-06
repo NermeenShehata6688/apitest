@@ -5,12 +5,6 @@ namespace IesSchool.Context.Modelss
 {
     public partial class User
     {
-        public User()
-        {
-            StudentParents = new HashSet<Student>();
-            StudentTeachers = new HashSet<Student>();
-        }
-
         public int Id { get; set; }
         public string? Code { get; set; }
         public string? Name { get; set; }
@@ -37,8 +31,7 @@ namespace IesSchool.Context.Modelss
         public string? ParentPassword { get; set; }
         public bool? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
-
-        public virtual ICollection<Student> StudentParents { get; set; }
-        public virtual ICollection<Student> StudentTeachers { get; set; }
+        public string? Phone1 { get; set; }
+        public string? Phone2 { get; set; }
     }
 }

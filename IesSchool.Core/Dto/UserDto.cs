@@ -26,6 +26,8 @@ namespace IesSchool.Core.Dto
         public string? DeletedBy { get; set; }
         public bool? IsSuspended { get; set; }
         public int? DepartmentId { get; set; }
+        public string? Phone1 { get; set; }
+        public string? Phone2 { get; set; }
         public string? ParentUserName { get; set; }
         public string? ParentPassword { get; set; }
         public string? FullPath { get; set; }
@@ -34,6 +36,7 @@ namespace IesSchool.Core.Dto
         public string? UserRoles { get; set; }
         public string? UserPassword { get; set; }
         public int[]? StudentsIdsForParent { get; set; }
+
 
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }

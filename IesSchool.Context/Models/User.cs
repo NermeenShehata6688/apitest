@@ -61,6 +61,8 @@ namespace IesSchool.Context.Models
         public string? ParentPassword { get; set; }
         public bool? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
+        public string? Phone1 { get; set; }
+        public string? Phone2 { get; set; }
 
         public virtual Department? Department { get; set; }
         public virtual Country? Nationality { get; set; }

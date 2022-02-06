@@ -732,6 +732,24 @@ namespace IesSchool.Core.Services
             }
         }
 
+        public ResponseDto GetUserFroProfileById(int userId)
+        {
+
+            try
+            {
+                var user = _uow.GetRepository<User>().Single(x=> x.Id== userId, null, x => x.Include(x => x.AspNetUser));
+                var mapper = _mapper.Map<UserDto>(user);
+                if (user.AspNetUser!= null)
+                {
+                    mapper.UserName = user.AspNetUser.UserName == null ? "" : user.AspNetUser.UserName;
+                }
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         private PaginateDto<UserAttachmentDto> GetFullPathAndBinaryAtt(PaginateDto<UserAttachmentDto> allUserAttachement)
         {
             try
