@@ -234,9 +234,12 @@ namespace IesSchool.Core.Services
 
                 mapper.UserName= user.AspNetUser == null ? "" : user.AspNetUser.UserName==null? "": user.AspNetUser.UserName;
                 mapper.Email= user.AspNetUser == null ? "" : user.AspNetUser.Email ==null?"": user.AspNetUser.Email;
-                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
-                mapper.FullPath = fullpath;
+                if (mapper.Image!=null)
+                {
+                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                    mapper.FullPath = fullpath;
+                }
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -732,16 +735,25 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetUserFroProfileById(int userId)
+        public ResponseDto GetUserForProfileById(int userId)
         {
 
             try
             {
                 var user = _uow.GetRepository<User>().Single(x=> x.Id== userId, null, x => x.Include(x => x.AspNetUser));
-                var mapper = _mapper.Map<UserDto>(user);
-                if (user.AspNetUser!= null)
+                if (user != null)
                 {
-                    mapper.UserName = user.AspNetUser.UserName == null ? "" : user.AspNetUser.UserName;
+                    user.ImageBinary = null;
+                }
+                var mapper = _mapper.Map<UserDto>(user);
+               
+                mapper.UserName = user.AspNetUser == null ? "" : user.AspNetUser.UserName == null ? "" : user.AspNetUser.UserName;
+                mapper.Email = user.AspNetUser == null ? "" : user.AspNetUser.Email == null ? "" : user.AspNetUser.Email;
+                if (mapper.Image != null)
+                {
+                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                    mapper.FullPath = fullpath;
                 }
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

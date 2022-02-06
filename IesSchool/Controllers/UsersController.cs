@@ -299,5 +299,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetUserForProfileById(int userId)
+        {
+            try
+            {
+                var all = _userService.GetUserForProfileById(userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

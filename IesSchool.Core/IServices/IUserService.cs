@@ -30,7 +30,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto DeleteUserAttachment(int userAttachmentId);
         public bool IsUserNameExist(string UserName, int? userId);
         public bool IsUserCodeExist(string UserCode, int? userId);
-        public ResponseDto IsSuspended(int userId, bool isSuspended); 
+        public ResponseDto IsSuspended(int userId, bool isSuspended);
+        public ResponseDto GetUserForProfileById(int userId);
 
     }
 }
