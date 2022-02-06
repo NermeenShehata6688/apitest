@@ -430,17 +430,28 @@ namespace IesSchool.Core.Services
                     }
                     else
                     {
-
                         var cmd2 = $"UPDATE Students SET Students.ParentId =Null where  Students.ParentId={ mapper.Id}" ;
                         _iesContext.Database.ExecuteSqlRaw(cmd2);
                     }
 
-                    AspNetUser aspNetUser = new AspNetUser();
-                    aspNetUser.Id = userDto.Id;
-                    aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
-                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
-                    _uow.GetRepository<AspNetUser>().Update(aspNetUser);
-                    _uow.SaveChanges();
+                    //AspNetUser aspNetUser = new AspNetUser();
+                    //aspNetUser.Id = userDto.Id;
+                    //aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
+                    //aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
+                    //_uow.GetRepository<AspNetUser>().Update(aspNetUser);
+                    //_uow.SaveChanges();
+                    var AspnetBeforeUpdtate = _uow.GetRepository<AspNetUser>().Single(x => x.Id == mapper.Id);
+                    if (AspnetBeforeUpdtate != null)
+                    {
+                        AspnetBeforeUpdtate.UserName = userDto.UserName == null ? AspnetBeforeUpdtate.UserName : userDto.UserName;
+                        AspnetBeforeUpdtate.Email = userDto.Email == null ? AspnetBeforeUpdtate.Email : userDto.Email;
+                        _uow.GetRepository<AspNetUser>().Update(AspnetBeforeUpdtate);
+                        _uow.SaveChanges();
+                    }
+
+
+
+
                     transaction.Commit();
 
                     userDto.Id = mapper.Id;
@@ -457,7 +468,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditUser2(UserDto userDto)
+        public  ResponseDto EditUser2(UserDto userDto)
         {
             try
             {
@@ -473,17 +484,24 @@ namespace IesSchool.Core.Services
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     
                     var mapper = _mapper.Map<User>(userDto);
-
                     _uow.GetRepository<User>().Update(mapper);
                     _uow.SaveChanges();
+                    var AspnetBeforeUpdtate = _uow.GetRepository<AspNetUser>().Single(x => x.Id == mapper.Id);
+                    if (AspnetBeforeUpdtate!=null)
+                    {
+                        AspnetBeforeUpdtate.UserName = userDto.UserName == null ? AspnetBeforeUpdtate.UserName : userDto.UserName;
+                        AspnetBeforeUpdtate.Email = userDto.Email == null ? AspnetBeforeUpdtate.Email : userDto.Email;
+                        _uow.GetRepository<AspNetUser>().Update(AspnetBeforeUpdtate);
+                        _uow.SaveChanges();
+                    }
+                  
+                    // AspNetUser aspNetUser = new AspNetUser();
+                    //aspNetUser.Id = userDto.Id;
+                    //aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
+                    //aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
 
-                    AspNetUser aspNetUser = new AspNetUser();
-                    aspNetUser.Id = userDto.Id;
-                    aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
-                    aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
-                    _uow.GetRepository<AspNetUser>().Update(aspNetUser);
-                    _uow.SaveChanges();
 
+                 
                     if (userDto.StudentsIdsForParent != null && userDto.StudentsIdsForParent.Count() > 0)
                     {
                         var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && userDto.StudentsIdsForParent.Contains(x.Id), null).Items;

@@ -91,9 +91,9 @@ namespace IesSchool.Controllers
             try
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+             
                 if (result.Succeeded)
                 {
-
                     var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Email);
                     List<string> roles = _userManager.GetRolesAsync(appUser).Result.ToList();
                     string token2 = CreateToken(appUser, roles );
