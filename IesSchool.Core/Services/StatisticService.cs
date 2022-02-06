@@ -25,29 +25,44 @@ namespace IesSchool.Core.Services
             try
             {
                 StatisticDto statisticDto = new StatisticDto();
-                var allStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true).Items;
+                var allStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true, null,null, 0, 100000, true).Items;
+                statisticDto.StusentsCount = allStudents.Count();
+
                 if (allStudents.Count>0)
                 {
-                    statisticDto.StusentsCount = allStudents.Count();
                     statisticDto.SuspendendStusentsCount = allStudents.Where(x=> x.IsSuspended==true).Count();
                     statisticDto.ActivetusentsCount = allStudents.Where(x=> x.IsActive==true).Count();
                     statisticDto.UnActivetusentsCount = allStudents.Where(x=> x.IsActive==false).Count();
                 }
                 var setting = _uow.GetRepository<Setting>().Single();
-                var ieps = _uow.GetRepository<Iep>().GetList(x => x.IsDeleted != true).Items;
-
+                var ieps = _uow.GetRepository<Iep>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items;
                 if (ieps.Count > 0)
                 {
                     statisticDto.CurrentYearIepsCount = ieps.Where(x => x.AcadmicYearId == setting.CurrentYearId).Count();
                     statisticDto.CurrentTermIepsCount = ieps.Where(x => x.TermId == setting.CurrentTermId).Count();
                 }
-                var itps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true).Items;
 
+                var itps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items;
                 if (itps.Count > 0)
                 {
                     statisticDto.CurrentYearItpsCount = itps.Where(x => x.AcadmicYearId == setting.CurrentYearId).Count();
                     statisticDto.CurrentTermItpsCount = itps.Where(x => x.TermId == setting.CurrentTermId).Count();
                 }
+                var ixps = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items;
+               
+                    statisticDto.CurrentYearIxpsCount = itps.Where(x => x.AcadmicYearId == setting.CurrentYearId).Count();
+                    statisticDto.CurrentTermIxpsCount = itps.Where(x => x.TermId == setting.CurrentTermId).Count();
+                
+                 statisticDto.AreasCount = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
+                 statisticDto.StrandsCount = _uow.GetRepository<Strand>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
+                 statisticDto.SkillsCount = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
+
+                var allUsers = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items;
+                statisticDto.TeachersCount = allUsers.Where(x => x.IsTeacher == true).Count();
+                statisticDto.TherapistsCount = allUsers.Where(x => x.IsTherapist == true).Count();
+                statisticDto.ExtraTeachersCount = allUsers.Where(x => x.IsExtraCurricular == true).Count();
+
+                statisticDto.DepartmentsCount = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = statisticDto };
             }

@@ -20,7 +20,14 @@ namespace IesSchool.Core.Dto
         public int? CurrentYearIxpsCount { get; set; }
         public int? CurrentTermIxpsCount { get; set; }
 
+        public int? AreasCount { get; set; }
+        public int? StrandsCount { get; set; }
+        public int? SkillsCount { get; set; }
 
+        public int? TeachersCount { get; set; }
+        public int? TherapistsCount { get; set; }
+        public int? ExtraTeachersCount { get; set; }
+        public int? DepartmentsCount { get; set; }
 
     }
 }

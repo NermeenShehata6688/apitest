@@ -61,6 +61,17 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<AcadmicYear>(acadmicYearDto);
                 _uow.GetRepository<AcadmicYear>().Add(mapper);
                 _uow.SaveChanges();
+                if (acadmicYearDto.IsCurrent == true)
+                {
+                    var setting = _uow.GetRepository<Setting>().Single();
+                    if (setting != null)
+                    {
+                        setting.CurrentYearId = mapper.Id;
+                    }
+                   
+                    _uow.GetRepository<Setting>().Update(setting);
+                    _uow.SaveChanges();
+                }
                 acadmicYearDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Acadmic Year Added  Seccessfuly", Data = acadmicYearDto };
             }
@@ -83,6 +94,17 @@ namespace IesSchool.Core.Services
                 _uow.GetRepository<AcadmicYear>().Update(mapper);
                 _uow.SaveChanges();
                 acadmicYearDto.Id = mapper.Id;
+                if (acadmicYearDto.IsCurrent == true)
+                {
+                    var setting = _uow.GetRepository<Setting>().Single();
+                    if (setting != null)
+                    {
+                        setting.CurrentYearId = mapper.Id;
+                    }
+
+                    _uow.GetRepository<Setting>().Update(setting);
+                    _uow.SaveChanges();
+                }
                 return new ResponseDto { Status = 1, Message = "Acadmic Year Updated Seccessfuly", Data = acadmicYearDto };
             }
             catch (Exception ex)
@@ -107,9 +129,6 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-
-
-
 
     }
 }

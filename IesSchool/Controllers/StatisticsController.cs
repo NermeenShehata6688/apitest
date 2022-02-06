@@ -13,6 +13,7 @@ namespace IesSchool.Controllers
         {
             _statisticService = statisticService;
         }
+        //[ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetStatistics()
         {

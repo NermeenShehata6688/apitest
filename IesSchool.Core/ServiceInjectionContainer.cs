@@ -36,6 +36,7 @@ namespace IesSchool.Core
             services.AddScoped<IIxpService, IxpService>(); 
             services.AddScoped<IMobileService, MobileService>(); 
             services.AddScoped<IStatisticService, StatisticService>();
+            services.AddScoped<ISettingService, SettingService>();
 
             return services; 
         }

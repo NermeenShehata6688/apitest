@@ -14,5 +14,8 @@ namespace IesSchool.Core.Dto
         public int? LongTermPercent { get; set; }
         public int? ShortTermPercent { get; set; }
 
+        public string? CurrentYearName { get; set; }
+        public string? CurrentTermNamed { get; set; }
+
     }
 }

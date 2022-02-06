@@ -461,7 +461,12 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ApplicationUserGroup, ApplicationUserGroupDto>().ReverseMap();
             CreateMap(typeof(Paginate<>), typeof(PaginateDto<>)).ReverseMap();
             CreateMap(typeof(List<>), typeof(List<>)).ReverseMap();
-            CreateMap<Setting, SettingDto>().ReverseMap();
+            CreateMap<Setting, SettingDto>()
+            .ForMember(dist => dist.CurrentYearName, opt => opt.MapFrom(c => c.CurrentYear == null ? "" : c.CurrentYear.Name))
+            .ForMember(dist => dist.CurrentTermNamed, opt => opt.MapFrom(c => c.CurrentTerm == null ? "" : c.CurrentTerm.Name))
+            .ReverseMap()
+            .ForMember(x => x.CurrentYear, op => op.Ignore())
+            .ForMember(x => x.CurrentYear, op => op.Ignore());
             #endregion
 
         }

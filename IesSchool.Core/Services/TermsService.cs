@@ -61,6 +61,17 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<Term>(termDto);
                 _uow.GetRepository<Term>().Add(mapper);
                 _uow.SaveChanges();
+                if (termDto.IsCurrent == true)
+                {
+                    var setting = _uow.GetRepository<Setting>().Single();
+                    if (setting != null)
+                    {
+                        setting.CurrentTermId = mapper.Id;
+                    }
+
+                    _uow.GetRepository<Setting>().Update(setting);
+                    _uow.SaveChanges();
+                }
                 termDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Term Added  Seccessfuly", Data = termDto };
             }
@@ -82,6 +93,17 @@ namespace IesSchool.Core.Services
                 }
                 _uow.GetRepository<Term>().Update(mapper);
                 _uow.SaveChanges();
+                if (termDto.IsCurrent == true)
+                {
+                    var setting = _uow.GetRepository<Setting>().Single();
+                    if (setting != null)
+                    {
+                        setting.CurrentTermId = mapper.Id;
+                    }
+
+                    _uow.GetRepository<Setting>().Update(setting);
+                    _uow.SaveChanges();
+                }
                 termDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Term Updated Seccessfuly", Data = termDto };
             }
