@@ -286,9 +286,6 @@ namespace IesSchool.Core.Services
 
                     transaction.Commit();
 
-
-
-
                     var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
 
                     if (resultt.Succeeded)
