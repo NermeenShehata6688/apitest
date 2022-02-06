@@ -312,5 +312,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetAllParents([FromQuery]UserSearchDto userSearchDto)
+        {
+            try
+            {
+                var all = _userService.GetAllParents(userSearchDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -740,7 +740,7 @@ namespace IesSchool.Core.Services
 
             try
             {
-                var user = _uow.GetRepository<User>().Single(x=> x.Id== userId, null, x => x.Include(x => x.AspNetUser));
+                var user = _uow.GetRepository<User>().Single(x=> x.Id== userId && x.IsDeleted!=true, null, x => x.Include(x => x.AspNetUser));
                 if (user != null)
                 {
                     user.ImageBinary = null;
@@ -756,6 +756,37 @@ namespace IesSchool.Core.Services
                     mapper.FullPath = fullpath;
                 }
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetAllParents(UserSearchDto userSearchDto)
+        {
+
+            try
+            {
+                var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null);
+                if (AllParents != null)
+                {
+                    AllParents.Items.ToList().ForEach(x => x.ImageBinary = null);
+                }
+               
+                if (userSearchDto.Index == null || userSearchDto.Index == 0)
+                {
+                    userSearchDto.Index = 0;
+                }
+                else
+                {
+                    userSearchDto.Index += 1;
+                }
+                var lstUserDto = _mapper.Map<PaginateDto<UserDto>>(AllParents);
+
+                var mapper = new PaginateDto<UserDto> { Count = AllParents.Items.Count(), Items = AllParents.Items != null ? lstUserDto.Items.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstUserDto.Items.ToList()};
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+
             }
             catch (Exception ex)
             {
