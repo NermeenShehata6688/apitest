@@ -18,7 +18,7 @@ namespace IesSchool.Context.Models
         public int Id { get; set; }
         public int StudentId { get; set; }
         public int AcadmicYearId { get; set; }
-        public int? TermId { get; set; }
+        public int TermId { get; set; }
         public DateTime? DateOfPreparation { get; set; }
         public int? TeacherId { get; set; }
         public DateTime? LastDateOfReview { get; set; }

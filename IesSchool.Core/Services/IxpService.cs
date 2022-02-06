@@ -56,7 +56,7 @@ namespace IesSchool.Core.Services
                     x => x.Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
-                     .Include(s => s.IxpExtraCurriculars), 0, 100000, true);
+                     .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
                 var AllIxps = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
                 if (ixpSearchDto.Student_Id != null)
                 {
@@ -66,13 +66,17 @@ namespace IesSchool.Core.Services
                 {
                     AllIxps = AllIxps.Where(x => x.AcadmicYearId == ixpSearchDto.AcadmicYear_Id).ToList();
                 }
-                if (ixpSearchDto.ExtraCurricularName != null)
-                {
-                    AllIxps = AllIxps.Where(x => x.IxpExtraCurricularsName.Contains( ixpSearchDto.ExtraCurricularName)).ToList();
-                }
+                //if (ixpSearchDto.ExtraCurricularName != null)
+                //{
+                //    AllIxps = AllIxps.Where(x => x.IxpExtraCurricularsName.Contains( ixpSearchDto.ExtraCurricularName)).ToList();
+                //}
                 if (ixpSearchDto.Term_Id != null)
                 {
                     AllIxps = AllIxps.Where(x => x.TermId == ixpSearchDto.Term_Id).ToList();
+                }
+                if (ixpSearchDto.ExtraCurricular_Id != null )
+                {
+                    AllIxps = AllIxps.Where(x => x.ExtraCurricularIds.Contains(ixpSearchDto.ExtraCurricular_Id == null ? 0 : ixpSearchDto.ExtraCurricular_Id.Value)).ToList();
                 }
                 if (ixpSearchDto.Status != null)
                 {

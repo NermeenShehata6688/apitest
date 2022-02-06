@@ -14,9 +14,10 @@ namespace IesSchool.Core.Dto
         public int? AcadmicYear_Id { get; set; }
         public int? Term_Id { get; set; }
        // public int? Teacher_Id { get; set; }
-        //public int? ExtraCurricular_Id { get; set; }
+       
         public string? ExtraCurricularName { get; set; }
         public int? Index { get; set; }
         public int? PageSize { get; set; }
+        public int? ExtraCurricular_Id { get; set; }
     }
 }
