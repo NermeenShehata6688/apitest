@@ -213,7 +213,10 @@ namespace IesSchool.Core.Services
                     user.ImageBinary = null;
                 }
                 var mapper = _mapper.Map<UserDto>(user);
-
+                //if (user.AspNetUser != null)
+                //{
+                //    mapper.UserPassword = user.AspNetUser.PasswordHash;
+                //}
 
                 var appUser = _userManager.Users.FirstOrDefault(r => r.Email == user.Email);
                 if (appUser!= null)
