@@ -237,9 +237,16 @@ namespace IesSchool.Core.Services
                 {
                     mapper.UserAttachments = GetFullPathAndBinaryICollictionAtt(mapper.UserAttachments);
                 }
+               
+                    mapper.UserName = user.AspNetUser == null ? "" : user.AspNetUser.UserName == null ? "" : user.AspNetUser.UserName;
+                    mapper.Email = user.AspNetUser == null ? "" : user.AspNetUser.Email == null ? "" : user.AspNetUser.Email;
 
-                mapper.UserName= user.AspNetUser == null ? "" : user.AspNetUser.UserName==null? "": user.AspNetUser.UserName;
-                mapper.Email= user.AspNetUser == null ? "" : user.AspNetUser.Email ==null?"": user.AspNetUser.Email;
+                if (mapper.IsParent==true)
+                {
+                    mapper.UserName = user.ParentUserName == null ? "" : user.ParentUserName;
+                    mapper.Email = user.Email == null ? "" : user.Email ;
+
+                }
                 if (mapper.Image!=null)
                 {
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;

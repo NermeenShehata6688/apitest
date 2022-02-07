@@ -57,6 +57,7 @@ namespace IesSchool.Controllers
             }
         }
 
+        [ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetEventsImageGroubedByEventId()
         {
