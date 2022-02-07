@@ -357,7 +357,10 @@ namespace IesSchool.Core.MappingProfile
 
             CreateMap<EventHelper, EventHelperDto>().ReverseMap();
             CreateMap<EventType, EventTypeDto>().ReverseMap();
-            CreateMap<EventStudentFile, EventStudentFileDto>().ReverseMap();
+            CreateMap<EventStudentFile, EventStudentFileDto>()
+            .ForMember(dist => dist.EventName, opt => opt.MapFrom(c => c.EventStudent == null ? "" : c.EventStudent.Event== null ? "" : c.EventStudent.Event.Name))
+                .ReverseMap()
+                 .ForMember(x => x.EventStudent, op => op.Ignore());
             #endregion
             #region Reports
             CreateMap<ReportsHelper, ReportsHelperDto>().ReverseMap();

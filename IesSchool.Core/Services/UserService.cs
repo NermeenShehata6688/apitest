@@ -321,30 +321,34 @@ namespace IesSchool.Core.Services
                         _iesContext.Database.ExecuteSqlRaw(cmd);
                     }
                     userDto.Id = mapper.Id;
-                    var user = new IdentityUser<int>
-                    {
-                        UserName = userDto.UserName,
-                        Email = userDto.Email,
-                        Id = mapper.Id
-                        //Email = model.Email,
-                    };
+                   
                     //transaction.CreateSavepoint("AfterSavingUser");
 
                     transaction.Commit();
-
-                    var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
-
-                    if (resultt.Succeeded)
+                    if (userDto.IsParent != true)
                     {
-                        //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
-                        //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
-                    }
-                    else
-                    {
-                        var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
-                        _ = _iesContext.Database.ExecuteSqlRaw(cmd);
+                        var user = new IdentityUser<int>
+                        {
+                            UserName = userDto.UserName,
+                            Email = userDto.Email,
+                            Id = mapper.Id
+                            //Email = model.Email,
+                        };
+                        var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
 
+                        if (resultt.Succeeded)
+                        {
+                            //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+                            //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
+                        }
+                        else
+                        {
+                            var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
+                            _ = _iesContext.Database.ExecuteSqlRaw(cmd);
+
+                        }
                     }
+                    
                     //_uow.SaveChanges();
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
@@ -373,7 +377,6 @@ namespace IesSchool.Core.Services
 
                     if (userDto != null)
                     {
-                   
                     var mapper = _mapper.Map<User>(userDto);
                     mapper.IsDeleted = false;
                     mapper.CreatedOn = DateTime.Now;
@@ -391,28 +394,30 @@ namespace IesSchool.Core.Services
                         _iesContext.Database.ExecuteSqlRaw(cmd);
                     }
 
-                    var user = new IdentityUser<int>
-                    {
-                        UserName = userDto.UserName,
-                        Email = userDto.Email,
-                        Id = mapper.Id
-                    };
+                    
                     transaction.Commit();
-
-                    var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
-
-                    if (resultt.Succeeded)
+                    if (userDto.IsParent!=true)
                     {
-                        //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
-                        //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
-                    }
-                    else
-                    {
-                        var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
-                        _ = _iesContext.Database.ExecuteSqlRaw(cmd);
-                        //transaction.RollbackToSavepoint("AfterSavingUser");
-                    }
+                        var user = new IdentityUser<int>
+                        {
+                            UserName = userDto.UserName,
+                            Email = userDto.Email,
+                            Id = mapper.Id
+                        };
+                        var resultt = await _userManager.CreateAsync(user, userDto.UserPassword);
 
+                        if (resultt.Succeeded)
+                        {
+                            //_iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+                            //return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
+                        }
+                        else
+                        {
+                            var cmd = $"delete from [dbo].[User] where Id={userDto.Id}";
+                            _ = _iesContext.Database.ExecuteSqlRaw(cmd);
+                            //transaction.RollbackToSavepoint("AfterSavingUser");
+                        }
+                    }
                     userDto.Id = mapper.Id;
 
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };

@@ -13,5 +13,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto ReturnParentIfExist(string UserName, string Password);
         public ResponseDto GetParentById(int parentId);
         public ResponseDto GetEventsImageGroubedByEventId();
+        public ResponseDto GetParentStudents(int parentId);
+        public ResponseDto GetParentStudentsEvents(int parentId);
     }
 }

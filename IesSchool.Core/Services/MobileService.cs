@@ -104,6 +104,64 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        public ResponseDto GetParentStudents(int parentId)
+        {
+            try
+            {
+                var students = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, Image = x.Image }),x => x.ParentId == parentId && x.IsDeleted != true, null,null, 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<StudentDto>>(students);
+
+                if (mapper.Items.Count()>0&& mapper != null)
+                {
+                    foreach (var item in mapper.Items)
+                    {
+                        if (item.Image != null)
+                        {
+                            item.ImageBinary = null;
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+                            item.FullPath = fullpath;
+                        }
+                    }
+                }
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetParentStudentsEvents(int parentId)
+        {
+            try
+            {
+                var studentsIds = _uow.GetRepository<Student>().GetList( x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x=> x.Id).ToArray();
+
+                var eventStudentIds = _uow.GetRepository<EventStudent>().GetList( x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value) , null, null, 0, 100000, true).Items.Select(x=> x.Id).ToArray();
+
+                var eventStudentFiles = _uow.GetRepository<EventStudentFile>().GetList(x => eventStudentIds.Contains(x.EventStudentId.Value == null ? 0 : x.EventStudentId.Value), null,
+                  x => x.Include(x => x.EventStudent).ThenInclude(x => x.Event) );
+
+                var mapper = _mapper.Map<PaginateDto<EventStudentFileDto>>(eventStudentFiles);
+                if (mapper.Items.Count() > 0 && mapper != null)
+                {
+                    foreach (var item in mapper.Items)
+                    {
+                        if (item.FileName != null)
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                    }
+                }
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto GetEventsImageGroubedByEventId()
         {
             try

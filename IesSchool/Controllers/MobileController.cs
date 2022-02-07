@@ -71,5 +71,31 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetParentStudents(int parentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetParentStudents(parentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetParentStudentsEvents(int parentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetParentStudentsEvents(parentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
