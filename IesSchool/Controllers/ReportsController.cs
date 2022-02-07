@@ -18,7 +18,7 @@ namespace IesSchool.Controllers
         }
 
         // GET api/<ReportsController>/5
-        [HttpGet]
+       
         [HttpGet]
         public FileStreamResult LpReport(int iepId)
         {

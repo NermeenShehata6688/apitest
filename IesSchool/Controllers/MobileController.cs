@@ -10,45 +10,19 @@ namespace IesSchool.Controllers
     public class MobileController : ControllerBase
     {
         private IMobileService _iMobileService;
-        public MobileController(IMobileService iMobileService)
+        private IReportService _reportService;
+        public MobileController(IMobileService iMobileService, IReportService reportService)
         {
             _iMobileService = iMobileService;
+            _reportService = reportService;
         }
-
-
-        // GET: api/<MobileController>
+      
         [HttpGet]
-        public IActionResult IsParentExist(string UserName, string Password)
+        public IActionResult Login(string UserName, string Password)
         {
             try
             {
-                var all = _iMobileService.IsParentExist(UserName, Password);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public IActionResult ReturnParentIfExist(string UserName, string Password)
-        {
-            try
-            {
-                var all = _iMobileService.ReturnParentIfExist(UserName, Password);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public IActionResult GetParentById(int parentId)
-        {
-            try
-            {
-                var all = _iMobileService.GetParentById(parentId);
+                var all = _iMobileService.Login(UserName, Password);
                 return Ok(all);
             }
             catch (Exception)
@@ -85,11 +59,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetParentStudentsEvents(int parentId)
+        public IActionResult GetStudentsEventsByParentId(int parentId)
         {
             try
             {
-                var all = _iMobileService.GetParentStudentsEvents(parentId);
+                var all = _iMobileService.GetStudentsEventsByParentId(parentId);
                 return Ok(all);
             }
             catch (Exception)
@@ -97,5 +71,20 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetStudentIepsItpsIxps(int studentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetStudentIepsItpsIxps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+       
+
     }
 }
