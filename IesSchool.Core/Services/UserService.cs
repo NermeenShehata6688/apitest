@@ -128,7 +128,7 @@ namespace IesSchool.Core.Services
                 {
                     userSearchDto.Index += 1;
                 }
-                var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstToSend != null ? lstUserDto.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstToSend.ToList() };
+                var mapper = new PaginateDto<VwUserDto> { Count = lstToSend.Count(), Items = lstToSend != null ? lstUserDto.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstToSend.ToList() };
                // var mapper = new PaginateDto<VwUserDto> { Count = allUsers.Count(), Items = lstToSend, Index = userSearchDto.Index, Pages = userSearchDto.PageSize };
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

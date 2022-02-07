@@ -47,21 +47,23 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
-        public ResponseDto ReturnParentIfExist(string UserName, string Password)
+        public ResponseDto Login(string UserName, string Password)
         {
             try
             {
                 if (UserName != null && Password != null)
                 {
                     // obj.Password.CompareTo(pass) == 0/string.Equals
-                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Compare(x.ParentPassword, Password) == 0);
-                    // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsSuspended != true);
+                    //var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Compare(x.ParentPassword, Password) == 0 && x.IsSuspended != true);
+                     var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsSuspended != true);
                     // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
                     if (user != null)
                         return new ResponseDto { Status = 1, Message = " Seccess", Data = user };
+                    else
+                        return new ResponseDto { Status = 0, Message = " null" };
 
                 }
-                return new ResponseDto { Status = 1, Message = " null" };
+                return new ResponseDto { Status = 0, Message = " null" };
             }
             catch (Exception ex)
             {
@@ -131,7 +133,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetParentStudentsEvents(int parentId)
+        public ResponseDto GetStudentsEventsByParentId(int parentId)
         {
             try
             {
@@ -155,7 +157,14 @@ namespace IesSchool.Core.Services
                         }
                     }
                 }
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                var mapperData = mapper.Items.GroupBy(x => x.EventName)
+                                                .OrderByDescending(x => x.Key)
+                                                .Select(evt => new
+                                                {
+                                                    EventName = evt.Key,
+                                                    EventAttachement = evt.OrderBy(x => x.EventName)
+                                                });
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapperData };
             }
             catch (Exception ex)
             {
@@ -184,6 +193,46 @@ namespace IesSchool.Core.Services
                 }
                 else
                     return new ResponseDto { Status = 1, Message = " null" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentIepsItpsIxps(int studentId)
+        {
+            try
+            {
+                IepsItpsIxpsDto iepsItpsIxpsDto = new IepsItpsIxpsDto();
+                var iep = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.IsPublished == true, null, x => x.Include(x => x.Student)
+                    .Include(x => x.AcadmicYear).Include(x => x.Term), 0, 100000, true);
+                var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep).Items;
+
+                    iepsItpsIxpsDto.Ieps = iepMapper;
+
+
+                var AllItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
+                   x => x.Include(s => s.Student)
+                    .Include(s => s.Therapist)
+                    .Include(s => s.AcadmicYear)
+                    .Include(s => s.Term)
+                    .Include(s => s.ParamedicalService), 0, 100000, true);
+                var itpsMapper = _mapper.Map<PaginateDto<ItpDto>>(AllItps).Items;
+
+                iepsItpsIxpsDto.Itps = itpsMapper;
+
+
+                var AllIxpsx = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
+                   x => x.Include(s => s.Student)
+                    .Include(s => s.AcadmicYear)
+                    .Include(s => s.Term)
+                    .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
+                var ixpMapper = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
+               
+                iepsItpsIxpsDto.Ixps = ixpMapper;
+
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = iepsItpsIxpsDto };
+
             }
             catch (Exception ex)
             {
