@@ -254,13 +254,6 @@ namespace IesSchool.Core.Services
             }
         }
 
-
-
-
-
-
-
-
         public UserDto GetJustUserById(int userId)
         {
             try
@@ -286,17 +279,6 @@ namespace IesSchool.Core.Services
                 throw ex;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
         public async Task<ResponseDto>  AddUser (IFormFile file, UserDto userDto)
         {
@@ -836,15 +818,17 @@ namespace IesSchool.Core.Services
 
             try
             {
-                var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null);
+                var AllParentss = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null);
+                var AllParents = _mapper.Map<PaginateDto<UserDto>>(AllParentss).Items;
+
                 if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
                 {
-                    AllParents = AllParents.Items.Where(x => x.Code.Contains(userSearchDto.StringSearch)
-                        || x.Name.Contains(userSearchDto.StringSearch));
+                    AllParents = AllParents.Where(x => x.Code.Contains(userSearchDto.StringSearch)
+                        || x.Name.Contains(userSearchDto.StringSearch)).ToList();
                 }
                 if (AllParents != null)
                 {
-                    AllParents.Items.ToList().ForEach(x => x.ImageBinary = null);
+                    AllParents.ToList().ForEach(x => x.ImageBinary = null);
                 }
                
                 if (userSearchDto.Index == null || userSearchDto.Index == 0)
@@ -855,10 +839,10 @@ namespace IesSchool.Core.Services
                 {
                     userSearchDto.Index += 1;
                 }
-                var lstUserDto = _mapper.Map<PaginateDto<UserDto>>(AllParents);
 
-                var mapper = new PaginateDto<UserDto> { Count = AllParents.Items.Count(), Items = lstUserDto.Items != null ? lstUserDto.Items.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstUserDto.Items.ToList()};
 
+                var mapper = new PaginateDto<UserDto> { Count = AllParents.Count(), Items = AllParents != null ? AllParents.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : AllParents.ToList() };
+               
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
 
             }
