@@ -414,7 +414,17 @@ namespace IesSchool.Controllers
                   //  string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userr);
                     //IdentityResult updateResult = await _userManager.ResetPasswordAsync(userr, resetToken, model.Password);
                     IdentityResult updateResult2 = await _userManager.ChangePasswordAsync(userr, model.OldPassword, model.NewPassword);
-                    return Ok(new ResponseDto { Message = "تم تغير كلمة المرور بنجاح", Status = 1 });
+                    if (updateResult2.Succeeded)
+                    {
+                        return Ok(new ResponseDto {  Status = 1 ,Message = "Password Changed Succesfully !!"});
+                    }
+                    else
+                    {
+                        return Ok(new ResponseDto
+                        { Status = 0, Errormessage = "faild To Change Password !!",
+                            Data = string.Join(",", updateResult2.Errors.Select(x => x.Description))
+                        });
+                    }
 
                 }
                 catch (Exception ex)

@@ -42,7 +42,6 @@ namespace IesSchool.Core.Dto
 
 
     public class RestPasswordModel
-
     {
         //public int Id { get; set; } = 0;
 
