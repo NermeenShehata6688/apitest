@@ -17,6 +17,7 @@ namespace IesSchool.Core.Dto
         public bool? IsPublished { get; set; }
         public string? FileName { get; set; }
         public string? FullPath { get; set; }
+        public string? EventName { get; set; }
 
         public virtual EventAttachmentBinaryDto? EventAttachmentBinary { get; set; } 
     }

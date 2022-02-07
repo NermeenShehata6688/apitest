@@ -31,11 +31,38 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public IActionResult ReturnParentIfExist(string UserName, string Password)
+        {
+            try
+            {
+                var all = _iMobileService.ReturnParentIfExist(UserName, Password);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public IActionResult GetParentById(int parentId)
         {
             try
             {
                 var all = _iMobileService.GetParentById(parentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetEventsImageGroubedByEventId()
+        {
+            try
+            {
+                var all = _iMobileService.GetEventsImageGroubedByEventId();
                 return Ok(all);
             }
             catch (Exception)

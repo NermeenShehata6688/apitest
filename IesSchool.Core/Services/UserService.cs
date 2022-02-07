@@ -768,6 +768,11 @@ namespace IesSchool.Core.Services
             try
             {
                 var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null);
+                if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
+                {
+                    AllParents = AllParents.Items.Where(x => x.Code.Contains(userSearchDto.StringSearch)
+                        || x.Name.Contains(userSearchDto.StringSearch));
+                }
                 if (AllParents != null)
                 {
                     AllParents.Items.ToList().ForEach(x => x.ImageBinary = null);
@@ -783,7 +788,7 @@ namespace IesSchool.Core.Services
                 }
                 var lstUserDto = _mapper.Map<PaginateDto<UserDto>>(AllParents);
 
-                var mapper = new PaginateDto<UserDto> { Count = AllParents.Items.Count(), Items = AllParents.Items != null ? lstUserDto.Items.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstUserDto.Items.ToList()};
+                var mapper = new PaginateDto<UserDto> { Count = AllParents.Items.Count(), Items = lstUserDto.Items != null ? lstUserDto.Items.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : lstUserDto.Items.ToList()};
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
 
