@@ -325,5 +325,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult IsParentUserNameExist(string UserName, int? userId)
+        {
+            try
+            {
+                var all = _userService.IsParentUserNameExist(UserName, userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
