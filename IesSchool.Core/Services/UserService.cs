@@ -851,6 +851,29 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        //public bool IsUserNameExist(string UserName, int? userId)
+        //{
+        //    try
+        //    {
+        //        if (UserName != null && userId != null)
+        //        {
+        //            var user = _uow.GetRepository<AspNetUser>().GetList(x => x.UserName == UserName && x.Id != userId);
+        //            if (user.Items.Count() > 0)
+        //                return true;
+        //        }
+        //        if (UserName != null && userId == null)
+        //        {
+        //            var user = _uow.GetRepository<AspNetUser>().GetList(x => x.UserName == UserName);
+        //            if (user.Items.Count() > 0)
+        //                return true;
+        //        }
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return false;
+        //    }
+        //}
         private PaginateDto<UserAttachmentDto> GetFullPathAndBinaryAtt(PaginateDto<UserAttachmentDto> allUserAttachement)
         {
             try

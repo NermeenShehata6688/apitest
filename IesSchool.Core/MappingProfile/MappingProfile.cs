@@ -331,7 +331,9 @@ namespace IesSchool.Core.MappingProfile
 
             // CreateMap<Paginate<EventAttachement>, Paginate<EventAttachementDto>>().ReverseMap();
 
-            CreateMap<EventAttachement, EventAttachementDto>().ReverseMap()
+            CreateMap<EventAttachement, EventAttachementDto>()
+           .ForMember(dist => dist.EventName, opt => opt.MapFrom(c => c.Event == null ? "" : c.Event.Name == null ? "" : c.Event.Name))
+                .ReverseMap()
              .ForMember(x => x.Event, op => op.Ignore());
 
             CreateMap<EventAttachmentBinary, EventAttachmentBinaryDto>().ReverseMap();

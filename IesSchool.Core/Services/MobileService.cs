@@ -108,7 +108,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var eventsImage = _uow.GetRepository<EventAttachement>().GetList(null, null, null, 0, 100000, true).Items;
+                var eventsImage = _uow.GetRepository<EventAttachement>().GetList(null, null, x=> x.Include(x=>x.Event), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventAttachementDto>>(eventsImage);
 
                 if (mapper.Items.Count > 0)
