@@ -33,6 +33,6 @@ namespace IesSchool.Core.IServices
         public ResponseDto IsSuspended(int userId, bool isSuspended);
         public ResponseDto GetUserForProfileById(int userId);
         public ResponseDto GetAllParents(UserSearchDto userSearchDto);
-
+        public UserDto GetJustUserById(int userId);
     }
 }

@@ -16,11 +16,17 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private iesContext _iesContext;
         private IFileService _ifileService;
+      
+
         private readonly UserManager<IdentityUser<int>> _userManager;
 
         private IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserService(UserManager<IdentityUser<int>> userManage,IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext, IFileService ifileService, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+        public UserService(UserManager<IdentityUser<int>> userManage,
+            IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext,
+            IFileService ifileService, IHostingEnvironment hostingEnvironment, 
+            IHttpContextAccessor httpContextAccessor
+           )
         {
             _uow = unitOfWork;
             _mapper = mapper;
@@ -247,6 +253,51 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+
+
+
+
+
+
+
+
+        public UserDto GetJustUserById(int userId)
+        {
+            try
+            {
+                var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null);
+               
+                if (user != null)
+                {
+                    user.ImageBinary = null;
+                }
+                var mapper = _mapper.Map<UserDto>(user);
+              
+                if (mapper.Image != null)
+                {
+                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                    mapper.FullPath = fullpath;
+                }
+                return mapper;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         public async Task<ResponseDto>  AddUser (IFormFile file, UserDto userDto)
         {
             using var transaction = _iesContext.Database.BeginTransaction();
