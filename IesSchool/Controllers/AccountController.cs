@@ -25,14 +25,18 @@ namespace IesSchool.Controllers
         private readonly IUserApplicationGroupService _iaplicationGroupService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private IUserService _userService;
+
         public AccountController(
-            IUserApplicationGroupService iaplicationGroupService,
+        IUserApplicationGroupService iaplicationGroupService,
             UserManager<IdentityUser<int>> userManager,
             SignInManager<IdentityUser<int>> signInManager,
             RoleManager<IdentityRole<int>> roleManager,
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor
             , IMapper mapper
+             , IUserService userService
+
             )
         {
             _userManager = userManager;
@@ -41,6 +45,7 @@ namespace IesSchool.Controllers
             _roleManager = roleManager;
             _iaplicationGroupService = iaplicationGroupService;
             _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
 
             _mapper = mapper;
         }
@@ -91,10 +96,15 @@ namespace IesSchool.Controllers
             try
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+             
                 if (result.Succeeded)
                 {
 
+
                     var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Email);
+                var User=    _userService.GetJustUserById(appUser.Id);
+
+
                     List<string> roles = _userManager.GetRolesAsync(appUser).Result.ToList();
                     string token2 = CreateToken(appUser, roles );
 
@@ -132,11 +142,11 @@ namespace IesSchool.Controllers
                     //var CreateBy = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     // will give the user's userId
 
-                    var userName22 = User?.Identity?.Name;
-                    var userName2 = User.FindFirstValue(ClaimTypes.Name);
-                    var role = User.FindFirstValue(ClaimTypes.Role);
+                    //var userName22 = User?.Identity?.Name;
+                    //var userName2 = User.FindFirstValue(ClaimTypes.Name);
+                    //var role = User.FindFirstValue(ClaimTypes.Role);
 
-                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName,} };
+                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath } };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
