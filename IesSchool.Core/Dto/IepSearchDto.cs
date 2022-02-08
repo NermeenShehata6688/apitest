@@ -26,6 +26,6 @@ namespace IesSchool.Core.Dto
         //public int? RoomNumber { get; set; }
         //public string? StudentNameAr { get; set; }
         //public string? StudentName { get; set; }
-        //public int? StudentCode { get; set; }
+        public string? StudentCode { get; set; }
     }
 }

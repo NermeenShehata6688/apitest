@@ -96,7 +96,11 @@ namespace IesSchool.Core.Services
                 {
                     allIeps = allIeps.Where(x => x.Department_Id == iepSearchDto.Department_Id);
                 }
-                
+                if (iepSearchDto.StudentCode != null)
+                {
+                    allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains( iepSearchDto.StudentCode));
+                }
+
 
                 var lstIepDto = _mapper.Map<List<VwIepDto>>(allIeps);
                 if (iepSearchDto.Index == null || iepSearchDto.Index == 0)
