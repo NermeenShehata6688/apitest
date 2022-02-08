@@ -20,7 +20,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.SkillAlowedDepartments).Include(s => s.Students).Include(s => s.Users), 0, 100000, true);
+                var allDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<DepartmentDto>>(allDepartments);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
