@@ -30,7 +30,7 @@ namespace IesSchool.Core.Services
                 IepHelper iepHelper = new IepHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code }),null, null, null, 0, 100000, true),
+                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId }),null, null, null, 0, 100000, true),
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
                     AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name,RoomNumber=x.RoomNumber }), x =>  x.IsTeacher == true, null, null, 0, 1000000, true),

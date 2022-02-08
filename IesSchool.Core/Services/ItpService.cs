@@ -596,6 +596,7 @@ namespace IesSchool.Core.Services
                         itpProgressReportDto.TermId = itp.TermId;
                         itpProgressReportDto.ParamedicalServiceId = itp.ParamedicalServiceId;
                         itpProgressReportDto.TherapistId = itp.TherapistId;
+                        itpProgressReportDto.HeadOfEducationId = itp.HeadOfEducationId;
 
                         if (itp.ItpGoalObjectives.Count > 0)
                         {

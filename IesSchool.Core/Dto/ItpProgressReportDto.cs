@@ -32,10 +32,11 @@ namespace IesSchool.Core.Dto
         public string? TermName { get; set; }
         public string? TherapistName { get; set; }
         public string? ParamedicalServiceName { get; set; }
+       // public string? HeadOfEducationName { get; set; }
 
         //public string? StudentBirthDay { get; set; }
         //public string? StudentDepartmentName { get; set; }
-     
+
         public virtual ICollection<ItpObjectiveProgressReportDto>? ItpObjectiveProgressReports { get; set; }
     }
 }
