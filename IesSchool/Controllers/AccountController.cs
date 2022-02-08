@@ -102,7 +102,7 @@ namespace IesSchool.Controllers
 
 
                     var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Email);
-                var User=    _userService.GetJustUserById(appUser.Id);
+                      var User=  _userService.GetJustUserById(appUser.Id);
 
 
                     List<string> roles = _userManager.GetRolesAsync(appUser).Result.ToList();
@@ -398,7 +398,7 @@ namespace IesSchool.Controllers
         }
         [HttpPost]
         //[Route("ChangePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] RegisterModel model)
+        public async Task<IActionResult> ChangePassword([FromBody] RestPasswordModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -410,10 +410,21 @@ namespace IesSchool.Controllers
                 try
                 {
 
-                    var userr = _userManager.Users.First(x => x.Email == model.Email);
-                    string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userr);
-                    IdentityResult updateResult = await _userManager.ResetPasswordAsync(userr, resetToken, model.Password);
-                    return Ok(new ResponseDto { Message = "تم تغير كلمة المرور بنجاح", Status = 1 });
+                    var userr = _userManager.Users.First(x => x.UserName == model.UserName);
+                  //  string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userr);
+                    //IdentityResult updateResult = await _userManager.ResetPasswordAsync(userr, resetToken, model.Password);
+                    IdentityResult updateResult2 = await _userManager.ChangePasswordAsync(userr, model.OldPassword, model.NewPassword);
+                    if (updateResult2.Succeeded)
+                    {
+                        return Ok(new ResponseDto {  Status = 1 ,Message = "Password Changed Succesfully !!"});
+                    }
+                    else
+                    {
+                        return Ok(new ResponseDto
+                        { Status = 0, Errormessage = "faild To Change Password !!",
+                            Data = string.Join(",", updateResult2.Errors.Select(x => x.Description))
+                        });
+                    }
 
                 }
                 catch (Exception ex)

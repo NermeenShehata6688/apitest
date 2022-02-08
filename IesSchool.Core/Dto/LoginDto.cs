@@ -39,6 +39,18 @@ namespace IesSchool.Core.Dto
         //public string []  Roles{ get; set; }
         public IEnumerable<ApplicationGroupDto> Roles { get; set; }
     }
+
+
+    public class RestPasswordModel
+    {
+        //public int Id { get; set; } = 0;
+
+        public string UserName { get; set; }
+
+        public string NewPassword { get; set; }
+        public string OldPassword { get; set; }
+
+    }
     public class UpdateResources
     {
         public string Id { get; set; }
