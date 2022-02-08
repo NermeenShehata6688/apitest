@@ -84,7 +84,99 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-       
+        [HttpGet]
+        public FileStreamResult LpReport(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepLpReport(iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult IepReport(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepReport(iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult BCPReport(int? studentId, int? iepId)
+        {
+            try
+            {
+                var all = _reportService.BCPReport(studentId, iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult ProgressReport(int iepProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ProgressReport(iepProgressReportId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public FileStreamResult ItpReport(int itpId)
+        {
+            try
+            {
+                var all = _reportService.ItpReport(itpId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult ItpProgressReport(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ItpProgressReport(itpProgressReportId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public FileStreamResult IxpReport(int ixpId)
+        {
+            try
+            {
+                var all = _reportService.IxpReport(ixpId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }
