@@ -19,6 +19,7 @@ namespace IesSchool.Context.Models
         public int? DepartmentId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
+        public DateTime? BirthDay { get; set; }
         public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
