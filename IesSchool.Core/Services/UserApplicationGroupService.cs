@@ -160,10 +160,10 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                using (var context = _context.Database.BeginTransaction())
-                {
+                //using (var context = _context.Database.BeginTransaction())
+                //{
                     var cmd = "";
-                    _context.ApplicationGroups.Update(model);
+                 //   _context.ApplicationGroups.Update(model);
 
                     var group = FindGroup(model.Id);
                     group.Name = model.Name;
@@ -179,7 +179,7 @@ namespace IesSchool.Core.Services
                     cmd += $"DELETE FROM ApplicationGroupRole where ApplicationGroupId = '{model.Id}'";
                     //_ = _context.Database.ExecuteSqlCommand(cmd);
                     _ = _context.Database.ExecuteSqlRaw(cmd);
-
+                _context.SaveChanges();
 
                     foreach (var item in model.ApplicationGroupRoles)
                     {
@@ -190,12 +190,12 @@ namespace IesSchool.Core.Services
                     int[] groupid = { group.Id };
                     foreach (var item in group.ApplicationUserGroups)
                     {
-                        //_context.ApplicationUserGroup.Add(new ApplicationUserGroup
-                        //{
-                        //    ApplicationGroupId = group.Id,
-                        //    ApplicationUserId = item.ApplicationUserId
-                        //});
-                        var roles = model.ApplicationGroupRoles.Select(s => s.ApplicationRoleId).Distinct();
+                    _context.ApplicationUserGroups.Add(new ApplicationUserGroup
+                    {
+                        ApplicationGroupId = group.Id,
+                        ApplicationUserId = item.ApplicationUserId
+                    });
+                    var roles = model.ApplicationGroupRoles.Select(s => s.ApplicationRoleId).Distinct().ToList();
                         if (roles != null)
                         {
                             foreach (var role in roles)
@@ -209,9 +209,9 @@ namespace IesSchool.Core.Services
                         }
                     }
                     _context.SaveChanges();
-                    context.Commit();
+                    //context.Commit();
                     return new ResponseDto { Status = 1, Message = "تم تعديل المجموعة بنجاح  بنجاح" };
-                }
+                //}
             }
             catch (Exception ex)
             {
