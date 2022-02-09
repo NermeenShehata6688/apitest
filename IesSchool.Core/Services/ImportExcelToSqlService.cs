@@ -57,7 +57,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = "Null" };
+                    return new ResponseDto { Status =0, Message = "Null" };
                 }
                 return new ResponseDto { Status = 1, Message = "Done Check Your Areas now" };
 
@@ -105,7 +105,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = "Null" };
+                    return new ResponseDto { Status = 0, Message = "Null" };
                 }
                 return new ResponseDto { Status = 1, Message = "Done Check Your Strands now" };
 
@@ -155,7 +155,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = "Null" };
+                    return new ResponseDto { Status = 0, Message = "Null" };
                 }
                 return new ResponseDto { Status = 1, Message = "Done Check Your Skills now" };
 
