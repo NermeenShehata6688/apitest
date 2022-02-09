@@ -363,11 +363,12 @@ namespace IesSchool.Core.Services
                         _uow.SaveChanges();
 
                         var mapper = _mapper.Map<GetIepDto>(oldIep);
-                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                       
+                        return new ResponseDto { Status = 1, Message = " IEP has been Duplicated", Data = mapper };
                     }
                     else
                     {
-                        return new ResponseDto { Status = 1, Message = " null" };
+                        return new ResponseDto { Status = 0, Message = " null" };
                     }
                 }
                 else

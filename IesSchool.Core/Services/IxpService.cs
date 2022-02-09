@@ -269,18 +269,18 @@ namespace IesSchool.Core.Services
                         _uow.SaveChanges();
 
                         var mapper = _mapper.Map<IxpDto>(ixp);
-                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                        return new ResponseDto { Status = 1, Message = " IXP has been Duplicated", Data = mapper };
                     }
                     else
                     {
-                        return new ResponseDto { Status = 1, Message = " null" };
+                        return new ResponseDto { Status = 0, Message = " null" };
                     }
                 }
 
 
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = " null" };
+                    return new ResponseDto { Status = 0, Message = " null" };
                 }
             }
             catch (Exception ex)
