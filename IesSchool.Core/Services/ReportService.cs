@@ -929,7 +929,7 @@ namespace IesSchool.Core.Services
 						MemoryStream stream1 = new MemoryStream();
 						return new FileStreamResult(stream1, "application/excel");
 					}
-					//lastRow = worksheet.Rows.Length;
+					lastRow = worksheet.Rows.Length;
 					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
 					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
 					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;

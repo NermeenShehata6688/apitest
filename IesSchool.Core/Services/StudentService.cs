@@ -130,7 +130,11 @@ namespace IesSchool.Core.Services
                     var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones)
                     .Include(x => x.StudentAttachments).ThenInclude(x=> x.AttachmentType)
                     .Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
-                    student.ImageBinary = null;
+                    if (student!=null)
+                    {
+                        student.ImageBinary = null;
+
+                    }
                     var mapper = _mapper.Map<StudentDetailsDto>(student);
                     if (mapper.StudentAttachments.Count() > 0)
                     {
@@ -208,6 +212,8 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
+                    //studentDto.Image = null;
+                    //studentDto.ImageBinary = null;
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     studentDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{studentDto.Image}";
                 }
