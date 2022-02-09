@@ -280,11 +280,11 @@ namespace IesSchool.Core.Services
                     _uow.SaveChanges();
 
                     var mapper = _mapper.Map<ItpDto>(itp);
-                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    return new ResponseDto { Status = 1, Message = " ITP has been Duplicated", Data = mapper };
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = " null" };
+                    return new ResponseDto { Status = 0, Message = " null" };
                 }
 
             }
