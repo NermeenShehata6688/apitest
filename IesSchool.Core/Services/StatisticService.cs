@@ -32,7 +32,7 @@ namespace IesSchool.Core.Services
                 {
                     statisticDto.SuspendendStusentsCount = allStudents.Where(x=> x.IsSuspended==true).Count();
                     statisticDto.ActivetusentsCount = allStudents.Where(x=> x.IsActive==true).Count();
-                    statisticDto.UnActivetusentsCount = allStudents.Where(x=> x.IsActive==false).Count();
+                    statisticDto.UnActivetusentsCount = allStudents.Where(x=> x.IsActive!=true).Count();
                 }
                 var setting = _uow.GetRepository<Setting>().Single();
                 var ieps = _uow.GetRepository<Iep>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items;
