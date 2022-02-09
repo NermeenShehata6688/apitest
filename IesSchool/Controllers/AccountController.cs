@@ -367,26 +367,35 @@ namespace IesSchool.Controllers
                 try
                 {
                   var user = await _userManager.FindByNameAsync(model.UserName );
+                    if (user!=null)
+                    {
+
                   //  var user = await _userManager.FindByIdAsync(model.Id. );
                     //user.FullName = model.FullName;
-                    user.UserName = model.UserName;
-                    user.Email = model.Email;
+                    //user.UserName = model.UserName;
+                    //user.Email = model.Email;
 
-                    if (!string.IsNullOrEmpty(model.Password))
-                    {
-                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    //if (!string.IsNullOrEmpty(model.Password))
+                    //{
+                    //    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                        var resetpassword = await _userManager.ResetPasswordAsync(user, token, model.Password);
-                    }
+                    //    var resetpassword = await _userManager.ResetPasswordAsync(user, token, model.Password);
+                    //}
                     _iaplicationGroupService.DeleteGroupFromUser(user.Id);
                     _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
 
-                    var userq = await _userManager.UpdateAsync(user);
+                    //var userq = await _userManager.UpdateAsync(user);
 
                     //var userRoles = await userManager.GetRolesAsync(user);
                     //await userManager.RemoveFromRolesAsync(user, userRoles);
                     //await userManager.AddToRolesAsync(user, model.Roles);
                     return Ok(new ResponseDto { Message = "تم التعديل بنجاح", Data = user, Status = 1 });
+                    }
+                    else
+                    {
+                        return Ok(new ResponseDto { Errormessage = "فشل في عملية التعديل" , Status =0 });
+
+                    }
                 }
                 catch (Exception ex)
                 {
