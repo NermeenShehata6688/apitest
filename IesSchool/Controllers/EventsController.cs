@@ -108,11 +108,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult IsPublished(int Id, bool isPublished)
+        public IActionResult IsPublished(IsPuplishedDto isPuplishedDto)
         {
             try
             {
-                var all = _eventService.IsPublished(Id, isPublished);
+                var all = _eventService.IsPublished(isPuplishedDto);
                 return Ok(all);
             }
             catch (Exception)
