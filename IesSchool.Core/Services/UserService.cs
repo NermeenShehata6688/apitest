@@ -423,7 +423,7 @@ namespace IesSchool.Core.Services
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
                 }
                 else
-                    return new ResponseDto { Status = 1, Message = "null" };
+                    return new ResponseDto { Status = 0, Message = "null" };
 
             }
             catch (Exception ex)
