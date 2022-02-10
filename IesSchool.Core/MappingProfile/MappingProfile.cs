@@ -405,8 +405,8 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ItpHelper, ItpHelperDto>().ReverseMap();
             CreateMap<ItpProgressReport, ItpProgressReportDto>()
              .ForMember(dist => dist.TherapistName, opt => opt.MapFrom(c => c.Therapist == null ? "" : c.Therapist.Name))
-            .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
-            .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
+            .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code == null ? "" : c.Student.Code.ToString()))
+            .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name == null ? "" : c.Student.Name))
             .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name))
             .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Term == null ? "" : c.Term.Name))
             .ForMember(dist => dist.ParamedicalServiceName, opt => opt.MapFrom(c => c.ParamedicalService == null ? "" : c.ParamedicalService.Name == null ? "" : c.ParamedicalService.Name))

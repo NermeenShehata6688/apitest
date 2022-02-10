@@ -265,6 +265,7 @@ namespace IesSchool.Core.Services
                             ixp.IxpExtraCurriculars.ToList().ForEach(x => x.Id = 0);
                         }
 
+                        ixp.Status = 0;
                         _uow.GetRepository<Ixp>().Add(ixp);
                         _uow.SaveChanges();
 
