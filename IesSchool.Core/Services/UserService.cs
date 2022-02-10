@@ -830,7 +830,7 @@ namespace IesSchool.Core.Services
 
             try
             {
-                var AllParentss = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null);
+                var AllParentss = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent!=true, null);
                 var AllParents = _mapper.Map<PaginateDto<UserDto>>(AllParentss).Items;
 
                 if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
