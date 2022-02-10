@@ -94,10 +94,10 @@ namespace IesSchool.Core.Services
 							#region General
 							//Disable gridlines in the worksheet
 							worksheet.IsGridLinesVisible = true;
-							worksheet.Range["A1:BE100"].WrapText = true;
-							worksheet.Range["A1:BE100"].CellStyle.Font.Bold = true;
-							worksheet.Range["A1:BE13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-							worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+							worksheet.Range["A1:BF100"].WrapText = true;
+							worksheet.Range["A1:BF100"].CellStyle.Font.Bold = true;
+							worksheet.Range["A1:BF13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+							worksheet.Range["A1:BF13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 							#endregion
 							#region IEP
 							worksheet.Range["A1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
@@ -271,12 +271,12 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BF1"].ColumnWidth = 1;
 						worksheet.Range["A1"].RowHeight = 17;
-						worksheet.Range["A1:BE100"].WrapText = true;
-						worksheet.Range["A1:BE100"].CellStyle.Font.Bold = true;
-						worksheet.Range["A1:BE13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-						worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+						worksheet.Range["A1:BF100"].WrapText = true;
+						worksheet.Range["A1:BF100"].CellStyle.Font.Bold = true;
+						worksheet.Range["A1:BF13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+						worksheet.Range["A1:BF13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 						#endregion
 						#region IEP
 						worksheet.Range["A1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
@@ -930,11 +930,11 @@ namespace IesSchool.Core.Services
 						return new FileStreamResult(stream1, "application/excel");
 					}
 					lastRow = worksheet.Rows.Length;
-					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
+					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Size = 9;
 
 
 					MemoryStream stream = new MemoryStream();
@@ -2956,10 +2956,10 @@ namespace IesSchool.Core.Services
 							#region General
 							//Disable gridlines in the worksheet
 							worksheet.IsGridLinesVisible = true;
-							worksheet.Range["A1:BE100"].WrapText = true;
-							worksheet.Range["A1:BE100"].CellStyle.Font.Bold = true;
-							worksheet.Range["A1:BE13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-							worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+							worksheet.Range["A1:BF100"].WrapText = true;
+							worksheet.Range["A1:BF100"].CellStyle.Font.Bold = true;
+							worksheet.Range["A1:BF13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+							worksheet.Range["A1:BF13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 							#endregion
 							#region IEP
 							worksheet.Range["A1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
@@ -3135,10 +3135,10 @@ namespace IesSchool.Core.Services
 						worksheet.IsGridLinesVisible = true;
 						worksheet.Range["A1:BE1"].ColumnWidth = 1;
 						worksheet.Range["A1"].RowHeight = 17;
-						worksheet.Range["A1:BE100"].WrapText = true;
-						worksheet.Range["A1:BE100"].CellStyle.Font.Bold = true;
-						worksheet.Range["A1:BE13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-						worksheet.Range["A1:BE13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+						worksheet.Range["A1:BF100"].WrapText = true;
+						worksheet.Range["A1:BF100"].CellStyle.Font.Bold = true;
+						worksheet.Range["A1:BF13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+						worksheet.Range["A1:BF13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 						#endregion
 						#region IEP
 						worksheet.Range["A1:BE4"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
@@ -4364,11 +4364,11 @@ namespace IesSchool.Core.Services
 						return "";
 					}
 					lastRow = worksheet.Rows.Length;
-					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
+					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Size = 9;
 
 
 					var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
@@ -4980,11 +4980,11 @@ namespace IesSchool.Core.Services
 						return new FileStreamResult(stream1, "application/excel");
 					}
 					lastRow = worksheet.Rows.Length;
-					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
+					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Size = 9;
 
 
 					MemoryStream stream = new MemoryStream();
@@ -5291,11 +5291,11 @@ namespace IesSchool.Core.Services
 						return "";
 					}
 					lastRow = worksheet.Rows.Length;
-					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Bold = true;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-					worksheet.Range["A1:BE" + (lastRow)].CellStyle.Font.Size = 9;
+					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Bold = true;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+					worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Size = 9;
 
 
 					var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");

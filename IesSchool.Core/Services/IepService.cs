@@ -363,7 +363,18 @@ namespace IesSchool.Core.Services
                         _uow.SaveChanges();
 
                         var mapper = _mapper.Map<GetIepDto>(oldIep);
-                       
+
+                        if (mapper.Id>0 )
+                        {
+                            var objectivesToUpdate = mapper.Goals.SelectMany(x => x.Objectives).ToList().Select(x => x.Id).ToArray();
+                            if (objectivesToUpdate.Count()>0)
+                            {
+                                string numbersToUpdate = string.Join(",", objectivesToUpdate);
+                                var cmd = $"update Objective set Objective.IepId = {mapper.Id} Where Objective.Id IN ({numbersToUpdate})";
+                                _iesContext.Database.ExecuteSqlRaw(cmd);
+                            }
+                        }
+                            
                         return new ResponseDto { Status = 1, Message = " IEP has been Duplicated", Data = mapper };
                     }
                     else
@@ -373,7 +384,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = " null" };
+                    return new ResponseDto { Status = 0, Message = " null" };
                 }
             }
             catch (Exception ex)
