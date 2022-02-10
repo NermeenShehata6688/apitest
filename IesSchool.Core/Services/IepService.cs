@@ -210,20 +210,18 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto DeleteIep(List<IepDto> iepDto)
+        public ResponseDto DeleteIep(int iepId)
         {
             try
             {
-                if (iepDto != null)
+                if (iepId > 0)
                 {
-                    foreach (var iep in iepDto)
-                    {
-                        iep.IsDeleted = true;
-                        iep.DeletedOn = DateTime.Now;
-                        var mapper = _mapper.Map<Iep>(iep);
-                        _uow.GetRepository<Iep>().Update(mapper);
-                    }
-                  
+                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
+                    iep.IsDeleted = true;
+                    iep.DeletedOn = DateTime.Now;
+                    var mapper = _mapper.Map<Iep>(iep);
+                    _uow.GetRepository<Iep>().Update(mapper);
+
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Deleted Seccessfuly" };
                 }
@@ -363,7 +361,18 @@ namespace IesSchool.Core.Services
                         _uow.SaveChanges();
 
                         var mapper = _mapper.Map<GetIepDto>(oldIep);
-                       
+
+                        if (mapper.Id>0 )
+                        {
+                            var objectivesToUpdate = mapper.Goals.SelectMany(x => x.Objectives).ToList().Select(x => x.Id).ToArray();
+                            if (objectivesToUpdate.Count()>0)
+                            {
+                                string numbersToUpdate = string.Join(",", objectivesToUpdate);
+                                var cmd = $"update Objective set Objective.IepId = {mapper.Id} Where Objective.Id IN ({numbersToUpdate})";
+                                _iesContext.Database.ExecuteSqlRaw(cmd);
+                            }
+                        }
+                            
                         return new ResponseDto { Status = 1, Message = " IEP has been Duplicated", Data = mapper };
                     }
                     else
@@ -373,7 +382,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = " null" };
+                    return new ResponseDto { Status = 0, Message = " null" };
                 }
             }
             catch (Exception ex)

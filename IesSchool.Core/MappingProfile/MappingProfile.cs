@@ -154,8 +154,8 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.Teacher, op => op.Ignore())
              .ForMember(x => x.AcadmicYear, op => op.Ignore())
              .ForMember(x => x.Term, op => op.Ignore())
-             .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
-             .ForMember(x => x.HeadOfEducation, op => op.Ignore())
+             .ForMember(x => x.HeadOfDepartmentNavigation, op => op.Ignore())
+             .ForMember(x => x.HeadOfEducationNavigation, op => op.Ignore())
            //.ForMember(x => x.IepExtraCurriculars, op => op.Ignore())
            //.ForMember(x => x.IepParamedicalServices, op => op.Ignore())
            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
