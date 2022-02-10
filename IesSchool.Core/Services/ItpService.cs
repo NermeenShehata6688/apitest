@@ -280,6 +280,16 @@ namespace IesSchool.Core.Services
                     _uow.SaveChanges();
 
                     var mapper = _mapper.Map<ItpDto>(itp);
+                    if (mapper.Id > 0)
+                    {
+                        var objectivesToUpdate = mapper.ItpGoals.SelectMany(x => x.ItpGoalObjectives).ToList().Select(x => x.Id).ToArray();
+                        if (objectivesToUpdate.Count() > 0)
+                        {
+                            string numbersToUpdate = string.Join(",", objectivesToUpdate);
+                            var cmd = $"update ITP_GoalObjective set ItpId = {mapper.Id} Where Id IN ({numbersToUpdate})";
+                            _iesContext.Database.ExecuteSqlRaw(cmd);
+                        }
+                    }
                     return new ResponseDto { Status = 1, Message = " ITP has been Duplicated", Data = mapper };
                 }
                 else
@@ -470,7 +480,7 @@ namespace IesSchool.Core.Services
         public ResponseDto GetItpProgressReportsByItpId(int itpId)
         {
             try
-            {
+             {
                 var itpProgressReports = _uow.GetRepository<ItpProgressReport>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.ParamedicalService).Include(x => x.Therapist));
@@ -581,7 +591,7 @@ namespace IesSchool.Core.Services
                     if (itp != null)
                     {
                         itpProgressReportDto.ItpId = itp.Id;
-                        itpProgressReportDto.StudentCode = itp.Student == null ? 0 : itp.Student.Code;
+                        itpProgressReportDto.StudentCode = itp.Student == null ? "": itp.Student.Code.ToString();
                         itpProgressReportDto.StudentName = itp.Student == null ? "" : itp.Student.Name;
                         itpProgressReportDto.AcadmicYearName = itp.AcadmicYear == null ? "" : itp.AcadmicYear.Name;
                         itpProgressReportDto.TermName = itp.Term == null ? "" : itp.Term.Name;

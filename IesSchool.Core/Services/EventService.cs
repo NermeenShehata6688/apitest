@@ -183,7 +183,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allEventTypes = _uow.GetRepository<EventType>().GetList();
+                var allEventTypes = _uow.GetRepository<EventType>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventTypeDto>>(allEventTypes);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -239,8 +239,12 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var cmd = $"delete from EventType where Id={eventTypeId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
+                EventType oEventType = _uow.GetRepository<EventType>().Single(x => x.Id == eventTypeId);
+                oEventType.IsDeleted = true;
+                oEventType.DeletedOn = DateTime.Now;
+
+                _uow.GetRepository<EventType>().Update(oEventType);
+                _uow.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "EventType Deleted Seccessfuly" };
             }
             catch (Exception ex)
@@ -300,7 +304,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddEventAttachement(int eventId, IFormFileCollection files)
+        public ResponseDto AddEventAttachement(int eventId, IFormFileCollection files)      
         {
             try
             {
