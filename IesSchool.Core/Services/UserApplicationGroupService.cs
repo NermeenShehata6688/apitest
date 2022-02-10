@@ -160,8 +160,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                //using (var context = _context.Database.BeginTransaction())
-                //{
+               using (var context = _context.Database.BeginTransaction())
+                {
                     var cmd = "";
                  //   _context.ApplicationGroups.Update(model);
 
@@ -179,7 +179,7 @@ namespace IesSchool.Core.Services
                     cmd += $"DELETE FROM ApplicationGroupRole where ApplicationGroupId = '{model.Id}'";
                     //_ = _context.Database.ExecuteSqlCommand(cmd);
                     _ = _context.Database.ExecuteSqlRaw(cmd);
-                _context.SaveChanges();
+                _ = _context.SaveChanges();
 
                     foreach (var item in model.ApplicationGroupRoles)
                     {
@@ -190,11 +190,13 @@ namespace IesSchool.Core.Services
                     int[] groupid = { group.Id };
                     foreach (var item in group.ApplicationUserGroups)
                     {
-                    _context.ApplicationUserGroups.Add(new ApplicationUserGroup
-                    {
-                        ApplicationGroupId = group.Id,
-                        ApplicationUserId = item.ApplicationUserId
-                    });
+                    //_context.ApplicationUserGroups.Add(new ApplicationUserGroup
+                    //{
+                    //    ApplicationGroupId = group.Id,
+                    //    ApplicationUserId = item.ApplicationUserId
+                    //});
+                    //_ = _context.SaveChanges();
+
                     var roles = model.ApplicationGroupRoles.Select(s => s.ApplicationRoleId).Distinct().ToList();
                         if (roles != null)
                         {
@@ -208,10 +210,10 @@ namespace IesSchool.Core.Services
                             }
                         }
                     }
-                    _context.SaveChanges();
-                    //context.Commit();
+                _ = _context.SaveChanges();
+                    context.Commit();
                     return new ResponseDto { Status = 1, Message = "تم تعديل المجموعة بنجاح  بنجاح" };
-                //}
+               }
             }
             catch (Exception ex)
             {
