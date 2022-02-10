@@ -16,7 +16,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddEvent(EventDto eventDto);
         public ResponseDto EditEvent(EventDto eventDto);
         public ResponseDto DeleteEvent(int eventId);
-        public ResponseDto IsPublished(EventDto eventDto);
+        public ResponseDto IsPublished(int eventId, bool isPublished);
 
         public ResponseDto GetEventTypes();
         public ResponseDto GetEventTypeById(int eventTypeId);

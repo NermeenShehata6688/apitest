@@ -163,12 +163,12 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto IsPublished(EventDto oEventDto)
+        public ResponseDto IsPublished(int eventId, bool isPublished)
         {
             try
             {
-                Event oEvent = _uow.GetRepository<Event>().Single(x => x.Id == oEventDto.Id);
-                oEvent.IsPublished = oEventDto.IsPublished;
+                Event oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId);
+                oEvent.IsPublished = isPublished;
                 _uow.GetRepository<Event>().Update(oEvent);
                 _uow.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "Event Is Published State Has Changed" };
