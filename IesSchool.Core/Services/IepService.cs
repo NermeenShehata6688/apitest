@@ -356,7 +356,7 @@ namespace IesSchool.Core.Services
                                 }
                             }
                         }
-
+                        oldIep.Status = 0;
                         _uow.GetRepository<Iep>().Add(oldIep);
                         _uow.SaveChanges();
 

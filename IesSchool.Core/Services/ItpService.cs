@@ -275,7 +275,7 @@ namespace IesSchool.Core.Services
                             }
                         }
                     }
-
+                    itp.Status = 0;
                     _uow.GetRepository<Itp>().Add(itp);
                     _uow.SaveChanges();
 
