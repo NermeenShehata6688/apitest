@@ -106,7 +106,7 @@ namespace IesSchool.Controllers
             {
                 throw;
             }
-        }
+        }      
         [HttpPut]
         public IActionResult IsPublished(IsPuplishedDto isPuplishedDto)
         {
