@@ -34,7 +34,7 @@ namespace IesSchool.Core.Dto
             public int? Code { get; set; }
 
             //public virtual ApplicationGroupDto ApplicationGroup { get; set; } = null;
-           public virtual AspNetRoleDto ApplicationRole { get; set; } = null;
+           public virtual AspNetRoleDto? ApplicationRole { get; set; } = null;
         }
 
 
