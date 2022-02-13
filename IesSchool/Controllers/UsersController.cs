@@ -258,6 +258,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpPut]
+        public IActionResult IsActive(IsActiveDto isActiveDto)
+        {
+            try
+            {
+                var all = _userService.IsActive(isActiveDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpGet]
         public IActionResult IsUserNameExist(string UserName, int? userId)
         {

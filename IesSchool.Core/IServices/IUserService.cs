@@ -31,6 +31,7 @@ namespace IesSchool.Core.IServices
         public bool IsUserNameExist(string UserName, int? userId);
         public bool IsUserCodeExist(string UserCode, int? userId);
         public ResponseDto IsSuspended(int userId, bool isSuspended);
+        public ResponseDto IsActive(IsActiveDto isActiveDto);
         public ResponseDto GetUserForProfileById(int userId);
         public ResponseDto GetAllParents(UserSearchDto userSearchDto);
         public UserDto GetJustUserById(int userId);

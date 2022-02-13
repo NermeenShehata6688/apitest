@@ -31,5 +31,11 @@ namespace IesSchool.Core.Dto
         public string? DepartmentName { get; set; }
         public string? NationalityName { get; set; }
         public string? FullPath { get; set; }
+        public string? Phone1 { get; set; }
+        public string? Phone2 { get; set; }
+        public bool? IsActive { get; set; }
+        public DateTime? BirthDate { get; set; }
+
+
     }
 }

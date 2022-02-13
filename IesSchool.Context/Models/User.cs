@@ -63,6 +63,7 @@ namespace IesSchool.Context.Models
         public DateTime? BirthDate { get; set; }
         public string? Phone1 { get; set; }
         public string? Phone2 { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual Department? Department { get; set; }
         public virtual Country? Nationality { get; set; }
