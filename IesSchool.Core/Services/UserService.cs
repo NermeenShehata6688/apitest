@@ -67,7 +67,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allUsers = _uow.GetRepository<VwUser>().Query("select * from Vw_Users where IsDeleted != 1");
+                var allUsers = _uow.GetRepository<VwUser>().Query("select * from Vw_Users where IsDeleted != 1 and IsParent != 1");
 
                 if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
                 {
@@ -266,20 +266,23 @@ namespace IesSchool.Core.Services
             try
             {
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null);
-               
+
                 if (user != null)
                 {
                     user.ImageBinary = null;
+
+                    var mapper = _mapper.Map<UserDto>(user);
+
+                    if (mapper.Image != null)
+                    {
+                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                        mapper.FullPath = fullpath;
+                    }
+                    return mapper;
                 }
-                var mapper = _mapper.Map<UserDto>(user);
-              
-                if (mapper.Image != null)
-                {
-                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
-                    mapper.FullPath = fullpath;
-                }
-                return mapper;
+          
+                return new UserDto();
             }
             catch (Exception ex)
             {
@@ -392,6 +395,7 @@ namespace IesSchool.Core.Services
 
                         var cmd = $"UPDATE Students SET Students.ParentId = { mapper.Id} Where Id IN ({numbersToUpdate})";
                         _iesContext.Database.ExecuteSqlRaw(cmd);
+                        userDto.ImageBinary = null;
                     }
 
                     
@@ -460,7 +464,7 @@ namespace IesSchool.Core.Services
 
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
-
+                    mapper.IsDeleted = false;
                     _uow.GetRepository<User>().Update(mapper);
                     _uow.SaveChanges();
 
@@ -503,7 +507,7 @@ namespace IesSchool.Core.Services
                     userDto.ImageBinary = null;
                     userDto.FullPath = result.virtualPath;
                     userDto.Id = mapper.Id;
-                    return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = userDto };
+                    return new ResponseDto { Status = 1, Message = "User Updated Seccessfuly", Data = userDto };
                 }
                 else
                     return new ResponseDto { Status = 1, Message = "null" };
@@ -529,6 +533,7 @@ namespace IesSchool.Core.Services
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     
                     var mapper = _mapper.Map<User>(userDto);
+                    mapper.IsDeleted = false;
                     _uow.GetRepository<User>().Update(mapper);
                     _uow.SaveChanges();
                     var AspnetBeforeUpdtate = _uow.GetRepository<AspNetUser>().Single(x => x.Id == mapper.Id);
@@ -567,7 +572,7 @@ namespace IesSchool.Core.Services
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
                     userDto.Id = mapper.Id;
-                    return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = userDto };
+                    return new ResponseDto { Status = 1, Message = "User Updated Seccessfuly", Data = userDto };
                 }
                 else
                     return new ResponseDto { Status = 1, Message = "null" };
@@ -830,7 +835,7 @@ namespace IesSchool.Core.Services
 
             try
             {
-                var AllParentss = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent!=true, null);
+                var AllParentss = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null, null, 0, 1000000, true);
                 var AllParents = _mapper.Map<PaginateDto<UserDto>>(AllParentss).Items;
 
                 if (!string.IsNullOrEmpty(userSearchDto.StringSearch))

@@ -550,14 +550,14 @@ namespace IesSchool.Core.Services
                 {
                     foreach (var item in allEventAttachement.Items)
                     {
-                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
-                        {
-                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
-                            item.FullPath = fullpath;
-                        }
-                        else
-                        {
+                        //if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        //{
+                        //    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                        //    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                        //    item.FullPath = fullpath;
+                        //}
+                        //else
+                        //{
                             if (item != null && item.FileName != null)
                             {
                                 var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == item.Id , null, null);
@@ -569,7 +569,7 @@ namespace IesSchool.Core.Services
                                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
                                 item.FullPath = fullpath;
                             }
-                        }
+                        //}
                     }
                 }
                 return allEventAttachement;
