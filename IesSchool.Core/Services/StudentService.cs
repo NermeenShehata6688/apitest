@@ -128,25 +128,29 @@ namespace IesSchool.Core.Services
                 if (studentId != null)
                 {
                     var student = _uow.GetRepository<Student>().Single(x => x.Id == studentId && x.IsDeleted != true, null, x => x.Include(x => x.Phones)
-                    .Include(x => x.StudentAttachments).ThenInclude(x=> x.AttachmentType)
+                    .Include(x => x.StudentAttachments).ThenInclude(x => x.AttachmentType)
                     .Include(x => x.StudentHistoricalSkills).Include(x => x.StudentTherapists));
-                    if (student!=null)
+                    if (student != null)
                     {
                         student.ImageBinary = null;
 
+
+                        var mapper = _mapper.Map<StudentDetailsDto>(student);
+
+                        if (mapper.StudentAttachments.Count() > 0)
+                        {
+                            mapper.StudentAttachments = GetFullPathAndBinaryICollictionAtt(mapper.StudentAttachments);
+                        }
+                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                        mapper.FullPath = fullpath;
+                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                     }
-                    var mapper = _mapper.Map<StudentDetailsDto>(student);
-                    if (mapper.StudentAttachments.Count() > 0)
-                    {
-                        mapper.StudentAttachments = GetFullPathAndBinaryICollictionAtt(mapper.StudentAttachments);
-                    }
-                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
-                    mapper.FullPath = fullpath;
-                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                    else
+                        return new ResponseDto { Status = 0, Message = "null" };
                 }
                 else
-                    return new ResponseDto { Status = 1, Message = "null"};
+                    return new ResponseDto { Status = 0, Message = "null" };
             }
             catch (Exception ex)
             {

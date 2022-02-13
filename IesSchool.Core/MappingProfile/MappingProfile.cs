@@ -88,7 +88,10 @@ namespace IesSchool.Core.MappingProfile
 
             CreateMap<StudentHelper, StudentHelperDto>().ReverseMap();
             CreateMap<VwStudent, VwStudentDto>().ReverseMap();
-            CreateMap<Student, StudentDetailsDto>().ReverseMap();
+            CreateMap<Student, StudentDetailsDto>()
+             .ForMember(dist => dist.DateOfBirthName, opt => opt.MapFrom(c => c.DateOfBirth == null ? "" : c.DateOfBirth.Value.ToShortDateString()))
+
+                .ReverseMap();
             CreateMap<StudentAttachmentBinary, StudentAttachmentBinaryDto>().ReverseMap();
             CreateMap<Phone, PhoneDto>().ReverseMap()
                 .ForMember(x => x.Student, op => op.Ignore());
