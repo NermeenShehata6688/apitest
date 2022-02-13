@@ -338,7 +338,7 @@ namespace IesSchool.Controllers
             {
                 try
                 {
-                    var res = _roleManager.Roles.ToList();
+                    var res = _roleManager.Roles.OrderBy(x=>x.Name).ToList();
                     return Ok(new ResponseDto { Message = "Success", Data = res, Status = 1 });
                 }
                 catch (Exception ex)
@@ -599,7 +599,7 @@ namespace IesSchool.Controllers
         [HttpGet]
 
         //[Route("GetApplicationGroup")]
-        public IEnumerable<ApplicationGroup> GetApplicationGroup()
+        public IEnumerable<ApplicationGroupDto> GetApplicationGroup()
         {
 
             var res = _iaplicationGroupService.GetGroups();

@@ -1,8 +1,9 @@
-﻿using IesSchool.Context.Models;
+﻿using AutoMapper;
+using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using Microsoft.EntityFrameworkCore;
-
+using static IesSchool.Core.Dto.MembershipDto;
 
 namespace IesSchool.Core.Services
 {
@@ -10,11 +11,13 @@ namespace IesSchool.Core.Services
     {
 
         public iesContext _context { get; }
+        private readonly IMapper _mapper;
 
-
-        public UserApplicationGroupService(iesContext context)
+        public UserApplicationGroupService(iesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+
         }
 
 
@@ -139,14 +142,17 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public IEnumerable<ApplicationGroup> GetGroups()
+        public IEnumerable<ApplicationGroupDto> GetGroups()
         {
             var res = _context.ApplicationGroups.Include(x => x.ApplicationGroupRoles).ThenInclude(c => c.ApplicationRole).ToList();
-            return res;
+            var mapper = _mapper.Map<IEnumerable<ApplicationGroupDto>>(res);
+            return mapper;
+
         }
         public IEnumerable<ApplicationGroup> GetGroupsDetails(string id)
         {
             var res = _context.ApplicationGroups.Include(x => x.ApplicationGroupRoles).ThenInclude(c => c.ApplicationRole).ToList();
+            
             return res;
         }
 

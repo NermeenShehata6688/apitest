@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace IesSchool.Context.Models
 {
@@ -16,6 +17,8 @@ namespace IesSchool.Context.Models
         public string? Description { get; set; }
 
         public virtual ICollection<ApplicationGroupRole> ApplicationGroupRoles { get; set; } = null;
+        [JsonIgnore]
+
         public virtual ICollection<ApplicationUserGroup> ApplicationUserGroups { get; set; } = null;
     }
 }
