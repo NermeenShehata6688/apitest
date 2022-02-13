@@ -1,5 +1,6 @@
 ﻿using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
+using static IesSchool.Core.Dto.MembershipDto;
 
 namespace IesSchool.Core.IServices
 {
@@ -9,7 +10,7 @@ namespace IesSchool.Core.IServices
         ResponseDto AddRoleToGroup(int[] roleId, int groupId);
         ResponseDto AddGroupToUser(int[] groupIds, int userid);
         ResponseDto DeleteGroup(int id);
-        IEnumerable<ApplicationGroup> GetGroups();
+        IEnumerable<ApplicationGroupDto> GetGroups();
         ApplicationGroup FindGroup(int id);
         ResponseDto UpdateGroup(ApplicationGroup model);
         ResponseDto Add(ApplicationGroup model);

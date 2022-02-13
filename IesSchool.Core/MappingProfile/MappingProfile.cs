@@ -12,6 +12,7 @@ namespace IesSchool.Core.MappingProfile
         {
             #region BasicData
             CreateMap<Country, CountryDto>().ReverseMap();
+            CreateMap<ApplicationGroup, ApplicationGroupDto>().ReverseMap();
             CreateMap<State, StateDto>().ReverseMap();
             CreateMap<City, CityDto>().ForMember(x => x.State, op => op.Ignore()).ReverseMap().ForMember(x => x.State, op => op.Ignore());
 
@@ -29,6 +30,7 @@ namespace IesSchool.Core.MappingProfile
                 .ForMember(x => x.AcadmicYear, op => op.Ignore()); ;
             CreateMap<AttachmentType, AttachmentTypeDto>().ReverseMap();
             CreateMap<WorkCategory, WorkCategoryDto>().ReverseMap();
+
 
             #endregion
             #region Curriculums
