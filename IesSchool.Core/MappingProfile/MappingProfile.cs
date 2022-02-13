@@ -13,6 +13,8 @@ namespace IesSchool.Core.MappingProfile
             #region BasicData
             CreateMap<Country, CountryDto>().ReverseMap();
             CreateMap<ApplicationGroup, ApplicationGroupDto>().ReverseMap();
+            CreateMap<AspNetRole, AspNetRoleDto>().ReverseMap();
+
             CreateMap<State, StateDto>().ReverseMap();
             CreateMap<City, CityDto>().ForMember(x => x.State, op => op.Ignore()).ReverseMap().ForMember(x => x.State, op => op.Ignore());
 

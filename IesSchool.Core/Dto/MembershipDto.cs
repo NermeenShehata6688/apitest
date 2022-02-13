@@ -34,7 +34,7 @@ namespace IesSchool.Core.Dto
             public int? Code { get; set; }
 
             //public virtual ApplicationGroupDto ApplicationGroup { get; set; } = null;
-            //public virtual AspNetRoleDto ApplicationRole { get; set; } = null;
+           public virtual AspNetRoleDto ApplicationRole { get; set; } = null;
         }
 
 
@@ -46,7 +46,7 @@ namespace IesSchool.Core.Dto
         {
             public AspNetRoleDto()
             {
-                ApplicationGroupRoles = new HashSet<AspNetRoleDto>();
+                //ApplicationGroupRoles = new HashSet<AspNetRoleDto>();
                 //AspNetRoleClaims = new HashSet<AspNetRoleClaim>();
             }
 
@@ -55,7 +55,7 @@ namespace IesSchool.Core.Dto
             public string? NormalizedName { get; set; }
             public string? ConcurrencyStamp { get; set; }
 
-            public virtual ICollection<AspNetRoleDto> ApplicationGroupRoles { get; set; }
+            //public virtual ICollection<ApplicationGroupRoles> ApplicationGroupRoles { get; set; }
             //public virtual ICollection<AspNetRoleClaim> AspNetRoleClaims { get; set; }
         }
 
