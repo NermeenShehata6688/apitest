@@ -282,7 +282,7 @@ namespace IesSchool.Core.Services
                     throw;
                 }
                 skillDto.Id = mapper.Id;
-                return new ResponseDto { Status = 1, Message = "Student Updated Seccessfuly", Data = skillDto };
+                return new ResponseDto { Status = 1, Message = "Skill Updated Seccessfuly", Data = skillDto };
             }
             catch (Exception ex)
             {
