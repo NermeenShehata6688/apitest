@@ -43,14 +43,9 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + log.User.Image))
                         {
                             var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{log.User.Image}";
-                            mapper.Where(x => x.UserId == log.User.Id).First().UserImagePath = fullpath;
+                            mapper.Where(x => x.UserId == log.User.Id).ToList().ForEach( x=> x.UserImagePath = fullpath);
                         }
-                        //if (log.CreatedOn!= null)
-                        //{
-                        //    mapper.Where(x => x.UserId == log.User.Id).First().UserCommentTime = log.CreatedOn.ToUniversalTime();
-
-                        //    //univDateTime = localDateTime.ToUniversalTime();
-                        //}
+                       
                     }
                 }
 
@@ -79,7 +74,8 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + log.User.Image))
                         {
                             var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{log.User.Image}";
-                            mapper.Where(x => x.UserId == log.User.Id).First().UserImagePath = fullpath;
+                            mapper.Where(x => x.UserId == log.User.Id).ToList().ForEach(x => x.UserImagePath = fullpath);
+
                         }
                     }
                 }
