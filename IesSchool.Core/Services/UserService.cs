@@ -762,6 +762,21 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto IsActive(IsActiveDto isActiveDto)
+        {
+            try
+            {
+                User user = _uow.GetRepository<User>().Single(x => x.Id == isActiveDto.Id);
+                user.IsActive = isActiveDto.IsActive;
+                _uow.GetRepository<User>().Update(user);
+                _uow.SaveChanges();
+                return new ResponseDto { Status = 1, Message = "User Is Active State Has Changed" };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
         public List<VwUserDto> GetFullPathAndBinary(List<VwUserDto> allUsers )
         {
             try
