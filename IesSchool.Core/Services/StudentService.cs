@@ -214,13 +214,13 @@ namespace IesSchool.Core.Services
                     studentDto.Image = result.FileName;
                     studentDto.FullPath = result.virtualPath;
                 }
-                else if (file != null && studentDto.Image== null) 
+                else if (file == null && studentDto.Image== null) 
                 {
 
                     studentDto.Image = null;
                     studentDto.ImageBinary = null;
                 }
-                else if (file != null && studentDto.Image != null)
+                else if (file == null && studentDto.Image != null)
                 {
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     studentDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{studentDto.Image}";
