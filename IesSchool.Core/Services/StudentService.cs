@@ -216,8 +216,8 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    //studentDto.Image = null;
-                    //studentDto.ImageBinary = null;
+                    studentDto.Image = null;
+                    studentDto.ImageBinary = null;
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     studentDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{studentDto.Image}";
                 }
