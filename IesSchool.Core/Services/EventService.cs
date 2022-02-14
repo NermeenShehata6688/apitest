@@ -44,7 +44,7 @@ namespace IesSchool.Core.Services
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
                     AllTeachers = _uow.GetReadOnlyRepository<User>().GetList((x => new User  {Id=  x.Id ,Name= x.Name }), x => x.IsDeleted != true && x.IsTeacher == true, null,null, 0, 1000000, true),
                     AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
-                    AllEventTypes = _uow.GetRepository<EventType>().GetList(null, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllEventTypes = _uow.GetRepository<EventType>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                    // AllEvents = _uow.GetRepository<Event>().GetList(x=> x.IsDeleted!=true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<EventHelperDto>(eventHelper);
@@ -290,7 +290,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var oEventAttachement = _uow.GetRepository<EventAttachement>().GetList(x => x.EventId == eventId, null);
+                var oEventAttachement = _uow.GetRepository<EventAttachement>().GetList(x => x.EventId == eventId, null,null, 0, 100000, true);
                 var mapper = _mapper.Map <PaginateDto<EventAttachementDto>>(oEventAttachement);
                 if (mapper.Items.Count()>0)
                 {
@@ -436,7 +436,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var oEventStudentFile = _uow.GetRepository<EventStudentFile>().GetList(x => x.EventStudentId == eventStudentId, null);
+                var oEventStudentFile = _uow.GetRepository<EventStudentFile>().GetList(x => x.EventStudentId == eventStudentId, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventStudentFileDto>>(oEventStudentFile);
 
                 if (mapper.Items.Count() > 0)
