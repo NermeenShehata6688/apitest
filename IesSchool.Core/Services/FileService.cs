@@ -33,9 +33,29 @@ namespace IesSchool.Core.Services
             if (file.Length <= 0) return new FileDto { };
             var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
             var filePath = Path.Combine(target, fileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                 file.CopyToAsync(stream);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyToAsync(stream);
+                    stream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+            }
+            if (File.Exists("wwwRoot/tempFiles/" + fileName))
+            {
+                Console.WriteLine("Excist");
+            }
+            else
+            {
+                Console.WriteLine("notExcist");
+
             }
             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
             var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}";
