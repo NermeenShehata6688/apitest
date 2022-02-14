@@ -203,7 +203,7 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from Student_Therapist where StudentId={studentDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 //change image to binary
-                if (file!= null)
+                if (file != null)
                 {
                     MemoryStream ms = new MemoryStream();
                     file.CopyTo(ms);
@@ -214,10 +214,14 @@ namespace IesSchool.Core.Services
                     studentDto.Image = result.FileName;
                     studentDto.FullPath = result.virtualPath;
                 }
-                else
+                else if (file != null && studentDto.Image== null) 
                 {
+
                     studentDto.Image = null;
                     studentDto.ImageBinary = null;
+                }
+                else if (file != null && studentDto.Image != null)
+                {
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     studentDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{studentDto.Image}";
                 }

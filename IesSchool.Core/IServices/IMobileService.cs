@@ -1,4 +1,5 @@
 ﻿using IesSchool.Core.Dto;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetParentStudents(int parentId);
         public ResponseDto GetStudentsEventsByParentId(int parentId);
         public ResponseDto GetStudentIepsItpsIxps(int studentId);
+        public ResponseDto ChangePassword(int id, string oldPassword, string newPassword);
+
     }
 }

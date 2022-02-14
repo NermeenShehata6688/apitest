@@ -177,6 +177,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpPut]
+        public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
+        {
+            try
+            {
+                var all = _iMobileService.ChangePassword(id,  oldPassword,  newPassword);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

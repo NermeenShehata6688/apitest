@@ -516,9 +516,6 @@ namespace IesSchool.Core.Services
                         _uow.SaveChanges();
                     }
 
-
-
-
                     transaction.Commit();
 
                     userDto.Id = mapper.Id;
@@ -562,14 +559,6 @@ namespace IesSchool.Core.Services
                         _uow.GetRepository<AspNetUser>().Update(AspnetBeforeUpdtate);
                         _uow.SaveChanges();
                     }
-                  
-                    // AspNetUser aspNetUser = new AspNetUser();
-                    //aspNetUser.Id = userDto.Id;
-                    //aspNetUser.UserName = userDto.UserName == null ? "" : userDto.UserName;
-                    //aspNetUser.Email = userDto.Email == null ? "" : userDto.Email;
-
-
-                 
                     if (userDto.StudentsIdsForParent != null && userDto.StudentsIdsForParent.Count() > 0)
                     {
                         var student = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && userDto.StudentsIdsForParent.Contains(x.Id), null).Items;
@@ -590,6 +579,12 @@ namespace IesSchool.Core.Services
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
                     userDto.Id = mapper.Id;
+                    if (userDto.Image!=null)
+                    {
+                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                        userDto.FullPath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{userDto.Image}";
+
+                    }
                     return new ResponseDto { Status = 1, Message = "User Updated Seccessfuly", Data = userDto };
                 }
                 else
