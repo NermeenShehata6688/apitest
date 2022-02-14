@@ -66,10 +66,10 @@ namespace IesSchool.Core.Services
                 {
                     AllIxps = AllIxps.Where(x => x.AcadmicYearId == ixpSearchDto.AcadmicYear_Id).ToList();
                 }
-                //if (ixpSearchDto.ExtraCurricularName != null)
-                //{
-                //    AllIxps = AllIxps.Where(x => x.IxpExtraCurricularsName.Contains( ixpSearchDto.ExtraCurricularName)).ToList();
-                //}
+                if (ixpSearchDto.ExtraCurricularTeacher_Id != null)
+                {
+                    AllIxps = AllIxps.Where(x => x.ExtraCurricularTeacherIds.Contains(ixpSearchDto.ExtraCurricularTeacher_Id == null ? 0 : ixpSearchDto.ExtraCurricularTeacher_Id.Value)).ToList();
+                }
                 if (ixpSearchDto.Term_Id != null)
                 {
                     AllIxps = AllIxps.Where(x => x.TermId == ixpSearchDto.Term_Id).ToList();

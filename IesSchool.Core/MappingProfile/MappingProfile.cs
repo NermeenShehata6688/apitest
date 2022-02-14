@@ -437,6 +437,7 @@ namespace IesSchool.Core.MappingProfile
             #region IXP
             CreateMap<Ixp, IxpDto>()
            .ForMember(dist => dist.ExtraCurricularIds, opt => opt.MapFrom(c => c.IxpExtraCurriculars.ToList().Select(x => x.ExtraCurricularId == null ? 0 : x.ExtraCurricularId).Distinct()))
+           .ForMember(dist => dist.ExtraCurricularTeacherIds, opt => opt.MapFrom(c => c.IxpExtraCurriculars.ToList().Select(x => x.TeacherId == null ? 0 : x.TeacherId).Distinct()))
             .ForMember(dist => dist.ExtraCurricularNames, opt => opt.MapFrom(c => c.IxpExtraCurriculars.ToList().Select(x => x.ExtraCurricular == null ? "" : x.ExtraCurricular.Name).Distinct()))
 
             .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name == null ? "" : c.AcadmicYear.Name))
