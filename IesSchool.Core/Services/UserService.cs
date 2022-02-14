@@ -206,15 +206,15 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x => 
-                x.Include(x => x.StudentTherapists).Include(x=>x.AspNetUser)
+                var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, x =>
+                x.Include(x => x.StudentTherapists).Include(x => x.AspNetUser)
                 .Include(x => x.UserAttachments).ThenInclude(x => x.AttachmentType)
                 .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
                 .Include(x => x.UserExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
                 .Include(x => x.StudentExtraTeachers)
                 .Include(x => x.AspNetUser)
                 .Include(x => x.StudentParents));
-                if (user!=null)
+                if (user != null)
                 {
                     user.ImageBinary = null;
                 }
@@ -225,7 +225,7 @@ namespace IesSchool.Core.Services
                 //}
 
                 var appUser = _userManager.Users.FirstOrDefault(r => r.Email == user.Email);
-                if (appUser!= null)
+                if (appUser != null)
                 {
                     var roles = _userManager.GetRolesAsync(appUser).Result;
                     if (roles.Count() > 0)
@@ -233,26 +233,27 @@ namespace IesSchool.Core.Services
                         mapper.UserRoles = string.Join(Environment.NewLine, roles);
                     }
                 }
-                if (mapper.UserAttachments.Count()>0)
+                if (mapper.UserAttachments.Count() > 0)
                 {
                     mapper.UserAttachments = GetFullPathAndBinaryICollictionAtt(mapper.UserAttachments);
                 }
-               
-                    mapper.UserName = user.AspNetUser == null ? "" : user.AspNetUser.UserName == null ? "" : user.AspNetUser.UserName;
-                    mapper.Email = user.AspNetUser == null ? "" : user.AspNetUser.Email == null ? "" : user.AspNetUser.Email;
 
-                if (mapper.IsParent==true)
+                mapper.UserName = user.AspNetUser == null ? "" : user.AspNetUser.UserName == null ? "" : user.AspNetUser.UserName;
+                mapper.Email = user.AspNetUser == null ? "" : user.AspNetUser.Email == null ? "" : user.AspNetUser.Email;
+
+                if (mapper.IsParent == true)
                 {
                     mapper.UserName = user.ParentUserName == null ? "" : user.ParentUserName;
-                    mapper.Email = user.Email == null ? "" : user.Email ;
+                    mapper.Email = user.Email == null ? "" : user.Email;
 
                 }
-                if (mapper.Image!=null)
+                if (mapper.Image != null)
                 {
                     string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                     var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
                     mapper.FullPath = fullpath;
                 }
+
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -269,15 +270,31 @@ namespace IesSchool.Core.Services
 
                 if (user != null)
                 {
-                    user.ImageBinary = null;
+                   // user.ImageBinary = null;
 
                     var mapper = _mapper.Map<UserDto>(user);
 
                     if (mapper.Image != null)
                     {
-                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
-                        mapper.FullPath = fullpath;
+                            if (File.Exists("wwwRoot/tempFiles/" + mapper.Image))
+                            {
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                            mapper.FullPath = fullpath;
+                            }
+                            else
+                            {
+                               //var userBinary = _uow.GetRepository<User>().Single(x => x.Id == mapper.Id, null, null);
+                                if (user.ImageBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + mapper.Image, user.ImageBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                                mapper.FullPath = fullpath;
+                            }
+                        
                     }
                     return mapper;
                 }
@@ -355,6 +372,7 @@ namespace IesSchool.Core.Services
                     //_uow.SaveChanges();
                     userDto.Id = mapper.Id;
                     userDto.ImageBinary = null;
+               
                     userDto.FullPath = result.virtualPath;
 
                     return new ResponseDto { Status = 1, Message = "User Added  Seccessfuly", Data = userDto };
