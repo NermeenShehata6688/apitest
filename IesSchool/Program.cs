@@ -101,7 +101,7 @@ builder.Services.AddAuthentication(opt=> {
 });
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddMvc();
 
 //builder.Services.AddSwaggerGen();
 var app = builder.Build();
@@ -117,6 +117,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseCors("Iespolice");
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
