@@ -251,19 +251,19 @@ namespace IesSchool.Controllers
                     if (result.Succeeded)
                     {
                         _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
-                        return Ok(new ResponseDto { Status = 1, Message = "تم تسجيل المستخدم بنجاح!" });
+                        return Ok(new ResponseDto { Status = 1, Message = "Registered  Seccessfuly!" });
                     }
                     if (!result.Succeeded)
                         return Ok(new ResponseDto { Errormessage = string.Join(",", result.Errors.Select(x => x.Description)) });
 
-                    return Ok(new ResponseDto { Status = 0, Errormessage = "فشلت عملية التسجيل برجاء مراجعة البيانات المرسلة", Data = result.ToString() });
+                    return Ok(new ResponseDto { Status = 0, Errormessage = "Registeration Faild ", Data = result.ToString() });
 
                 }
             }
             catch (Exception ex)
             {
 
-                return Ok(new ResponseDto { Status = 0, Errormessage = "فشلت عملية التسجيل برجاء مراجعة البيانات المرسلة", Data = ex.Message.ToString() });
+                return Ok(new ResponseDto { Status = 0, Errormessage = "Registeration Faild", Data = ex.Message.ToString() });
 
             }
 

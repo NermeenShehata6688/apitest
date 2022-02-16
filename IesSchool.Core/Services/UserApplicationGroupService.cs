@@ -33,7 +33,7 @@ namespace IesSchool.Core.Services
                 });
             }
             _context.SaveChanges();
-            return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
+            return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
 
         }
         public ResponseDto Add(ApplicationGroup newrecord)
@@ -43,12 +43,12 @@ namespace IesSchool.Core.Services
                 //newrecord.Id = Guid.NewGuid().ToString();
                 _context.ApplicationGroups.Add(newrecord);
                 _context.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
+                return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
             }
             catch (Exception ex)
             {
 
-                return new ResponseDto { Status = 0, Errormessage = "فشلت عملية الانشاء", Data = ex.ToString() };
+                return new ResponseDto { Status = 0, Errormessage = "Adding Group Failed", Data = ex.ToString() };
 
             }
 
@@ -87,7 +87,7 @@ namespace IesSchool.Core.Services
                 _context.SaveChanges();
 
                 context.Commit();
-                return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
+                return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
 
             }
 
@@ -109,7 +109,7 @@ namespace IesSchool.Core.Services
 
                 context.Commit();
             }
-            return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
+            return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
 
         }
 
@@ -137,7 +137,7 @@ namespace IesSchool.Core.Services
                 //_ = _context.Database.ExecuteSqlCommand(cmd);
                 _ = _context.Database.ExecuteSqlRaw(cmd);
                 context.Commit();
-                return new ResponseDto { Status = 1, Message = "تم حذف المجموعة  بنجاح" };
+                return new ResponseDto { Status = 1, Message = "Group Deleted  Seccessfuly" };
 
             }
         }
@@ -218,13 +218,13 @@ namespace IesSchool.Core.Services
                     }
                 _ = _context.SaveChanges();
                     context.Commit();
-                    return new ResponseDto { Status = 1, Message = "تم تعديل المجموعة بنجاح  بنجاح" };
+                    return new ResponseDto { Status = 1, Message = "Group Updated Seccessfuly" };
                }
             }
             catch (Exception ex)
             {
 
-                return new ResponseDto { Status = 0, Errormessage = " فشل تعديل المجموعة", Data = ex.ToString() };
+                return new ResponseDto { Status = 0, Errormessage = "Group Updated Failed", Data = ex.ToString() };
 
             }
         }
@@ -233,7 +233,7 @@ namespace IesSchool.Core.Services
         {
             var cmd = $"delete from ApplicationUserGroup where ApplicationUserId='{userId}'; delete from AspNetUserRoles where UserId ='{userId}' ";
            _ = _context.Database.ExecuteSqlRaw(cmd);
-            return new ResponseDto { Status = 1, Message = "تم انشاء المجموعة بنجاح  بنجاح" };
+            return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
 
         }
 
