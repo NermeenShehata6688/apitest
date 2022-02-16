@@ -6,7 +6,10 @@ using IesSchool.InfraStructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace IesSchool.Core.Services
 {
@@ -16,7 +19,8 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private iesContext _iesContext;
         private IFileService _ifileService;
-      
+        
+
 
         private readonly UserManager<IdentityUser<int>> _userManager;
 
@@ -35,6 +39,7 @@ namespace IesSchool.Core.Services
             _hostingEnvironment = hostingEnvironment;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManage;
+          
         }
         public ResponseDto GetUsersHelper()
         {
@@ -322,7 +327,9 @@ namespace IesSchool.Core.Services
                     ms.Close();
                     ms.Dispose();
                     //upload file in local directory
-                    var result = _ifileService.UploadFile(file);
+                   // var result = _ifileService.UploadFile(file);
+                    var result = _ifileService.SaveBinary(file.FileName, userDto.ImageBinary);
+
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
                     mapper.IsDeleted = false;
@@ -478,7 +485,8 @@ namespace IesSchool.Core.Services
                     ms.Dispose();
 
                     //upload file in local directory
-                    var result = _ifileService.UploadFile(file);
+                   // var result = _ifileService.UploadFile(file);
+                    var result = _ifileService.SaveBinary(file.FileName, userDto.ImageBinary);
 
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
@@ -994,5 +1002,7 @@ namespace IesSchool.Core.Services
             }
         }
 
+
+      
     }
 }

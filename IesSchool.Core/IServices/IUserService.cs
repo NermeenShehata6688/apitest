@@ -36,5 +36,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetAllParents(UserSearchDto userSearchDto);
         public UserDto GetJustUserById(int userId);
         public bool IsParentUserNameExist(string UserName, int? userId);
+
+       //public  Task<UserDto> ResetPasswordAsync(PasswordResetDto passwordResetDto);
     }
 }

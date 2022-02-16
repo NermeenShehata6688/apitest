@@ -174,10 +174,13 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department == null ? "" : c.Student.Department.Name))
             .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name))
             .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Term == null ? "" : c.Term.Name))
-            .ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name))
-            .ForMember(dist => dist.HeadOfDepartmentName, opt => opt.MapFrom(c => c.HeadOfDepartmentNavigation == null ? "" : c.HeadOfDepartmentNavigation.Name))
-            .ForMember(dist => dist.HeadOfEducationName, opt => opt.MapFrom(c => c.HeadOfEducationNavigation == null ? "" : c.HeadOfEducationNavigation.Name))
-            .ReverseMap();
+            //.ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name))
+            //.ForMember(dist => dist.HeadOfDepartmentName, opt => opt.MapFrom(c => c.HeadOfDepartmentNavigation == null ? "" : c.HeadOfDepartmentNavigation.Name))
+            //.ForMember(dist => dist.HeadOfEducationName, opt => opt.MapFrom(c => c.HeadOfEducationNavigation == null ? "" : c.HeadOfEducationNavigation.Name))
+            .ReverseMap()
+            .ForMember(x => x.Student, op => op.Ignore())
+            .ForMember(x => x.AcadmicYear, op => op.Ignore())
+            .ForMember(x => x.Term, op => op.Ignore());
 
             CreateMap<IepHelper, IepHelperDto>().ReverseMap();
             CreateMap<VwIep, VwIepDto>().ReverseMap();
