@@ -296,19 +296,19 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto GetEvents(int? parentId)
+        public ResponseDto GetEvents(GetMobileEventsDto? getMobileEventsDto)
         {
             try
             {
-
-                if (parentId != null)
+                PaginateDto<EventMobileDto> mapper = new PaginateDto<EventMobileDto>();
+                if (getMobileEventsDto.Id != null)
                 {
-                    var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
+                    var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == getMobileEventsDto.Id && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
 
                     var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x => x
                        .Include(x => x.EventAttachements.Take(1))
                        .Include(x => x.EventStudents.Where(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value))).ThenInclude(x => x.EventStudentFiles.Take(1)), 0, 100000, true);
-                    var mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
 
                     if (mapper.Items.Any(x => x.EventAttachements != null))
                     {
@@ -341,14 +341,12 @@ namespace IesSchool.Core.Services
                     }
 
 
-                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
-
                 }
                 else
                 {
                     var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x => x
                       .Include(x => x.EventAttachements.Take(1)), 0, 100000, true);
-                    var mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
                     if (mapper.Items.Any(x => x.EventAttachements != null))
                     {
                         if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
@@ -363,9 +361,19 @@ namespace IesSchool.Core.Services
                         }
                     }
 
-                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
                 }
+                if (getMobileEventsDto.Index == null || getMobileEventsDto.Index == 0)
+                {
+                    getMobileEventsDto.Index = 0;
+                }
+                else
+                {
+                    getMobileEventsDto.Index += 1;
+                }
+                 mapper = new PaginateDto<EventMobileDto> { Count = mapper.Items.Count(), Items = mapper.Items != null ? mapper.Items.Skip(getMobileEventsDto.Index == null || getMobileEventsDto.PageSize == null ? 0 : ((getMobileEventsDto.Index.Value - 1) * getMobileEventsDto.PageSize.Value)).Take(getMobileEventsDto.PageSize ??= 20).ToList() : mapper.Items.ToList() };
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+
 
             }
             catch (Exception ex)

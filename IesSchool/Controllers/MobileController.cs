@@ -1,4 +1,5 @@
-﻿using IesSchool.Core.IServices;
+﻿using IesSchool.Core.Dto;
+using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,21 +36,13 @@ namespace IesSchool.Controllers
 
         //[ResponseCache(Duration = 3600)]
         [HttpGet]
-        public IActionResult GetEvents(int? parentId)
+        public IActionResult GetEvents([FromQuery] GetMobileEventsDto getMobileEventsDto)
         {
             try
             {
-                if (parentId != null)
-                {
-                    var all = _iMobileService.GetEvents(parentId);
+                    var all = _iMobileService.GetEvents(getMobileEventsDto);
                     return Ok(all);
-                }
-                else
-                {
-                    var all = _iMobileService.GetEvents(null);
-
-                    return Ok(all);
-                }
+               
             }
             catch (Exception)
             {

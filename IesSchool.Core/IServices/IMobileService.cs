@@ -13,7 +13,7 @@ namespace IesSchool.Core.IServices
         public bool IsParentExist(string UserName, string Password);
         public ResponseDto Login(string UserName, string Password);
         public ResponseDto GetParentById(int parentId);
-        public ResponseDto GetEvents(int? parentId);
+        public ResponseDto GetEvents(GetMobileEventsDto getMobileEventsDto);
        // public ResponseDto GetEventsImageGroubedByEventId();
         public ResponseDto GetParentStudents(int parentId);
         public ResponseDto GetStudentsEventsByParentId(int parentId);
