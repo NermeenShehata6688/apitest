@@ -333,11 +333,19 @@ namespace IesSchool.Core.MappingProfile
             #endregion
             #region Event
             CreateMap<Event, EventDto>()
-           .ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Department == null ? "" : c.Department.Name == null ? "" : c.Department.Name))
-           .ForMember(dist => dist.EventTypeName, opt => opt.MapFrom(c => c.EventType == null ? "" : c.EventType.Name == null ? "" : c.EventType.Name))
+           //.ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Department == null ? "" : c.Department.Name == null ? "" : c.Department.Name))
+           //.ForMember(dist => dist.EventTypeName, opt => opt.MapFrom(c => c.EventType == null ? "" : c.EventType.Name == null ? "" : c.EventType.Name))
                .ReverseMap()
            .ForMember(x => x.Department, op => op.Ignore())
            .ForMember(x => x.EventType, op => op.Ignore());
+            CreateMap<Event, EventGetDto>().ReverseMap();
+
+            CreateMap<Event, EventMobileDto>()
+          .ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Department == null ? "" : c.Department.Name == null ? "" : c.Department.Name))
+          .ForMember(dist => dist.EventTypeName, opt => opt.MapFrom(c => c.EventType == null ? "" : c.EventType.Name == null ? "" : c.EventType.Name))
+              .ReverseMap()
+          .ForMember(x => x.Department, op => op.Ignore())
+          .ForMember(x => x.EventType, op => op.Ignore());
             CreateMap<Event, EventGetDto>().ReverseMap();
 
             // CreateMap<Paginate<EventAttachement>, Paginate<EventAttachementDto>>().ReverseMap();

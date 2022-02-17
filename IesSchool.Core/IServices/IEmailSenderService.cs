@@ -10,5 +10,6 @@ namespace IesSchool.Core.IServices
     public  interface IEmailSenderService
     {
         public void SendEmail(PasswordResetDto passwordResetDto);
+        public bool ResetUserPassword(PasswordResetDto passwordResetDto);
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IesSchool.Controllers
 {
-    [Authorize]
+   //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
@@ -33,14 +33,23 @@ namespace IesSchool.Controllers
             }
         }
 
-        [ResponseCache(Duration = 3600)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
-        public IActionResult GetEventsImageGroubedByEventId()
+        public IActionResult GetEvents(int? parentId)
         {
             try
             {
-                var all = _iMobileService.GetEventsImageGroubedByEventId();
-                return Ok(all);
+                if (parentId != null)
+                {
+                    var all = _iMobileService.GetEvents(parentId);
+                    return Ok(all);
+                }
+                else
+                {
+                    var all = _iMobileService.GetEvents(null);
+
+                    return Ok(all);
+                }
             }
             catch (Exception)
             {

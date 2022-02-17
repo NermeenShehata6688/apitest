@@ -1,7 +1,10 @@
-﻿using IesSchool.Core.Dto;
+﻿using IesSchool.Context.Models;
+using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
+using IesSchool.InfraStructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -20,27 +23,35 @@ namespace IesSchool.Core.Services
     {
         private readonly IConfiguration _config;
         private readonly UserManager<IdentityUser<int>> _userManager;
+        private readonly IUnitOfWork _uow;
+        private iesContext _iesContext;
 
-        public EmailSenderService(IConfiguration config, UserManager<IdentityUser<int>> userManage)
+        public EmailSenderService(IConfiguration config, UserManager<IdentityUser<int>> userManage, IUnitOfWork unitOfWork, iesContext iesContext)
         {
             _config = config;
             _userManager = userManage;
+            _uow = unitOfWork;
+            _iesContext = iesContext;
         }
         public async void SendEmail(PasswordResetDto passwordResetDto)
         {
             try
             {
-                var user = await _userManager.FindByEmailAsync(passwordResetDto.Email);
+                // var user = await _userManager.FindByEmailAsync(passwordResetDto.Email);
+                var user = _uow.GetRepository<User>().Single(x => x.Email == passwordResetDto.Email);
                 if (user == null)
                     return ;
-                using (MailMessage mm = new MailMessage("nermeenshehata6688@gmail.com", passwordResetDto.Email))
+                string fromEmail = _config.GetSection("SmtpSettings").GetSection("SenderEmail").Value;
+                string emailPass = _config.GetSection("SmtpSettings").GetSection("Password").Value;
+
+                using (MailMessage mm = new MailMessage(fromEmail, passwordResetDto.Email))
                 {
                     // Guid g = Guid.NewGuid();
-                    string url = "http://localhost:5212";
+                    string url = _config["AppUrl"] + "/api/ChangePassword/Index";
                     string html = "";
                     html = "<table cellpadding = \"4\">" +
                                     "<tr>" +
-                                        "<td><span>Dear " + user.UserName + " ,</span></td>" +
+                                        "<td><span>Dear " + user.Name + " ,</span></td>" +
                                     "</tr>" +
                                     "<tr>" +
                                         "<td><span>To reset your password, please go to the following page:</span></td>" +
@@ -67,7 +78,7 @@ namespace IesSchool.Core.Services
 
                     SmtpClient smtp = new SmtpClient();
 
-                    smtp.Credentials = new NetworkCredential("nermeenshehata6688@gmail.com", "nora366nora");
+                    smtp.Credentials = new NetworkCredential(fromEmail, emailPass);
 
                     // smtp.UseDefaultCredentials = true;
                     smtp.Port = 587;
@@ -84,6 +95,29 @@ namespace IesSchool.Core.Services
             catch
             {
                 return;
+            }
+        }
+        public bool ResetUserPassword(PasswordResetDto passwordResetDto)
+        {
+            try
+            {
+                var user = _uow.GetRepository<User>().Single(x => x.Id == passwordResetDto.Id);
+                if (user != null)
+                {
+                    if (passwordResetDto.NewPassword != null)
+                    {
+                        var cmd = $"UPDATE[User] SET ParentPassword={passwordResetDto.NewPassword} where Id={passwordResetDto.Id}";
+                        _iesContext.Database.ExecuteSqlRaw(cmd);
+                        _iesContext.Dispose();
+                    }
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
             }
         }
 
