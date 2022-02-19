@@ -647,7 +647,21 @@ namespace IesSchool.Controllers
         }
 
 
+        //[HttpPost]
+        //public async Task<IActionResult> ResetPassword(PasswordResetDto passwordResetDto)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = await _userService.ResetPasswordAsync(passwordResetDto);
 
+        //        if (result != null)
+        //            return Ok(result);
+
+        //        return BadRequest(result);
+        //    }
+
+        //    return BadRequest("Invalid details");
+        //}
 
     }
 

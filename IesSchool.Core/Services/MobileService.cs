@@ -37,9 +37,9 @@ namespace IesSchool.Core.Services
                 if (UserName != null && Password != null)
                 {
                     // obj.Password.CompareTo(pass) == 0/string.Equals
-                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Compare( x.ParentPassword,Password)==0 );
-                   // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsSuspended != true);
-                   // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
+                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Compare(x.ParentPassword, Password) == 0);
+                    // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsSuspended != true);
+                    // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
                     if (user != null)
                         return true;
                 }
@@ -59,7 +59,7 @@ namespace IesSchool.Core.Services
                     // obj.Password.CompareTo(pass) == 0/string.Equals
                     //var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Compare(x.ParentPassword, Password) == 0 && x.IsSuspended != true);
                     // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsActive != false);
-                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword== Password );
+                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword == Password);
                     // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
                     if (user != null)
                         return new ResponseDto { Status = 1, Message = " Seccess", Data = user };
@@ -86,15 +86,15 @@ namespace IesSchool.Core.Services
                 {
                     parent.ImageBinary = null;
                     var parentStudents = _uow.GetRepository<Student>().GetList(x => x.ParentId == parent.Id && x.IsDeleted != true);
-                    if (parentStudents.Items.Count()>0)
+                    if (parentStudents.Items.Count() > 0)
                     {
                         var mapperStudent = _mapper.Map<PaginateDto<StudentDto>>(parentStudents).Items;
-                        if (mapperStudent.Count()>0)
+                        if (mapperStudent.Count() > 0)
                         {
                             mapper.Students = mapperStudent;
                         }
                     }
-                    if (mapper.Image!=null)
+                    if (mapper.Image != null)
                     {
                         string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                         var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
@@ -102,7 +102,7 @@ namespace IesSchool.Core.Services
                     }
                 }
 
-                
+
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -114,10 +114,10 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var students = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, Image = x.Image }),x => x.ParentId == parentId && x.IsDeleted != true, null,null, 0, 100000, true);
+                var students = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, Image = x.Image }), x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<StudentDto>>(students);
 
-                if (mapper.Items.Count()>0&& mapper != null)
+                if (mapper.Items.Count() > 0 && mapper != null)
                 {
                     foreach (var item in mapper.Items)
                     {
@@ -141,12 +141,12 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var studentsIds = _uow.GetRepository<Student>().GetList( x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x=> x.Id).ToArray();
+                var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
 
-                var eventStudentIds = _uow.GetRepository<EventStudent>().GetList( x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value) , null, null, 0, 100000, true).Items.Select(x=> x.Id).ToArray();
+                var eventStudentIds = _uow.GetRepository<EventStudent>().GetList(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value), null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
 
                 var eventStudentFiles = _uow.GetRepository<EventStudentFile>().GetList(x => eventStudentIds.Contains(x.EventStudentId.Value == null ? 0 : x.EventStudentId.Value), null,
-                  x => x.Include(x => x.EventStudent).ThenInclude(x => x.Event) );
+                  x => x.Include(x => x.EventStudent).ThenInclude(x => x.Event));
 
                 var mapper = _mapper.Map<PaginateDto<EventStudentFileDto>>(eventStudentFiles);
                 if (mapper.Items.Count() > 0 && mapper != null)
@@ -179,7 +179,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var eventsImage = _uow.GetRepository<EventAttachement>().GetList(null, null, x=> x.Include(x=>x.Event), 0, 100000, true);
+                var eventsImage = _uow.GetRepository<EventAttachement>().GetList(null, null, x => x.Include(x => x.Event), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventAttachementDto>>(eventsImage);
 
                 if (mapper.Items.Count > 0)
@@ -212,7 +212,7 @@ namespace IesSchool.Core.Services
                     .Include(x => x.AcadmicYear).Include(x => x.Term), 0, 100000, true);
                 var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep).Items;
 
-                    iepsItpsIxpsDto.Ieps = iepMapper;
+                iepsItpsIxpsDto.Ieps = iepMapper;
 
 
                 var AllItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
@@ -232,7 +232,7 @@ namespace IesSchool.Core.Services
                     .Include(s => s.Term)
                     .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
                 var ixpMapper = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
-               
+
                 iepsItpsIxpsDto.Ixps = ixpMapper;
 
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = iepsItpsIxpsDto };
@@ -247,7 +247,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (allEventAttachement.Items.Count() > 0)
+                if (allEventAttachement.Items. Count() > 0)
                 {
                     foreach (var item in allEventAttachement.Items)
                     {
@@ -271,9 +271,9 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var parent = _uow.GetRepository<User>().Single( x => x.Id == id );
-             
-                if (parent != null&& oldPassword!=null)
+                var parent = _uow.GetRepository<User>().Single(x => x.Id == id);
+
+                if (parent != null && oldPassword != null)
                 {
 
                     if (parent.ParentPassword == oldPassword)
@@ -296,6 +296,90 @@ namespace IesSchool.Core.Services
             }
         }
 
+        public ResponseDto GetEvents(GetMobileEventsDto? getMobileEventsDto)
+        {
+            try
+            {
+                PaginateDto<EventMobileDto> mapper = new PaginateDto<EventMobileDto>();
+                if (getMobileEventsDto.Id != null)
+                {
+                    var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == getMobileEventsDto.Id && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
 
-	}
+                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x => x
+                       .Include(x => x.EventAttachements.Take(1))
+                       .Include(x => x.EventStudents.Where(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value))).ThenInclude(x => x.EventStudentFiles.Take(1)), 0, 100000, true);
+                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+
+                    if (mapper.Items.Any(x => x.EventAttachements != null))
+                    {
+                        if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
+                        {
+                            foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
+                            {
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+
+                        }
+                    }
+                    if (mapper.Items.Any(x => x.EventStudents != null))
+                    {
+                        if (mapper.Items.Any(x => x.EventStudents.Any(x => x.EventStudentFiles != null)))
+                        {
+                            if (mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles).Count() > 0)
+                            {
+                                foreach (var item in mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles))
+                                {
+                                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                    item.FullPath = fullpath;
+                                }
+
+                            }
+                        }
+                    }
+
+
+                }
+                else
+                {
+                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x => x
+                      .Include(x => x.EventAttachements.Take(1)), 0, 100000, true);
+                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+                    if (mapper.Items.Any(x => x.EventAttachements != null))
+                    {
+                        if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
+                        {
+                            foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
+                            {
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+
+                        }
+                    }
+
+
+                }
+                if (getMobileEventsDto.Index == null || getMobileEventsDto.Index == 0)
+                {
+                    getMobileEventsDto.Index = 0;
+                }
+                else
+                {
+                    getMobileEventsDto.Index += 1;
+                }
+                 mapper = new PaginateDto<EventMobileDto> { Count = mapper.Items.Count(), Items = mapper.Items != null ? mapper.Items.Skip(getMobileEventsDto.Index == null || getMobileEventsDto.PageSize == null ? 0 : ((getMobileEventsDto.Index.Value - 1) * getMobileEventsDto.PageSize.Value)).Take(getMobileEventsDto.PageSize ??= 20).ToList() : mapper.Items.ToList() };
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+    }
 }

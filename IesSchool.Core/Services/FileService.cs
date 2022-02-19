@@ -22,6 +22,42 @@ namespace IesSchool.Core.Services
         #endregion
 
         #region Upload File  
+        public FileDto SaveBinary(string imageName,byte[] binary)
+        {
+            try
+            {
+                if (imageName != null && binary.Count() > 0)
+                {
+                    var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(imageName);
+
+                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                    string fullpath = "";
+                    if (!Directory.Exists(target))
+                    {
+                        Directory.CreateDirectory(target);
+                    }
+                    if (binary.Count() > 0)
+                    {
+                        System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + fileName, binary);
+
+                        string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                        fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}";
+                    }
+
+                    return new FileDto { FileName = fileName, virtualPath = fullpath, UploadedOn = DateTime.Now };
+                }
+                else
+                    return new FileDto { };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        //save image from front end to temp file
         public FileDto UploadFile(IFormFile file)
         {
             var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
@@ -60,7 +96,7 @@ namespace IesSchool.Core.Services
             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
             var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}";
 
-            return new FileDto { FileName = fileName, virtualPath = fullpath, UploadedOn=DateTime.Now };
+            return new FileDto { FileName = fileName, virtualPath = fullpath, UploadedOn = DateTime.Now };
         }
         #endregion
     }

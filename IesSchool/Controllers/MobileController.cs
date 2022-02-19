@@ -1,10 +1,13 @@
-﻿using IesSchool.Core.IServices;
+﻿using IesSchool.Core.Dto;
+using IesSchool.Core.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace IesSchool.Controllers
 {
+   //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
@@ -31,14 +34,15 @@ namespace IesSchool.Controllers
             }
         }
 
-        [ResponseCache(Duration = 3600)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
-        public IActionResult GetEventsImageGroubedByEventId()
+        public IActionResult GetEvents([FromQuery] GetMobileEventsDto getMobileEventsDto)
         {
             try
             {
-                var all = _iMobileService.GetEventsImageGroubedByEventId();
-                return Ok(all);
+                    var all = _iMobileService.GetEvents(getMobileEventsDto);
+                    return Ok(all);
+               
             }
             catch (Exception)
             {
