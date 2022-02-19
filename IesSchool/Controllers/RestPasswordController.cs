@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace IesSchool.Controllers
 {
 
-    [Route("api/[controller]/[action]")]
+    //[Route("api/[controller]/[action]")]
 
     public class RestPasswordController : Controller
     {
