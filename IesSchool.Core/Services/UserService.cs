@@ -130,7 +130,7 @@ namespace IesSchool.Core.Services
                     userSearchDto.Index = 0;
                 }
                 else
-                {
+                {    
                     userSearchDto.Index += 1;
                 }
                 var mapper = new PaginateDto<VwUserDto> { Count = lstToSend.Count(), Items = lstToSend != null ? lstUserDto.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 100000).ToList() : lstToSend.ToList() };
