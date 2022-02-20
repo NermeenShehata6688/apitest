@@ -323,6 +323,7 @@ namespace IesSchool.Core.Services
                     var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x => x
                        .Include(x => x.EventAttachements.Take(1))
                        .Include(x => x.EventStudents.Where(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value))).ThenInclude(x => x.EventStudentFiles.Take(1)), 0, 100000, true);
+                    events.Items.ToList().ForEach(x => x.Description = null);
                      mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
 
                     if (mapper.Items.Any(x => x.EventAttachements != null))
@@ -357,7 +358,8 @@ namespace IesSchool.Core.Services
                 {
                     var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x => x
                       .Include(x => x.EventAttachements.Take(1)), 0, 100000, true);
-                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+                    events.Items.ToList().ForEach(x => x.Description = null);
+                    mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
                     if (mapper.Items.Any(x => x.EventAttachements != null))
                     {
                         if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
