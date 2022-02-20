@@ -119,17 +119,31 @@ namespace IesSchool.Core.Services
             {
                 var students = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, Image = x.Image }), x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<StudentDto>>(students);
+                mapper.Items.ToList().ForEach(x => x.ImageBinary = null);
 
                 if (mapper.Items.Count() > 0 && mapper != null)
                 {
                     foreach (var item in mapper.Items)
                     {
-                        if (item.Image != null)
+                        if (File.Exists("wwwRoot/tempFiles/" + item.Image))
                         {
-                            item.ImageBinary = null;
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                             var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
                             item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.Image != null)
+                            {
+                                var student = _uow.GetRepository<Student>().Single(x => x.Id == item.Id && x.IsDeleted != true, null, null);
+                                if (student.ImageBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+                                item.FullPath = fullpath;
+                            }
                         }
                     }
                 }
@@ -158,9 +172,7 @@ namespace IesSchool.Core.Services
                     {
                         if (item.FileName != null)
                         {
-                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
-                            item.FullPath = fullpath;
+                            GetFullPathAndBinaryStudentFiles(item);
                         }
                     }
                 }
