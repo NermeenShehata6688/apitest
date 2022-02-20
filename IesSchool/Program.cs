@@ -124,4 +124,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 //app.UseMiddleware<BasicAuthenticationMiddleware>();
+
+
+//app.UseWhen(context => context.Request.Path.StartsWithSegments("/api/Mobile/"), appBuilder =>
+//{
+//});
+
 app.Run();
