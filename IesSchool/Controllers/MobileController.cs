@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IesSchool.Controllers
 {
-//    [Authorize]
+   //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
@@ -36,7 +36,6 @@ namespace IesSchool.Controllers
 
         //[ResponseCache(Duration = 3600)]
         [HttpGet]
-        [Authorize]
         public IActionResult GetEvents([FromQuery] GetMobileEventsDto getMobileEventsDto)
         {
             try
