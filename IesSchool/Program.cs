@@ -123,5 +123,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-//app.UseMiddleware<BasicAuthenticationMiddleware>();
+app.UseMiddleware<BasicAuthenticationMiddleware>();
 app.Run();
