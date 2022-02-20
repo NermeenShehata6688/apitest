@@ -62,16 +62,16 @@ namespace IesSchool.Core.Services
                     var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword == Password);
                     // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
                     if (user != null)
-                        return new ResponseDto { Status = 1, Message = " Seccess", Data = user };
+                        return new ResponseDto { Status = 1, Message = "LogIn Seccess", Data = user };
                     else
-                        return new ResponseDto { Status = 0, Message = " null" };
+                        return new ResponseDto { Status = 0, Errormessage = "there is no user founed with this input data" };
 
                 }
-                return new ResponseDto { Status = 0, Message = " null" };
+                return new ResponseDto { Status = 0, Errormessage = "faild to get data" };
             }
             catch (Exception ex)
             {
-                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+                return new ResponseDto { Status = 0, Errormessage = "faild to get data", Data = ex };
 
             }
         }
@@ -354,7 +354,7 @@ namespace IesSchool.Core.Services
                             foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
                             {
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
                                 item.FullPath = fullpath;
                             }
 

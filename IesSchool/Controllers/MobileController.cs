@@ -7,19 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IesSchool.Controllers
 {
-   [Authorize]
+ //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
     {
         private IMobileService _iMobileService;
         private IReportService _reportService;
-        private IEventService _eventService;
-        public MobileController(IMobileService iMobileService, IReportService reportService, IEventService eventService)
+        public MobileController(IMobileService iMobileService, IReportService reportService)
         {
             _iMobileService = iMobileService;
             _reportService = reportService;
-            _eventService = eventService;
         }
       
         [HttpGet]
@@ -52,11 +50,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetEventById(int eventId)
+        public IActionResult GetParentStudents(int parentId)
         {
             try
             {
-                var all = _eventService.GetEventById(eventId);
+                var all = _iMobileService.GetParentStudents(parentId);
                 return Ok(all);
             }
             catch (Exception)
