@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IesSchool.Controllers
 {
-   //[Authorize]
+   [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
