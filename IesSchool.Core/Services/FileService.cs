@@ -71,11 +71,14 @@ namespace IesSchool.Core.Services
             var filePath = Path.Combine(target, fileName);
             try
             {
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyToAsync(stream);
-                    stream.Close();
-                }
+                //using (var stream = new FileStream(filePath, FileMode.Create))
+                //{
+                //    file.CopyToAsync(stream);
+                //    stream.Close();
+                //}
+
+                System.IO.File.Copy(file.FileName, filePath, true);
+
             }
             catch (Exception ex)
             {
