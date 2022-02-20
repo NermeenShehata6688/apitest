@@ -281,7 +281,6 @@ namespace IesSchool.Core.Services
                 return allEventAttachement; ;
             }
         }
-
         public ResponseDto ChangePassword(int id, string oldPassword, string newPassword)
         {
             try
@@ -310,7 +309,6 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-
         public ResponseDto GetEvents(GetMobileEventsDto? getMobileEventsDto)
         {
             try
@@ -472,6 +470,5 @@ namespace IesSchool.Core.Services
                 return allEventStudentFiles; ;
             }
         }
-
     }
 }
