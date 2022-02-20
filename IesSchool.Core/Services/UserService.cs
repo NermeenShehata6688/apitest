@@ -290,13 +290,19 @@ namespace IesSchool.Core.Services
                             }
                             else
                             {
-                               //var userBinary = _uow.GetRepository<User>().Single(x => x.Id == mapper.Id, null, null);
-                                if (user.ImageBinary != null)
+                            var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                            string fullpath = "";
+                            if (!Directory.Exists(target))
+                            {
+                                Directory.CreateDirectory(target);
+                            }
+                            //var userBinary = _uow.GetRepository<User>().Single(x => x.Id == mapper.Id, null, null);
+                            if (user.ImageBinary != null)
                                 {
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + mapper.Image, user.ImageBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                                 fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
                                 mapper.FullPath = fullpath;
                             }
                         

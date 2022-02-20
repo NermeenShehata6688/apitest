@@ -316,9 +316,7 @@ namespace IesSchool.Core.Services
                         {
                             foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
                             {
-                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
-                                item.FullPath = fullpath;
+                                GetFullPathAndBinaryEventAtt(item);
                             }
 
                         }
@@ -331,9 +329,7 @@ namespace IesSchool.Core.Services
                             {
                                 foreach (var item in mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles))
                                 {
-                                    string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                    var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
-                                    item.FullPath = fullpath;
+                                    GetFullPathAndBinaryStudentFiles(item);
                                 }
 
                             }
@@ -353,9 +349,7 @@ namespace IesSchool.Core.Services
                         {
                             foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
                             {
-                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
-                                item.FullPath = fullpath;
+                                GetFullPathAndBinaryEventAtt(item);
                             }
 
                         }
@@ -381,5 +375,76 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        private EventAttachementDto GetFullPathAndBinaryEventAtt(EventAttachementDto allEventAttachement)
+        {
+            try
+            {
+                if (allEventAttachement!= null)
+                {
+                        if (File.Exists("wwwRoot/tempFiles/" + allEventAttachement.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventAttachement.FileName}";
+                        allEventAttachement.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (allEventAttachement != null && allEventAttachement.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == allEventAttachement.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + allEventAttachement.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventAttachement.FileName}";
+                            allEventAttachement.FullPath = fullpath;
+                            }
+                        }
+                    
+                }
+                return allEventAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allEventAttachement; ;
+            }
+        }
+        private EventStudentFileDto GetFullPathAndBinaryStudentFiles(EventStudentFileDto allEventStudentFiles)
+        {
+            try
+            {
+                if (allEventStudentFiles!= null)
+                {
+                        if (File.Exists("wwwRoot/tempFiles/" + allEventStudentFiles.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventStudentFiles.FileName}";
+                        allEventStudentFiles.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (allEventStudentFiles != null && allEventStudentFiles.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventStudentFileBinary>().Single(x => x.Id == allEventStudentFiles.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + allEventStudentFiles.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventStudentFiles.FileName}";
+                            allEventStudentFiles.FullPath = fullpath;
+                            }
+                        }
+                   
+                }
+                return allEventStudentFiles;
+            }
+            catch (Exception ex)
+            {
+                return allEventStudentFiles; ;
+            }
+        }
+
     }
 }
