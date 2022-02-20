@@ -568,7 +568,12 @@ namespace IesSchool.Core.Services
                                 var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == item.Id , null, null);
                                 if (att.FileBinary != null)
                                 {
-                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                                    if (!Directory.Exists(target))
+                                    {
+                                        Directory.CreateDirectory(target);
+                                    }
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
@@ -605,7 +610,12 @@ namespace IesSchool.Core.Services
                                 var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == item.Id , null, null);
                                 if (att.FileBinary != null)
                                 {
-                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                                    if (!Directory.Exists(target))
+                                    {
+                                        Directory.CreateDirectory(target);
+                                    }
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
                                 var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
@@ -642,6 +652,11 @@ namespace IesSchool.Core.Services
                                 var att = _uow.GetRepository<EventStudentFileBinary>().Single(x => x.Id == item.Id, null, null);
                                 if (att.FileBinary != null)
                                 {
+                                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                                    if (!Directory.Exists(target))
+                                    {
+                                        Directory.CreateDirectory(target);
+                                    }
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
@@ -679,6 +694,11 @@ namespace IesSchool.Core.Services
                                 var att = _uow.GetRepository<EventStudentFileBinary>().Single(x => x.Id == item.Id, null, null);
                                 if (att.FileBinary != null)
                                 {
+                                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                                    if (!Directory.Exists(target))
+                                    {
+                                        Directory.CreateDirectory(target);
+                                    }
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
