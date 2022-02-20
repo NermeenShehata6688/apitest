@@ -100,7 +100,7 @@ namespace IesSchool.Core.Services
                     if (mapper.Image != null)
                     {
                         string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{mapper.Image}";
+                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{mapper.Image}";
                         mapper.FullPath = fullpath;
                     }
                 }
@@ -128,7 +128,7 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + item.Image))
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.Image}";
                             item.FullPath = fullpath;
                         }
                         else
@@ -141,7 +141,7 @@ namespace IesSchool.Core.Services
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.Image, student.ImageBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.Image}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.Image}";
                                 item.FullPath = fullpath;
                             }
                         }
@@ -269,7 +269,7 @@ namespace IesSchool.Core.Services
                         if (item.FileName != null)
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
                             item.FullPath = fullpath;
                         }
                     }
@@ -401,7 +401,7 @@ namespace IesSchool.Core.Services
                     if (File.Exists("wwwRoot/tempFiles/" + allEventAttachement.FileName))
                     {
                         string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventAttachement.FileName}";
+                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{allEventAttachement.FileName}";
                         allEventAttachement.FullPath = fullpath;
                     }
                     else
@@ -419,7 +419,7 @@ namespace IesSchool.Core.Services
                                 System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + allEventAttachement.FileName, att.FileBinary);
                             }
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventAttachement.FileName}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{allEventAttachement.FileName}";
                             allEventAttachement.FullPath = fullpath;
                         }
                     }
@@ -441,7 +441,7 @@ namespace IesSchool.Core.Services
                     if (File.Exists("wwwRoot/tempFiles/" + allEventStudentFiles.FileName))
                     {
                         string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventStudentFiles.FileName}";
+                        var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{allEventStudentFiles.FileName}";
                         allEventStudentFiles.FullPath = fullpath;
                     }
                     else
@@ -459,7 +459,7 @@ namespace IesSchool.Core.Services
                                 System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + allEventStudentFiles.FileName, att.FileBinary);
                             }
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{allEventStudentFiles.FileName}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{allEventStudentFiles.FileName}";
                             allEventStudentFiles.FullPath = fullpath;
                         }
                     }
