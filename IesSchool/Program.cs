@@ -123,11 +123,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
 //app.UseMiddleware<BasicAuthenticationMiddleware>();
 
-
-//app.UseWhen(context => context.Request.Path.StartsWithSegments("/api/Mobile/"), appBuilder =>
+//app.UseWhen(context => context.Request.Path.StartsWithSegments("/78787878"), appBuilder =>
 //{
+//    app.UseMiddleware<BasicAuthenticationMiddleware>();
 //});
 
 app.Run();

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IesSchool.Controllers
 {
+    //[Authorize] 
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AcadmicYearsController : ControllerBase
