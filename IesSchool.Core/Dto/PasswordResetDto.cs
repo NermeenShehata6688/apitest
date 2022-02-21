@@ -9,7 +9,7 @@ namespace IesSchool.Core.Dto
     public class PasswordResetDto
     {
         public int? Id { get; set; }
-        public string? Token { get; set; }
+        //public string? Token { get; set; }
       
         public string? Email { get; set; }
   

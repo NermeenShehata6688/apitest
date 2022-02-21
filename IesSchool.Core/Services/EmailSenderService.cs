@@ -33,14 +33,17 @@ namespace IesSchool.Core.Services
             _uow = unitOfWork;
             _iesContext = iesContext;
         }
-        public async void SendEmail(PasswordResetDto passwordResetDto)
+        public  string SendEmail(PasswordResetDto passwordResetDto)
         {
             try
             {
-                // var user = await _userManager.FindByEmailAsync(passwordResetDto.Email);
+                string msg = "";
                 var user = _uow.GetRepository<User>().Single(x => x.Email == passwordResetDto.Email);
                 if (user == null)
-                    return ;
+                {
+                    msg = "Your Email Is Not Registerd";
+                    return msg;
+                }
                 string fromEmail = _config.GetSection("SmtpSettings").GetSection("SenderEmail").Value;
                 string emailPass = _config.GetSection("SmtpSettings").GetSection("Password").Value;
 
@@ -87,19 +90,24 @@ namespace IesSchool.Core.Services
                     smtp.Send(mm);
 
                     mm.Dispose();
-
+                    msg = "Ies Team Send You Email. Please Check to Change Your Password ";
+                    return msg;
                 }
-                return;
+             
             }
-            catch
+            catch (Exception)
             {
-                return;
+                throw;
             }
         }
         public bool ResetUserPassword(PasswordResetDto passwordResetDto)
         {
             try
             {
+                if (passwordResetDto.Id==null)
+                {
+                    return false;
+                }
                 var user = _uow.GetRepository<User>().Single(x => x.Id == passwordResetDto.Id);
                 if (user != null)
                 {
@@ -119,7 +127,6 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
-
 
         #region NotNeededForNow
         //private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
