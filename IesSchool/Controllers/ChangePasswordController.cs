@@ -29,12 +29,13 @@ namespace IesSchool.Controllers
             var all = _emailSenderService.ResetUserPassword(passwordResetDto);
             if (all ==true)
             {
-                TempData["msg"] = "Password has been Changed, Try to LogIn Again ";
+                //TempData["msg"] = "Password has been Changed, Try to LogIn Again ";
+                passwordResetDto.Replay = "Password has been Changed, Try to LogIn Again ";
             }
             else
-                TempData["msg"] = "Error, Try Again";
+                passwordResetDto.Replay = "Error, Try Again";
 
-            return View("Index");
+            return View("Index", passwordResetDto);
 
         }
     }

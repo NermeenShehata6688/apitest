@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using IesSchool.Core.Dto
+@model PasswordResetDto;
+<!DOCTYPE html>
 <html>
 
   <head>
@@ -21,48 +23,43 @@
             <br />
             <br />
             <br />
-             <div class=" col-md-3 "></div>
-            <div class=" col-md-6 " style=" box-shadow: 0px 3px 5px 10px #8888882e;" >
-                <div rowspan="2" class="col-sm-4" >
+             <div class="  col-md-3 col-lg-3 col-sm-1 col-xs-1"></div>
+            <div class=" col-md-6 col-lg-6 col-sm-10 col-xs-10 " style=" box-shadow: 0px 3px 5px 10px #8888882e;" >
+                <div  class="row form-group" style="height:270px" >
                     <br />
-                    <img src="/staticFiles/SysLogo.jpeg" style="width:100%;height:100%;" id="" />
+                    <img src="/staticFiles/LayoutLogo.jpg" style="width:100%;height:100%;" id="" />
                      <br />
                     </div>
-
-
-             <div class="row form-group col-sm-8">
+                    <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2"></div>
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+             <div class=" form-group ">
                     <br />
             <br />
-                <label for="inputPassword" class=" col-form-label">Password</label>
+                <label for="inputPassword" class=" col-md-6 col-lg-6 col-sm-6 col-xs-6 col-form-label">Password</label>
                 <div class="">
-                    <input type="password"  name="newPassword"  id="newPassword"   class="col-sm-8" placeholder="" >
+                    <input type="password"  name="newPassword"  id="newPassword"   class="col-md-6 col-lg-6 col-sm-6 col-xs-6" placeholder="" >
                    
                 </div>
-            </div>            <br />
-            <br />
-            <br />
-            <br />
-
-            <div class=" row form-group col-sm-8 ">
-                <label for="inputPassword" class=" col-form-label">Re-Enter Password</label>
-                <div class="">
-                    <input type="password"  name="confirmPassword" id="confirmPassword" class="col-sm-8" placeholder="" >
-                   
-                </div>
-            </div>
-             <div class=" row form-group col-sm-12 ">
-                 
+                <br />
+            </div>          
            
-            <div class="  col-sm-3 ">
+
+            <div class="  form-group ">
+                <label for="inputPassword" class="col-md-6 col-lg-6 col-sm-6 col-xs-6 col-form-label">Re-Enter Password</label>
+                <div class="">
+                    <input type="password"  name="confirmPassword" id="confirmPassword" class="col-md-6 col-lg-6 col-sm-6 col-xs-6" placeholder="" >
+                   
+                </div>
+                </div>
             </div>
-            <div class="  form-group col-sm-6 ">
+             <div class=" form-group col-md-12 col-lg-12 col-sm-12 col-xs-12 ">
+                 
+                 <br /> <br /> <br />
                  <input type="button" value="Change Password" style="width: 100%;background-color: #3f51b5;color: white;height:35px" onclick="SavePassword()" />
                  <br />
                  <br />
-    <p id="info" name="info" style="color:red">   </p> 
+    <p id="info"  name="info" style="color:red;text-align: center;">   </p> 
                  
-            </div>
-             
              </div>
               
             </div>
@@ -70,11 +67,12 @@
     @*<label id="lbInfo" name="lbInfo"></label>*@
                 <label>@TempData["msg"]</label>
 
-    @if (TempData["msg"]!= null)
+   @if (Model!= null)
     {
-    <p id="info2" name="info" style="color:red"> @TempData["msg"].ToString()</p> 
-
-        
+         @if (Model.Replay!= null)
+         {
+    <p id="info"  name="info" style="color:red;text-align: center;">Model.Replay  </p> 
+    }
     }
 </form>
 

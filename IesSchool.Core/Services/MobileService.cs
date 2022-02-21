@@ -117,9 +117,9 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var students = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, Image = x.Image }), x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true);
-                var mapper = _mapper.Map<PaginateDto<StudentDto>>(students);
-                mapper.Items.ToList().ForEach(x => x.ImageBinary = null);
+                var students = _uow.GetRepository<VwStudent>().GetList( x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<VwStudentDto>>(students);
+               // mapper.Items.ToList().ForEach(x => x.ImageBinary = null);
 
                 if (mapper.Items.Count() > 0 && mapper != null)
                 {

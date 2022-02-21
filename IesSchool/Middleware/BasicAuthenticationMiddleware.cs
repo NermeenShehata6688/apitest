@@ -39,7 +39,9 @@ namespace IesSchool.Middleware
 
                     if (savedUser== username&& savedPass== password)
                     {
-                        await _next.Invoke(httpContext);
+                       // await _next.Invoke(httpContext);
+                        await _next(httpContext);
+
                     }
                     else
                     {
