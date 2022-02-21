@@ -15,9 +15,10 @@ namespace IesSchool.Controllers
             _emailSenderService = emailSenderService;
         }
         // GET: RestPasswordController
-        [HttpGet]
-        public ActionResult Index()
+        [HttpGet("{id}")]
+        public ActionResult Index(int id)
         {
+            ViewBag.UserId = id;
             return View();
         }
 
@@ -28,13 +29,13 @@ namespace IesSchool.Controllers
             var all = _emailSenderService.ResetUserPassword(passwordResetDto);
             if (all ==true)
             {
-               // TempData["name"] = "Bill";
-                TempData["msg"] = "Password has been Changed, Try to LogIn ";
+                //TempData["msg"] = "Password has been Changed, Try to LogIn Again ";
+                passwordResetDto.Replay = "Password has been Changed, Try to LogIn Again ";
             }
             else
-                TempData["msg"] = "Error, Try Again";
+                passwordResetDto.Replay = "Error, Try Again";
 
-            return View("Index");
+            return View("Index", passwordResetDto);
 
         }
     }
