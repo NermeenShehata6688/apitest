@@ -46,8 +46,7 @@ namespace IesSchool.Core.Services
 
                 using (MailMessage mm = new MailMessage(fromEmail, passwordResetDto.Email))
                 {
-                    // Guid g = Guid.NewGuid();
-                    string url = _config["AppUrl"] + "/api/ChangePassword/Index";
+                    string url = _config["AppUrl"] + "/api/ChangePassword/Index/"+ user.Id;
                     string html = "";
                     html = "<table cellpadding = \"4\">" +
                                     "<tr>" +
