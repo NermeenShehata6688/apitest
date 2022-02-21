@@ -73,7 +73,7 @@ builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(config =>
              .AddDefaultTokenProviders();
 
 
-builder.Services.AddAuthentication(opt=> {
+builder.Services.AddAuthentication(opt => {
 
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -94,7 +94,7 @@ builder.Services.AddAuthentication(opt=> {
         ValidateIssuer = false,
         ValidateAudience = false
     };
-     options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
+    options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
     {
         // Disable the built-in JWT claims mapping feature.
         InboundClaimTypeMap = new Dictionary<string, string>()
@@ -126,9 +126,9 @@ app.MapControllers();
 
 //app.UseMiddleware<BasicAuthenticationMiddleware>();
 
-//app.UseWhen(context => context.Request.Path.StartsWithSegments("/78787878"), appBuilder =>
-//{
-//    app.UseMiddleware<BasicAuthenticationMiddleware>();
-//});
-
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/secure"), appBuilder =>
+{
+    appBuilder.UseMiddleware<BasicAuthenticationMiddleware>();
+});
 app.Run();
+

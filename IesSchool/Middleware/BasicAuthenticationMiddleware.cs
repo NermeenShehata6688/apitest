@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace IesSchool.Middleware
 {
-    public class BasicAuthenticationMiddleware
+    public class BasicAuthenticationMiddleware 
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _config;
