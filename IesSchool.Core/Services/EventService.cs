@@ -79,18 +79,21 @@ namespace IesSchool.Core.Services
                     .Include(x => x.EventStudents).ThenInclude(x => x.Student)
                     .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                 var mapper = _mapper.Map<EventGetDto>(oEvent);
-                
-                if (mapper.EventAttachements!=null && mapper.EventAttachements.Count()>0)
+
+                if (mapper!=null)
                 {
-                    mapper.EventAttachements = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
-                }
-                if (mapper.EventStudents != null && mapper.EventStudents.Count > 0)
-                {
-                    foreach (var item in mapper.EventStudents)
+                    if (mapper.EventAttachements != null && mapper.EventAttachements.Count() > 0)
                     {
-                        if (item.EventStudentFiles != null)
+                        mapper.EventAttachements = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
+                    }
+                    if (mapper.EventStudents != null && mapper.EventStudents.Count > 0)
+                    {
+                        foreach (var item in mapper.EventStudents)
                         {
-                            item.EventStudentFiles = GetFullPathAndBinaryStudentFilesICollection(item.EventStudentFiles);
+                            if (item.EventStudentFiles != null)
+                            {
+                                item.EventStudentFiles = GetFullPathAndBinaryStudentFilesICollection(item.EventStudentFiles);
+                            }
                         }
                     }
                 }
