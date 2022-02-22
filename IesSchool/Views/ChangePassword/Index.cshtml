@@ -58,23 +58,13 @@
                  <input type="button" value="Change Password" style="width: 100%;background-color: #3f51b5;color: white;height:35px" onclick="SavePassword()" />
                  <br />
                  <br />
-    <p id="info"  name="info" style="color:red;text-align: center;">   </p> 
-                 
+                 <p id="info"  name="info" style="color:red;text-align: center;">   </p> 
+                 <p id="infoSucces" class="bold"  name="info" style="color:green;text-align: center;">   </p> 
              </div>
               
             </div>
-             
-    @*<label id="lbInfo" name="lbInfo"></label>*@
-                <label>@TempData["msg"]</label>
-
-   @if (Model!= null)
-    {
-         @if (Model.Replay!= null)
-         {
-    <p id="info"  name="info" style="color:red;text-align: center;">Model.Replay  </p> 
-    }
-    }
-</form>
+          
+    </form>
 
 </body>
 </html>
@@ -85,6 +75,7 @@
     
 
     function SavePassword () {
+         $('#infoSucces').text('');
         if($('#newPassword').val()=="")
         {
            $('#info').text('Please Enter Your new Password.');
@@ -96,6 +87,7 @@
            $('#info').text('Not Matched. Please Re-Enter Your Password.');
             return;
         }
+         $('#info').text('');
         var userId = parseInt(@ViewBag.UserId);
           $.ajax({
                type: "POST",
@@ -104,8 +96,13 @@
                 dataType: "json",
                 success: function (res) { //call successfull
                     console.log(res)
+                      
+                       $('#newPassword').val('');
+                       $('#confirmPassword').val('');
+                     $('#infoSucces').text(res.value.replay);
                 },
                 error: function (xhr) {
+                      console.log(res)
                 }
             });
     }

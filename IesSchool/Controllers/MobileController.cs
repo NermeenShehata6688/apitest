@@ -8,16 +8,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace IesSchool.Controllers
 {
    //[Authorize]
-    [Route("secure/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
     {
         private IMobileService _iMobileService;
         private IReportService _reportService;
-        public MobileController(IMobileService iMobileService, IReportService reportService)
+        private IEventService _eventService;
+        public MobileController(IMobileService iMobileService, IReportService reportService, IEventService eventService)
         {
             _iMobileService = iMobileService;
             _reportService = reportService;
+            _eventService = eventService;
         }
       
         [HttpGet]
@@ -55,6 +57,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iMobileService.GetParentStudents(parentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetEventById(int eventId)
+        {
+            try
+            {
+                var all = _eventService.GetEventById(eventId);
                 return Ok(all);
             }
             catch (Exception)

@@ -33,7 +33,7 @@ namespace IesSchool.Core.Services
             _uow = unitOfWork;
             _iesContext = iesContext;
         }
-        public  string SendEmail(PasswordResetDto passwordResetDto)
+        public  ResponseDto SendEmail(PasswordResetDto passwordResetDto)
         {
             try
             {
@@ -42,7 +42,8 @@ namespace IesSchool.Core.Services
                 if (user == null)
                 {
                     msg = "Your Email Is Not Registerd";
-                    return msg;
+                    return new ResponseDto { Status = 0, Message = msg };
+
                 }
                 string fromEmail = _config.GetSection("SmtpSettings").GetSection("SenderEmail").Value;
                 string emailPass = _config.GetSection("SmtpSettings").GetSection("Password").Value;
@@ -90,10 +91,11 @@ namespace IesSchool.Core.Services
                     smtp.Send(mm);
 
                     mm.Dispose();
-                    msg = "Ies Team Send You Email. Please Check to Change Your Password ";
-                    return msg;
+                    msg = "Ies Team Sent You Email. Please Check to Change Your Password ";
+                    return new ResponseDto { Status =1, Message = msg };
+
                 }
-             
+
             }
             catch (Exception)
             {
@@ -113,9 +115,9 @@ namespace IesSchool.Core.Services
                 {
                     if (passwordResetDto.NewPassword != null)
                     {
-                        var cmd = $"UPDATE[User] SET ParentPassword={passwordResetDto.NewPassword} where Id={passwordResetDto.Id}";
+                        var cmd = $"UPDATE[User] SET ParentPassword=N'{passwordResetDto.NewPassword}' where Id={passwordResetDto.Id}";
                         _iesContext.Database.ExecuteSqlRaw(cmd);
-                        _iesContext.Dispose();
+                        //_iesContext.Dispose();
                     }
                     return true;
                 }
