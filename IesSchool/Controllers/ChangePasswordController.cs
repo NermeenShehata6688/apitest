@@ -35,7 +35,8 @@ namespace IesSchool.Controllers
             else
                 passwordResetDto.Replay = "Error, Try Again";
 
-            return View("Index", passwordResetDto);
+                     return Ok(Json(passwordResetDto));
+           
 
         }
     }

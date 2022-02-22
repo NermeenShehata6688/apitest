@@ -19,7 +19,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-               string all= _emailSenderService.SendEmail(passwordResetDto);
+               var all= _emailSenderService.SendEmail(passwordResetDto);
                 return Ok(all);
             }
             catch (Exception)
