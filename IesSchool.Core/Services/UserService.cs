@@ -933,6 +933,29 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
+        public bool IsParentEmailExist(string Email, int? userId)
+        {
+            try
+            {
+                if (Email != null && userId != null)
+                {
+                    var user = _uow.GetRepository<User>().GetList(x => x.Email == Email && x.Id != userId);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                if (Email != null && userId == null)
+                {
+                    var user = _uow.GetRepository<User>().GetList(x => x.Email == Email);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         private PaginateDto<UserAttachmentDto> GetFullPathAndBinaryAtt(PaginateDto<UserAttachmentDto> allUserAttachement)
         {
             try
@@ -1007,8 +1030,6 @@ namespace IesSchool.Core.Services
                 return allUserAttachement; ;
             }
         }
-
-
       
     }
 }

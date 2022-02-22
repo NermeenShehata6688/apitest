@@ -13,10 +13,10 @@ namespace IesSchool.Context.Models
         public string? NameAr { get; set; }
         public string? Name { get; set; }
         public int? Code { get; set; }
-        public int? CivilId { get; set; }
+        public string? CivilId { get; set; }
         public string? Image { get; set; }
         public int? NationalityId { get; set; }
-        public int? PassportNumber { get; set; }
+        public string? PassportNumber { get; set; }
         public int? ReligionId { get; set; }
         public string? Email { get; set; }
         public int? DepartmentId { get; set; }
@@ -52,7 +52,7 @@ namespace IesSchool.Context.Models
         public int? StateId { get; set; }
         public int? CityId { get; set; }
         public int? ParentId { get; set; }
-        public int? TermType { get; set; }
+        public string? TermType { get; set; }
         public string? DisabilityNotes { get; set; }
         public int? MinistryNumber { get; set; }
         public string? Level { get; set; }

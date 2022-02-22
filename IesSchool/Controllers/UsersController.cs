@@ -351,5 +351,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult IsParentEmailExist(string Email, int? userId)
+        {
+            try
+            {
+                var all = _userService.IsParentEmailExist(Email, userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
