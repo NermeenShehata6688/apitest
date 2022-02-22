@@ -97,6 +97,9 @@ namespace IesSchool.Core.Services
                         }
                     }
                 }
+                else
+                    return new ResponseDto { Status = 0, Message = " null", Data = mapper };
+
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
