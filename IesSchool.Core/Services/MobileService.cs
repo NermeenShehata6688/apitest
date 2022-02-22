@@ -59,9 +59,6 @@ namespace IesSchool.Core.Services
             {
                 if (UserName != null && Password != null)
                 {
-                    // obj.Password.CompareTo(pass) == 0/string.Equals
-                    //var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && String.Compare(x.ParentPassword, Password) == 0 && x.IsSuspended != true);
-                    // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.Equals( Password, StringComparison.Ordinal) && x.IsActive != false);
                     var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword == Password);
                     // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
                     if (user != null)
@@ -103,7 +100,9 @@ namespace IesSchool.Core.Services
                         var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{mapper.Image}";
                         mapper.FullPath = fullpath;
                     }
-                }
+                }else
+                    return new ResponseDto { Status = 0, Message = " No Parent" };
+
 
 
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -241,7 +240,6 @@ namespace IesSchool.Core.Services
 
                     var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true && x.IsPublished == true, null,
                    x => x.Include(x => x.EventAttachements)
-                   .Include(x => x.EventStudents)
                    .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                     var mapper = _mapper.Map<EventGetDto>(oEvent);
 
@@ -255,7 +253,6 @@ namespace IesSchool.Core.Services
                         {
                             if (studentsIds.Count()>0)
                             {
-                               // mapper.EventStudents = mapper.EventStudents.Where(studentsIds.Contains(x => x.StudentId));
 
                                 mapper.EventStudents = (from s in mapper.EventStudents
                                                         where studentsIds.Contains(s.StudentId.Value==null?0: s.StudentId.Value)
@@ -273,7 +270,13 @@ namespace IesSchool.Core.Services
                                     }
                                 }
                             }
-                            
+                            else
+                            {
+                                mapper.EventStudents = null;
+                                return new ResponseDto { Status = 1, Message = " Success", Data = mapper };
+
+                            }
+
                         }
                         return new ResponseDto { Status = 1, Message = " Success", Data = mapper };
                     }
@@ -449,9 +452,9 @@ namespace IesSchool.Core.Services
                         return new ResponseDto { Status = 1, Message = " Password has Changed Seccessfuly", Data = parent };
                     }
                     else
-                        return new ResponseDto { Status = 0, Message = " Old Password is not Matched" };
+                        return new ResponseDto { Status = 0 , Message = " Incorrect Password" };
                 }
-                return new ResponseDto { Status = 0, Message = " Null Parent" };
+                return new ResponseDto { Status = 0, Message = " No Data" };
 
             }
             catch (Exception ex)
