@@ -67,5 +67,7 @@ namespace IesSchool.Context.Models
         public bool? Gender { get; set; }
         public bool? IsActive { get; set; }
         public string? InactiveReason { get; set; }
+        public string? ReligionName { get; set; }
+        public string? ReligionNameAr { get; set; }
     }
 }

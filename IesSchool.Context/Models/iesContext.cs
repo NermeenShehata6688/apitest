@@ -1361,6 +1361,10 @@ namespace IesSchool.Context.Models
                    .WithMany(p => p.StudentParents)
                    .HasForeignKey(d => d.ParentId)
                    .HasConstraintName("FK_Students_Parent");
+                entity.HasOne(d => d.Religion)
+                   .WithMany(p => p.Students)
+                   .HasForeignKey(d => d.ReligionId)
+                   .HasConstraintName("FK_Students_Religion");
             });
             modelBuilder.Entity<StudentExtraTeacher>(entity =>
             {

@@ -87,6 +87,7 @@ namespace IesSchool.Context.Models
         public virtual State? State { get; set; }
         public virtual User? Parent { get; set; }
         public virtual User? Teacher { get; set; }
+        public virtual Religion? Religion { get; set; }
         public virtual ICollection<EventStudent> EventStudents { get; set; }
         public virtual ICollection<IepProgressReport> IepProgressReports { get; set; }
         public virtual ICollection<Iep> Ieps { get; set; }
