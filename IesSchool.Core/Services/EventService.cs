@@ -329,8 +329,8 @@ namespace IesSchool.Core.Services
                         ms.Close();
                         ms.Dispose();
 
-                        var result = _ifileService.UploadFile(file);
-                       // var result = _ifileService.SaveBinary(file.FileName, eventAttachmentBinary.FileBinary);
+                        //  var result = _ifileService.UploadFile(file);
+                        var result = _ifileService.SaveBinary(file.FileName, eventAttachmentBinary.FileBinary);
 
                         eventAttachement.Add(new EventAttachementDto
                         {
@@ -392,8 +392,8 @@ namespace IesSchool.Core.Services
                                 ms.Close();
                                 ms.Dispose();
 
-                                var result = _ifileService.UploadFile(file);
-                                //var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
+                                //  var result = _ifileService.UploadFile(file);
+                                var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
 
                                 eventStudentFile.Add(new EventStudentFile
                                 {
@@ -482,8 +482,8 @@ namespace IesSchool.Core.Services
                             ms.Close();
                             ms.Dispose();
 
-                            var result = _ifileService.UploadFile(file);
-                           // var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
+                            //  var result = _ifileService.UploadFile(file);
+                            var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
 
 
                             eventStudentFile.Add(new EventStudentFile

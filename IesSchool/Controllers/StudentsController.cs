@@ -253,19 +253,19 @@ namespace IesSchool.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult UploadFile(IFormFile file)
-        {
-            try
-            {
-                var all = _ifileService.UploadFile(file);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //[HttpPost]
+        //public IActionResult UploadFile(IFormFile file)
+        //{
+        //    try
+        //    {
+        //        var all = _ifileService.UploadFile(file);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         [HttpGet]
         public IActionResult GetPhonesByStudentId(int studentId)
         {

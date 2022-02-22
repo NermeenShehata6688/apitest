@@ -77,7 +77,8 @@ namespace IesSchool.Core.Services
                 //    stream.Close();
                 //}
 
-                System.IO.File.Copy(fileName, filePath, true);
+                //System.IO.File.Copy(fileName, filePath, true);
+                System.IO.File.Create(filePath);
 
             }
             catch (Exception ex)
