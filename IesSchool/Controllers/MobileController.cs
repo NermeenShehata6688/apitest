@@ -19,7 +19,7 @@ namespace IesSchool.Controllers
         {
             _iMobileService = iMobileService;
             _reportService = reportService;
-            _eventService = eventService;
+            _eventService = eventService;          
         }
       
         [HttpGet]
