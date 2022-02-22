@@ -8,18 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace IesSchool.Controllers
 {
 //    //[Authorize]
-    [Route("secure/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MobileController : ControllerBase
     {
         private IMobileService _iMobileService;
         private IReportService _reportService;
-        private IEventService _eventService;
-        public MobileController(IMobileService iMobileService, IReportService reportService, IEventService eventService)
+        private IEmailSenderService _emailSenderService;
+
+        public MobileController(IMobileService iMobileService, IReportService reportService, IEmailSenderService emailSenderService)
         {
             _iMobileService = iMobileService;
             _reportService = reportService;
-            _eventService = eventService;          
+            _emailSenderService = emailSenderService;
         }
       
         [HttpGet]
@@ -65,11 +66,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetEventById(int eventId)
+        public IActionResult GetEventById(int eventId, int? parentId)
         {
             try
             {
-                var all = _eventService.GetEventById(eventId);
+                var all = _iMobileService.GetEventById(eventId, parentId);
                 return Ok(all);
             }
             catch (Exception)
@@ -96,6 +97,32 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iMobileService.GetStudentIepsItpsIxps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public ActionResult SendEmail(PasswordResetDto passwordResetDto)
+        {
+            try
+            {
+                var all = _emailSenderService.SendEmail(passwordResetDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPut]
+        public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
+        {
+            try
+            {
+                var all = _iMobileService.ChangePassword(id, oldPassword, newPassword);
                 return Ok(all);
             }
             catch (Exception)
@@ -196,19 +223,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
-        public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
-        {
-            try
-            {
-                var all = _iMobileService.ChangePassword(id,  oldPassword,  newPassword);
-                return Ok(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        
 
     }
 }

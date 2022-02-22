@@ -154,6 +154,156 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        public ResponseDto GetEvents(GetMobileEventsDto? getMobileEventsDto)
+        {
+            try
+            {
+                PaginateDto<EventMobileDto> mapper = new PaginateDto<EventMobileDto>();
+                if (getMobileEventsDto.Id != null)
+                {
+                    var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == getMobileEventsDto.Id && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
+                    var studentEventIds = _uow.GetRepository<EventStudent>().GetList(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value), null, null, 0, 100000, true).Items.Select(x => x.EventId).ToArray();
+
+                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true && studentEventIds.Contains(x.Id), null, x => x
+                       .Include(x => x.EventAttachements.Take(1))
+                       //.Include(x => x.EventStudents.Where(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value))).ThenInclude(x => x.EventStudentFiles.Take(1))
+                       , 0, 100000, true);
+                    events.Items.ToList().ForEach(x => x.Description = null);
+                    mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+                    if (mapper.Items.Count()>0)
+                    {
+                        if (mapper.Items.Any(x => x.EventAttachements != null))
+                        {
+                            if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
+                            {
+                                foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
+                                {
+                                    GetFullPathAndBinaryEventAtt(item);
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                        return new ResponseDto { Status = 1, Message = "No Data" };
+
+            }
+                else
+                {
+                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true, null, x => x
+                      .Include(x => x.EventAttachements.Take(1)), 0, 100000, true);
+                    events.Items.ToList().ForEach(x => x.Description = null);
+                    mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
+                    if (mapper.Items.Count() > 0)
+                    {
+                        if (mapper.Items.Any(x => x.EventAttachements != null))
+                        {
+                            if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
+                            {
+                                foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
+                                {
+                                    GetFullPathAndBinaryEventAtt(item);
+                                }
+
+                            }
+                        }
+
+                    }
+                    else
+                        return new ResponseDto { Status = 1, Message = "No Data" };
+
+                }
+                if (getMobileEventsDto.Index == null || getMobileEventsDto.Index == 0)
+                {
+                    getMobileEventsDto.Index = 0;
+                }
+                else
+                {
+                    getMobileEventsDto.Index += 1;
+                }
+                mapper = new PaginateDto<EventMobileDto> { Count = mapper.Items.Count(), Items = mapper.Items != null ? mapper.Items.Skip(getMobileEventsDto.Index == null || getMobileEventsDto.PageSize == null ? 0 : ((getMobileEventsDto.Index.Value - 1) * getMobileEventsDto.PageSize.Value)).Take(getMobileEventsDto.PageSize ??= 20).ToList() : mapper.Items.ToList() };
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetEventById(int eventId, int? parentId)
+        {
+            try
+            {
+                if (parentId != null)
+                {
+                    List<int> studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == parentId && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToList();
+
+                    var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true && x.IsPublished == true, null,
+                   x => x.Include(x => x.EventAttachements)
+                   .Include(x => x.EventStudents).ThenInclude(x => x.Student)
+                   .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
+                    var mapper = _mapper.Map<EventGetDto>(oEvent);
+
+                    if (mapper != null)
+                    {
+                        if (mapper.EventAttachements != null && mapper.EventAttachements.Count() > 0)
+                        {
+                            mapper.EventAttachements = GetFullPathAndBinary(mapper.EventAttachements);
+                        }
+                        if (mapper.EventStudents != null && mapper.EventStudents.Count() > 0)
+                        {
+                            if (studentsIds.Count()>0)
+                            {
+                               // mapper.EventStudents = mapper.EventStudents.Where(studentsIds.Contains(x => x.StudentId));
+
+                                mapper.EventStudents = (from s in mapper.EventStudents
+                                                        where studentsIds.Contains(s.StudentId.Value==null?0: s.StudentId.Value)
+                                                        select s).ToList();
+
+                             //   mapper.EventStudents = mapper.EventStudents.Where(x => x.StudentId.Contains(studentsIds)).ToList() ;
+                                if (mapper.EventStudents.Count()>0)
+                                {
+                                    foreach (var item in mapper.EventStudents)
+                                    {
+                                        if (item.EventStudentFiles != null)
+                                        {
+                                            item.EventStudentFiles = GetFullPathAndBinaryStudentFiles(item.EventStudentFiles);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                        return new ResponseDto { Status = 1, Message = " Success", Data = mapper };
+                    }
+                    else
+                        return new ResponseDto { Status = 1, Message = " No Data"};
+                }
+                else
+                {
+                    var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true && x.IsPublished == true, null,
+                   x => x.Include(x => x.EventAttachements));
+                    var mapper = _mapper.Map<EventGetDto>(oEvent);
+
+                    if (mapper != null)
+                    {
+                        if (mapper.EventAttachements != null && mapper.EventAttachements.Count() > 0)
+                        {
+                            mapper.EventAttachements = GetFullPathAndBinary(mapper.EventAttachements);
+                        }
+                        return new ResponseDto { Status = 1, Message = " Success", Data = mapper };
+
+                    }
+                    else
+                        return new ResponseDto { Status = 1, Message = " No Data" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto GetStudentsEventsByParentId(int parentId)
         {
             try
@@ -309,88 +459,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetEvents(GetMobileEventsDto? getMobileEventsDto)
-        {
-            try
-            {
-                PaginateDto<EventMobileDto> mapper = new PaginateDto<EventMobileDto>();
-                if (getMobileEventsDto.Id != null)
-                {
-                    var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == getMobileEventsDto.Id && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
-                    var studentEventIds = _uow.GetRepository<EventStudent>().GetList(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value), null, null, 0, 100000, true).Items.Select(x => x.EventId).ToArray();
-                  
-                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true && studentEventIds.Contains(x.Id), null, x => x
-                       .Include(x => x.EventAttachements.Take(1))
-                       .Include(x => x.EventStudents.Where(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value))).ThenInclude(x => x.EventStudentFiles.Take(1)), 0, 100000, true);
-                    events.Items.ToList().ForEach(x => x.Description = null);
-                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
-
-                    if (mapper.Items.Any(x => x.EventAttachements != null))
-                    {
-                        if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
-                        {
-                            foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
-                            {
-                                GetFullPathAndBinaryEventAtt(item);
-                            }
-
-                        }
-                    }
-                    if (mapper.Items.Any(x => x.EventStudents != null))
-                    {
-                        if (mapper.Items.Any(x => x.EventStudents.Any(x => x.EventStudentFiles != null)))
-                        {
-                            if (mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles).Count() > 0)
-                            {
-                                foreach (var item in mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles))
-                                {
-                                    GetFullPathAndBinaryStudentFiles(item);
-                                }
-
-                            }
-                        }
-                    }
-
-
-                }
-                else
-                {
-                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true, null, x => x
-                      .Include(x => x.EventAttachements.Take(1)), 0, 100000, true);
-                    events.Items.ToList().ForEach(x => x.Description = null);
-                    mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
-                    if (mapper.Items.Any(x => x.EventAttachements != null))
-                    {
-                        if (mapper.Items.SelectMany(x => x.EventAttachements).Count() > 0)
-                        {
-                            foreach (var item in mapper.Items.SelectMany(x => x.EventAttachements))
-                            {
-                                GetFullPathAndBinaryEventAtt(item);
-                            }
-
-                        }
-                    }
-
-
-                }
-                if (getMobileEventsDto.Index == null || getMobileEventsDto.Index == 0)
-                {
-                    getMobileEventsDto.Index = 0;
-                }
-                else
-                {
-                    getMobileEventsDto.Index += 1;
-                }
-                 mapper = new PaginateDto<EventMobileDto> { Count = mapper.Items.Count(), Items = mapper.Items != null ? mapper.Items.Skip(getMobileEventsDto.Index == null || getMobileEventsDto.PageSize == null ? 0 : ((getMobileEventsDto.Index.Value - 1) * getMobileEventsDto.PageSize.Value)).Take(getMobileEventsDto.PageSize ??= 20).ToList() : mapper.Items.ToList() };
-                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
-
-
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-            }
-        }
+   
         private EventAttachementDto GetFullPathAndBinaryEventAtt(EventAttachementDto allEventAttachement)
         {
             try
@@ -470,5 +539,105 @@ namespace IesSchool.Core.Services
                 return allEventStudentFiles; ;
             }
         }
+        private ICollection<EventAttachementDto> GetFullPathAndBinary(ICollection<EventAttachementDto> allEventAttachement)
+        {
+            try
+            {
+                if (allEventAttachement.Count() > 0)
+                {
+                    foreach (var item in allEventAttachement)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventAttachmentBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                                    if (!Directory.Exists(target))
+                                    {
+                                        Directory.CreateDirectory(target);
+                                    }
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allEventAttachement;
+            }
+            catch (Exception ex)
+            {
+                return allEventAttachement; ;
+            }
+        }
+
+        private ICollection<EventStudentFileDto> GetFullPathAndBinaryStudentFiles(ICollection<EventStudentFileDto> allEventStudentFiles)
+        {
+            try
+            {
+                if (allEventStudentFiles.Count() > 0)
+                {
+                    foreach (var item in allEventStudentFiles)
+                    {
+                        if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
+                        {
+                            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            item.FullPath = fullpath;
+                        }
+                        else
+                        {
+                            if (item != null && item.FileName != null)
+                            {
+                                var att = _uow.GetRepository<EventStudentFileBinary>().Single(x => x.Id == item.Id, null, null);
+                                if (att.FileBinary != null)
+                                {
+                                    var target = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwRoot/tempFiles");
+                                    if (!Directory.Exists(target))
+                                    {
+                                        Directory.CreateDirectory(target);
+                                    }
+                                    System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
+                                }
+                                string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                item.FullPath = fullpath;
+                            }
+                        }
+                    }
+                }
+                return allEventStudentFiles;
+            }
+            catch (Exception ex)
+            {
+                return allEventStudentFiles; ;
+            }
+        }
     }
 }
+
+//if (mapper.Items.Any(x => x.EventStudents != null))
+//{
+//    if (mapper.Items.Any(x => x.EventStudents.Any(x => x.EventStudentFiles != null)))
+//    {
+//        if (mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles).Count() > 0)
+//        {
+//            foreach (var item in mapper.Items.SelectMany(x => x.EventStudents).ToList().SelectMany(x => x.EventStudentFiles))
+//            {
+//                GetFullPathAndBinaryStudentFiles(item);
+//            }
+
+//        }
+//    }
+//}
