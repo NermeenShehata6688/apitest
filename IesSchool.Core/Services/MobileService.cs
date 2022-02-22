@@ -241,7 +241,7 @@ namespace IesSchool.Core.Services
 
                     var oEvent = _uow.GetRepository<Event>().Single(x => x.Id == eventId && x.IsDeleted != true && x.IsPublished == true, null,
                    x => x.Include(x => x.EventAttachements)
-                   .Include(x => x.EventStudents).ThenInclude(x => x.Student)
+                   .Include(x => x.EventStudents)
                    .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                     var mapper = _mapper.Map<EventGetDto>(oEvent);
 
