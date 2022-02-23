@@ -417,14 +417,27 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                IepsItpsIxpsDto iepsItpsIxpsDto = new IepsItpsIxpsDto();
                 var iep = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.IsPublished == true, null, x => x.Include(x => x.Student)
-                    .Include(x => x.AcadmicYear).Include(x => x.Term), 0, 100000, true);
+                    .Include(x => x.AcadmicYear)
+                    .Include(s => s.Teacher).Include(x => x.Term), 0, 100000, true);
                 var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep).Items;
+                if (iepMapper.Count()>0)
+                {
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = iepMapper };
 
-                iepsItpsIxpsDto.Ieps = iepMapper;
-
-
+                }
+                else
+                return new ResponseDto { Status = 1, Message = " No Data", Data = iepMapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentItps(int studentId)
+        {
+            try
+            {
                 var AllItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
                    x => x.Include(s => s.Student)
                     .Include(s => s.Therapist)
@@ -432,21 +445,37 @@ namespace IesSchool.Core.Services
                     .Include(s => s.Term)
                     .Include(s => s.ParamedicalService), 0, 100000, true);
                 var itpsMapper = _mapper.Map<PaginateDto<ItpDto>>(AllItps).Items;
+                if (itpsMapper.Count() > 0)
+                {
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = itpsMapper };
 
-                iepsItpsIxpsDto.Itps = itpsMapper;
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = " No Data", Data = itpsMapper };
 
-
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentIxps(int studentId)
+        {
+            try
+            {
                 var AllIxpsx = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
                    x => x.Include(s => s.Student)
                     .Include(s => s.AcadmicYear)
                     .Include(s => s.Term)
                     .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
                 var ixpMapper = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
+                if (ixpMapper.Count() > 0)
+                {
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = ixpMapper };
 
-                iepsItpsIxpsDto.Ixps = ixpMapper;
-
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = iepsItpsIxpsDto };
-
+                }
+                else
+                    return new ResponseDto { Status = 1, Message = " No Data", Data = ixpMapper };
             }
             catch (Exception ex)
             {

@@ -92,11 +92,37 @@ namespace IesSchool.Controllers
         //    }
         //}
         [HttpGet]
-        public IActionResult GetStudentIepsItpsIxps(int studentId)
+        public IActionResult GetStudentIeps(int studentId)
         {
             try
             {
-                var all = _iMobileService.GetStudentIepsItpsIxps(studentId);
+                var all = _iMobileService.GetStudentIeps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetStudentItps(int studentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetStudentItps(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetStudentIxps(int studentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetStudentIxps(studentId);
                 return Ok(all);
             }
             catch (Exception)
