@@ -2,6 +2,7 @@
 using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -171,6 +172,19 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public string LpReportHTML(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepLpReportHTML(iepId);
+                return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public FileStreamResult IepReport(int iepId)
         {
             try
@@ -184,12 +198,13 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public FileStreamResult BCPReport(int? studentId, int? iepId)
+        public string IepReportHTML(int iepId)
         {
             try
             {
-                var all = _reportService.BCPReport(studentId, iepId);
-                return all;
+                var all = _reportService.IepReportHTML(iepId);
+
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
@@ -203,6 +218,19 @@ namespace IesSchool.Controllers
             {
                 var all = _reportService.ProgressReport(iepProgressReportId);
                 return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public string ProgressReportHTML(int iepProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ProgressReportHTML(iepProgressReportId);
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
@@ -224,12 +252,38 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        public string ItpReportHTML(int itpId)
+        {
+            try
+            {
+                var all = _reportService.ItpReportHTML(itpId);
+                return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public FileStreamResult ItpProgressReport(int itpProgressReportId)
         {
             try
             {
                 var all = _reportService.ItpProgressReport(itpProgressReportId);
                 return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public string ItpProgressReportHTML(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ItpProgressReportHTML(itpProgressReportId);
+                return JsonSerializer.Serialize(all);
             }
             catch (Exception)
             {
@@ -250,7 +304,20 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        
+        [HttpGet]
+        public string IxpReportHTML(int ixpId)
+        {
+            try
+            {
+                var all = _reportService.IxpReportHTML(ixpId);
+                return JsonSerializer.Serialize(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
     }
 }
