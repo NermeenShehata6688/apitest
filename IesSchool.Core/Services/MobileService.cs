@@ -420,8 +420,8 @@ namespace IesSchool.Core.Services
                 var iep = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.IsPublished == true, null, x => x.Include(x => x.Student)
                     .Include(x => x.AcadmicYear)
                     .Include(s => s.Teacher).Include(x => x.Term), 0, 100000, true);
-                var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep).Items;
-                if (iepMapper.Count()>0)
+                var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep);
+                if (iepMapper.Items.Count()>0)
                 {
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = iepMapper };
 
