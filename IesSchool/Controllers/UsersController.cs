@@ -48,7 +48,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        [ResponseCache(Duration = 3600)]
+        [ResponseCache(Duration = 1800)]
         public IActionResult GetUsersWithCache([FromQuery] UserSearchDto userSearchDto)
         {
             try

@@ -40,11 +40,9 @@ namespace IesSchool.Core.Services
                                     {
                                         areasToImport.Add(new Area
                                         {
-                                            Name = reader.GetValue(0) == null ? null : reader.GetValue(0).ToString(),
-                                            NameAr = reader.GetValue(1) == null ? null : reader.GetValue(1).ToString(),
+                                            Id = reader.GetValue(0) == null ? 0 : int.Parse(reader.GetValue(0).ToString()),
+                                            Name = reader.GetValue(1) == null ? null : reader.GetValue(1).ToString(),
                                             Code = reader.GetValue(2) == null ? null : int.Parse(reader.GetValue(2).ToString()),
-                                            DisplayOrder = reader.GetValue(3) == null ? null : int.Parse(reader.GetValue(3).ToString())
-
                                         });
                                     }
                                 }
@@ -53,13 +51,12 @@ namespace IesSchool.Core.Services
                     }
                     _uow.GetRepository<Area>().Add(areasToImport);
                     _uow.SaveChanges();
-
                 }
                 else
                 {
                     return new ResponseDto { Status =0, Message = "File is not in the Correct Format" };
                 }
-                return new ResponseDto { Status = 1, Message = "Done Check Your Areas now" };
+                return new ResponseDto { Status = 1, Message = "Area Updated Successfuly. Check Your Areas now" };
 
             }
             catch (Exception ex)
@@ -88,11 +85,10 @@ namespace IesSchool.Core.Services
                                     {
                                         strandsToImport.Add(new Strand
                                         {
-                                            Name = reader.GetValue(0) == null ? null : reader.GetValue(0).ToString(),
-                                            NameAr = reader.GetValue(1) == null ? null : reader.GetValue(1).ToString(),
-                                            AreaId = reader.GetValue(2) == null ? null : int.Parse(reader.GetValue(2).ToString()),
-                                            DisplayOrder = reader.GetValue(3) == null ? null : int.Parse(reader.GetValue(3).ToString()),
-                                            Code = reader.GetValue(4) == null ? null : int.Parse(reader.GetValue(4).ToString())
+                                            Id = reader.GetValue(0) == null ? 0 : int.Parse(reader.GetValue(0).ToString()),
+                                            AreaId = reader.GetValue(1) == null ? null : int.Parse(reader.GetValue(1).ToString()),
+                                            Name = reader.GetValue(2) == null ? null : reader.GetValue(2).ToString(),
+                                            Code = reader.GetValue(3) == null ? null : int.Parse(reader.GetValue(3).ToString())
                                         });
                                     }
                                 }
@@ -107,7 +103,7 @@ namespace IesSchool.Core.Services
                 {
                     return new ResponseDto { Status = 0, Message = "File is not in the Correct Format" };
                 }
-                return new ResponseDto { Status = 1, Message = "Done Check Your Strands now" };
+                return new ResponseDto { Status = 1, Message = "Strands Updated Successfuly. Check Your Strands now" };
 
             }
             catch (Exception ex)
@@ -136,13 +132,10 @@ namespace IesSchool.Core.Services
                                     {
                                         skillsToImport.Add(new Skill
                                         {
-                                            Name = reader.GetValue(0) == null ? null : reader.GetValue(0).ToString(),
-                                            NameAr = reader.GetValue(1) == null ? null : reader.GetValue(1).ToString(),
-                                            Code = reader.GetValue(2) == null ? null : int.Parse(reader.GetValue(2).ToString()),
-                                            Level = reader.GetValue(3) == null ? null : int.Parse(reader.GetValue(3).ToString()),
-                                            SkillNumber = reader.GetValue(4) == null ? null : int.Parse(reader.GetValue(4).ToString()),
-                                            StrandId = reader.GetValue(5) == null ? null : int.Parse(reader.GetValue(5).ToString()),
-                                            DisplayOrder = reader.GetValue(6) == null ? null : int.Parse(reader.GetValue(6).ToString())
+                                            Id = reader.GetValue(0) == null ? 0 : int.Parse(reader.GetValue(0).ToString()),
+                                            Name = reader.GetValue(1) == null ? null : reader.GetValue(1).ToString(),
+                                            StrandId = reader.GetValue(2) == null ? null : int.Parse(reader.GetValue(2).ToString()),
+                                            SkillNumber = reader.GetValue(3) == null ? null : int.Parse(reader.GetValue(3).ToString()),
                                         });
                                     }
                                 }
@@ -157,7 +150,7 @@ namespace IesSchool.Core.Services
                 {
                     return new ResponseDto { Status = 0, Message = "File is not in the Correct Format" };
                 }
-                return new ResponseDto { Status = 1, Message = "Done Check Your Skills now" };
+                return new ResponseDto { Status = 1, Message = "Skils Updated Successfuly. Check Your Skills now" };
 
             }
             catch (Exception ex)
