@@ -145,8 +145,10 @@ namespace IesSchool.Core.Services
                             }
                         }
                     }
+                    return new ResponseDto { Status = 1, Message = " Sucsses", Data = mapper };
+
                 }
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                return new ResponseDto { Status = 1, Message = " No Data", Data = mapper };
             }
             catch (Exception ex)
             {
@@ -372,6 +374,46 @@ namespace IesSchool.Core.Services
             }
         }
         public ResponseDto GetStudentIepsItpsIxps(int studentId)
+        {
+            try
+            {
+                IepsItpsIxpsDto iepsItpsIxpsDto = new IepsItpsIxpsDto();
+                var iep = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.IsPublished == true, null, x => x.Include(x => x.Student)
+                    .Include(x => x.AcadmicYear).Include(x => x.Term), 0, 100000, true);
+                var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep).Items;
+
+                iepsItpsIxpsDto.Ieps = iepMapper;
+
+
+                var AllItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
+                   x => x.Include(s => s.Student)
+                    .Include(s => s.Therapist)
+                    .Include(s => s.AcadmicYear)
+                    .Include(s => s.Term)
+                    .Include(s => s.ParamedicalService), 0, 100000, true);
+                var itpsMapper = _mapper.Map<PaginateDto<ItpDto>>(AllItps).Items;
+
+                iepsItpsIxpsDto.Itps = itpsMapper;
+
+
+                var AllIxpsx = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
+                   x => x.Include(s => s.Student)
+                    .Include(s => s.AcadmicYear)
+                    .Include(s => s.Term)
+                    .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
+                var ixpMapper = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
+
+                iepsItpsIxpsDto.Ixps = ixpMapper;
+
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = iepsItpsIxpsDto };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetStudentIeps(int studentId)
         {
             try
             {
