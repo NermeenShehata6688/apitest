@@ -79,21 +79,27 @@ namespace IesSchool.Core.Services
                     .Include(x => x.EventStudents).ThenInclude(x => x.Student)
                     .Include(x => x.EventStudents).ThenInclude(x => x.EventStudentFiles));
                 var mapper = _mapper.Map<EventGetDto>(oEvent);
-                
-                if (mapper.EventAttachements!=null && mapper.EventAttachements.Count()>0)
+
+                if (mapper!=null)
                 {
-                    mapper.EventAttachements = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
-                }
-                if (mapper.EventStudents != null && mapper.EventStudents.Count > 0)
-                {
-                    foreach (var item in mapper.EventStudents)
+                    if (mapper.EventAttachements != null && mapper.EventAttachements.Count() > 0)
                     {
-                        if (item.EventStudentFiles != null)
+                        mapper.EventAttachements = GetFullPathAndBinaryIColliction(mapper.EventAttachements);
+                    }
+                    if (mapper.EventStudents != null && mapper.EventStudents.Count > 0)
+                    {
+                        foreach (var item in mapper.EventStudents)
                         {
-                            item.EventStudentFiles = GetFullPathAndBinaryStudentFilesICollection(item.EventStudentFiles);
+                            if (item.EventStudentFiles != null)
+                            {
+                                item.EventStudentFiles = GetFullPathAndBinaryStudentFilesICollection(item.EventStudentFiles);
+                            }
                         }
                     }
                 }
+                else
+                    return new ResponseDto { Status = 0, Message = " null", Data = mapper };
+
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -323,8 +329,8 @@ namespace IesSchool.Core.Services
                         ms.Close();
                         ms.Dispose();
 
-                        var result = _ifileService.UploadFile(file);
-                       // var result = _ifileService.SaveBinary(file.FileName, eventAttachmentBinary.FileBinary);
+                        //  var result = _ifileService.UploadFile(file);
+                        var result = _ifileService.SaveBinary(file.FileName, eventAttachmentBinary.FileBinary);
 
                         eventAttachement.Add(new EventAttachementDto
                         {
@@ -386,8 +392,8 @@ namespace IesSchool.Core.Services
                                 ms.Close();
                                 ms.Dispose();
 
-                                var result = _ifileService.UploadFile(file);
-                                //var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
+                                //  var result = _ifileService.UploadFile(file);
+                                var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
 
                                 eventStudentFile.Add(new EventStudentFile
                                 {
@@ -476,8 +482,8 @@ namespace IesSchool.Core.Services
                             ms.Close();
                             ms.Dispose();
 
-                            var result = _ifileService.UploadFile(file);
-                           // var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
+                            //  var result = _ifileService.UploadFile(file);
+                            var result = _ifileService.SaveBinary(file.FileName, eventStudentFileBinary.FileBinary);
 
 
                             eventStudentFile.Add(new EventStudentFile

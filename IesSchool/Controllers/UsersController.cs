@@ -48,6 +48,20 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        [ResponseCache(Duration = 3600)]
+        public IActionResult GetUsersWithCache([FromQuery] UserSearchDto userSearchDto)
+        {
+            try
+            {
+                var all = _userService.GetUsers(userSearchDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public IActionResult GetAllTeachers()
         {
             try

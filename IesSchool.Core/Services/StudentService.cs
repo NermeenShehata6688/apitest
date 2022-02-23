@@ -32,17 +32,14 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted != 1");
+                var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted <> 1");
 
                 if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {
                     allStudents = allStudents.Where(x => x.NameAr.Contains(studentSearchDto.StringSearch)
                         || x.Name.Contains(studentSearchDto.StringSearch)
-                        || x.Code.ToString().Contains(studentSearchDto.StringSearch.ToString())
-                        || x.CivilId.ToString().Contains(studentSearchDto.StringSearch.ToString())
-                        || x.PassportNumber.ToString().Contains(studentSearchDto.StringSearch.ToString())
-                        || x.Email.Contains(studentSearchDto.StringSearch)
-                        || x.HomePhone.Contains(studentSearchDto.StringSearch));
+                        || x.Code.ToString().Contains(studentSearchDto.StringSearch)
+                       );
                 }
                 if (studentSearchDto.NationalityId != null)
                 {
@@ -172,8 +169,8 @@ namespace IesSchool.Core.Services
                         ms.Close();
                         ms.Dispose();
                         //upload file in local directory
-                       var result = _ifileService.UploadFile(file);
-                        //var result = _ifileService.SaveBinary(file.FileName, studentDto.ImageBinary);
+                        // var result = _ifileService.UploadFile(file);
+                        var result = _ifileService.SaveBinary(file.FileName, studentDto.ImageBinary);
 
                         studentDto.Image = result.FileName;
                         studentDto.FullPath = result.virtualPath;
@@ -212,8 +209,8 @@ namespace IesSchool.Core.Services
                     studentDto.ImageBinary = ms.ToArray();
                     ms.Close();
                     ms.Dispose();
-                    var result = _ifileService.UploadFile(file);
-                    //var result = _ifileService.SaveBinary(file.FileName, studentDto.ImageBinary);
+                    //var result = _ifileService.UploadFile(file);
+                    var result = _ifileService.SaveBinary(file.FileName, studentDto.ImageBinary);
 
                     studentDto.Image = result.FileName;
                     studentDto.FullPath = result.virtualPath;
@@ -473,7 +470,9 @@ namespace IesSchool.Core.Services
 
                     //upload file in local directory
 
-                    var result = _ifileService.UploadFile(file);
+                   // var result = _ifileService.UploadFile(file);
+                    var result = _ifileService.SaveBinary(file.FileName, studentAttachmentBinary.FileBinary);
+
                     studentAttachmentDto.FileName = result.FileName;
 
                     //saving to DataBase

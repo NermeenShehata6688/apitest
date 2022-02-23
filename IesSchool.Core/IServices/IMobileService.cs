@@ -14,9 +14,12 @@ namespace IesSchool.Core.IServices
         public ResponseDto Login(string UserName, string Password);
         public ResponseDto GetParentById(int parentId);
         public ResponseDto GetEvents(GetMobileEventsDto getMobileEventsDto);
-       // public ResponseDto GetEventsImageGroubedByEventId();
+        public ResponseDto GetEventById(int eventId, int? parentId);
         public ResponseDto GetParentStudents(int parentId);
         public ResponseDto GetStudentsEventsByParentId(int parentId);
+        public ResponseDto GetStudentIeps(int studentId);
+        public ResponseDto GetStudentItps(int studentId);
+        public ResponseDto GetStudentIxps(int studentId);
         public ResponseDto GetStudentIepsItpsIxps(int studentId);
         public ResponseDto ChangePassword(int id, string oldPassword, string newPassword);
 

@@ -333,8 +333,8 @@ namespace IesSchool.Core.Services
                     ms.Close();
                     ms.Dispose();
                     //upload file in local directory
-                    var result = _ifileService.UploadFile(file);
-                   // var result = _ifileService.SaveBinary(file.FileName, userDto.ImageBinary);
+                    // var result = _ifileService.UploadFile(file);
+                    var result = _ifileService.SaveBinary(file.FileName, userDto.ImageBinary);
 
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
@@ -491,8 +491,8 @@ namespace IesSchool.Core.Services
                     ms.Dispose();
 
                     //upload file in local directory
-                    var result = _ifileService.UploadFile(file);
-                   // var result = _ifileService.SaveBinary(file.FileName, userDto.ImageBinary);
+                    //  var result = _ifileService.UploadFile(file);
+                    var result = _ifileService.SaveBinary(file.FileName, userDto.ImageBinary);
 
                     userDto.Image = result.FileName;
                     var mapper = _mapper.Map<User>(userDto);
@@ -667,7 +667,9 @@ namespace IesSchool.Core.Services
                 ms.Dispose();
 
                 //upload file in local directory
-                var result = _ifileService.UploadFile(file);
+                //var result = _ifileService.UploadFile(file);
+                var result = _ifileService.SaveBinary(file.FileName, userAttachmentBinary.FileBinary);
+
                 userAttachmentDto.FileName = result.FileName;
 
                 //saving to DataBase
