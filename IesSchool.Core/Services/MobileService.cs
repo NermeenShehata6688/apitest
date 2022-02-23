@@ -444,8 +444,8 @@ namespace IesSchool.Core.Services
                     .Include(s => s.AcadmicYear)
                     .Include(s => s.Term)
                     .Include(s => s.ParamedicalService), 0, 100000, true);
-                var itpsMapper = _mapper.Map<PaginateDto<ItpDto>>(AllItps).Items;
-                if (itpsMapper.Count() > 0)
+                var itpsMapper = _mapper.Map<PaginateDto<ItpDto>>(AllItps);
+                if (itpsMapper.Items.Count() > 0)
                 {
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = itpsMapper };
 
@@ -468,8 +468,8 @@ namespace IesSchool.Core.Services
                     .Include(s => s.AcadmicYear)
                     .Include(s => s.Term)
                     .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
-                var ixpMapper = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
-                if (ixpMapper.Count() > 0)
+                var ixpMapper = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx);
+                if (ixpMapper.Items.Count() > 0)
                 {
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = ixpMapper };
 
