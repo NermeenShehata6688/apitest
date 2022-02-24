@@ -417,7 +417,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iep = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.IsPublished == true, null, x => x.Include(x => x.Student)
+                var iep = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.IsPublished == true, null, x => x
+                .Include(x => x.IepProgressReports)
                     .Include(x => x.AcadmicYear)
                     .Include(s => s.Teacher).Include(x => x.Term), 0, 100000, true);
                 var iepMapper = _mapper.Map<PaginateDto<GetIepDto>>(iep);
@@ -438,7 +439,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var AllItps = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && x.StudentId == studentId && x.IsPublished == true, null,
-                   x => x.Include(s => s.Student)
+                   x => x.Include(s => s.ItpProgressReports)
                     .Include(s => s.Therapist)
                     .Include(s => s.AcadmicYear)
                     .Include(s => s.Term)

@@ -902,7 +902,7 @@ namespace IesSchool.Core.Services
                 }
 
 
-                var mapper = new PaginateDto<UserDto> { Count = AllParents.Count(), Items = AllParents != null ? AllParents.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 20).ToList() : AllParents.ToList() };
+                var mapper = new PaginateDto<UserDto> { Count = AllParents.Count(), Items = AllParents != null ? AllParents.Skip(userSearchDto.Index == null || userSearchDto.PageSize == null ? 0 : ((userSearchDto.Index.Value - 1) * userSearchDto.PageSize.Value)).Take(userSearchDto.PageSize ??= 100000).ToList() : AllParents.ToList() };
                
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
 
