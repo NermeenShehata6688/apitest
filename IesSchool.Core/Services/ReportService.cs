@@ -11,7 +11,8 @@ using Syncfusion.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System.Reflection;
+using Syncfusion.XlsIORenderer;
+using Syncfusion.Pdf;
 
 namespace IesSchool.Core.Services
 {
@@ -5341,6 +5342,7 @@ namespace IesSchool.Core.Services
 
 					IWorkbook workbook = application.Workbooks.Create(0);
 					IWorksheet worksheet;
+
 					int noOfObjectives = 1;
 					if (mapper == null)
 					{
@@ -5370,10 +5372,14 @@ namespace IesSchool.Core.Services
 								}
 							}
 							worksheet = workbook.Worksheets.Create(noOfObjectives + "-" + strandName + "(" + skills + ")");
+							worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
+
 							#region General
 							//Disable gridlines in the worksheet
 							worksheet.IsGridLinesVisible = true;
 							worksheet.Range["A1:BF100"].WrapText = true;
+							worksheet.Range["A1:BF1"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+							worksheet.Range["A1:A100"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["A1:BF100"].CellStyle.Font.Bold = true;
 							worksheet.Range["A1:BF13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 							worksheet.Range["A1:BF13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
@@ -5625,32 +5631,23 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A6:BE6"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						#endregion
 					}
-					//ExcelToPdfConverter converter = new ExcelToPdfConverter(workbook);
+                   
+					XlsIORenderer renderer = new XlsIORenderer();
+					PdfDocument pdfDoc = new PdfDocument();
 
-					////Initialize PDF document
-					//PdfDocument pdfDocument = new PdfDocument();
+					XlsIORendererSettings settings = new XlsIORendererSettings();
+					settings.IsConvertBlankPage = false;
+					settings.TemplateDocument = pdfDoc;
+					settings.DisplayGridLines = GridLinesDisplayStyle.Invisible;
 
-					////Convert Excel document into PDF document
-					//pdfDocument = converter.Convert();
+					pdfDoc = renderer.ConvertToPDF(workbook, settings);
+				//	fileStream.Dispose();
 
-					////Save the PDF file
-					//pdfDocument.Save("ExcelToPDF.pdf");
-
-
-
-
-
-
-
-
-					//Saving the Excel to the MemoryStream 
 					MemoryStream stream = new MemoryStream();
-					workbook.SaveAs(stream);
-
-					//Set the position as '0'.
+					pdfDoc.Save(stream);
+					
 					stream.Position = 0;
-					//Download the Excel file in the browser
-					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
+					FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/pdf");
 
 					fileStreamResult.FileDownloadName = (iep.StudentName == null ? "" : iep.StudentName + "-PLReport" + ".pdf");
 

@@ -49,5 +49,7 @@ namespace IesSchool.Core.Dto
 
 
         public virtual ICollection<ItpGoalDto>? ItpGoals { get; set; }
+        public virtual ICollection<ItpProgressReportDto>? ItpProgressReports { get; set; }
+
     }
 }

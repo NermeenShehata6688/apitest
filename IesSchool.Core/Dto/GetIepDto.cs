@@ -49,5 +49,6 @@ namespace IesSchool.Core.Dto
         public virtual ICollection<IepExtraCurricularDto>? IepExtraCurriculars { get; set; }
         public virtual ICollection<IepParamedicalServiceDto>? IepParamedicalServices { get; set; }
         public virtual ICollection<GoalDto>? Goals { get; set; }
+        public virtual ICollection<IepProgressReportDto>? IepProgressReports { get; set; }
     }
 }
