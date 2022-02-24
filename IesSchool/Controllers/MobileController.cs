@@ -318,6 +318,21 @@ namespace IesSchool.Controllers
             }
         }
 
+        [HttpGet]
+        public FileStreamResult LpReportPDF(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepLpReportPDF(iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
 
     }
 }
