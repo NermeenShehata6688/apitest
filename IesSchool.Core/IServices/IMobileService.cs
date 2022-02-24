@@ -22,6 +22,11 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetStudentIxps(int studentId);
         public ResponseDto GetStudentIepsItpsIxps(int studentId);
         public ResponseDto ChangePassword(int id, string oldPassword, string newPassword);
+        public FileStreamResult IepLpReportPDF(int iepId);
+        public string IepLpReportPdfPreview(int iepId);
+        public FileStreamResult IepReportPDF(int iepId);
+        public string IepReportPdfPreview(int iepId);
+        public FileStreamResult IepProgressReportPDF(int iepProgressReportId);
 
     }
 }
