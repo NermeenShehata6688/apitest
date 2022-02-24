@@ -158,166 +158,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpGet]
-        public FileStreamResult LpReport(int iepId)
-        {
-            try
-            {
-                var all = _reportService.IepLpReport(iepId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public string LpReportHTML(int iepId)
-        {
-            try
-            {
-                var all = _reportService.IepLpReportHTML(iepId);
-                return JsonSerializer.Serialize(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public FileStreamResult IepReport(int iepId)
-        {
-            try
-            {
-                var all = _reportService.IepReport(iepId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public string IepReportHTML(int iepId)
-        {
-            try
-            {
-                var all = _reportService.IepReportHTML(iepId);
-
-                return JsonSerializer.Serialize(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public FileStreamResult ProgressReport(int iepProgressReportId)
-        {
-            try
-            {
-                var all = _reportService.ProgressReport(iepProgressReportId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public string ProgressReportHTML(int iepProgressReportId)
-        {
-            try
-            {
-                var all = _reportService.ProgressReportHTML(iepProgressReportId);
-                return JsonSerializer.Serialize(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpGet]
-        public FileStreamResult ItpReport(int itpId)
-        {
-            try
-            {
-                var all = _reportService.ItpReport(itpId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public string ItpReportHTML(int itpId)
-        {
-            try
-            {
-                var all = _reportService.ItpReportHTML(itpId);
-                return JsonSerializer.Serialize(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public FileStreamResult ItpProgressReport(int itpProgressReportId)
-        {
-            try
-            {
-                var all = _reportService.ItpProgressReport(itpProgressReportId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public string ItpProgressReportHTML(int itpProgressReportId)
-        {
-            try
-            {
-                var all = _reportService.ItpProgressReportHTML(itpProgressReportId);
-                return JsonSerializer.Serialize(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpGet]
-        public FileStreamResult IxpReport(int ixpId)
-        {
-            try
-            {
-                var all = _reportService.IxpReport(ixpId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [HttpGet]
-        public string IxpReportHTML(int ixpId)
-        {
-            try
-            {
-                var all = _reportService.IxpReportHTML(ixpId);
-                return JsonSerializer.Serialize(all);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
+       
         [HttpGet]
         public FileStreamResult LpReportPDF(int iepId)
         {
@@ -350,6 +191,32 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _reportService.IepReportPDF(iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult IepReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepReportPdfPreview(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult IepProgressReportPDF(int IepProgressReportPDF)
+        {
+            try
+            {
+                var all = _reportService.IepProgressReportPDF(IepProgressReportPDF);
                 return all;
             }
             catch (Exception)
