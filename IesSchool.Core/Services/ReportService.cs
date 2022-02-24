@@ -5379,7 +5379,7 @@ namespace IesSchool.Core.Services
 							worksheet.IsGridLinesVisible = true;
 							worksheet.Range["A1:BF100"].WrapText = true;
 							worksheet.Range["A1:BF1"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
-							worksheet.Range["A1:A100"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
+							//worksheet.Range["A1:A100"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
 							worksheet.Range["A1:BF100"].CellStyle.Font.Bold = true;
 							worksheet.Range["A1:BF13"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
 							worksheet.Range["A1:BF13"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
@@ -5538,7 +5538,8 @@ namespace IesSchool.Core.Services
 								worksheet.Range["A13"].RowHeight = 35;
 								worksheet.Range["A13:BE13"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 							}
-
+							int lastRow = worksheet.Rows.Length;
+							worksheet.Range["A1:BF"+ lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
 							#endregion
 
 							//Apply row height and column width to look good
@@ -5631,8 +5632,9 @@ namespace IesSchool.Core.Services
 						worksheet.Range["A6:BE6"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						#endregion
 					}
-                   
-					XlsIORenderer renderer = new XlsIORenderer();
+					
+					
+			XlsIORenderer renderer = new XlsIORenderer();
 					PdfDocument pdfDoc = new PdfDocument();
 
 					XlsIORendererSettings settings = new XlsIORendererSettings();
