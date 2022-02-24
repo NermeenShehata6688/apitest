@@ -425,7 +425,6 @@ namespace IesSchool.Core.Services
                 if (iepMapper.Items.Count()>0)
                 {
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = iepMapper };
-
                 }
                 else
                 return new ResponseDto { Status = 1, Message = " No Data", Data = iepMapper };
