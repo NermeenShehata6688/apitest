@@ -28,6 +28,8 @@ namespace IesSchool.Core.IServices
         public string IepReportPdfPreview(int iepId);
         public FileStreamResult IepProgressReportPDF(int iepProgressReportId);
         public string IepProgressReportPdfPreview(int iepProgressReportId);
+        public FileStreamResult ItpReportPDF(int itpId);
+        public string ItpReportPdfPreview(int itpId);
 
     }
 }
