@@ -5539,7 +5539,7 @@ namespace IesSchool.Core.Services
 								worksheet.Range["A13:BE13"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 							}
 							int lastRow = worksheet.Rows.Length;
-							worksheet.Range["A1:BF"+ lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
+							//worksheet.Range["A1:BF"+ lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
 							#endregion
 
 							//Apply row height and column width to look good
