@@ -331,7 +331,32 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-
+        [HttpGet]
+        public ActionResult LpReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepLpReportPdfPreview(iepId);
+                return Ok( all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult IepReportPDF(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepReportPDF(iepId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
     }
