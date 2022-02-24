@@ -224,7 +224,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-
+        [HttpGet]
+        public ActionResult IepProgressReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _iMobileService.IepProgressReportPdfPreview(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

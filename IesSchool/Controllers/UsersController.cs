@@ -353,6 +353,20 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
+        [ResponseCache(Duration = 1800)]
+        public IActionResult GetAllParentsWithCach([FromQuery] UserSearchDto userSearchDto)
+        {
+            try
+            {
+                var all = _userService.GetAllParents(userSearchDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
         public IActionResult IsParentUserNameExist(string UserName, int? userId)
         {
             try
