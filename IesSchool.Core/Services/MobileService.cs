@@ -624,7 +624,7 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
                             item.FullPath = fullpath;
                         }
                         else
@@ -642,7 +642,7 @@ namespace IesSchool.Core.Services
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
                                 item.FullPath = fullpath;
                             }
                         }
@@ -667,7 +667,7 @@ namespace IesSchool.Core.Services
                         if (File.Exists("wwwRoot/tempFiles/" + item.FileName))
                         {
                             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                            var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
                             item.FullPath = fullpath;
                         }
                         else
@@ -685,7 +685,7 @@ namespace IesSchool.Core.Services
                                     System.IO.File.WriteAllBytes("wwwRoot/tempFiles/" + item.FileName, att.FileBinary);
                                 }
                                 string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{item.FileName}";
+                                var fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{item.FileName}";
                                 item.FullPath = fullpath;
                             }
                         }
