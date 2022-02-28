@@ -153,6 +153,12 @@ namespace IesSchool.Core.MappingProfile
 
             CreateMap<User, ParentDto>().ReverseMap();
             CreateMap<Student, StudentParentDto>().ReverseMap();
+            CreateMap<AcadmicYear, AcadmicYearChartDto>()
+            .ForMember(dist => dist.IepCount, opt => opt.MapFrom(c => c.Ieps.Where(x => x.IsDeleted != true).Count()))
+            .ForMember(dist => dist.ItpCount, opt => opt.MapFrom(c => c.Itps.Where(x => x.IsDeleted != true).Count()))
+            .ForMember(dist => dist.IxpCount, opt => opt.MapFrom(c => c.Ixps.Where(x => x.IsDeleted != true).Count()))
+
+                .ReverseMap();
 
             #endregion
             #region IEP

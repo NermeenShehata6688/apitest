@@ -28,6 +28,8 @@ namespace IesSchool.Core.Dto
         public int? TherapistsCount { get; set; }
         public int? ExtraTeachersCount { get; set; }
         public int? DepartmentsCount { get; set; }
+        public virtual PaginateDto<AcadmicYearChartDto>? AcadmicYearChartDto { get; set; }
+
 
     }
 }
