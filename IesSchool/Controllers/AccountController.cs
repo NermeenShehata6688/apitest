@@ -230,7 +230,7 @@ namespace IesSchool.Controllers
                     //var userExists = await _userManager.FindByNameAsync(model.UserName);
                     var userExists = await _userManager.FindByIdAsync(model.Id.ToString());
                     if (userExists != null)
-                        return Ok(new ResponseDto { Status = 5, Errormessage = "Error", Message = "هذا المستخدم موجود بالفعل" });
+                        return Ok(new ResponseDto { Status = 5, Errormessage = "Error", Message = "User Already Exists " });
 
                     //ApplicationUser user = new ApplicationUser()
                     //{
@@ -389,7 +389,7 @@ namespace IesSchool.Controllers
                     //var userRoles = await userManager.GetRolesAsync(user);
                     //await userManager.RemoveFromRolesAsync(user, userRoles);
                     //await userManager.AddToRolesAsync(user, model.Roles);
-                    return Ok(new ResponseDto { Message = "تم التعديل بنجاح", Data = user, Status = 1 });
+                    return Ok(new ResponseDto { Message = "Updated Successfully", Data = user, Status = 1 });
                     }
                     else
                     {
@@ -399,7 +399,7 @@ namespace IesSchool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "فشل في عملية التعديل" + ex.Message.ToString(), Status = 0 });
+                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "Failed To Update" + ex.Message.ToString(), Status = 0 });
                 }
             }
 
@@ -439,7 +439,7 @@ namespace IesSchool.Controllers
                 catch (Exception ex)
                 {
 
-                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "فشل في عملية تغيير كلمة المرور" + ex.Message.ToString(), Status = 0 });
+                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "Password Change Failed" + ex.Message.ToString(), Status = 0 });
 
                 }
 
@@ -463,11 +463,11 @@ namespace IesSchool.Controllers
 
                     //var userr = await _userManager.FindByIdAsync(model.Id);
                     var result = await _userManager.DeleteAsync(user);
-                    return Ok(new ResponseDto { Message = "تم الحذف بنجاح", Status = 1 });
+                    return Ok(new ResponseDto { Message = "Deleted Successfully", Status = 1 });
                 }
                 catch (Exception ex)
                 {
-                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "فشل في عملية الحذف  " + ex.Message.ToString(), Status = 0 });
+                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "Faild To Delete" + ex.Message.ToString(), Status = 0 });
 
                 }
 
@@ -526,14 +526,14 @@ namespace IesSchool.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Ok(new ResponseDto { Message = "تم التعديل  بنجاح", Status = 1 });
+                    return Ok(new ResponseDto { Message = "Updated Successfully", Status = 1 });
 
                 }
                 return Ok(new ResponseDto { Errormessage = result.Errors.FirstOrDefault().Description, Status = 0 });
             }
             catch (Exception ex)
             {
-                return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "فشل في عملية الحذف  " + ex.Message.ToString(), Status = 0 });
+                return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "Failed To Delete" + ex.Message.ToString(), Status = 0 });
 
             }
         }

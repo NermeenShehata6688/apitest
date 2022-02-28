@@ -19,7 +19,7 @@ namespace IesSchool.Controllers
             _fileService = fileService;
         }
 
-        //[ResponseCache(Duration = 800)]
+        [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetUserHelper()
         {

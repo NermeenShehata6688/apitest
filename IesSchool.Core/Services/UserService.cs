@@ -882,13 +882,15 @@ namespace IesSchool.Core.Services
                 var AllParentss = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent==true, null, null, 0, 1000000, true);
                 var AllParents = _mapper.Map<PaginateDto<UserDto>>(AllParentss).Items;
 
-                if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
-                {
-                    AllParents = AllParents.Where(x => x.Code.Contains(userSearchDto.StringSearch)
-                        || x.Name.Contains(userSearchDto.StringSearch)).ToList();
-                }
+              
                 if (AllParents != null)
                 {
+                    if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
+                    {
+                        AllParents = AllParents.Where(x => x.Code.Contains(userSearchDto.StringSearch)
+                       || x.Name.Contains(userSearchDto.StringSearch)).ToList();
+
+                    }
                     AllParents.ToList().ForEach(x => x.ImageBinary = null);
                 }
                
