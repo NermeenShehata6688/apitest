@@ -59,14 +59,22 @@ namespace IesSchool.Core.Services
                  statisticDto.SkillsCount = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
 
                 var allUsers = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items;
-                statisticDto.TeachersCount = allUsers.Where(x => x.IsTeacher == true).Count();
-                statisticDto.TherapistsCount = allUsers.Where(x => x.IsTherapist == true).Count();
-                statisticDto.ExtraTeachersCount = allUsers.Where(x => x.IsExtraCurricular == true).Count();
+                if (allUsers.Count () >0)
+                {
+                    statisticDto.TeachersCount = allUsers.Where(x => x.IsTeacher == true).Count();
+                    statisticDto.TherapistsCount = allUsers.Where(x => x.IsTherapist == true).Count();
+                    statisticDto.ExtraTeachersCount = allUsers.Where(x => x.IsExtraCurricular == true).Count();
 
+                }
                 statisticDto.DepartmentsCount = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
                
-                var acadmic = _uow.GetRepository<AcadmicYear>().GetList(x => x.IsDeleted != true, null, x=> x.Include(x => x.Ieps.Where(x=> x.IsDeleted!=true)).Include(x => x.Itps.Where(x => x.IsDeleted != true)).Include(x => x.Ixps.Where(x => x.IsDeleted != true)), 0, 100000, true);
-                statisticDto.AcadmicYearChartDto = _mapper.Map<PaginateDto<AcadmicYearChartDto>>(acadmic);
+                var acadmic = _uow.GetRepository<AcadmicYear>().GetList(x => x.IsDeleted != true, null, x=> x
+                .Include(x => x.Ieps.Where(x=> x.IsDeleted!=true)).Include(x => x.Itps.Where(x => x.IsDeleted != true)).Include(x => x.Ixps.Where(x => x.IsDeleted != true)), 0, 100000, true);
+                if (acadmic!= null && acadmic.Items.Count()>0)
+                {
+                    statisticDto.AcadmicYearChartDto = _mapper.Map<PaginateDto<AcadmicYearChartDto>>(acadmic);
+                    statisticDto.AcadmicYearChartDto.Items = statisticDto.AcadmicYearChartDto.Items.TakeLast(4).ToList();
+                }
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = statisticDto };
             }

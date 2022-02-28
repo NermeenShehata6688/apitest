@@ -968,7 +968,7 @@ namespace IesSchool.Context.Models
 
                 entity.HasOne(d => d.Term)
                    .WithMany(p => p.Ixps)
-                   .HasForeignKey(d => d.AcadmicYearId)
+                   .HasForeignKey(d => d.TermId)
                    .HasConstraintName("FK_IXP_Terms");
 
                 entity.HasOne(d => d.HeadOfDepartment)
