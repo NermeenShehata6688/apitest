@@ -926,7 +926,7 @@ namespace IesSchool.Core.Services
 							#endregion
 
 							//Apply row height and column width to look good
-							worksheet.Range["A1:BE1"].ColumnWidth = 1;
+							worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 							worksheet.Range["A1"].RowHeight = 17;
 
 
@@ -945,7 +945,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BF1"].ColumnWidth = 1;
+						worksheet.Range["A1:BF1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 
 						worksheet.Range["A1:BF100"].WrapText = true;
@@ -1274,7 +1274,7 @@ namespace IesSchool.Core.Services
 							#endregion
 
 							//Apply row height and column width to look good
-							worksheet.Range["A1:BE1"].ColumnWidth = 1;
+							worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 							worksheet.Range["A1"].RowHeight = 17;
 
 
@@ -1293,7 +1293,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BF1"].ColumnWidth = 1;
+						worksheet.Range["A1:BF1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 
 						worksheet.Range["A1:BF100"].WrapText = true;
@@ -1478,7 +1478,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 						worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 
@@ -2095,7 +2095,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 						worksheet.Range["A1:BE1"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 
@@ -3536,7 +3536,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 
 						#endregion
@@ -3994,7 +3994,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 
 						#endregion
@@ -4460,13 +4460,13 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 						#endregion
 
 						#region General Data
 						FileStream AllLogo = new FileStream("wwwroot/staticFiles/AllLogos.jpg", FileMode.Open, FileAccess.Read);
-						IPictureShape AllLogoShape = worksheet.Pictures.AddPicture(1, 1, AllLogo, 107, 100);
+						IPictureShape AllLogoShape = worksheet.Pictures.AddPicture(1, 1, AllLogo, 143, 100);
 
 						lastRow = worksheet.Rows.Length + 9;
 						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
@@ -4759,13 +4759,13 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 						#endregion
 
 						#region General Data
 						FileStream AllLogo = new FileStream("wwwroot/staticFiles/AllLogos.jpg", FileMode.Open, FileAccess.Read);
-						IPictureShape AllLogoShape = worksheet.Pictures.AddPicture(1, 1, AllLogo, 107, 100);
+						IPictureShape AllLogoShape = worksheet.Pictures.AddPicture(1, 1, AllLogo, 143, 100);
 
 						lastRow = worksheet.Rows.Length + 9;
 						worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
@@ -5059,7 +5059,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 
 						#endregion
@@ -5393,7 +5393,7 @@ namespace IesSchool.Core.Services
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
-						worksheet.Range["A1:BE1"].ColumnWidth = 1;
+						worksheet.Range["A1:BE1"].ColumnWidth = 1.6;
 						worksheet.Range["A1"].RowHeight = 17;
 
 						#endregion
