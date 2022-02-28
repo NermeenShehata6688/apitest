@@ -4371,6 +4371,7 @@ namespace IesSchool.Core.Services
 					{
 						Directory.CreateDirectory(target);
 					}
+
 					string fullpath = "";
 					if (workbook != null)
 					{
@@ -4987,7 +4988,7 @@ namespace IesSchool.Core.Services
 							pdfDoc.Save(stream1);
 						}
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
+						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{fileName}.pdf";
 					}
 					return fullpath;
 				}
@@ -5663,7 +5664,7 @@ namespace IesSchool.Core.Services
 							pdfDoc.Save(stream1);
 						}
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
+						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://192.168.8.103:45455/tempFiles/{fileName}.pdf";
 					}
 					return fullpath;
 				}
