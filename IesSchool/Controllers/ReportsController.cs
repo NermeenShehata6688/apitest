@@ -206,19 +206,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpGet]
-        public FileStreamResult IepLpReportPDF(int iepId)
-        {
-            try
-            {
-                var all = _reportService.IepLpReportPDF(iepId);
-                return all;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        
 
     }
 }

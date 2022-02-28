@@ -164,7 +164,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _reportService.IepLpReportPDF(iepId);
+                var all = _iMobileService.IepLpReportPDF(iepId);
                 return all;
             }
             catch (Exception)
@@ -177,7 +177,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _reportService.IepLpReportPdfPreview(iepId);
+                var all = _iMobileService.IepLpReportPdfPreview(iepId);
                 return Ok( all);
             }
             catch (Exception)
@@ -190,7 +190,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _reportService.IepReportPDF(iepId);
+                var all = _iMobileService.IepReportPDF(iepId);
                 return all;
             }
             catch (Exception)
@@ -203,7 +203,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _reportService.IepReportPdfPreview(iepId);
+                var all = _iMobileService.IepReportPdfPreview(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -216,7 +216,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _reportService.IepProgressReportPDF(IepProgressReportPDF);
+                var all = _iMobileService.IepProgressReportPDF(IepProgressReportPDF);
                 return all;
             }
             catch (Exception)
@@ -224,7 +224,44 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-
-
+        [HttpGet]
+        public ActionResult IepProgressReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _iMobileService.IepProgressReportPdfPreview(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult ItpReportPDF(int itpId)
+        {
+            try
+            {
+                var all = _iMobileService.ItpReportPDF(itpId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult ItpReportPdfPreview(int itpId)
+        {
+            try
+            {
+                var all = _iMobileService.ItpReportPdfPreview(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
