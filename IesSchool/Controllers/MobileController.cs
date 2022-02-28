@@ -263,5 +263,57 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public FileStreamResult ItpProgressReportPDF(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _iMobileService.ItpProgressReportPDF(itpProgressReportId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult ItpProgressReportPdfPreview(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _iMobileService.ItpProgressReportPdfPreview(itpProgressReportId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult IxpReportPDF(int ixpId)
+        {
+            try
+            {
+                var all = _iMobileService.IxpReportPDF(ixpId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult IxpReportPdfPreview(int ixpId)
+        {
+            try
+            {
+                var all = _iMobileService.IxpReportPdfPreview(ixpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
