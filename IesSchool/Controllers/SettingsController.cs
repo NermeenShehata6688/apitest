@@ -58,5 +58,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpPut]
+        public IActionResult AddAboutUs(SettingDto settingDto)
+        {
+            try
+            {
+                var all = _settingService.AddAboutUs(settingDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
