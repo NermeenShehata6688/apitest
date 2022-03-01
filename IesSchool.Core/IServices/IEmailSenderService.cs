@@ -9,7 +9,7 @@ namespace IesSchool.Core.IServices
 {
     public  interface IEmailSenderService
     {
-        public ResponseDto SendEmail(PasswordResetDto passwordResetDto);
+        public ResponseDto SendEmail(string email);
         public bool ResetUserPassword(PasswordResetDto passwordResetDto);
     }
 }

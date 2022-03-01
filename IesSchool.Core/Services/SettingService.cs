@@ -51,6 +51,22 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto AddAboutUs(SettingDto settingDto)
+        {
+            try
+            {
+                var mapper = _mapper.Map<Setting>(settingDto);
+                _uow.GetRepository<Setting>().Update(mapper);
+                _uow.SaveChanges();
+
+                settingDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "AboutUs has Changed Seccessfuly", Data = settingDto };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
         public ResponseDto AboutUs()
         {
             try

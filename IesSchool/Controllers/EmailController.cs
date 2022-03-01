@@ -15,11 +15,11 @@ namespace IesSchool.Controllers
             _emailSenderService = emailSenderService;
         }
         [HttpPut]
-        public ActionResult SendEmail(PasswordResetDto passwordResetDto)
+        public ActionResult SendEmail(string email)
         {
             try
             {
-               var all= _emailSenderService.SendEmail(passwordResetDto);
+               var all= _emailSenderService.SendEmail(email);
                 return Ok(all);
             }
             catch (Exception)

@@ -33,12 +33,12 @@ namespace IesSchool.Core.Services
             _uow = unitOfWork;
             _iesContext = iesContext;
         }
-        public  ResponseDto SendEmail(PasswordResetDto passwordResetDto)
+        public  ResponseDto SendEmail(string email)
         {
             try
             {
                 string msg = "";
-                var user = _uow.GetRepository<User>().Single(x => x.Email == passwordResetDto.Email);
+                var user = _uow.GetRepository<User>().Single(x => x.Email == email);
                 if (user == null)
                 {
                     msg = "Your Email Is Not Registerd";
@@ -48,7 +48,7 @@ namespace IesSchool.Core.Services
                 string fromEmail = _config.GetSection("SmtpSettings").GetSection("SenderEmail").Value;
                 string emailPass = _config.GetSection("SmtpSettings").GetSection("Password").Value;
 
-                using (MailMessage mm = new MailMessage(fromEmail, passwordResetDto.Email))
+                using (MailMessage mm = new MailMessage(fromEmail, email))
                 {
                     string url = _config["AppUrl"] + "/api/ChangePassword/Index/"+ user.Id;
                     string html = "";
@@ -63,7 +63,7 @@ namespace IesSchool.Core.Services
                                         "<td><a href=" + url + ">Reset Your Password</a></td>" +
                                     "</tr>" +
                                     "<tr>" +
-                                        "<td><span>Then login with your Email: <b>" + passwordResetDto.Email + "</b></span></td>" +
+                                        "<td><span>Then login with your Email: <b>" + email + "</b></span></td>" +
                                     "</tr>" +
                                     "<tr>" +
                                         "<td>Thank You<br />IES Team" +
