@@ -11,5 +11,6 @@ namespace IesSchool.Core.IServices
     {
         public ResponseDto GetSetting();
         public ResponseDto EditSetting(SettingDto settingDto);
+        public ResponseDto AboutUs();
     }
 }
