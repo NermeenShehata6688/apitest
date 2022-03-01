@@ -135,7 +135,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [HttpPut]
+        [HttpGet]
         public ActionResult SendEmail(string email)
         {
             try

@@ -14,7 +14,7 @@ namespace IesSchool.Controllers
         {
             _emailSenderService = emailSenderService;
         }
-        [HttpPut]
+        [HttpGet]
         public ActionResult SendEmail(string email)
         {
             try
