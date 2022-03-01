@@ -10,6 +10,7 @@ namespace IesSchool.Context.Models
         public int? CurrentTermId { get; set; }
         public int? LongTermPercent { get; set; }
         public int? ShortTermPercent { get; set; }
+        public string? AboutUs { get; set; }
 
         public virtual Term? CurrentTerm { get; set; }
         public virtual AcadmicYear? CurrentYear { get; set; }

@@ -13,6 +13,7 @@ namespace IesSchool.Core.Dto
         public int? CurrentTermId { get; set; }
         public int? LongTermPercent { get; set; }
         public int? ShortTermPercent { get; set; }
+        public string? AboutUs { get; set; }
 
         public string? CurrentYearName { get; set; }
         public string? CurrentTermNamed { get; set; }

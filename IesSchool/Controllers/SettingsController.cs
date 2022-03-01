@@ -45,5 +45,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult AboutUs()
+        {
+            try
+            {
+                var all = _settingService.AboutUs();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

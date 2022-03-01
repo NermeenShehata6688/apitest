@@ -17,12 +17,15 @@ namespace IesSchool.Controllers
         private IMobileService _iMobileService;
         private IReportService _reportService;
         private IEmailSenderService _emailSenderService;
+        private ISettingService _settingService;
 
-        public MobileController(IMobileService iMobileService, IReportService reportService, IEmailSenderService emailSenderService)
+        public MobileController(IMobileService iMobileService, IReportService reportService, 
+            IEmailSenderService emailSenderService, ISettingService settingService)
         {
             _iMobileService = iMobileService;
             _reportService = reportService;
             _emailSenderService = emailSenderService;
+            _settingService = settingService;
         }
       
         [HttpGet]
@@ -308,6 +311,19 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iMobileService.IxpReportPdfPreview(ixpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult AboutUs()
+        {
+            try
+            {
+                var all = _settingService.AboutUs();
                 return Ok(all);
             }
             catch (Exception)

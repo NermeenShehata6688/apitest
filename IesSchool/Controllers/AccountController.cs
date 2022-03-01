@@ -393,7 +393,7 @@ namespace IesSchool.Controllers
                     }
                     else
                     {
-                        return Ok(new ResponseDto { Errormessage = "فشل في عملية التعديل" , Status =0 });
+                        return Ok(new ResponseDto { Errormessage = "Failed To Update", Status =0 });
 
                     }
                 }

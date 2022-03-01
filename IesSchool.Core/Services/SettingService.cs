@@ -51,5 +51,24 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public ResponseDto AboutUs()
+        {
+            try
+            {
+
+                var setting = _uow.GetRepository<Setting>().Single();
+                var mapper = _mapper.Map<SettingDto>(setting);
+                if (mapper != null)
+                    return new ResponseDto { Status = 1, Message = "Seccess", Data = mapper.AboutUs };
+                else
+                    return new ResponseDto { Status = 0, Errormessage = "null" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = "faild ", Data = ex };
+
+            }
+        }
     }
 }
