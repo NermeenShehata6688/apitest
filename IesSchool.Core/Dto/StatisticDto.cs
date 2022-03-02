@@ -29,6 +29,7 @@ namespace IesSchool.Core.Dto
         public int? ExtraTeachersCount { get; set; }
         public int? DepartmentsCount { get; set; }
         public virtual PaginateDto<AcadmicYearChartDto>? AcadmicYearChartDto { get; set; }
+        public virtual PaginateDto<DepartmentStatisticDto>? DepartmentStatisticDto { get; set; }
 
 
     }
