@@ -70,7 +70,7 @@ namespace IesSchool.Core.Services
 
                 statisticDto.DepartmentsCount = departments.Items.Count();
                 statisticDto.DepartmentStatisticDto = _mapper.Map<PaginateDto<DepartmentStatisticDto>>(departments);
-                if (statisticDto.StusentsCount >0)
+                if (statisticDto.StusentsCount >0 && statisticDto.StusentsCount!=null)
                 {
                     foreach (var item in statisticDto.DepartmentStatisticDto.Items)
                     {
