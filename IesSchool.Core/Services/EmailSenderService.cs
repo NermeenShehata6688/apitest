@@ -69,9 +69,7 @@ namespace IesSchool.Core.Services
                                         "<td>Thank You<br />IES Team" +
                                         "</td>" +
                                     "</tr>" +
-                                      "<tr>" +
-                                        "<td><img src=\"cid:logo.png\"></td>" +
-                                    "</tr>" +
+                                      
                                 "</table>";
 
                     mm.Subject = "IES - Change Your Password";
