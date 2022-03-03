@@ -31,6 +31,7 @@ namespace IesSchool.Core.IServices
 
         public ResponseDto GetAreaByIdWithStrands(int areaId);
         public ResponseDto GetAreaByIdWithStrandsAndSkills(int areaId);
+        public ResponseDto GetSkillsByStrandId(int strandId);
 
 
     }

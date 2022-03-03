@@ -292,5 +292,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetSkillsByStrandId(int strandId)
+        {
+            try
+            {
+                var all = _curriculumService.GetSkillsByStrandId(strandId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -79,10 +79,10 @@ namespace IesSchool.Core.Services
 
                     SmtpClient smtp = new SmtpClient();
 
-                    smtp.Credentials = new NetworkCredential(fromEmail, emailPass);
+                    //smtp.Credentials = new NetworkCredential(fromEmail, emailPass);
 
-                    // smtp.UseDefaultCredentials = true;
-                    smtp.Port = 587;
+                     smtp.UseDefaultCredentials = true;
+                    smtp.Port = 465;
                     smtp.EnableSsl = true;
                     smtp.Host = "smtp.gmail.com";
 

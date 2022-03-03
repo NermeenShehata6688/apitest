@@ -91,7 +91,7 @@
         var userId = parseInt(@ViewBag.UserId);
           $.ajax({
                type: "POST",
-                url: "http://localhost:5212/api/ChangePassword/ResetUserPassword",
+                url: "http://localhost:5222/api/ChangePassword/ResetUserPassword",
                 data: { Id:userId, NewPassword: $('#newPassword').val(), ConfirmPassword:  $('#confirmPassword').val() },
                 dataType: "json",
                 success: function (res) { //call successfull

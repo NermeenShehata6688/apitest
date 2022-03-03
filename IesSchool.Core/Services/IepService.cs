@@ -38,11 +38,11 @@ namespace IesSchool.Core.Services
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x =>  x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
                     AllStrands = _uow.GetRepository<Strand>().GetList(null, null, null, 0, 1000000, true),
-                    AllSkills = _uow.GetRepository<Skill>().GetList(null, null, null, 0, 1000000, true),
+                   // AllSkills = _uow.GetRepository<Skill>().GetList(null, null, null, 0, 10, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                     AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(null, null, null, 0, 1000000, true),
-                    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x=> x.Include(x=>x.Assistant), 0, 1000000, true),
+                    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
                     Setting = _uow.GetRepository<Setting>().Single(),
                 };
                 var mapper = _mapper.Map<IepHelperDto>(iepHelper);
