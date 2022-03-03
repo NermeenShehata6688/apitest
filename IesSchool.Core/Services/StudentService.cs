@@ -186,7 +186,7 @@ namespace IesSchool.Core.Services
                     studentDto.ImageBinary = null;
                     return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
                 }
-                else
+                else      
                     return new ResponseDto { Status = 1, Message = "null" };
             }
             catch (Exception ex)
