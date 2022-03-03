@@ -649,5 +649,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetSkillsByObjectiveId(int objectiveId)
+        {
+            try
+            {
+                var all = _iepService.GetSkillsByObjectiveId( objectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -434,7 +434,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
                .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
                .Include(s => s.Strand)
-               .Include(s => s.Area)
+               .Include(s => s.Area), 0, 100000, true
                );
                     var mapper = _mapper.Map<PaginateDto<GoalDto>>(goals);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -634,7 +634,7 @@ namespace IesSchool.Core.Services
                     .Include(s => s.ObjectiveSkills)
                     .Include(s => s.Activities)
                     .Include(s => s.Goal).ThenInclude(s => s.Strand)
-                     .Include(s => s.Goal).ThenInclude(s => s.Area));
+                     .Include(s => s.Goal).ThenInclude(s => s.Area), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<IepObjectiveDto>>(objective);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -816,7 +816,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allActivities = _uow.GetRepository<Activity>().GetList();
+                var allActivities = _uow.GetRepository<Activity>().GetList(null,null,null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<ActivityDto>>(allActivities);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -829,7 +829,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var objActivities = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objectiveId, null);
+                var objActivities = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objectiveId, null, null,0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<ActivityDto>>(objActivities);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -991,7 +991,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId,null, x => x.Include(x => x.ExtraCurricular));
+                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId,null, x => x.Include(x => x.ExtraCurricular), 0, 100000, true);
                 var mapper = _mapper.Map < PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -1051,7 +1051,7 @@ namespace IesSchool.Core.Services
                 var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId && x.IsDeleted!=true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
-                    .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands));
+                    .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands), 0, 100000, true);
 
                 var mapper = _mapper.Map<PaginateDto<IepProgressReportDto>>(iepProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -1365,7 +1365,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var paramedicalIds = _uow.GetRepository<TherapistParamedicalService>().GetList(x => x.UserId == userId).Items.Select(x => x.ParamedicalServiceId).ToArray();
+                var paramedicalIds = _uow.GetRepository<TherapistParamedicalService>().GetList(x => x.UserId == userId,null,null, 0, 100000, true).Items.Select(x => x.ParamedicalServiceId).ToArray();
                 if (paramedicalIds!=null)
                 {
 
@@ -1373,7 +1373,7 @@ namespace IesSchool.Core.Services
                    x => x.Include(x => x.ProgressReport).ThenInclude(x => x.Student)
                    .Include(x => x.ProgressReport).ThenInclude(x => x.AcadmicYear)
                    .Include(x => x.ProgressReport).ThenInclude(x => x.Term)
-                   .Include(x => x.ParamedicalService));
+                   .Include(x => x.ParamedicalService), 0, 100000, true);
 
                     var mapper = _mapper.Map<PaginateDto<ProgressReportParamedicalDto>>(progressReportParamedicals);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -1440,6 +1440,22 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetSkillsByObjectiveId(int objectiveId)
+        {
+            try
+            {
+                var objectiveSkills = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId == objectiveId,null,null, 0, 100000, true).Items.Select(x=> x.SkillId).ToArray();
+                var Skills = _uow.GetRepository<Skill>().GetList(x => objectiveSkills.Contains(x.Id), null, null, 0, 100000, true);
+
+                var mapper = _mapper.Map<PaginateDto<SkillDto>>(Skills);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
     }
