@@ -27,7 +27,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                IepHelper iepHelper = new IepHelper()
+                IepHelper iepHelper = new IepHelper()      
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
                     AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId }),null, null, null, 0, 100000, true),
