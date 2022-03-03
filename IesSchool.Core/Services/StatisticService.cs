@@ -66,14 +66,27 @@ namespace IesSchool.Core.Services
                     statisticDto.ExtraTeachersCount = allUsers.Where(x => x.IsExtraCurricular == true).Count();
 
                 }
-                statisticDto.DepartmentsCount = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, null, null, 0, 100000, true).Items.Count();
-               
+                var departments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, null, x => x.Include(x=> x.Students.Where(x=> x.IsDeleted!= true)), 0, 100000, true);
+
+                statisticDto.DepartmentsCount = departments.Items.Count();
+                statisticDto.DepartmentStatisticDto = _mapper.Map<PaginateDto<DepartmentStatisticDto>>(departments);
+                if (statisticDto.StusentsCount >0 && statisticDto.StusentsCount!=null)
+                {
+                    foreach (var item in statisticDto.DepartmentStatisticDto.Items)
+                    {
+                        var percentage = ((decimal)(item.StudentCount) / ((decimal)statisticDto.StusentsCount)) * 100;
+                        item.StudentCountPercentage = Math.Round(percentage);
+                    }
+
+                }
+                     
                 var acadmic = _uow.GetRepository<AcadmicYear>().GetList(x => x.IsDeleted != true, null, x=> x
                 .Include(x => x.Ieps.Where(x=> x.IsDeleted!=true)).Include(x => x.Itps.Where(x => x.IsDeleted != true)).Include(x => x.Ixps.Where(x => x.IsDeleted != true)), 0, 100000, true);
                 if (acadmic!= null && acadmic.Items.Count()>0)
                 {
                     statisticDto.AcadmicYearChartDto = _mapper.Map<PaginateDto<AcadmicYearChartDto>>(acadmic);
                     statisticDto.AcadmicYearChartDto.Items = statisticDto.AcadmicYearChartDto.Items.TakeLast(4).ToList();
+                    
                 }
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = statisticDto };

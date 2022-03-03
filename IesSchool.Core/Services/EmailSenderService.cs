@@ -69,9 +69,7 @@ namespace IesSchool.Core.Services
                                         "<td>Thank You<br />IES Team" +
                                         "</td>" +
                                     "</tr>" +
-                                      "<tr>" +
-                                        "<td><img src=\"cid:logo.png\"></td>" +
-                                    "</tr>" +
+                                      
                                 "</table>";
 
                     mm.Subject = "IES - Change Your Password";
@@ -83,7 +81,7 @@ namespace IesSchool.Core.Services
 
                     smtp.Credentials = new NetworkCredential(fromEmail, emailPass);
 
-                    // smtp.UseDefaultCredentials = true;
+                    //smtp.UseDefaultCredentials = true;
                     smtp.Port = 587;
                     smtp.EnableSsl = true;
                     smtp.Host = "smtp.gmail.com";

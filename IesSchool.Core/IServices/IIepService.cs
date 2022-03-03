@@ -67,6 +67,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetProgressReportParamedicalById(int progressReportParamedicalId);
         public ResponseDto EditProgressReportParamedical(ProgressReportParamedicalDto progressReportParamedicalDto);
         public ResponseDto DeleteProgressReportParamedicalt(int progressReportParamedicalId);
+        public ResponseDto GetSkillsByObjectiveId(int objectiveId);
 
     }
 }

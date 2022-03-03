@@ -22,9 +22,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ParamedicalService, ParamedicalServiceDto>().ReverseMap();
 
             CreateMap<Department, DepartmentDto>()
-            .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.SkillAlowedDepartments.Count()))
-            .ForMember(dist => dist.StudentCount, opt => opt.MapFrom(c => c.Students.Count()))
-            .ForMember(dist => dist.TeacherCount, opt => opt.MapFrom(c => c.Users.Where(x => x.IsTeacher == true).Count()))
+            .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.SkillAlowedDepartments==null?0: c.SkillAlowedDepartments.Count()))
+            .ForMember(dist => dist.StudentCount, opt => opt.MapFrom(c => c.Students == null ? 0 : c.Students.Count()))
+            .ForMember(dist => dist.TeacherCount, opt => opt.MapFrom(c => c.Users==null?0 : c.Users.Where(x => x.IsTeacher == true).Count()))
             .ReverseMap();
 
             CreateMap<AcadmicYear, AcadmicYearDto>().ReverseMap();
@@ -498,6 +498,9 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap()
             .ForMember(x => x.CurrentYear, op => op.Ignore())
             .ForMember(x => x.CurrentYear, op => op.Ignore());
+
+            CreateMap<Department, DepartmentStatisticDto>()
+           .ForMember(dist => dist.StudentCount, opt => opt.MapFrom(c => c.Students == null ? 0 : c.Students.Count()));
             #endregion
 
         }

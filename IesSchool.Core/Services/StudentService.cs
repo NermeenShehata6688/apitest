@@ -186,7 +186,7 @@ namespace IesSchool.Core.Services
                     studentDto.ImageBinary = null;
                     return new ResponseDto { Status = 1, Message = "Student Added  Seccessfuly", Data = studentDto };
                 }
-                else
+                else      
                     return new ResponseDto { Status = 1, Message = "null" };
             }
             catch (Exception ex)
@@ -373,7 +373,7 @@ namespace IesSchool.Core.Services
             {
                 if (studentId != null || studentId != 0)
                 {
-                    var studentHistoricalSkill = _uow.GetRepository<StudentHistoricalSkill>().GetList(x => x.StudentId == studentId);
+                    var studentHistoricalSkill = _uow.GetRepository<StudentHistoricalSkill>().GetList(x => x.StudentId == studentId,null,null, 0, 100000, true);
                 var mapper = _mapper.Map<Paginate<StudentHistoricalSkillDto>>(studentHistoricalSkill);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
@@ -438,7 +438,7 @@ namespace IesSchool.Core.Services
             {
                 if (studentId != null || studentId != 0)
                 {
-                    var studentAttachment = _uow.GetRepository<StudentAttachment>().GetList(x => x.StudentId == studentId, null, x => x.Include(x => x.AttachmentType));
+                    var studentAttachment = _uow.GetRepository<StudentAttachment>().GetList(x => x.StudentId == studentId, null, x => x.Include(x => x.AttachmentType), 0, 100000, true);
                     var mapper = _mapper.Map <PaginateDto<StudentAttachmentDto>>(studentAttachment);
                     if (mapper.Items.Count() > 0)
                     {
@@ -676,16 +676,16 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3).Items.Select(x=> x.Id).ToArray();
+                var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3, null,null,0, 100000, true).Items.Select(x=> x.Id).ToArray();
                 if (studentIeps.Count()>0)
                 {
-                    var studentObjectives = _uow.GetRepository<Objective>().GetList(x => studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value)).Items.Select(x => x.Id).ToArray();
+                    var studentObjectives = _uow.GetRepository<Objective>().GetList(x => studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value), null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
                     if (studentObjectives.Count() > 0)
                     {
-                        var studentObjectiveSkill = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId!= null&& studentObjectives.Contains(x.ObjectiveId.Value == null?0: x.ObjectiveId.Value)).Items.Select(x => x.SkillId).Distinct().ToArray();
+                        var studentObjectiveSkill = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId!= null&& studentObjectives.Contains(x.ObjectiveId.Value == null?0: x.ObjectiveId.Value), null, null, 0, 100000, true).Items.Select(x => x.SkillId).Distinct().ToArray();
                         if (studentObjectiveSkill.Count()>0)
                         {
-                            var studentSkill = _uow.GetRepository<Skill>().GetList(x => x.Id != null && studentObjectiveSkill.Contains(x.Id), null, x=>x.Include(x => x.Strand).ThenInclude((x => x.Area)));
+                            var studentSkill = _uow.GetRepository<Skill>().GetList(x => x.Id != null && studentObjectiveSkill.Contains(x.Id), null, x=>x.Include(x => x.Strand).ThenInclude((x => x.Area)), 0, 100000, true);
                             if (studentSkill.Items.Count()>0)
                             {
                                 var mapper = _mapper.Map<PaginateDto<SkillDto>>(studentSkill);

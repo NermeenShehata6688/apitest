@@ -348,5 +348,19 @@ namespace IesSchool.Core.Services
 
             }
         }
+
+        public ResponseDto GetSkillsByStrandId(int strandId)
+        {
+            try
+            {
+                var allSkills = _uow.GetRepository<Skill>().GetList(x => x.IsDeleted != true && x.StrandId== strandId,null, null, 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<SkillDto>>(allSkills);
+                return new ResponseDto { Status = 1, Errormessage = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
     }
 }

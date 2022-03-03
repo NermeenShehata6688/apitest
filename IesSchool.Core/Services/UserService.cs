@@ -229,7 +229,7 @@ namespace IesSchool.Core.Services
                 //    mapper.UserPassword = user.AspNetUser.PasswordHash;
                 //}
 
-                var appUser = _userManager.Users.FirstOrDefault(r => r.Email == user.Email);
+                var appUser = _userManager.Users.FirstOrDefault(r => r.Id == user.Id);
                 if (appUser != null)
                 {
                     var roles = _userManager.GetRolesAsync(appUser).Result;

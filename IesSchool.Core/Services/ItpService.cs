@@ -36,7 +36,7 @@ namespace IesSchool.Core.Services
                     AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-                    TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(),
+                    TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<ItpHelperDto>(itpHelper);
 
@@ -308,7 +308,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allItpGoals = _uow.GetRepository<ItpGoal>().GetList(x => x.IsDeleted != true);
+                var allItpGoals = _uow.GetRepository<ItpGoal>().GetList(x => x.IsDeleted != true,null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<ItpGoalDto>>(allItpGoals);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -344,7 +344,7 @@ namespace IesSchool.Core.Services
                 if (itpId != 0)
                 {
                     var goals = _uow.GetRepository<ItpGoal>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null, x => x
-               .Include(s => s.ItpGoalObjectives.Where(s => s.IsDeleted != true)));
+               .Include(s => s.ItpGoalObjectives.Where(s => s.IsDeleted != true)), 0, 100000, true);
                     var mapper = _mapper.Map<PaginateDto<ItpGoalDto>>(goals);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
@@ -462,7 +462,7 @@ namespace IesSchool.Core.Services
             {
                 if (goalId != 0)
                 {
-                    var objectives = _uow.GetRepository<ItpGoalObjective>().GetList(x => x.ItpGoalId == goalId && x.IsDeleted != true);
+                    var objectives = _uow.GetRepository<ItpGoalObjective>().GetList(x => x.ItpGoalId == goalId && x.IsDeleted != true, null, null, 0, 100000, true);
                     var mapper = _mapper.Map<PaginateDto<ItpGoalObjectiveDto>>(objectives);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }

@@ -295,7 +295,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().GetList(x => x.IxpId == ixpId,null,
-                    x=> x.Include(x => x.ExtraCurricular).Include(x => x.Teacher)
+                    x=> x.Include(x => x.ExtraCurricular).Include(x => x.Teacher), 0, 100000, true
                 );
                 var mapper = _mapper.Map<PaginateDto<IxpExtraCurricularDto>>(ixpExtraCurricular);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };

@@ -12,11 +12,13 @@ namespace IesSchool.Controllers
     public class IepsController : ControllerBase
     {
         private IIepService _iepService;
-        public IepsController(IIepService iepService)
+        private ICurriculumService _curriculumService;
+        public IepsController(IIepService iepService, ICurriculumService curriculumService)
         {
             _iepService = iepService;
+            _curriculumService = curriculumService;
         }
-        [ResponseCache(Duration = 800)]
+        //[ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetIepsHelper()
         {
@@ -627,6 +629,32 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _iepService.DeleteProgressReportParamedicalt(progressReportParamedicalId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetSkillsByStrandId(int strandId)
+        {
+            try
+            {
+                var all = _curriculumService.GetSkillsByStrandId(strandId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetSkillsByObjectiveId(int objectiveId)
+        {
+            try
+            {
+                var all = _iepService.GetSkillsByObjectiveId( objectiveId);
                 return Ok(all);
             }
             catch (Exception)
