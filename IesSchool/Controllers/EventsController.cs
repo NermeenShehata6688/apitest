@@ -34,7 +34,7 @@ namespace IesSchool.Controllers
         }
         // GET: api/<EventsController>
      
-        //[ResponseCache(Duration = 800)]
+        [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetEventHelper()
         {
