@@ -168,8 +168,14 @@ namespace IesSchool.Core.Services
             {
                using (var context = _context.Database.BeginTransaction())
                 {
+                    var SHDH = "UPDATE ApplicationGroup " +
+                                                     $"SET  [Name]= '{model.Name}', [Description]= '{model.Description}' " +
+                                                    $"WHERE [Id] = {model.Id}";
+
+                    _ = _context.Database.ExecuteSqlRaw(SHDH);
+                    _ = _context.SaveChanges();
                     var cmd = "";
-                 //   _context.ApplicationGroups.Update(model);
+                    //_context.ApplicationGroups.Update(model);
 
                     var group = FindGroup(model.Id);
                     group.Name = model.Name;
