@@ -141,6 +141,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                var cmd = $"delete from User_Assistant where AssistantId={assistantId}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
                 Assistant oAssistant = _uow.GetRepository<Assistant>().Single(x => x.Id == assistantId);
                 oAssistant.IsDeleted = true;
                 oAssistant.DeletedOn = DateTime.Now;

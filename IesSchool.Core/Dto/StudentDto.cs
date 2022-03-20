@@ -47,7 +47,7 @@ namespace IesSchool.Core.Dto
         public bool? IsSuspended { get; set; }
         public string? SuspensionReason { get; set; }
         public DateTime? DeletedOn { get; set; }
-        //public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }

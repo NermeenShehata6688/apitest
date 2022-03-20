@@ -22,7 +22,7 @@ namespace IesSchool.Core.Dto
         public DateTime? BirthDate { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
-        //public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsSuspended { get; set; }
         public int? DepartmentId { get; set; }
