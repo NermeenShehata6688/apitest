@@ -26,7 +26,7 @@ namespace IesSchool.Core.Services
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.SkillAlowedDepartments).Include(s => s.Students.Where(x => x.IsDeleted != true)).Include(s => s.Users.Where(x => x.IsDeleted != true)), 0, 10000, true),
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), null, 0, 10000, true),
-                    AllTeachers = _uow.GetRepository<VwUser>().GetList(x => x.IsDeleted != true && x.IsTeacher == true, x => x.OrderBy(c => c.Name), null, 0, 10000, true)
+                    AllTeachers = _uow.GetRepository<VwUser>().GetList(x => x.IsDeleted != true && x.IsTeacher == true, null, null, 0, 10000, true)
                 };
                 var mapper = _mapper.Map<AssistantHelperDto>(assistantHelper);
 
@@ -161,7 +161,7 @@ namespace IesSchool.Core.Services
                 assistant.IsSuspended = isSuspended;
                 _uow.GetRepository<Assistant>().Update(assistant);
                 _uow.SaveChanges();
-                return new ResponseDto { Status = 1, Message = "Student Is Suspended State Has Changed" };
+                return new ResponseDto { Status = 1, Message = "Assistant Is Suspended State Has Changed" };
             }
             catch (Exception ex)
             {
