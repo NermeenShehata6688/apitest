@@ -18,7 +18,7 @@ namespace IesSchool.Controllers
             _iepService = iepService;
             _curriculumService = curriculumService;
         }
-        [ResponseCache(Duration = 800)]
+       // [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetIepsHelper()
         {

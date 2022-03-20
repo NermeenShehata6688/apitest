@@ -33,7 +33,7 @@ namespace IesSchool.Controllers
             }
         }
         // GET: api/<StudentsController>
-        [ResponseCache(Duration = 800)]
+       // [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetStudentHelper()
         {
@@ -357,7 +357,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [ResponseCache(Duration = 800)]
+       // [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetStudentHistoricalSkills(int studentId)
         {
