@@ -24,7 +24,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _iepService.GetIepsHelper();
+                var all = _iepService.GetIepsHelper();    
                 return Ok(all);
             }
             catch (Exception)
