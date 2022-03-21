@@ -327,11 +327,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult ObjIsMasterd(int objId, bool isMastered)
+        public IActionResult ObjIsMasterd(ObjStatus status)
         {
             try
             {
-                var all = _iepService.ObjIsMasterd(objId, isMastered);
+                var all = _iepService.ObjIsMasterd(status);
                 return Ok(all);
             }
             catch (Exception)
@@ -339,6 +339,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        //[HttpPut]
+        //public IActionResult ObjIsMasterd(int objId, bool isMastered)
+        //{
+        //    try
+        //    {
+        //        var all = _iepService.ObjIsMasterd(objId, isMastered);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         //[HttpPut]
         //public IActionResult ObjectiveIsMasterd(int objectiveId, bool isMasterd)
         //{
