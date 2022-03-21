@@ -752,33 +752,59 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto ObjIsMasterd(int objId, bool IsMasterd)
+        //public ResponseDto ObjIsMasterd(int objId, bool IsMasterd)
+        //{
+        //    try
+        //    {
+        //        if (objId != 0)
+        //        {
+        //            Objective objective = _uow.GetRepository<Objective>().Single(x => x.Id == objId);
+        //            if (objective!=null)
+        //            {
+        //                objective.IsMasterd = IsMasterd;
+        //                _uow.GetRepository<Objective>().Update(objective);
+        //                _uow.SaveChanges();
+        //                return new ResponseDto { Status = 1, Message = "Objective Is Masterd Status Has Changed" };
+        //            }
+        //                return new ResponseDto { Status = 1, Message = "null" };
+
+        //        }
+        //        else
+        //        {
+        //            return new ResponseDto { Status = 1, Message = "null" };
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+
+
+        public ResponseDto ObjIsMasterd(ObjStatus statusDto)
         {
             try
             {
-                if (objId != 0)
+                if (statusDto.objId != 0)
                 {
-                    Objective objective = _uow.GetRepository<Objective>().Single(x => x.Id == objId);
-                    if (objective!=null)
-                    {
-                        objective.IsMasterd = IsMasterd;
-                        _uow.GetRepository<Objective>().Update(objective);
-                        _uow.SaveChanges();
-                        return new ResponseDto { Status = 1, Message = "Objective Is Masterd Status Has Changed" };
-                    }
-                        return new ResponseDto { Status = 1, Message = "null" };
-
+                    Objective Objective = _uow.GetRepository<Objective>().Single(x => x.Id == statusDto.objId);
+                    Objective.IsMasterd = statusDto.IsMasterd;
+                    _uow.GetRepository<Objective>().Update(Objective);
+                    _uow.SaveChanges();
+                    return new ResponseDto { Status = 1, Message = "Objective Status Has Changed" };
                 }
                 else
                 {
                     return new ResponseDto { Status = 1, Message = "null" };
                 }
+
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+
         public bool ObjectiveIsMasterd(Objective objective)
         {
             try
