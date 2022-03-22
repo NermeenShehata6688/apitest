@@ -25,6 +25,8 @@ namespace IesSchool.Core.Dto
         public IPaginate<SkillEvaluation> AllSkillEvaluations { get; set; }
         public IPaginate<UserAssistant> AllTeacherAssistants { get; set; }
         public Setting Setting { get; set; }
+        public IPaginate<User> AllTherapist { get; set; }
+        public IPaginate<TherapistParamedicalService> TherapistParamedicalService { get; set; }
 
     }
     public class IepHelperDto
@@ -44,6 +46,8 @@ namespace IesSchool.Core.Dto
         public PaginateDto<SkillEvaluationDto> AllSkillEvaluations { get; set; }
         public PaginateDto<UserAssistantDto> AllTeacherAssistants { get; set; }
         public SettingDto Setting { get; set; }
+        public PaginateDto<UserDto> AllTherapist { get; set; }
+        public PaginateDto<TherapistParamedicalServiceDto> TherapistParamedicalService { get; set; }
 
 
     }
