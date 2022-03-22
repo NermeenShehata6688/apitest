@@ -14,5 +14,6 @@ namespace IesSchool.Core.Dto
         public int? TherapistId { get; set; }
         public bool? IsItpCreated { get; set; }
         public string? ParamedicalServiceName { get; set; }
+        public string? TherapistName { get; set; }
     }
 }
