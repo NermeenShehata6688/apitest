@@ -133,6 +133,7 @@ namespace IesSchool.Core.Services
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
                .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
                .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.Therapist)
                .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
                .Include(s => s.Student).ThenInclude(s => s.Department)
                //.Include(s => s.Teacher)
@@ -950,7 +951,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId,null, x=> x.Include(x=>x.ParamedicalService));
+                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId,null, x=> x.Include(x=>x.ParamedicalService).Include(x => x.Therapist));
                 var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalService);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
