@@ -5327,7 +5327,7 @@ namespace IesSchool.Core.Services
 			}
 		}
 		#region PDF Reports
-		public string IepLpReportPdfPreview(int iepId)
+		public ResponseDto IepLpReportPdfPreview(int iepId)
 		{
 			try
 			{
@@ -5349,7 +5349,7 @@ namespace IesSchool.Core.Services
 					if (mapper == null)
 					{
 						//MemoryStream stream1 = new MemoryStream();
-						return "";
+						return null;
 					}
 					if (AllIepObjectives != null && AllIepObjectives.Items.Count() > 0)
 					{
@@ -5674,8 +5674,10 @@ namespace IesSchool.Core.Services
 						}
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
-					}
-					return fullpath;
+                    }
+
+					return new ResponseDto { Status = 1, Data = fullpath.ToString(), Message = fullpath.ToString() };
+
 				}
 			}
 			catch (Exception)

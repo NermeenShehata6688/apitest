@@ -28,7 +28,7 @@ namespace IesSchool.Core.IServices
         public FileStreamResult IxpReport(int ixpId);
         public string IxpReportHTML(int ixpId);
 
-        public string IepLpReportPdfPreview(int iepId);
+        public ResponseDto IepLpReportPdfPreview(int iepId);
         public string IepReportPdfPreview(int iepId);
         public string IepProgressReportPdfPreview(int iepProgressReportId);
         public string ItpReportPdfPreview(int itpId);
