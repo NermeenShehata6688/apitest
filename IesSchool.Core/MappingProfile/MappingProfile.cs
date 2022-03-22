@@ -251,6 +251,7 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(dist => dist.TherapistName, opt => opt.MapFrom(c => c.Therapist == null ? "" : c.Therapist.Name))
             .ReverseMap()
             .ForMember(x => x.Iep, op => op.Ignore())
+            .ForMember(x => x.Therapist, op => op.Ignore())
             .ForMember(x => x.ParamedicalService, op => op.Ignore());
             CreateMap<Paginate<Objective>, Paginate<ObjectiveDto>>().ReverseMap();
 
@@ -465,6 +466,7 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(dist => dist.IepTerm, opt => opt.MapFrom(c => c.Iep == null ? "" : c.Iep.Term == null ? "" : c.Iep.Term.Name))
            .ReverseMap()
            .ForMember(x => x.Iep, op => op.Ignore())
+            .ForMember(x => x.Therapist, op => op.Ignore())
            .ForMember(x => x.ParamedicalService, op => op.Ignore());
 
             #endregion
