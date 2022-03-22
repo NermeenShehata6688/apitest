@@ -206,7 +206,87 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        
+        #region PDFReports
+        [HttpGet]
+        public ActionResult LpReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepLpReportPdfPreview(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult IepReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepReportPdfPreview(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult IepProgressReportPdfPreview(int iepId)
+        {
+            try
+            {
+                var all = _reportService.IepProgressReportPdfPreview(iepId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult ItpReportPdfPreview(int itpId)
+        {
+            try
+            {
+                var all = _reportService.ItpReportPdfPreview(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult ItpProgressReportPdfPreview(int itpProgressReportId)
+        {
+            try
+            {
+                var all = _reportService.ItpProgressReportPdfPreview(itpProgressReportId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public ActionResult IxpReportPdfPreview(int ixpId)
+        {
+            try
+            {
+                var all = _reportService.IxpReportPdfPreview(ixpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
 
     }
 }
