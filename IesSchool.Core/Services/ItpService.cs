@@ -647,7 +647,7 @@ namespace IesSchool.Core.Services
                  .Include(x => x.Iep).ThenInclude(x => x.Term)
                  .Include(x => x.ParamedicalService), 0, 100000, true);
 
-                var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalServices);
+                var mapper = _mapper.Map<PaginateDto<IepParamedicalForTherapistDto>>(iepParamedicalServices);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
             }
