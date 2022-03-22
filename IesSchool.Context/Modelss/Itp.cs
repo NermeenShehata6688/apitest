@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IesSchool.Core.Dto
+namespace IesSchool.Context.Modelss
 {
-    public class ItpDto
+    public partial class Itp
     {
         public int Id { get; set; }
         public int? StudentId { get; set; }
@@ -37,20 +34,9 @@ namespace IesSchool.Core.Dto
         public bool? IsDeleted { get; set; }
         public int? IepparamedicalServiceId { get; set; }
 
-        public string? StudentName { get; set; }
-        public string? ParamediaclName { get; set; }
-        public string? TherapistName { get; set; }
-        public string? AcadmicYearName { get; set; }
-        public string? TermName { get; set; }
-        public string? StudentCodeName { get; set; }
-        public string? StudentBirthdayName { get; set; }
-        public string? DepartmentName { get; set; }
-        public string? TeacherName { get; set; }
-        public string? HeadOfEducationName { get; set; }
-
-
-        public virtual ICollection<ItpGoalDto>? ItpGoals { get; set; }
-        public virtual ICollection<ItpProgressReportDto>? ItpProgressReports { get; set; }
-
+        public virtual User? HeadOfDepartment { get; set; }
+        public virtual User? HeadOfEducation { get; set; }
+        public virtual IepParamedicalService? IepparamedicalService { get; set; }
+        public virtual User? Therapist { get; set; }
     }
 }

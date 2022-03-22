@@ -724,6 +724,11 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.IepParamedicalServices)
                     .HasForeignKey(d => d.ParamedicalServiceId)
                     .HasConstraintName("FK_IEP_ParamedicalService_ParamedicalService");
+
+                entity.HasOne(d => d.Therapist)
+                   .WithMany(p => p.IepParamedicalServices)
+                   .HasForeignKey(d => d.TherapistId)
+                   .HasConstraintName("FK_IEP_ParamedicalService_User");
             });
 
             modelBuilder.Entity<IepProgressReport>(entity =>
@@ -826,6 +831,11 @@ namespace IesSchool.Context.Models
                    .WithMany(p => p.Itps)
                    .HasForeignKey(d => d.TherapistDepartmentId)
                    .HasConstraintName("FK_ITP_ITP");
+
+                entity.HasOne(d => d.IepparamedicalService)
+                   .WithMany(p => p.Itps)
+                   .HasForeignKey(d => d.IepparamedicalServiceId)
+                   .HasConstraintName("FK_ITP_IEP_ParamedicalService");
             });
 
             modelBuilder.Entity<ItpGoal>(entity =>

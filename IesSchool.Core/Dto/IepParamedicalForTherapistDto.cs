@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IesSchool.Core.Dto
 {
-    public class IepParamedicalServiceDto
+    internal class IepParamedicalForTherapistDto
     {
         public int Id { get; set; }
         public int? Iepid { get; set; }
@@ -14,5 +14,8 @@ namespace IesSchool.Core.Dto
         public int? TherapistId { get; set; }
         public bool? IsItpCreated { get; set; }
         public string? ParamedicalServiceName { get; set; }
+        public string? IepYear { get; set; }
+        public string? IepStudent { get; set; }
+        public string? IepTerm { get; set; }
     }
 }

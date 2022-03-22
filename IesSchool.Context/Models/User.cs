@@ -32,6 +32,7 @@ namespace IesSchool.Context.Models
             UserExtraCurriculars = new HashSet<UserExtraCurricular>();
             StudentExtraTeachers = new HashSet<StudentExtraTeacher>();
             StudentParents = new HashSet<Student>();
+            IepParamedicalServices = new HashSet<IepParamedicalService>();
             //  StudentTeachers = new HashSet<Student>();
         }
 
@@ -68,6 +69,7 @@ namespace IesSchool.Context.Models
         public virtual Department? Department { get; set; }
         public virtual Country? Nationality { get; set; }
         public virtual AspNetUser AspNetUser { get; set; } = null!;
+        public virtual ICollection<IepParamedicalService> IepParamedicalServices { get; set; }
         public virtual ICollection<EventTeacher> EventTeachers { get; set; }
         public virtual ICollection<Iep> IepHeadOfDepartmentNavigations { get; set; }
         public virtual ICollection<Iep> IepHeadOfEducationNavigations { get; set; }

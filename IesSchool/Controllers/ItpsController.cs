@@ -288,5 +288,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult  GetIepsForTherapist(int therapistId)
+        {
+            try
+            {
+                var all = _itpService.GetIepsForTherapist(therapistId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        
     }
 }

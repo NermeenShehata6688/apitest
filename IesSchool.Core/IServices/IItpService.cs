@@ -34,6 +34,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto EditItpProgressReport(ItpProgressReportDto itpProgressReportDto);
         public ResponseDto DeleteItpProgressReport(int itpProgressReportId);
         public ResponseDto CreateItpProgressReport(int itpId);
+        public ResponseDto GetIepsForTherapist(int therapistId);
 
 
     }

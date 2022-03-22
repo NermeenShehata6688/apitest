@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Context.Modelss
 {
     public partial class IepParamedicalService
     {
@@ -17,9 +17,6 @@ namespace IesSchool.Context.Models
         public bool? IsItpCreated { get; set; }
 
         public virtual User? Therapist { get; set; }
-        public virtual Iep? Iep { get; set; }
-        public virtual ParamedicalService? ParamedicalService { get; set; }
         public virtual ICollection<Itp> Itps { get; set; }
-
     }
 }
