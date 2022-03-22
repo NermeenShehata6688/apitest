@@ -299,9 +299,15 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(x => x.Goal, op => op.Ignore())
            .ReverseMap();
 
-            //.ForMember(x => x.ObjectiveEvaluationProcesses, op => op.Ignore())
-            //.ForMember(x => x.ObjectiveSkills, op => op.Ignore())
-            //.ForMember(x => x.Activities, op => op.Ignore());
+            CreateMap<Objective, HistoricalSkillsDto>()
+          .ForMember(dist => dist.YearName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Iep == null ? "" : c.Goal.Iep.AcadmicYear == null ? "" : c.Goal.Iep.AcadmicYear.Name))
+          .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Iep == null ? "" : c.Goal.Iep.Term == null ? "" : c.Goal.Iep.Term.Name))
+          .ForMember(dist => dist.ObjSkillsNumbers, opt => opt.MapFrom(c => c.ObjectiveSkills.ToList().Select(c => c.Skill == null ? 0 : c.Skill.SkillNumber == null ? 0 : c.Skill.SkillNumber)))
+          .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Name))
+          .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Goal == null ? "" : c.Goal.Strand == null ? "" : c.Goal.Strand.Area == null ? "" : c.Goal.Strand.Area.Name))
+           .ReverseMap()
+          .ForMember(x => x.Goal, op => op.Ignore());
+         
 
             CreateMap<Objective, GetObjectiveDto>()
            .ForMember(dist => dist.EvaluationProcessName, opt => opt.MapFrom(c => c.ObjectiveEvaluationProcesses.ToList().Select(x => x.SkillEvaluation == null ? "" : x.SkillEvaluation.Name).Distinct()))

@@ -679,25 +679,17 @@ namespace IesSchool.Core.Services
                 var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3, null,null,0, 100000, true).Items.Select(x=> x.Id).ToArray();
                 if (studentIeps.Count()>0)
                 {
-                    var studentObjectives = _uow.GetRepository<Objective>().GetList(x => studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value), null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
-                    if (studentObjectives.Count() > 0)
-                    {
-                        var studentObjectiveSkill = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId!= null&& studentObjectives.Contains(x.ObjectiveId.Value == null?0: x.ObjectiveId.Value), null, null, 0, 100000, true).Items.Select(x => x.SkillId).Distinct().ToArray();
-                        if (studentObjectiveSkill.Count()>0)
-                        {
-                            var studentSkill = _uow.GetRepository<Skill>().GetList(x => x.Id != null && studentObjectiveSkill.Contains(x.Id), null, x=>x.Include(x => x.Strand).ThenInclude((x => x.Area)), 0, 100000, true);
-                            if (studentSkill.Items.Count()>0)
-                            {
-                                var mapper = _mapper.Map<PaginateDto<SkillDto>>(studentSkill);
-                                var mappers = mapper.Items.Distinct();
+                    var studentObjectives = _uow.GetRepository<Objective>().GetList(x => studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value)&& x.IsDeleted!= true, null,
+                        x=> x.Include(x => x.Goal).ThenInclude(x => x.Iep).ThenInclude(x => x.AcadmicYear)
+                        .Include(x => x.Goal).ThenInclude(x => x.Iep).ThenInclude(x => x.Term)
 
-                                return new ResponseDto { Status = 1, Message = "Student Is Active State Has Changed", Data = mappers };
-                            }
-                            else
-                                return new ResponseDto { Status = 1, Message = "null" };
-                        }
-                        else
-                            return new ResponseDto { Status = 1, Message = "null" };
+                        .Include(x => x.ObjectiveSkills).ThenInclude(x => x.Skill)
+                        .Include(x => x.Goal).ThenInclude(x => x.Strand).ThenInclude(x => x.Area), 0, 100000, true);
+
+                    if (studentObjectives!= null)
+                    {
+                        var mapper = _mapper.Map<PaginateDto<HistoricalSkillsDto>>(studentObjectives);
+                        return new ResponseDto { Status = 1, Message = "Success" ,Data= mapper };
                     }
                     else
                         return new ResponseDto { Status = 1, Message = "null" };
@@ -785,6 +777,45 @@ namespace IesSchool.Core.Services
             }
         }
 
+        #region Old
+        //public ResponseDto GetStudentHistoricalSkills(int studentId)
+        //{
+        //    try
+        //    {
+        //        var studentIeps = _uow.GetRepository<Iep>().GetList(x => x.StudentId == studentId && x.IsDeleted != true && x.Status == 3, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
+        //        if (studentIeps.Count() > 0)
+        //        {
+        //            var studentObjectives = _uow.GetRepository<Objective>().GetList(x => studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value), null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
+        //            if (studentObjectives.Count() > 0)
+        //            {
+        //                var studentObjectiveSkill = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId != null && studentObjectives.Contains(x.ObjectiveId.Value == null ? 0 : x.ObjectiveId.Value), null, null, 0, 100000, true).Items.Select(x => x.SkillId).Distinct().ToArray();
+        //                if (studentObjectiveSkill.Count() > 0)
+        //                {
+        //                    var studentSkill = _uow.GetRepository<Skill>().GetList(x => x.Id != null && studentObjectiveSkill.Contains(x.Id), null, x => x.Include(x => x.Strand).ThenInclude((x => x.Area)), 0, 100000, true);
+        //                    if (studentSkill.Items.Count() > 0)
+        //                    {
+        //                        var mapper = _mapper.Map<PaginateDto<SkillDto>>(studentSkill);
+        //                        var mappers = mapper.Items.Distinct();
 
+        //                        return new ResponseDto { Status = 1, Message = "Student Is Active State Has Changed", Data = mappers };
+        //                    }
+        //                    else
+        //                        return new ResponseDto { Status = 1, Message = "null" };
+        //                }
+        //                else
+        //                    return new ResponseDto { Status = 1, Message = "null" };
+        //            }
+        //            else
+        //                return new ResponseDto { Status = 1, Message = "null" };
+        //        }
+        //        else
+        //            return new ResponseDto { Status = 1, Message = "null" };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+        //    }
+        //}
+        #endregion
     }
 }

@@ -29,10 +29,10 @@ namespace IesSchool.Core.IServices
         public string IxpReportHTML(int ixpId);
 
         public ResponseDto IepLpReportPdfPreview(int iepId);
-        public string IepReportPdfPreview(int iepId);
-        public string IepProgressReportPdfPreview(int iepProgressReportId);
-        public string ItpReportPdfPreview(int itpId);
-        public string ItpProgressReportPdfPreview(int itpProgressReportId);
-        public string IxpReportPdfPreview(int ixpId);
+        public ResponseDto IepReportPdfPreview(int iepId);
+        public ResponseDto IepProgressReportPdfPreview(int iepProgressReportId);
+        public ResponseDto ItpReportPdfPreview(int itpId);
+        public ResponseDto ItpProgressReportPdfPreview(int itpProgressReportId);
+        public ResponseDto IxpReportPdfPreview(int ixpId);
     }
 }

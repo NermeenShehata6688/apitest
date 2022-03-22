@@ -5348,7 +5348,6 @@ namespace IesSchool.Core.Services
 
 					if (mapper == null)
 					{
-						//MemoryStream stream1 = new MemoryStream();
 						return null;
 					}
 					if (AllIepObjectives != null && AllIepObjectives.Items.Count() > 0)
@@ -5686,7 +5685,7 @@ namespace IesSchool.Core.Services
 				throw;
 			}
 		}
-		public string IepReportPdfPreview(int iepId)
+		public ResponseDto IepReportPdfPreview(int iepId)
 		{
 			try
 			{
@@ -6265,8 +6264,7 @@ namespace IesSchool.Core.Services
 					}
 					else
 					{
-						MemoryStream stream1 = new MemoryStream();
-						return "";
+						return null;
 					}
 					lastRow = worksheet.Rows.Length;
 					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
@@ -6302,7 +6300,8 @@ namespace IesSchool.Core.Services
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
 					}
-					return fullpath;
+					return new ResponseDto { Status = 1, Data = fullpath.ToString(), Message = fullpath.ToString() };
+
 				}
 			}
 			catch (Exception ex)
@@ -6311,7 +6310,7 @@ namespace IesSchool.Core.Services
 				throw;
 			}
 		}
-		public string IepProgressReportPdfPreview(int iepProgressReportId)
+		public ResponseDto IepProgressReportPdfPreview(int iepProgressReportId)
 		{
 			try
 			{
@@ -6674,7 +6673,7 @@ namespace IesSchool.Core.Services
 					}
 					else
 					{
-						return "";
+						return null; 
 					}
 					#region General
 					lastRow = worksheet.Rows.Length;
@@ -6716,7 +6715,8 @@ namespace IesSchool.Core.Services
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
 					}
-					return fullpath;
+					return new ResponseDto { Status = 1, Data = fullpath.ToString(), Message = fullpath.ToString() };
+
 				}
 			}
 			catch (Exception ex)
@@ -6724,7 +6724,7 @@ namespace IesSchool.Core.Services
 				throw;
 			}
 		}
-		public string ItpReportPdfPreview(int itpId)
+		public ResponseDto ItpReportPdfPreview(int itpId)
 		{
 			try
 			{
@@ -7143,7 +7143,7 @@ namespace IesSchool.Core.Services
 					}
 					else
 					{
-						return "";
+						return null;
 					}
 					lastRow = worksheet.Rows.Length;
 					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
@@ -7182,7 +7182,8 @@ namespace IesSchool.Core.Services
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
 					}
-					return fullpath;
+					return new ResponseDto { Status = 1, Data = fullpath.ToString(), Message = fullpath.ToString() };
+
 				}
 			}
 			catch (Exception ex)
@@ -7191,7 +7192,7 @@ namespace IesSchool.Core.Services
 				throw;
 			}
 		}
-		public string ItpProgressReportPdfPreview(int itpProgressReportId)
+		public ResponseDto ItpProgressReportPdfPreview(int itpProgressReportId)
 		{
 			try
 			{
@@ -7451,7 +7452,7 @@ namespace IesSchool.Core.Services
 					}
 					else
 					{
-						return "";
+						return null;
 					}
 					lastRow = worksheet.Rows.Length;
 					worksheet.Range["A1:BE" + (lastRow)].WrapText = true;
@@ -7489,7 +7490,8 @@ namespace IesSchool.Core.Services
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
 					}
-					return fullpath;
+					return new ResponseDto { Status = 1, Data = fullpath.ToString(), Message = fullpath.ToString() };
+
 				}
 			}
 			catch (Exception ex)
@@ -7498,7 +7500,7 @@ namespace IesSchool.Core.Services
 				throw;
 			}
 		}
-		public string IxpReportPdfPreview(int ixpId)
+		public ResponseDto IxpReportPdfPreview(int ixpId)
 		{
 			try
 			{
@@ -7794,7 +7796,7 @@ namespace IesSchool.Core.Services
 					}
 					else
 					{
-						return "";
+						return null;
 					}
 					lastRow = worksheet.Rows.Length;
 					worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
@@ -7831,7 +7833,7 @@ namespace IesSchool.Core.Services
 						string host = _httpContextAccessor.HttpContext.Request.Host.Value;
 						fullpath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{host}/tempFiles/{fileName}.pdf";
 					}
-					return fullpath;
+					return new ResponseDto { Status = 1, Data = fullpath.ToString(), Message = fullpath.ToString() };
 				}
 			}
 			catch (Exception ex)
