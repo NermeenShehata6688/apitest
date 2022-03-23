@@ -207,5 +207,31 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public IActionResult GetIepsForExTeacher(int teacherId)
+        {
+            try
+            {
+                var all = _ixpService.GetIepsForExTeacher(teacherId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult CreateIxp(int iepExtraCurricularId)
+        {
+            try
+            {
+                var all = _ixpService.CreateIxp(iepExtraCurricularId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

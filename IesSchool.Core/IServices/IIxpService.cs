@@ -25,5 +25,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto AddIxpExtraCurricular(IxpExtraCurricularDto ixpExtraCurricularDto);
         public ResponseDto EditIxpExtraCurricular(IxpExtraCurricularDto ixpExtraCurricularDto);
         public ResponseDto DeleteIxpExtraCurricular(int ixpExtraCurricularId);
+
+        public ResponseDto GetIepsForExTeacher(int teacherId);
+        public ResponseDto CreateIxp(int iepExtraCurricularId);
     }
 }
