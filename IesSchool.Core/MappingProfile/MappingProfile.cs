@@ -200,7 +200,9 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(dist => dist.ExTeacherName, opt => opt.MapFrom(c => c.ExTeacher == null ? "" : c.ExTeacher.Name))
             .ForMember(dist => dist.ExtraCurricularName, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" : c.ExtraCurricular.Name))
             .ReverseMap()
-             .ForMember(x => x.ExtraCurricular, op => op.Ignore());
+             .ForMember(x => x.ExtraCurricular, op => op.Ignore())
+             .ForMember(x => x.Iep, op => op.Ignore())
+             .ForMember(x => x.ExTeacher, op => op.Ignore());
 
             CreateMap<IepProgressReport, IepProgressReportDto>()
 
@@ -498,6 +500,7 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap()
 
              .ForMember(x => x.Student, op => op.Ignore())
+            // .ForMember(x => x.Iep, op => op.Ignore())
              .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
              .ForMember(x => x.HeadOfEducation, op => op.Ignore())
              .ForMember(x => x.AcadmicYear, op => op.Ignore())
