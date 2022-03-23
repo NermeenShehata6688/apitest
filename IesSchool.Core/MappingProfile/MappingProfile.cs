@@ -204,6 +204,16 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.Iep, op => op.Ignore())
              .ForMember(x => x.ExTeacher, op => op.Ignore());
 
+            CreateMap<IepExtraCurricular, IepExtraTeacherDto>()
+           .ForMember(dist => dist.ExtraCurricularName, opt => opt.MapFrom(c => c.ExtraCurricular == null ? "" : c.ExtraCurricular.Name))
+           .ForMember(dist => dist.IepStudent, opt => opt.MapFrom(c => c.Iep == null ? "" : c.Iep.Student == null ? "" : c.Iep.Student.Name))
+           .ForMember(dist => dist.IepTerm, opt => opt.MapFrom(c => c.Iep == null ? "" : c.Iep.Term == null ? "" : c.Iep.Term.Name))
+           .ForMember(dist => dist.IepYear, opt => opt.MapFrom(c => c.Iep == null ? "" : c.Iep.AcadmicYear == null ? "" : c.Iep.AcadmicYear.Name))
+           .ReverseMap()
+            .ForMember(x => x.ExtraCurricular, op => op.Ignore())
+            .ForMember(x => x.Iep, op => op.Ignore())
+            .ForMember(x => x.ExTeacher, op => op.Ignore());
+
             CreateMap<IepProgressReport, IepProgressReportDto>()
 
             .ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name))
