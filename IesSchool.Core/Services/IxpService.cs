@@ -56,7 +56,9 @@ namespace IesSchool.Core.Services
                     x => x.Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
-                     .Include(s => s.IxpExtraCurriculars).ThenInclude(s => s.ExtraCurricular), 0, 100000, true);
+                     .Include(s => s.IxpExtraCurriculars)
+                    // .ThenInclude(s => s.ExtraCurricular)
+                     , 0, 100000, true);
                 var AllIxps = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
                 if (ixpSearchDto.Student_Id != null)
                 {
@@ -109,8 +111,8 @@ namespace IesSchool.Core.Services
             {
                 var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
                     x => x
-                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                    .Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
+                    //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                    //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term));
@@ -295,7 +297,10 @@ namespace IesSchool.Core.Services
             try
             {
                 var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().GetList(x => x.IxpId == ixpId,null,
-                    x=> x.Include(x => x.ExtraCurricular).Include(x => x.Teacher), 0, 100000, true
+                    //x=> x.Include(x => x.ExtraCurricular)
+                    //.Include(x => x.Teacher)
+                    null
+                    , 0, 100000, true
                 );
                 var mapper = _mapper.Map<PaginateDto<IxpExtraCurricularDto>>(ixpExtraCurricular);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
@@ -311,7 +316,9 @@ namespace IesSchool.Core.Services
             {
                 if (ixpExtraCurricularId != 0)
                 {
-                    var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().Single(x => x.Id == ixpExtraCurricularId , null, x => x.Include(s => s.ExtraCurricular).Include(s => s.Teacher));
+                    var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().Single(x => x.Id == ixpExtraCurricularId , null, null
+                        //x => x.Include(s => s.ExtraCurricular).Include(s => s.Teacher)
+                        );
                     var mapper = _mapper.Map<IxpExtraCurricularDto>(ixpExtraCurricular);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }

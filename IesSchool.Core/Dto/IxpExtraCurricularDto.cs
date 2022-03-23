@@ -10,8 +10,6 @@ namespace IesSchool.Core.Dto
     {
         public int Id { get; set; }
         public int? IxpId { get; set; }
-        public int? ExtraCurricularId { get; set; }
-        public int? TeacherId { get; set; }
         public string? Goal { get; set; }
         public string? Strategy { get; set; }
         public int? Indication { get; set; }

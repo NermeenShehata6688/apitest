@@ -28,6 +28,10 @@ namespace IesSchool.Core.Dto
         public string? FooterNotes { get; set; }
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
+        public int? ExtraCurricularId { get; set; }
+        public int? ExTeacherId { get; set; }
+        public int? IepextraCurricularId { get; set; }
+
 
         public string? StudentName { get; set; }
         public string? AcadmicYearName { get; set; }

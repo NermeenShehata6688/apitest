@@ -6,16 +6,33 @@ namespace IesSchool.Context.Modelss
     public partial class User
     {
         public User()
-        {   
-           
+        {
+            EventTeachers = new HashSet<EventTeacher>();
+            IepExtraCurriculars = new HashSet<IepExtraCurricular>();
+            IepHeadOfDepartmentNavigations = new HashSet<Iep>();
+            IepHeadOfEducationNavigations = new HashSet<Iep>();
             IepParamedicalServices = new HashSet<IepParamedicalService>();
-          
-            
-          
-           
+            IepProgressReportHeadOfEducations = new HashSet<IepProgressReport>();
+            IepProgressReportTeachers = new HashSet<IepProgressReport>();
+            IepTeachers = new HashSet<Iep>();
+            ItpHeadOfDepartments = new HashSet<Itp>();
+            ItpHeadOfEducations = new HashSet<Itp>();
+            ItpProgressReportHeadOfEducations = new HashSet<ItpProgressReport>();
+            ItpProgressReportTeachers = new HashSet<ItpProgressReport>();
+            ItpProgressReportTherapists = new HashSet<ItpProgressReport>();
+            ItpTherapists = new HashSet<Itp>();
+            IxpExTeachers = new HashSet<Ixp>();
+            IxpHeadOfDepartments = new HashSet<Ixp>();
+            IxpHeadOfEducations = new HashSet<Ixp>();
+            LogComments = new HashSet<LogComment>();
+            StudentExtraTeachers = new HashSet<StudentExtraTeacher>();
+            StudentParents = new HashSet<Student>();
             StudentTeachers = new HashSet<Student>();
-           
-           
+            StudentTherapists = new HashSet<StudentTherapist>();
+            TherapistParamedicalServices = new HashSet<TherapistParamedicalService>();
+            UserAssistants = new HashSet<UserAssistant>();
+            UserAttachments = new HashSet<UserAttachment>();
+            UserExtraCurriculars = new HashSet<UserExtraCurricular>();
         }
 
         public int Id { get; set; }
@@ -52,6 +69,7 @@ namespace IesSchool.Context.Modelss
         public virtual Country? Nationality { get; set; }
         public virtual AspNetUser AspNetUser { get; set; } = null!;
         public virtual ICollection<EventTeacher> EventTeachers { get; set; }
+        public virtual ICollection<IepExtraCurricular> IepExtraCurriculars { get; set; }
         public virtual ICollection<Iep> IepHeadOfDepartmentNavigations { get; set; }
         public virtual ICollection<Iep> IepHeadOfEducationNavigations { get; set; }
         public virtual ICollection<IepParamedicalService> IepParamedicalServices { get; set; }
@@ -64,7 +82,7 @@ namespace IesSchool.Context.Modelss
         public virtual ICollection<ItpProgressReport> ItpProgressReportTeachers { get; set; }
         public virtual ICollection<ItpProgressReport> ItpProgressReportTherapists { get; set; }
         public virtual ICollection<Itp> ItpTherapists { get; set; }
-        public virtual ICollection<IxpExtraCurricular> IxpExtraCurriculars { get; set; }
+        public virtual ICollection<Ixp> IxpExTeachers { get; set; }
         public virtual ICollection<Ixp> IxpHeadOfDepartments { get; set; }
         public virtual ICollection<Ixp> IxpHeadOfEducations { get; set; }
         public virtual ICollection<LogComment> LogComments { get; set; }

@@ -30,8 +30,13 @@ namespace IesSchool.Context.Modelss
         public string? FooterNotes { get; set; }
         public string? StudentNotes { get; set; }
         public bool? IsPublished { get; set; }
+        public int? ExtraCurricularId { get; set; }
+        public int? ExTeacherId { get; set; }
+        public int? IepextraCurricularId { get; set; }
 
         public virtual AcadmicYear? AcadmicYear { get; set; }
+        public virtual User? ExTeacher { get; set; }
+        public virtual ExtraCurricular? ExtraCurricular { get; set; }
         public virtual User? HeadOfDepartment { get; set; }
         public virtual User? HeadOfEducation { get; set; }
         public virtual Student? Student { get; set; }
