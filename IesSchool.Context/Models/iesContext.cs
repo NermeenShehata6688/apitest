@@ -691,8 +691,27 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.Iepid)
                     .HasConstraintName("FK_IepAssistant_IEP");
             });
-
             modelBuilder.Entity<IepExtraCurricular>(entity =>
+            {
+                entity.ToTable("IEP_ExtraCurricular");
+
+                entity.Property(e => e.Iepid).HasColumnName("IEPId");
+
+                entity.HasOne(d => d.ExTeacher)
+                    .WithMany(p => p.IepExtraCurriculars)
+                    .HasForeignKey(d => d.ExTeacherId)
+                    .HasConstraintName("FK_IEP_ExtraCurricular_User");
+
+                entity.HasOne(d => d.ExtraCurricular)
+                    .WithMany(p => p.IepExtraCurriculars)
+                    .HasForeignKey(d => d.ExtraCurricularId)
+                    .HasConstraintName("FK_IEP_ExtraCurricular_ExtraCurricular");
+
+                entity.HasOne(d => d.Iep)
+                    .WithMany(p => p.IepExtraCurriculars)
+                    .HasForeignKey(d => d.Iepid)
+                    .HasConstraintName("FK_IEP_ExtraCurricular_IEP");
+            }); modelBuilder.Entity<IepExtraCurricular>(entity =>
             {
                 entity.ToTable("IEP_ExtraCurricular");
 
@@ -1002,6 +1021,11 @@ namespace IesSchool.Context.Models
                     .WithMany(p => p.IxpHeadOfEducations)
                     .HasForeignKey(d => d.HeadOfEducationId)
                     .HasConstraintName("FK_IXP_HeadOfEducation");
+
+                entity.HasOne(d => d.IepextraCurricular)
+                    .WithMany(p => p.Ixps)
+                    .HasForeignKey(d => d.IepextraCurricularId)
+                    .HasConstraintName("FK_IXP_IEP_ExtraCurricular");
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Ixps)

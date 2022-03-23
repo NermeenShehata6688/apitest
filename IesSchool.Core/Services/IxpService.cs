@@ -56,7 +56,7 @@ namespace IesSchool.Core.Services
                     x => x.Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
-                     .Include(s => s.IxpExtraCurriculars)
+                    //.Include(s => s.IxpExtraCurriculars)
                     // .ThenInclude(s => s.ExtraCurricular)
                      , 0, 100000, true);
                 var AllIxps = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;

@@ -39,6 +39,7 @@ namespace IesSchool.Context.Modelss
         public virtual ExtraCurricular? ExtraCurricular { get; set; }
         public virtual User? HeadOfDepartment { get; set; }
         public virtual User? HeadOfEducation { get; set; }
+        public virtual IepExtraCurricular? IepextraCurricular { get; set; }
         public virtual Student? Student { get; set; }
         public virtual Term? Term { get; set; }
         public virtual ICollection<IxpExtraCurricular> IxpExtraCurriculars { get; set; }

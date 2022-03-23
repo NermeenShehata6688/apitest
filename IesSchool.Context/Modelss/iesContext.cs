@@ -951,6 +951,11 @@ namespace IesSchool.Context.Modelss
                     .HasForeignKey(d => d.HeadOfEducationId)
                     .HasConstraintName("FK_IXP_HeadOfEducation");
 
+                entity.HasOne(d => d.IepextraCurricular)
+                    .WithMany(p => p.Ixps)
+                    .HasForeignKey(d => d.IepextraCurricularId)
+                    .HasConstraintName("FK_IXP_IEP_ExtraCurricular");
+
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Ixps)
                     .HasForeignKey(d => d.StudentId)
