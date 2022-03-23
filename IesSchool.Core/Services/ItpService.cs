@@ -133,11 +133,17 @@ namespace IesSchool.Core.Services
             {
                 if (itpDto != null)
                 {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+
                     itpDto.IsDeleted = false;
                     itpDto.CreatedOn = DateTime.Now;
                     var mapper = _mapper.Map<Itp>(itpDto);
                     _uow.GetRepository<Itp>().Add(mapper);
                     _uow.SaveChanges();
+
+                    var cmd = $"UPDATE IEP_ParamedicalService SET IsItpCreated = 1 Where Id ="+ itpDto.IepparamedicalServiceId;
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    transaction.Commit();
                     itpDto.Id = mapper.Id;
                     return new ResponseDto { Status = 1, Message = "Itp Added  Seccessfuly", Data = itpDto };
                 }
