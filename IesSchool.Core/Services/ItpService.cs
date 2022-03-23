@@ -666,7 +666,7 @@ namespace IesSchool.Core.Services
                  .Include(x => x.Iep).ThenInclude(x => x.Term), 0, 100000, true);
 
                 var mapper = _mapper.Map<PaginateDto<IepParamedicalCreateItpDto>>(iepParamedicalServices);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper.Items };
 
             }
             catch (Exception ex)
