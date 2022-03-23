@@ -61,8 +61,8 @@ namespace IesSchool.Core.Services
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                     AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(null, null, null, 0, 1000000, true),
                     AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
+                    AllExtraCurricularsTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
                     TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-
                 };
                 var mapper = _mapper.Map<IepHelper2Dto>(iepHelper);
 
