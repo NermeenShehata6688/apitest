@@ -432,7 +432,7 @@ namespace IesSchool.Core.Services
                  .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
                  .Include(x => x.Iep).ThenInclude(x => x.Term));
 
-                var mapper = _mapper.Map<IepParamedicalCreateItpDto>(iepExtraCurricular);
+                var mapper = _mapper.Map<IepExtraCreateIxpDto>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
             }
