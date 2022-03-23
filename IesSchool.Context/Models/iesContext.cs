@@ -1364,7 +1364,7 @@ namespace IesSchool.Context.Models
                     .HasConstraintName("FK_Students_State");
 
                 entity.HasOne(d => d.Teacher)
-                    .WithMany(p => p.Students)
+                    .WithMany(p => p.StudentTeachers)
                     .HasForeignKey(d => d.TeacherId)
                     .HasConstraintName("FK_Students_Teacher");
                 entity.HasOne(d => d.Parent)

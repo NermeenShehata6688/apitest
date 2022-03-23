@@ -5,6 +5,14 @@ namespace IesSchool.Context.Modelss
 {
     public partial class Itp
     {
+        public Itp()
+        {
+            ItpGoalObjectives = new HashSet<ItpGoalObjective>();
+            ItpGoals = new HashSet<ItpGoal>();
+            ItpProgressReports = new HashSet<ItpProgressReport>();
+            ItpStrategies = new HashSet<ItpStrategy>();
+        }
+
         public int Id { get; set; }
         public int? StudentId { get; set; }
         public int? ParamedicalServiceId { get; set; }
@@ -34,9 +42,18 @@ namespace IesSchool.Context.Modelss
         public bool? IsDeleted { get; set; }
         public int? IepparamedicalServiceId { get; set; }
 
+        public virtual AcadmicYear? AcadmicYear { get; set; }
         public virtual User? HeadOfDepartment { get; set; }
         public virtual User? HeadOfEducation { get; set; }
         public virtual IepParamedicalService? IepparamedicalService { get; set; }
+        public virtual ParamedicalService? ParamedicalService { get; set; }
+        public virtual Student? Student { get; set; }
+        public virtual Term? Term { get; set; }
         public virtual User? Therapist { get; set; }
+        public virtual Department? TherapistDepartment { get; set; }
+        public virtual ICollection<ItpGoalObjective> ItpGoalObjectives { get; set; }
+        public virtual ICollection<ItpGoal> ItpGoals { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReports { get; set; }
+        public virtual ICollection<ItpStrategy> ItpStrategies { get; set; }
     }
 }

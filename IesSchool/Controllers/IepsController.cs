@@ -34,6 +34,20 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        // [ResponseCache(Duration = 800)]
+        [HttpGet]
+        public IActionResult GetIepsHelper2()
+        {
+            try
+            {
+                var all = _iepService.GetIepsHelper2();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         // GET: api/<IepsController>
         [HttpGet]
         public IActionResult GetIeps([FromQuery] IepSearchDto iepSearchDto)

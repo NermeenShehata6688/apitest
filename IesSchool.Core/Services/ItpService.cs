@@ -656,6 +656,25 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        public ResponseDto CreateItp(int iepParamedicalServiceId)
+        {
+            try
+            {
+                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Id == iepParamedicalServiceId && x.IsItpCreated != true, null,
+                 x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
+                 .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
+                 .Include(x => x.Iep).ThenInclude(x => x.Term)
+                 .Include(x => x.ParamedicalService), 0, 100000, true);
+
+                var mapper = _mapper.Map<PaginateDto<IepParamedicalCreateItpDto>>(iepParamedicalServices);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         #region NotNeededNow
         //public ResponseDto GetItpObjectives()
         //{

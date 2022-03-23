@@ -25,7 +25,7 @@ namespace IesSchool.Context.Models
             IxpHeadOfEducations = new HashSet<Ixp>();
             LogComments = new HashSet<LogComment>();
             StudentTherapists = new HashSet<StudentTherapist>();
-            Students = new HashSet<Student>();
+          //  Students = new HashSet<Student>();
             TherapistParamedicalServices = new HashSet<TherapistParamedicalService>();
             UserAssistants = new HashSet<UserAssistant>();
             UserAttachments = new HashSet<UserAttachment>();
@@ -33,7 +33,7 @@ namespace IesSchool.Context.Models
             StudentExtraTeachers = new HashSet<StudentExtraTeacher>();
             StudentParents = new HashSet<Student>();
             IepParamedicalServices = new HashSet<IepParamedicalService>();
-            //  StudentTeachers = new HashSet<Student>();
+              StudentTeachers = new HashSet<Student>();
         }
 
         public int Id { get; set; }
@@ -87,13 +87,13 @@ namespace IesSchool.Context.Models
         public virtual ICollection<Ixp> IxpHeadOfEducations { get; set; }
         public virtual ICollection<LogComment> LogComments { get; set; }
         public virtual ICollection<StudentTherapist> StudentTherapists { get; set; }
-        public virtual ICollection<Student> Students { get; set; }
+       // public virtual ICollection<Student> Students { get; set; }
         public virtual ICollection<TherapistParamedicalService> TherapistParamedicalServices { get; set; }
         public virtual ICollection<UserAssistant> UserAssistants { get; set; }
         public virtual ICollection<UserAttachment> UserAttachments { get; set; }
         public virtual ICollection<UserExtraCurricular> UserExtraCurriculars { get; set; }
         public virtual ICollection<StudentExtraTeacher> StudentExtraTeachers { get; set; }
         public virtual ICollection<Student> StudentParents { get; set; }
-        //  public virtual ICollection<Student> StudentTeachers { get; set; }
+          public virtual ICollection<Student> StudentTeachers { get; set; }
     }
 }

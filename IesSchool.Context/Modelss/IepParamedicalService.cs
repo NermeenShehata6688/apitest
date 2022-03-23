@@ -16,6 +16,8 @@ namespace IesSchool.Context.Modelss
         public int? TherapistId { get; set; }
         public bool? IsItpCreated { get; set; }
 
+        public virtual Iep? Iep { get; set; }
+        public virtual ParamedicalService? ParamedicalService { get; set; }
         public virtual User? Therapist { get; set; }
         public virtual ICollection<Itp> Itps { get; set; }
     }

@@ -36,19 +36,35 @@ namespace IesSchool.Core.Services
                     AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name,RoomNumber=x.RoomNumber, IsDeleted = x.IsDeleted }), x =>  x.IsTeacher == true, null, null, 0, 1000000, true),
                     AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),null, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x =>  x.IsHeadofEducation == true, null, null, 0, 1000000, true),
+                    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
+                    Setting = _uow.GetRepository<Setting>().Single(),
+                   
+                };
+                var mapper = _mapper.Map<IepHelperDto>(iepHelper);
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetIepsHelper2()
+        {
+            try
+            {
+                IepHelper2 iepHelper = new IepHelper2()
+                {
                     AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
                     AllStrands = _uow.GetRepository<Strand>().GetList(null, null, null, 0, 1000000, true),
-                   // AllSkills = _uow.GetRepository<Skill>().GetList(null, null, null, 0, 10, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
                     AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                     AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(null, null, null, 0, 1000000, true),
-                    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
-                    Setting = _uow.GetRepository<Setting>().Single(),
                     AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
                     TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
 
                 };
-                var mapper = _mapper.Map<IepHelperDto>(iepHelper);
+                var mapper = _mapper.Map<IepHelper2Dto>(iepHelper);
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

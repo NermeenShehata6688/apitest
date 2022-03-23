@@ -11,6 +11,7 @@ namespace IesSchool.Core.IServices
     public interface IIepService
     {
         public ResponseDto GetIepsHelper();
+        public ResponseDto GetIepsHelper2();
         public ResponseDto GetIeps(IepSearchDto iepSearchDto);
         public ResponseDto GetIepById(int iepId);
         public ResponseDto AddIep(IepDto iepDto);

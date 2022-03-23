@@ -301,6 +301,19 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        
+        [HttpGet]
+        public IActionResult CreateItp(int iepParamedicalServiceId)
+        {
+            try
+            {
+                var all = _itpService.CreateItp(iepParamedicalServiceId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

@@ -16,18 +16,10 @@ namespace IesSchool.Core.Dto
         public IPaginate<User> AllTeachers { get; set; }
         public IPaginate<Assistant> AllAssistants { get; set; }
         public IPaginate<User> AllHeadOfEducations { get; set; }
-        public IPaginate<Area> AllAreas { get; set; }
-        public IPaginate<Strand> AllStrands { get; set; }
-        public IPaginate<Skill> AllSkills { get; set; }
-        public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
-        public IPaginate<ExtraCurricular> AllExtraCurriculars { get; set; }
         public IPaginate<Department> AllDepartments { get; set; }
-        public IPaginate<SkillEvaluation> AllSkillEvaluations { get; set; }
+       
         public IPaginate<UserAssistant> AllTeacherAssistants { get; set; }
         public Setting Setting { get; set; }
-        public IPaginate<User> AllTherapist { get; set; }
-        public IPaginate<TherapistParamedicalService> TherapistParamedicalService { get; set; }
-
     }
     public class IepHelperDto
     {
@@ -37,18 +29,9 @@ namespace IesSchool.Core.Dto
         public PaginateDto<UserDto> AllTeachers { get; set; }
         public PaginateDto<AssistantDto> AllAssistants { get; set; }
         public PaginateDto<UserDto> AllHeadOfEducations { get; set; }
-        public PaginateDto<AreaDto> AllAreas { get; set; }
-        public PaginateDto<StrandDto> AllStrands { get; set; }
-        public PaginateDto<SkillDto> AllSkills { get; set; }
-        public PaginateDto<ParamedicalServiceDto> AllParamedicalServices { get; set; }
-        public PaginateDto<ExtraCurricularDto> AllExtraCurriculars { get; set; }
         public PaginateDto<DepartmentDto> AllDepartments { get; set; }
-        public PaginateDto<SkillEvaluationDto> AllSkillEvaluations { get; set; }
         public PaginateDto<UserAssistantDto> AllTeacherAssistants { get; set; }
         public SettingDto Setting { get; set; }
-        public PaginateDto<UserDto> AllTherapist { get; set; }
-        public PaginateDto<TherapistParamedicalServiceDto> TherapistParamedicalService { get; set; }
-
 
     }
 }

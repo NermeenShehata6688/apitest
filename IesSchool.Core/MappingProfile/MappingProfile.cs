@@ -189,6 +189,7 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(x => x.Term, op => op.Ignore());
 
             CreateMap<IepHelper, IepHelperDto>().ReverseMap();
+            CreateMap<IepHelper2, IepHelper2Dto>().ReverseMap();
             CreateMap<VwIep, VwIepDto>().ReverseMap();
             CreateMap<IepAssistant, IepAssistantDto>()
             .ForMember(dist => dist.AssistantName, opt => opt.MapFrom(c => c.Assistant == null ? "" : c.Assistant.Name))
@@ -420,6 +421,7 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.Term, op => op.Ignore())
              .ForMember(x => x.TherapistDepartment, op => op.Ignore())
              .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
+             .ForMember(x => x.IepparamedicalService, op => op.Ignore())
              .ForMember(x => x.HeadOfEducation, op => op.Ignore());
 
             CreateMap<ItpGoal, ItpGoalDto>().ReverseMap()
@@ -468,6 +470,15 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(x => x.Iep, op => op.Ignore())
             .ForMember(x => x.Therapist, op => op.Ignore())
            .ForMember(x => x.ParamedicalService, op => op.Ignore());
+
+            CreateMap<IepParamedicalService, IepParamedicalCreateItpDto>()
+          .ForMember(dist => dist.IepStudentId, opt => opt.MapFrom(c => c.Iep == null ? 0 : c.Iep.Student == null ? 0 : c.Iep.Student.Id))
+          .ForMember(dist => dist.IepYearId, opt => opt.MapFrom(c => c.Iep == null ? 0 : c.Iep.AcadmicYear == null ? 0 : c.Iep.AcadmicYear.Id))
+          .ForMember(dist => dist.IepTermId, opt => opt.MapFrom(c => c.Iep == null ? 0 : c.Iep.Term == null ? 0 : c.Iep.Term.Id))
+          .ReverseMap()
+          .ForMember(x => x.Iep, op => op.Ignore())
+           .ForMember(x => x.Therapist, op => op.Ignore())
+          .ForMember(x => x.ParamedicalService, op => op.Ignore());
 
             #endregion
             #region IXP

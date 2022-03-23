@@ -6,11 +6,16 @@ namespace IesSchool.Context.Modelss
     public partial class User
     {
         public User()
-        {
+        {   
+           
             IepParamedicalServices = new HashSet<IepParamedicalService>();
-            ItpHeadOfDepartments = new HashSet<Itp>();
-            ItpHeadOfEducations = new HashSet<Itp>();
-            ItpTherapists = new HashSet<Itp>();
+          
+            
+          
+           
+            StudentTeachers = new HashSet<Student>();
+           
+           
         }
 
         public int Id { get; set; }
@@ -43,9 +48,33 @@ namespace IesSchool.Context.Modelss
         public string? Phone2 { get; set; }
         public bool? IsActive { get; set; }
 
+        public virtual Department? Department { get; set; }
+        public virtual Country? Nationality { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; } = null!;
+        public virtual ICollection<EventTeacher> EventTeachers { get; set; }
+        public virtual ICollection<Iep> IepHeadOfDepartmentNavigations { get; set; }
+        public virtual ICollection<Iep> IepHeadOfEducationNavigations { get; set; }
         public virtual ICollection<IepParamedicalService> IepParamedicalServices { get; set; }
+        public virtual ICollection<IepProgressReport> IepProgressReportHeadOfEducations { get; set; }
+        public virtual ICollection<IepProgressReport> IepProgressReportTeachers { get; set; }
+        public virtual ICollection<Iep> IepTeachers { get; set; }
         public virtual ICollection<Itp> ItpHeadOfDepartments { get; set; }
         public virtual ICollection<Itp> ItpHeadOfEducations { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReportHeadOfEducations { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReportTeachers { get; set; }
+        public virtual ICollection<ItpProgressReport> ItpProgressReportTherapists { get; set; }
         public virtual ICollection<Itp> ItpTherapists { get; set; }
+        public virtual ICollection<IxpExtraCurricular> IxpExtraCurriculars { get; set; }
+        public virtual ICollection<Ixp> IxpHeadOfDepartments { get; set; }
+        public virtual ICollection<Ixp> IxpHeadOfEducations { get; set; }
+        public virtual ICollection<LogComment> LogComments { get; set; }
+        public virtual ICollection<StudentExtraTeacher> StudentExtraTeachers { get; set; }
+        public virtual ICollection<Student> StudentParents { get; set; }
+        public virtual ICollection<Student> StudentTeachers { get; set; }
+        public virtual ICollection<StudentTherapist> StudentTherapists { get; set; }
+        public virtual ICollection<TherapistParamedicalService> TherapistParamedicalServices { get; set; }
+        public virtual ICollection<UserAssistant> UserAssistants { get; set; }
+        public virtual ICollection<UserAttachment> UserAttachments { get; set; }
+        public virtual ICollection<UserExtraCurricular> UserExtraCurriculars { get; set; }
     }
 }
