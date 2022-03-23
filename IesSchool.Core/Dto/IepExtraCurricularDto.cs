@@ -14,5 +14,7 @@ namespace IesSchool.Core.Dto
         public int? ExTeacherId { get; set; }
         public bool? IsIxpCreated { get; set; }
         public string? ExtraCurricularName { get; set; }
+        public string? ExTeacherName { get; set; }
+
     }
 }

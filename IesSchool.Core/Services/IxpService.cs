@@ -404,43 +404,43 @@ namespace IesSchool.Core.Services
             }
         }
 
-        //public ResponseDto GetIepsForExTeacher(int teacherId)
-        //{
-        //    try
-        //    {
-        //        var iepParamedicalServices = _uow.GetRepository<Iepex>().GetList(x => x.TherapistId == therapistId && x.IsItpCreated != true, null,
-        //         x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
-        //         .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
-        //         .Include(x => x.Iep).ThenInclude(x => x.Term)
-        //         .Include(x => x.ParamedicalService), 0, 100000, true);
+        public ResponseDto GetIepsForExTeacher(int teacherId)
+        {
+            try
+            {
+                var iepExtraCurriculars = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.ExTeacherId == teacherId && x.IsIxpCreated != true, null,
+                 x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
+                 .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
+                 .Include(x => x.Iep).ThenInclude(x => x.Term)
+                 .Include(x => x.ExtraCurricular), 0, 100000, true);
 
-        //        var mapper = _mapper.Map<PaginateDto<IepParamedicalForTherapistDto>>(iepParamedicalServices);
-        //        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                var mapper = _mapper.Map<PaginateDto<IepExtraCurricularDto>>(iepExtraCurriculars);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-        //    }
-        //}
-        //public ResponseDto CreateItp(int iepParamedicalServiceId)
-        //{
-        //    try
-        //    {
-        //        var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().Single(x => x.Id == iepParamedicalServiceId && x.IsItpCreated != true, null,
-        //         x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
-        //         .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
-        //         .Include(x => x.Iep).ThenInclude(x => x.Term));
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto CreateIxp(int iepExtraCurricularId)
+        {
+            try
+            {
+                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().Single(x => x.Id == iepExtraCurricularId && x.IsIxpCreated != true, null,
+                 x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
+                 .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
+                 .Include(x => x.Iep).ThenInclude(x => x.Term));
 
-        //        var mapper = _mapper.Map<IepParamedicalCreateItpDto>(iepParamedicalServices);
-        //        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+                var mapper = _mapper.Map<IepParamedicalCreateItpDto>(iepExtraCurricular);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
 
     }
 }

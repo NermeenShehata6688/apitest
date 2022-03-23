@@ -152,6 +152,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
                .Include(s => s.IepParamedicalServices).ThenInclude(s => s.Therapist)
                .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
+               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExTeacher)
                .Include(s => s.Student).ThenInclude(s => s.Department)
                //.Include(s => s.Teacher)
               // .Include(s => s.HeadOfDepartmentNavigation)
