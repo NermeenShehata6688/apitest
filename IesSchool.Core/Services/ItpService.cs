@@ -660,13 +660,13 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Id == iepParamedicalServiceId && x.IsItpCreated != true, null,
+                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().Single(x => x.Id == iepParamedicalServiceId && x.IsItpCreated != true, null,
                  x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
                  .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
-                 .Include(x => x.Iep).ThenInclude(x => x.Term), 0, 100000, true);
+                 .Include(x => x.Iep).ThenInclude(x => x.Term));
 
-                var mapper = _mapper.Map<PaginateDto<IepParamedicalCreateItpDto>>(iepParamedicalServices);
-                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper.Items };
+                var mapper = _mapper.Map<IepParamedicalCreateItpDto>(iepParamedicalServices);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
             }
             catch (Exception ex)
