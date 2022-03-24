@@ -151,20 +151,20 @@ namespace IesSchool.Core.Services
                 {
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
                .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
-               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
-               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.Therapist)
-               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
-               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExTeacher)
+               .Include(s => s.IepParamedicalServices.Where(x=> x.IsDeleted!=true)).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Therapist)
+               .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
+               .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExTeacher)
                .Include(s => s.Student).ThenInclude(s => s.Department)
                //.Include(s => s.Teacher)
               // .Include(s => s.HeadOfDepartmentNavigation)
               // .Include(s => s.HeadOfEducationNavigation)
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
-               .Include(s => s.Goals).ThenInclude(s => s.Strand)
-               .Include(s => s.Goals).ThenInclude(s => s.Area)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Strand)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Area)
                );
                     var mapper = _mapper.Map<GetIepDto>(iep);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -943,7 +943,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId,null, x=> x.Include(x=>x.ParamedicalService).Include(x => x.Therapist));
+                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId&& x.IsDeleted!=true,null, x=> x.Include(x=>x.ParamedicalService).Include(x => x.Therapist));
                 var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalService);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -998,6 +998,7 @@ namespace IesSchool.Core.Services
                     IepParamedicalService iepParamedicalService = _uow.GetRepository<IepParamedicalService>().Single(x => x.Id == iepParamedicalServiceId);
                     iepParamedicalService.IsDeleted = true;
                     iepParamedicalService.DeletedOn = DateTime.Now;
+                    _uow.GetRepository<IepParamedicalService>().Update(iepParamedicalService);
 
                     Itp itp = _uow.GetRepository<Itp>().Single(x => x.IepparamedicalServiceId == iepParamedicalServiceId);
                     if (itp != null)
@@ -1018,7 +1019,6 @@ namespace IesSchool.Core.Services
                         }
                     }
 
-                    _uow.GetRepository<IepParamedicalService>().Update(iepParamedicalService);
                     _uow.SaveChanges();
                     transaction.Commit();
                     return new ResponseDto { Status = 1, Message = "Iep Paramedical Service Deleted Seccessfuly" };
@@ -1048,7 +1048,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId,null, x => x.Include(x => x.ExtraCurricular).Include(x => x.ExTeacher), 0, 100000, true);
+                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ExtraCurricular).Include(x => x.ExTeacher), 0, 100000, true);
                 var mapper = _mapper.Map < PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
