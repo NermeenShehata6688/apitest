@@ -977,7 +977,7 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<IepParamedicalService>(iepParamedicalServiceDto);
                 _uow.GetRepository<IepParamedicalService>().Update(mapper);
                 _uow.SaveChanges();
-                var cmd = $"update ITP set ParamedicalServiceId {iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId},TherapistDepartmentId={iepParamedicalServiceDto.TherapistDepartmentId} Where IEPParamedicalServiceId ={iepParamedicalServiceDto.Id}";
+                var cmd = $"update ITP set ParamedicalServiceId ={iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId},TherapistDepartmentId={iepParamedicalServiceDto.TherapistDepartmentId} Where IEPParamedicalServiceId ={iepParamedicalServiceDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 transaction.Commit();
                 iepParamedicalServiceDto.Id = mapper.Id;
