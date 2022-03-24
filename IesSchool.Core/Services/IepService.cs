@@ -1012,9 +1012,31 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var cmd = $"delete from IEP_ParamedicalService where Id={iepParamedicalServiceId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                return new ResponseDto { Status = 1, Message = "Iep Paramedical Service Deleted Seccessfuly" };
+                if (iepParamedicalServiceId>0)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    IepParamedicalService iepParamedicalService = _uow.GetRepository<IepParamedicalService>().Single(x => x.Id == iepParamedicalServiceId);
+                    iepParamedicalService.IsDeleted = true;
+                    iepParamedicalService.DeletedOn = DateTime.Now;
+
+                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.IepparamedicalServiceId == iepParamedicalServiceId);
+                    itp.IsDeleted = true;
+                    itp.DeletedOn = DateTime.Now;
+
+                    //ItpGoal itpGoal = _uow.GetRepository<ItpGoal>().Single(x => x.Id == itp.Id);
+                    //itpProgressReport.IsDeleted = true;
+                    //itpProgressReport.DeletedOn = DateTime.Now;
+
+                    ItpProgressReport itpProgressReport = _uow.GetRepository<ItpProgressReport>().Single(x => x.Id == itp.Id);
+                    itpProgressReport.IsDeleted = true;
+                    itpProgressReport.DeletedOn = DateTime.Now;
+
+                    _uow.GetRepository<IepParamedicalService>().Update(iepParamedicalService);
+                    _uow.SaveChanges();
+                    transaction.Commit();
+                    return new ResponseDto { Status = 1, Message = "Iep Paramedical Service Deleted Seccessfuly" };
+                }
+                    return new ResponseDto { Status = 0, Message = "null" };
             }
             catch (Exception ex)
             {

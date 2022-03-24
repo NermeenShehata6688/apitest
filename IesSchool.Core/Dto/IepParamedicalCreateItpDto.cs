@@ -13,6 +13,12 @@ namespace IesSchool.Core.Dto
         public int? ParamedicalServiceId { get; set; }
         public int? TherapistId { get; set; }
         public bool? IsItpCreated { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime? DeletedOn { get; set; }
+        public string? DeletedBy { get; set; }
+        public bool? IsDeleted { get; set; }
+
         public int? IepYearId { get; set; }
         public int? IepStudentId { get; set; }
         public int? IepTermId { get; set; }
