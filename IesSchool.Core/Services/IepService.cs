@@ -956,6 +956,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                iepParamedicalServiceDto.IsDeleted = false;
+                iepParamedicalServiceDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<IepParamedicalService>(iepParamedicalServiceDto);
                 _uow.GetRepository<IepParamedicalService>().Add(mapper);
                 _uow.SaveChanges();
@@ -972,11 +974,10 @@ namespace IesSchool.Core.Services
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
-
                 var mapper = _mapper.Map<IepParamedicalService>(iepParamedicalServiceDto);
                 _uow.GetRepository<IepParamedicalService>().Update(mapper);
                 _uow.SaveChanges();
-                var cmd = $"uupdate ITP set ParamedicalServiceId {iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId} Where IEPParamedicalServiceId ={iepParamedicalServiceDto.Id}";
+                var cmd = $"update ITP set ParamedicalServiceId {iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId},TherapistDepartmentId={iepParamedicalServiceDto.TherapistDepartmentId} Where IEPParamedicalServiceId ={iepParamedicalServiceDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 transaction.Commit();
                 iepParamedicalServiceDto.Id = mapper.Id;
@@ -1060,6 +1061,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                iepExtraCurricularDto.IsDeleted = false;
+                iepExtraCurricularDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<IepExtraCurricular>(iepExtraCurricularDto);
                 _uow.GetRepository<IepExtraCurricular>().Add(mapper);
                 _uow.SaveChanges();

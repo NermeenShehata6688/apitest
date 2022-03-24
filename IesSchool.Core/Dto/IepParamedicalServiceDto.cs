@@ -19,6 +19,8 @@ namespace IesSchool.Core.Dto
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
 
+        public int? TherapistDepartmentId { get; set; }
+
         public string? ParamedicalServiceName { get; set; }
         public string? TherapistName { get; set; }
     }
