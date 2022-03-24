@@ -64,6 +64,8 @@ namespace IesSchool.Core.Services
                     AllExtraCurricularsTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
                     TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
                     UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                    AllStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(null, null, null, 0, 1000000, true),
+                    AllStudentExtraTeacher = _uow.GetRepository<StudentExtraTeacher>().GetList(null, null, null, 0, 1000000, true),
                 };
                 var mapper = _mapper.Map<IepHelper2Dto>(iepHelper);
 
@@ -775,8 +777,6 @@ namespace IesSchool.Core.Services
             }
         }
         
-
-
         public ResponseDto ObjIsMasterd(ObjStatus statusDto)
         {
             try
