@@ -774,33 +774,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        //public ResponseDto ObjIsMasterd(int objId, bool IsMasterd)
-        //{
-        //    try
-        //    {
-        //        if (objId != 0)
-        //        {
-        //            Objective objective = _uow.GetRepository<Objective>().Single(x => x.Id == objId);
-        //            if (objective!=null)
-        //            {
-        //                objective.IsMasterd = IsMasterd;
-        //                _uow.GetRepository<Objective>().Update(objective);
-        //                _uow.SaveChanges();
-        //                return new ResponseDto { Status = 1, Message = "Objective Is Masterd Status Has Changed" };
-        //            }
-        //                return new ResponseDto { Status = 1, Message = "null" };
-
-        //        }
-        //        else
-        //        {
-        //            return new ResponseDto { Status = 1, Message = "null" };
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
-        //    }
-        //}
+        
 
 
         public ResponseDto ObjIsMasterd(ObjStatus statusDto)
@@ -997,9 +971,14 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                using var transaction = _iesContext.Database.BeginTransaction();
+
                 var mapper = _mapper.Map<IepParamedicalService>(iepParamedicalServiceDto);
                 _uow.GetRepository<IepParamedicalService>().Update(mapper);
                 _uow.SaveChanges();
+                var cmd = $"uupdate ITP set ParamedicalServiceId {iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId} Where IEPParamedicalServiceId ={iepParamedicalServiceDto.Id}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+                transaction.Commit();
                 iepParamedicalServiceDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Iep Paramedical Service Updated Seccessfuly", Data = iepParamedicalServiceDto };
             }
@@ -1096,9 +1075,16 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                using var transaction = _iesContext.Database.BeginTransaction();
+              
                 var mapper = _mapper.Map<IepExtraCurricular>(iepExtraCurricularDto);
                 _uow.GetRepository<IepExtraCurricular>().Update(mapper);
+
+                var cmd = $"update IXP set ExtraCurricularId = {iepExtraCurricularDto.ExtraCurricularId} , ExTeacherId ={iepExtraCurricularDto.ExTeacherId} Where IEPExtraCurricularId ={iepExtraCurricularDto.Id}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+
                 _uow.SaveChanges();
+                transaction.Commit();
                 iepExtraCurricularDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Iep Extra Curricular Updated Seccessfuly", Data = iepExtraCurricularDto };
             }
@@ -1566,6 +1552,33 @@ namespace IesSchool.Core.Services
 //    {
 //        itpGoalObjective.IsDeleted = true;
 //        itpGoalObjective.DeletedOn = DateTime.Now;
+//    }
+//}
+//public ResponseDto ObjIsMasterd(int objId, bool IsMasterd)
+//{
+//    try
+//    {
+//        if (objId != 0)
+//        {
+//            Objective objective = _uow.GetRepository<Objective>().Single(x => x.Id == objId);
+//            if (objective!=null)
+//            {
+//                objective.IsMasterd = IsMasterd;
+//                _uow.GetRepository<Objective>().Update(objective);
+//                _uow.SaveChanges();
+//                return new ResponseDto { Status = 1, Message = "Objective Is Masterd Status Has Changed" };
+//            }
+//                return new ResponseDto { Status = 1, Message = "null" };
+
+//        }
+//        else
+//        {
+//            return new ResponseDto { Status = 1, Message = "null" };
+//        }
+//    }
+//    catch (Exception ex)
+//    {
+//        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
 //    }
 //}
 #endregion
