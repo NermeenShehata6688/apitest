@@ -35,7 +35,7 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
-        public int? IepparamedicalServiceId { get; set; }
+      //  public int? IepparamedicalServiceId { get; set; }
 
         public string? StudentName { get; set; }
         public string? ParamediaclName { get; set; }

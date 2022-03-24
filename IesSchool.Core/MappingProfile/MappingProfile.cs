@@ -443,7 +443,7 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(x => x.Term, op => op.Ignore())
              .ForMember(x => x.TherapistDepartment, op => op.Ignore())
              .ForMember(x => x.HeadOfDepartment, op => op.Ignore())
-             .ForMember(x => x.IepparamedicalService, op => op.Ignore())
+            // .ForMember(x => x.IepparamedicalService, op => op.Ignore())
              .ForMember(x => x.HeadOfEducation, op => op.Ignore());
 
             CreateMap<ItpGoal, ItpGoalDto>().ReverseMap()

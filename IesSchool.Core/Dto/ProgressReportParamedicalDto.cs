@@ -11,7 +11,9 @@ namespace IesSchool.Core.Dto
         public int Id { get; set; }
         public int? ProgressReportId { get; set; }
         public int? ParamedicalServiceId { get; set; }
+        public int? IepParamedicalSerciveId { get; set; }
         public string? Comment { get; set; }
+
         public string? ParamedicalServiceName { get; set; }
         public string? ParamedicalServiceNameAr { get; set; }
         public string? StudentName { get; set; }

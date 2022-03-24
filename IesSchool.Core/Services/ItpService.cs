@@ -141,7 +141,7 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<Itp>().Add(mapper);
                     _uow.SaveChanges();
 
-                    var cmd = $"UPDATE IEP_ParamedicalService SET IsItpCreated = 1 Where Id ="+ itpDto.IepparamedicalServiceId;
+                    var cmd = $"UPDATE IEP_ParamedicalService SET IsItpCreated = 1 Where Id ="+ itpDto.Id;
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     transaction.Commit();
                     itpDto.Id = mapper.Id;

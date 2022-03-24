@@ -3252,7 +3252,8 @@ namespace IesSchool.Core.Services
                     var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
                         x => x.Include(x => x.Student).ThenInclude(x => x.Department)
                     .Include(x => x.Student).ThenInclude(x => x.Teacher)
-                    .Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+                    .Include(x => x.Therapist)
+					//.Include(x => x.TherapistDepartment)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.HeadOfEducation)
                     .Include(x => x.ParamedicalService)
@@ -3969,7 +3970,8 @@ namespace IesSchool.Core.Services
 					var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
 						x => x.Include(x => x.Student).ThenInclude(x => x.Department)
 					.Include(x => x.Student).ThenInclude(x => x.Teacher)
-					.Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+					.Include(x => x.Therapist)
+					.Include(x => x.TherapistDepartment)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
 					.Include(x => x.ParamedicalService)
@@ -6739,7 +6741,8 @@ namespace IesSchool.Core.Services
 					var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
 						x => x.Include(x => x.Student).ThenInclude(x => x.Department)
 					.Include(x => x.Student).ThenInclude(x => x.Teacher)
-					.Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+					.Include(x => x.Therapist)
+					.Include(x => x.TherapistDepartment)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
 					.Include(x => x.ParamedicalService)

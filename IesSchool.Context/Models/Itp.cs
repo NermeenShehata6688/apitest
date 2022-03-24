@@ -40,12 +40,11 @@ namespace IesSchool.Context.Models
         public DateTime? DeletedOn { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
-        public int? IepparamedicalServiceId { get; set; }
 
         public virtual AcadmicYear? AcadmicYear { get; set; }
         public virtual User? HeadOfDepartment { get; set; }
         public virtual User? HeadOfEducation { get; set; }
-        public virtual IepParamedicalService? IepparamedicalService { get; set; }
+        public virtual IepParamedicalService IdNavigation { get; set; } = null!;
         public virtual ParamedicalService? ParamedicalService { get; set; }
         public virtual Student? Student { get; set; }
         public virtual Term? Term { get; set; }

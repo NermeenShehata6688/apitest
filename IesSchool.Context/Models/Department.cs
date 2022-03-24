@@ -9,6 +9,7 @@ namespace IesSchool.Context.Models
         {
             Assistants = new HashSet<Assistant>();
             Events = new HashSet<Event>();
+            Itps = new HashSet<Itp>();
             SkillAlowedDepartments = new HashSet<SkillAlowedDepartment>();
             Students = new HashSet<Student>();
             Users = new HashSet<User>();
@@ -24,9 +25,9 @@ namespace IesSchool.Context.Models
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
 
-        public virtual ICollection<Itp> Itps { get; set; }
         public virtual ICollection<Assistant> Assistants { get; set; }
         public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<Itp> Itps { get; set; }
         public virtual ICollection<SkillAlowedDepartment> SkillAlowedDepartments { get; set; }
         public virtual ICollection<Student> Students { get; set; }
         public virtual ICollection<User> Users { get; set; }

@@ -1000,7 +1000,7 @@ namespace IesSchool.Core.Services
                     iepParamedicalService.DeletedOn = DateTime.Now;
                     _uow.GetRepository<IepParamedicalService>().Update(iepParamedicalService);
 
-                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.IepparamedicalServiceId == iepParamedicalServiceId);
+                    Itp itp = _uow.GetRepository<Itp>().Single(x => x.Id == iepParamedicalServiceId);
                     if (itp != null)
                     {
                         itp.IsDeleted = true;

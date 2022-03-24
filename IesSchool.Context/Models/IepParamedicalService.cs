@@ -7,7 +7,7 @@ namespace IesSchool.Context.Models
     {
         public IepParamedicalService()
         {
-            Itps = new HashSet<Itp>();
+            ProgressReportParamedicals = new HashSet<ProgressReportParamedical>();
         }
 
         public int Id { get; set; }
@@ -21,10 +21,10 @@ namespace IesSchool.Context.Models
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
 
-        public virtual User? Therapist { get; set; }
         public virtual Iep? Iep { get; set; }
         public virtual ParamedicalService? ParamedicalService { get; set; }
-        public virtual ICollection<Itp> Itps { get; set; }
-
+        public virtual User? Therapist { get; set; }
+        public virtual Itp Itp { get; set; } = null!;
+        public virtual ICollection<ProgressReportParamedical> ProgressReportParamedicals { get; set; }
     }
 }
