@@ -1020,16 +1020,23 @@ namespace IesSchool.Core.Services
                     iepParamedicalService.DeletedOn = DateTime.Now;
 
                     Itp itp = _uow.GetRepository<Itp>().Single(x => x.IepparamedicalServiceId == iepParamedicalServiceId);
-                    itp.IsDeleted = true;
-                    itp.DeletedOn = DateTime.Now;
+                    if (itp != null)
+                    {
+                        itp.IsDeleted = true;
+                        itp.DeletedOn = DateTime.Now;
+                        _uow.GetRepository<Itp>().Update(itp);
 
-                    //ItpGoal itpGoal = _uow.GetRepository<ItpGoal>().Single(x => x.Id == itp.Id);
-                    //itpProgressReport.IsDeleted = true;
-                    //itpProgressReport.DeletedOn = DateTime.Now;
-
-                    ItpProgressReport itpProgressReport = _uow.GetRepository<ItpProgressReport>().Single(x => x.Id == itp.Id);
-                    itpProgressReport.IsDeleted = true;
-                    itpProgressReport.DeletedOn = DateTime.Now;
+                        var itpProgressReport = _uow.GetRepository<ItpProgressReport>().GetList(x => x.Id == itp.Id,null,null,0,100000,true);
+                        if (itpProgressReport!=null)
+                        {
+                            foreach (var item in itpProgressReport.Items)
+                            {
+                                item.IsDeleted = true;
+                                item.DeletedOn = DateTime.Now;
+                                _uow.GetRepository<ItpProgressReport>().Update(item);
+                            }
+                        }
+                    }
 
                     _uow.GetRepository<IepParamedicalService>().Update(iepParamedicalService);
                     _uow.SaveChanges();
@@ -1104,9 +1111,26 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var cmd = $"delete from IEP_ExtraCurricular where Id={iepExtraCurricularId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
-                return new ResponseDto { Status = 1, Message = "Iep Extra Curricular Deleted Seccessfuly" };
+                if (iepExtraCurricularId > 0)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    IepExtraCurricular iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().Single(x => x.Id == iepExtraCurricularId);
+                    iepExtraCurricular.IsDeleted = true;
+                    iepExtraCurricular.DeletedOn = DateTime.Now;
+
+                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.IepextraCurricularId == iepExtraCurricularId);
+                    if (ixp != null)
+                    {
+                        ixp.IsDeleted = true;
+                        ixp.DeletedOn = DateTime.Now;
+                        _uow.GetRepository<Ixp>().Update(ixp);
+                    }
+                    _uow.GetRepository<IepExtraCurricular>().Update(iepExtraCurricular);
+                    _uow.SaveChanges();
+                    transaction.Commit();
+                    return new ResponseDto { Status = 1, Message = "Iep ExtraCurricular Deleted Seccessfuly" };
+                }
+                return new ResponseDto { Status = 0, Message = "null" };
             }
             catch (Exception ex)
             {
@@ -1530,4 +1554,19 @@ namespace IesSchool.Core.Services
         }
     }
 }
+#region Not Neded Now
+//ItpGoal itpGoal = _uow.GetRepository<ItpGoal>().Single(x => x.ItpId == itp.Id);
+//if (itpGoal != null)
+//{
+//    itpGoal.IsDeleted = true;
+//    itpGoal.DeletedOn = DateTime.Now;
+
+//    ItpGoalObjective itpGoalObjective = _uow.GetRepository<ItpGoalObjective>().Single(x => x.ItpGoalId == itpGoal.Id);
+//    if (itpGoalObjective != null)
+//    {
+//        itpGoalObjective.IsDeleted = true;
+//        itpGoalObjective.DeletedOn = DateTime.Now;
+//    }
+//}
+#endregion
 
