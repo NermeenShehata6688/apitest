@@ -530,10 +530,6 @@ namespace IesSchool.Core.Services
                 _uow.SaveChanges();
 
 
-               // db.Students.OrderByDescending(s => s.createdon).FirstOrDefault();
-
-
-
                 if (itpProgressReportDto.GeneralComment!=null)
                 {
                     var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true);

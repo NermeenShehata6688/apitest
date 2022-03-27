@@ -1279,6 +1279,14 @@ namespace IesSchool.Core.Services
                             iepProgressReportDto.ProgressReportExtraCurriculars = new List<ProgressReportExtraCurricularDto>();
                             for (int i = 0; i < iep.IepExtraCurriculars.Count; i++)
                             {
+                                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == iep.IepExtraCurriculars.ToList()[i].Id && x.IsDeleted != true);
+                                string ixpComment = "";
+                                if (ixp != null)
+                                {
+                                    ixpComment = ixp.FooterNotes;
+                                    
+                                }
+
                                 iepProgressReportDto.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto
                                 {
                                     Id = 0,
@@ -1287,7 +1295,7 @@ namespace IesSchool.Core.Services
                                     ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId == null ? 0 : iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
                                     ExtraCurricularName = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name,
                                     ExtraCurricularNameAr = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr,
-                                    Comment = ""
+                                    Comment = ixpComment
                                 });
                             }
                         }
@@ -1301,7 +1309,7 @@ namespace IesSchool.Core.Services
                                 string itpReportComment = "";
                                 if (itp!=null)
                                 {
-                                    if (itp.ItpProgressReports != null)
+                                    if (itp.ItpProgressReports != null&& itp.ItpProgressReports.Count()>0)
                                     {
                                         var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).First();
                                         itpReportComment = lastReport.GeneralComment;
