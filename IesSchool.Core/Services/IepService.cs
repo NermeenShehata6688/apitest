@@ -37,7 +37,6 @@ namespace IesSchool.Core.Services
                     AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),null, null, null, 0, 1000000, true),
                     AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x =>  x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
-                    Setting = _uow.GetRepository<Setting>().Single(),
                    
                 };
                 var mapper = _mapper.Map<IepHelperDto>(iepHelper);
@@ -66,6 +65,7 @@ namespace IesSchool.Core.Services
                     UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                     AllStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(null, null, null, 0, 1000000, true),
                     AllStudentExtraTeacher = _uow.GetRepository<StudentExtraTeacher>().GetList(null, null, null, 0, 1000000, true),
+                    Setting = _uow.GetRepository<Setting>().Single(),
                 };
                 var mapper = _mapper.Map<IepHelper2Dto>(iepHelper);
 
@@ -1169,6 +1169,22 @@ namespace IesSchool.Core.Services
                 iepProgressReportDto.IsDeleted = false;
                 iepProgressReportDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<IepProgressReport>(iepProgressReportDto);
+                if (mapper.ProgressReportParamedicals!= null && mapper.ProgressReportParamedicals.Count()>0)
+                {
+                    foreach (var item in mapper.ProgressReportParamedicals)
+                    {
+                        item.IsDeleted = false;
+                        item.CreatedOn = DateTime.Now;
+                    }
+                }
+                if (mapper.ProgressReportExtraCurriculars != null && mapper.ProgressReportExtraCurriculars.Count() > 0)
+                {
+                    foreach (var item in mapper.ProgressReportExtraCurriculars)
+                    {
+                        item.IsDeleted = false;
+                        item.CreatedOn = DateTime.Now;
+                    }
+                }
                 _uow.GetRepository<IepProgressReport>().Add(mapper);
                 _uow.SaveChanges();
                 iepProgressReportDto.Id = mapper.Id;
@@ -1268,7 +1284,7 @@ namespace IesSchool.Core.Services
                                 {
                                     Id = 0,
                                     ProgressReportId = 0,
-                                    IepextraCurricularId = iep.IepExtraCurriculars.ToList()[i].Id == null ? 0 : iep.IepExtraCurriculars.ToList()[i].Id,
+                                    IepextraCurricularId = iep.IepExtraCurriculars.ToList()[i].Id ,
                                     ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId == null ? 0 : iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
                                     ExtraCurricularName = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name,
                                     ExtraCurricularNameAr = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr,
@@ -1288,7 +1304,7 @@ namespace IesSchool.Core.Services
                                 {
                                     if (itp.ItpProgressReports != null)
                                     {
-                                        var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).Last();
+                                        var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).First();
                                         itpReportComment = lastReport.GeneralComment;
                                     }
                                 }
@@ -1296,12 +1312,12 @@ namespace IesSchool.Core.Services
                                 {
                                     Id = 0,
                                     ProgressReportId = 0,
-                                    IepParamedicalSerciveId = iep.IepParamedicalServices.ToList()[i].Id == null ? 0 : iep.IepParamedicalServices.ToList()[i].Id,
+                                    IepParamedicalSerciveId = iep.IepParamedicalServices.ToList()[i].Id,
                                     ParamedicalServiceId = iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId == null ? 0 : iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId.Value,
-                                    ParamedicalServiceName = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name,
-                                    ParamedicalServiceNameAr = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr,
+                                    ParamedicalServiceName = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name,
+                                    ParamedicalServiceNameAr = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr,
                                     Comment = itpReportComment
-                                });
+                                }); ;
                             }
                         }
                         if (iep.Goals.Count > 0)

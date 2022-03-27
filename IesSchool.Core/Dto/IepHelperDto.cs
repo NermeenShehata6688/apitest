@@ -19,7 +19,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<Department> AllDepartments { get; set; }
        
         public IPaginate<UserAssistant> AllTeacherAssistants { get; set; }
-        public Setting Setting { get; set; }
+        
     }
     public class IepHelperDto
     {
@@ -31,7 +31,6 @@ namespace IesSchool.Core.Dto
         public PaginateDto<UserDto> AllHeadOfEducations { get; set; }
         public PaginateDto<DepartmentDto> AllDepartments { get; set; }
         public PaginateDto<UserAssistantDto> AllTeacherAssistants { get; set; }
-        public SettingDto Setting { get; set; }
 
     }
 }

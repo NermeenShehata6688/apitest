@@ -22,6 +22,7 @@ namespace IesSchool.Core.Dto
         public IPaginate<UserExtraCurricular> UserExtraCurricular { get; set; }
         public IPaginate<StudentTherapist> AllStudentTherapist { get; set; }
         public IPaginate<StudentExtraTeacher> AllStudentExtraTeacher { get; set; }
+        public Setting Setting { get; set; }
     }
     public class IepHelper2Dto
     {
@@ -37,5 +38,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<UserExtraCurricularDto> UserExtraCurricular { get; set; }
         public PaginateDto<StudentTherapistDto> AllStudentTherapist { get; set; }
         public PaginateDto<StudentExtraTeacherDto> AllStudentExtraTeacher { get; set; }
+        public SettingDto Setting { get; set; }
+
     }
 }

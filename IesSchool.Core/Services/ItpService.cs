@@ -540,7 +540,7 @@ namespace IesSchool.Core.Services
           
                     if (iepProgressParamedical!= null && iepProgressParamedical.Items.Count()>0)
                     {
-                       var iepProgressParamedicalLast = iepProgressParamedical.Items.OrderByDescending(x => x.CreatedOn).Last();
+                       var iepProgressParamedicalLast = iepProgressParamedical.Items.OrderByDescending(x => x.CreatedOn).First();
 
                         iepProgressParamedicalLast.Comment = itpProgressReportDto.GeneralComment;
                         _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedicalLast);
@@ -563,6 +563,21 @@ namespace IesSchool.Core.Services
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
+
+                if (itpProgressReportDto.GeneralComment != null)
+                {
+                    var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true);
+
+                    if (iepProgressParamedical != null && iepProgressParamedical.Items.Count() > 0)
+                    {
+                        var iepProgressParamedicalLast = iepProgressParamedical.Items.OrderByDescending(x => x.CreatedOn).First();
+
+                        iepProgressParamedicalLast.Comment = itpProgressReportDto.GeneralComment;
+                        _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedicalLast);
+                        _uow.SaveChanges();
+                    }
+                }
+
                 var cmd = $"delete from ITP_ObjectiveProgressReport where ItpProgressReportId={itpProgressReportDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
 
