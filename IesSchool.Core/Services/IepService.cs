@@ -977,7 +977,7 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<IepParamedicalService>(iepParamedicalServiceDto);
                 _uow.GetRepository<IepParamedicalService>().Update(mapper);
                 _uow.SaveChanges();
-                var cmd = $"update ITP set ParamedicalServiceId ={iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId},TherapistDepartmentId={iepParamedicalServiceDto.TherapistDepartmentId} Where IEPParamedicalServiceId ={iepParamedicalServiceDto.Id}";
+                var cmd = $"update ITP set ParamedicalServiceId ={iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId},TherapistDepartmentId={iepParamedicalServiceDto.TherapistDepartmentId} Where Id ={iepParamedicalServiceDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 transaction.Commit();
                 iepParamedicalServiceDto.Id = mapper.Id;
@@ -1083,7 +1083,7 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<IepExtraCurricular>(iepExtraCurricularDto);
                 _uow.GetRepository<IepExtraCurricular>().Update(mapper);
 
-                var cmd = $"update IXP set ExtraCurricularId = {iepExtraCurricularDto.ExtraCurricularId} , ExTeacherId ={iepExtraCurricularDto.ExTeacherId} Where IEPExtraCurricularId ={iepExtraCurricularDto.Id}";
+                var cmd = $"update IXP set  ExTeacherId ={iepExtraCurricularDto.ExTeacherId} Where Id ={iepExtraCurricularDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
 
                 _uow.SaveChanges();
