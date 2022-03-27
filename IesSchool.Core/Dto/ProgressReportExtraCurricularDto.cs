@@ -17,6 +17,8 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public bool? IsDeleted { get; set; }
         public string? CreatedBy { get; set; }
+        public int? IepextraCurricularId { get; set; }
+
         public string? ExtraCurricularName { get; set; }
         public string? ExtraCurricularNameAr { get; set; }
     }

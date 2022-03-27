@@ -1268,6 +1268,7 @@ namespace IesSchool.Core.Services
                                 {
                                     Id = 0,
                                     ProgressReportId = 0,
+                                    IepextraCurricularId = iep.IepExtraCurriculars.ToList()[i].Id == null ? 0 : iep.IepExtraCurriculars.ToList()[i].Id,
                                     ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId == null ? 0 : iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
                                     ExtraCurricularName = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name,
                                     ExtraCurricularNameAr = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr,
@@ -1283,15 +1284,19 @@ namespace IesSchool.Core.Services
                                 var itp = _uow.GetRepository<Itp>().Single(x => x.Id == iep.IepParamedicalServices.ToList()[i].Id && x.IsDeleted != true, null,
                                     x=> x.Include(x=> x.ItpProgressReports));
                                 string itpReportComment = "";
-                                if (itp.ItpProgressReports!=null)
+                                if (itp!=null)
                                 {
-                                    var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).Last();
-                                    itpReportComment = lastReport.GeneralComment;
+                                    if (itp.ItpProgressReports != null)
+                                    {
+                                        var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).Last();
+                                        itpReportComment = lastReport.GeneralComment;
+                                    }
                                 }
                                 iepProgressReportDto.ProgressReportParamedicals.Add(new ProgressReportParamedicalDto
                                 {
                                     Id = 0,
                                     ProgressReportId = 0,
+                                    IepParamedicalSerciveId = iep.IepParamedicalServices.ToList()[i].Id == null ? 0 : iep.IepParamedicalServices.ToList()[i].Id,
                                     ParamedicalServiceId = iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId == null ? 0 : iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId.Value,
                                     ParamedicalServiceName = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name,
                                     ParamedicalServiceNameAr = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr,

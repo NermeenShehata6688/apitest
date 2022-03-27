@@ -529,13 +529,21 @@ namespace IesSchool.Core.Services
                 _uow.GetRepository<ItpProgressReport>().Add(mapper);
                 _uow.SaveChanges();
 
+
+               // db.Students.OrderByDescending(s => s.createdon).FirstOrDefault();
+
+
+
                 if (itpProgressReportDto.GeneralComment!=null)
                 {
-                    var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true).Items.OrderByDescending(x => x.CreatedOn).Last();
-                    if (iepProgressParamedical!= null)
+                    var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true);
+          
+                    if (iepProgressParamedical!= null && iepProgressParamedical.Items.Count()>0)
                     {
-                        iepProgressParamedical.Comment = itpProgressReportDto.GeneralComment;
-                        _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedical);
+                       var iepProgressParamedicalLast = iepProgressParamedical.Items.OrderByDescending(x => x.CreatedOn).Last();
+
+                        iepProgressParamedicalLast.Comment = itpProgressReportDto.GeneralComment;
+                        _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedicalLast);
                         _uow.SaveChanges();
                     }
                 }
