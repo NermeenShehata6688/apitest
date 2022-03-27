@@ -1280,6 +1280,14 @@ namespace IesSchool.Core.Services
                             iepProgressReportDto.ProgressReportParamedicals = new List<ProgressReportParamedicalDto>();
                             for (int i = 0; i < iep.IepParamedicalServices.Count; i++)
                             {
+                                var itp = _uow.GetRepository<Itp>().Single(x => x.Id == iep.IepParamedicalServices.ToList()[i].Id && x.IsDeleted != true, null,
+                                    x=> x.Include(x=> x.ItpProgressReports));
+                                string itpReportComment = "";
+                                if (itp.ItpProgressReports!=null)
+                                {
+                                    var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).Last();
+                                    itpReportComment = lastReport.GeneralComment;
+                                }
                                 iepProgressReportDto.ProgressReportParamedicals.Add(new ProgressReportParamedicalDto
                                 {
                                     Id = 0,
@@ -1287,7 +1295,7 @@ namespace IesSchool.Core.Services
                                     ParamedicalServiceId = iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId == null ? 0 : iep.IepParamedicalServices.ToList()[i].ParamedicalServiceId.Value,
                                     ParamedicalServiceName = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.Name,
                                     ParamedicalServiceNameAr = iep.IepParamedicalServices.ToList()[i].ParamedicalService == null ? "" : iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr==null? "": iep.IepParamedicalServices.ToList()[i].ParamedicalService.NameAr,
-                                    Comment = ""
+                                    Comment = itpReportComment
                                 });
                             }
                         }

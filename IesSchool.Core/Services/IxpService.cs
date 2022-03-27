@@ -138,7 +138,7 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<Ixp>().Add(mapper);
                     _uow.SaveChanges();
 
-                    var cmd = $"UPDATE IEP_ExtraCurricular SET IsIxpCreated = 1  Where Id =" + ixpDto.IepextraCurricularId;
+                    var cmd = $"UPDATE IEP_ExtraCurricular SET IsIxpCreated = 1  Where Id =" + ixpDto.Id;
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     transaction.Commit();
 

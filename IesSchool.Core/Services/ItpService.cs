@@ -522,11 +522,26 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                using var transaction = _iesContext.Database.BeginTransaction();
                 itpProgressReportDto.IsDeleted = false;
                 itpProgressReportDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<ItpProgressReport>(itpProgressReportDto);
                 _uow.GetRepository<ItpProgressReport>().Add(mapper);
                 _uow.SaveChanges();
+
+                if (itpProgressReportDto.GeneralComment!=null)
+                {
+                    var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true).Items.OrderByDescending(x => x.CreatedOn).Last();
+                    if (iepProgressParamedical!= null)
+                    {
+                        iepProgressParamedical.Comment = itpProgressReportDto.GeneralComment;
+                        _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedical);
+                        _uow.SaveChanges();
+                    }
+                }
+
+                transaction.Commit();
+
                 itpProgressReportDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Itp Progress Report Added  Seccessfuly", Data = itpProgressReportDto };
             }
