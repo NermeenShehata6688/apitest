@@ -4859,7 +4859,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-							//	worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+								//worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
