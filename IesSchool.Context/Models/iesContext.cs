@@ -983,7 +983,7 @@ namespace IesSchool.Context.Models
             {
                 entity.ToTable("IXP");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 

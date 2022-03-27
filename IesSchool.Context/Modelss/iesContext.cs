@@ -929,7 +929,7 @@ namespace IesSchool.Context.Modelss
             {
                 entity.ToTable("IXP");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
@@ -1133,10 +1133,25 @@ namespace IesSchool.Context.Modelss
             {
                 entity.ToTable("ProgressReportExtraCurricular");
 
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.IepextraCurricularId).HasColumnName("IEPExtraCurricularId");
+
                 entity.HasOne(d => d.ExtraCurricular)
                     .WithMany(p => p.ProgressReportExtraCurriculars)
                     .HasForeignKey(d => d.ExtraCurricularId)
                     .HasConstraintName("FK_ProgressReportExtraCurricular_ExtraCurricular");
+
+                entity.HasOne(d => d.IepextraCurricular)
+                    .WithMany(p => p.ProgressReportExtraCurriculars)
+                    .HasForeignKey(d => d.IepextraCurricularId)
+                    .HasConstraintName("FK_ProgressReportExtraCurricular_IEP_ExtraCurricular");
 
                 entity.HasOne(d => d.ProgressReport)
                     .WithMany(p => p.ProgressReportExtraCurriculars)
