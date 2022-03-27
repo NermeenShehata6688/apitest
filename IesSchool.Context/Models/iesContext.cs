@@ -695,25 +695,13 @@ namespace IesSchool.Context.Models
             {
                 entity.ToTable("IEP_ExtraCurricular");
 
-                entity.Property(e => e.Iepid).HasColumnName("IEPId");
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
-                entity.HasOne(d => d.ExTeacher)
-                    .WithMany(p => p.IepExtraCurriculars)
-                    .HasForeignKey(d => d.ExTeacherId)
-                    .HasConstraintName("FK_IEP_ExtraCurricular_User");
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
-                entity.HasOne(d => d.ExtraCurricular)
-                    .WithMany(p => p.IepExtraCurriculars)
-                    .HasForeignKey(d => d.ExtraCurricularId)
-                    .HasConstraintName("FK_IEP_ExtraCurricular_ExtraCurricular");
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
 
-                entity.HasOne(d => d.Iep)
-                    .WithMany(p => p.IepExtraCurriculars)
-                    .HasForeignKey(d => d.Iepid)
-                    .HasConstraintName("FK_IEP_ExtraCurricular_IEP");
-            }); modelBuilder.Entity<IepExtraCurricular>(entity =>
-            {
-                entity.ToTable("IEP_ExtraCurricular");
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Iepid).HasColumnName("IEPId");
 
@@ -995,6 +983,8 @@ namespace IesSchool.Context.Models
             {
                 entity.ToTable("IXP");
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
@@ -1004,8 +994,6 @@ namespace IesSchool.Context.Models
                 entity.Property(e => e.DeletedBy).HasMaxLength(500);
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.IepextraCurricularId).HasColumnName("IEPExtraCurricularId");
 
                 entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
 
@@ -1034,10 +1022,11 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.HeadOfEducationId)
                     .HasConstraintName("FK_IXP_HeadOfEducation");
 
-                entity.HasOne(d => d.IepextraCurricular)
-                    .WithMany(p => p.Ixps)
-                    .HasForeignKey(d => d.IepextraCurricularId)
-                    .HasConstraintName("FK_IXP_IEP_ExtraCurricular");
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Ixp)
+                    .HasForeignKey<Ixp>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_IXP_IEP_ExtraCurricular1");
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Ixps)

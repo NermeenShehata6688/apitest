@@ -1107,7 +1107,7 @@ namespace IesSchool.Core.Services
                     iepExtraCurricular.IsDeleted = true;
                     iepExtraCurricular.DeletedOn = DateTime.Now;
 
-                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.IepextraCurricularId == iepExtraCurricularId);
+                    Ixp ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == iepExtraCurricularId);
                     if (ixp != null)
                     {
                         ixp.IsDeleted = true;
@@ -1134,7 +1134,7 @@ namespace IesSchool.Core.Services
                 var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId && x.IsDeleted!=true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
-                    .Include(x => x.ProgressReportParamedicals).Include(x => x.ProgressReportStrands), 0, 100000, true);
+                    .Include(x => x.ProgressReportParamedicals.Where(x=> x.IsDeleted!= true)).Include(x => x.ProgressReportStrands), 0, 100000, true);
 
                 var mapper = _mapper.Map<PaginateDto<IepProgressReportDto>>(iepProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -1152,7 +1152,7 @@ namespace IesSchool.Core.Services
                 .Include(x => x.AcadmicYear).Include(x => x.Term)
                    .Include(x => x.Teacher)
                    .Include(x => x.ProgressReportExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                   .Include(x => x.ProgressReportParamedicals).ThenInclude(x => x.ParamedicalService)
+                   .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService)
                    .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
                 var mapper = _mapper.Map<IepProgressReportDto>(iepProgressReport);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -1233,8 +1233,8 @@ namespace IesSchool.Core.Services
                 if (iepId > 0)
                 {
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
-               .Include(s => s.IepParamedicalServices).ThenInclude(s => s.ParamedicalService)
-               .Include(s => s.IepExtraCurriculars).ThenInclude(s => s.ExtraCurricular)
+               .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
                .Include(s => s.Student)
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
@@ -1452,7 +1452,7 @@ namespace IesSchool.Core.Services
                 if (paramedicalIds!=null)
                 {
 
-                    var progressReportParamedicals = _uow.GetRepository<ProgressReportParamedical>().GetList(x => paramedicalIds.Contains(x.ParamedicalServiceId.Value == null ? 0 : x.ParamedicalServiceId.Value), null,
+                    var progressReportParamedicals = _uow.GetRepository<ProgressReportParamedical>().GetList(x => paramedicalIds.Contains(x.ParamedicalServiceId.Value == null ? 0 : x.ParamedicalServiceId.Value)&& x.IsDeleted != true, null,
                    x => x.Include(x => x.ProgressReport).ThenInclude(x => x.Student)
                    .Include(x => x.ProgressReport).ThenInclude(x => x.AcadmicYear)
                    .Include(x => x.ProgressReport).ThenInclude(x => x.Term)

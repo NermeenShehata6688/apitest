@@ -519,7 +519,7 @@ namespace IesSchool.Core.MappingProfile
             .ReverseMap()
 
              .ForMember(x => x.Student, op => op.Ignore())
-             .ForMember(x => x.IepextraCurricular, op => op.Ignore())
+            // .ForMember(x => x.IepextraCurricular, op => op.Ignore())
              .ForMember(x => x.ExtraCurricular, op => op.Ignore())
              .ForMember(x => x.ExTeacher, op => op.Ignore())
              .ForMember(x => x.HeadOfDepartment, op => op.Ignore())

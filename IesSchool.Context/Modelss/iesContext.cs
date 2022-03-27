@@ -929,6 +929,8 @@ namespace IesSchool.Context.Modelss
             {
                 entity.ToTable("IXP");
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.Property(e => e.CreatedBy).HasMaxLength(500);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
@@ -938,8 +940,6 @@ namespace IesSchool.Context.Modelss
                 entity.Property(e => e.DeletedBy).HasMaxLength(500);
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.IepextraCurricularId).HasColumnName("IEPExtraCurricularId");
 
                 entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
 
@@ -968,10 +968,11 @@ namespace IesSchool.Context.Modelss
                     .HasForeignKey(d => d.HeadOfEducationId)
                     .HasConstraintName("FK_IXP_HeadOfEducation");
 
-                entity.HasOne(d => d.IepextraCurricular)
-                    .WithMany(p => p.Ixps)
-                    .HasForeignKey(d => d.IepextraCurricularId)
-                    .HasConstraintName("FK_IXP_IEP_ExtraCurricular");
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Ixp)
+                    .HasForeignKey<Ixp>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_IXP_IEP_ExtraCurricular1");
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Ixps)
@@ -1146,6 +1147,14 @@ namespace IesSchool.Context.Modelss
             modelBuilder.Entity<ProgressReportParamedical>(entity =>
             {
                 entity.ToTable("ProgressReportParamedical");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
                 entity.HasOne(d => d.IepParamedicalSercive)
                     .WithMany(p => p.ProgressReportParamedicals)
