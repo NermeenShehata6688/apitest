@@ -112,7 +112,7 @@ namespace IesSchool.Core.Services
             {
                 var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
                     x => x
-                    //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                    .Include(x => x.IxpExtraCurriculars)
                     //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)

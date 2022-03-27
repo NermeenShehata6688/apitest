@@ -4708,7 +4708,9 @@ namespace IesSchool.Core.Services
 						.Include(x => x.Student).ThenInclude(x => x.Teacher)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
-					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+					.Include(x => x.IxpExtraCurriculars)
+					.Include(x => x.ExTeacher)
+					.Include(x => x.ExtraCurricular)
 					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
 					);
 
@@ -4859,7 +4861,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-								//worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+							    worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
@@ -4947,17 +4949,17 @@ namespace IesSchool.Core.Services
 						if (ixp.IxpExtraCurriculars.Count() > 0)
 						{
 							lastRow = worksheet.Rows.Length + 1;
-
-							foreach (var extra in ixp.IxpExtraCurriculars)
-							{
-								worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Merge();
-								//worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Text = "Teacher Of :" + extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name; ;
+							var extra = ixp.IxpExtraCurriculars.FirstOrDefault();
+							//foreach (var extra in ixp.IxpExtraCurriculars.FirstOrDefault())
+							//{
+							worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Merge();
+								worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Text = "Teacher Of :" + ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name; ;
 								worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 								worksheet.Range["J" + (lastRow )].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
 								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Merge();
-								//worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text =  extra.Teacher == null ? "" : extra.Teacher.Name == null ? "" : extra.Teacher.Name; ;
+								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = ixp.ExTeacher == null ? "" : ixp.ExTeacher.Name == null ? "" : ixp.ExTeacher.Name; ;
 								worksheet.Range["A" + (lastRow) + ":BE" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["Y" + (lastRow )].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
@@ -4974,7 +4976,7 @@ namespace IesSchool.Core.Services
 
 								lastRow++;
 
-							}
+							//}
 						}
 						#endregion
 					}
@@ -5021,7 +5023,9 @@ namespace IesSchool.Core.Services
 						.Include(x => x.Student).ThenInclude(x => x.Teacher)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
-					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+					.Include(x => x.IxpExtraCurriculars)
+					.Include(x => x.ExTeacher)
+					.Include(x => x.ExtraCurricular)
 					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
 					);
 
@@ -5172,7 +5176,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-							//	worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
@@ -5264,13 +5268,13 @@ namespace IesSchool.Core.Services
 							foreach (var extra in ixp.IxpExtraCurriculars)
 							{
 								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Merge();
-								//worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name; ;
+								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name; ;
 								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 								worksheet.Range["J" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
 								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Merge();
-								//worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = extra.Teacher == null ? "" : extra.Teacher.Name == null ? "" : extra.Teacher.Name; ;
+								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = ixp.ExTeacher == null ? "" : ixp.ExTeacher.Name == null ? "" : ixp.ExTeacher.Name; ;
 								worksheet.Range["A" + (lastRow) + ":BE" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["Y" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
@@ -7520,7 +7524,10 @@ namespace IesSchool.Core.Services
 						.Include(x => x.Student).ThenInclude(x => x.Teacher)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
-					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+					.Include(x => x.IxpExtraCurriculars)
+					.Include(x => x.ExTeacher)
+					.Include(x => x.ExtraCurricular)
+
 					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
 					);
 
@@ -7677,7 +7684,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-								//worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
@@ -7768,17 +7775,18 @@ namespace IesSchool.Core.Services
 						if (ixp.IxpExtraCurriculars.Count() > 0)
 						{
 							lastRow = worksheet.Rows.Length + 1;
+							var extra = ixp.IxpExtraCurriculars.FirstOrDefault();
 
-							foreach (var extra in ixp.IxpExtraCurriculars)
-							{
-								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Merge();
-								//worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name; ;
+							//foreach (var extra in ixp.IxpExtraCurriculars)
+							//{
+							worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Merge();
+								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name; ;
 								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 								worksheet.Range["J" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
 								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Merge();
-								//worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = extra.Teacher == null ? "" : extra.Teacher.Name == null ? "" : extra.Teacher.Name; ;
+								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = ixp.ExTeacher == null ? "" : ixp.ExTeacher.Name == null ? "" : ixp.ExTeacher.Name; ;
 								worksheet.Range["A" + (lastRow) + ":BE" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["Y" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
@@ -7796,7 +7804,7 @@ namespace IesSchool.Core.Services
 
 								lastRow++;
 
-							}
+							//}
 						}
 						#endregion
 					}
