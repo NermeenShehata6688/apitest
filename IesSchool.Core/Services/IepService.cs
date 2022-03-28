@@ -23,19 +23,20 @@ namespace IesSchool.Core.Services
             _mapper = mapper;
             _iesContext = iesContext;
         }
+        #region Iep
         public ResponseDto GetIepsHelper()
         {
             try
             {
-                IepHelper iepHelper = new IepHelper()      
+                IepHelper iepHelper = new IepHelper()
                 {
                     AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId, IsDeleted = x.IsDeleted }),null, null, null, 0, 100000, true),
+                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
                     AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
                     AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name,RoomNumber=x.RoomNumber, IsDeleted = x.IsDeleted }), x =>  x.IsTeacher == true, null, null, 0, 1000000, true),
-                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),null, null, null, 0, 1000000, true),
-                    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x =>  x.IsHeadofEducation == true, null, null, 0, 1000000, true),
+                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber, IsDeleted = x.IsDeleted }), x => x.IsTeacher == true, null, null, 0, 1000000, true),
+                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }), null, null, null, 0, 1000000, true),
+                    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
                     AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
                     Setting = _uow.GetRepository<Setting>().Single(),
                 };
@@ -119,7 +120,7 @@ namespace IesSchool.Core.Services
                 }
                 if (iepSearchDto.StudentCode != null)
                 {
-                    allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains( iepSearchDto.StudentCode));
+                    allIeps = allIeps.Where(x => x.StudentCode.ToString().Contains(iepSearchDto.StudentCode));
                 }
 
 
@@ -128,7 +129,7 @@ namespace IesSchool.Core.Services
                 {
                     iepSearchDto.Index = 0;
                 }
-                else 
+                else
                 {
                     iepSearchDto.Index += 1;
                 }
@@ -146,18 +147,18 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (iepId!=0)
+                if (iepId != 0)
                 {
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
                .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
-               .Include(s => s.IepParamedicalServices.Where(x=> x.IsDeleted!=true)).ThenInclude(s => s.ParamedicalService)
+               .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
                .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Therapist)
                .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
                .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExTeacher)
                .Include(s => s.Student).ThenInclude(s => s.Department)
                //.Include(s => s.Teacher)
-              // .Include(s => s.HeadOfDepartmentNavigation)
-              // .Include(s => s.HeadOfEducationNavigation)
+               // .Include(s => s.HeadOfDepartmentNavigation)
+               // .Include(s => s.HeadOfEducationNavigation)
                .Include(s => s.AcadmicYear)
                .Include(s => s.Term)
                .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
@@ -170,7 +171,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 0, Message = " null"};
+                    return new ResponseDto { Status = 0, Message = " null" };
                 }
             }
             catch (Exception ex)
@@ -182,7 +183,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (iepDto!=null)
+                if (iepDto != null)
                 {
                     iepDto.IsDeleted = false;
                     iepDto.CreatedOn = DateTime.Now;
@@ -194,7 +195,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    return new ResponseDto { Status = 1, Message = "null"};
+                    return new ResponseDto { Status = 1, Message = "null" };
                 }
 
             }
@@ -207,8 +208,9 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (iepDto!=null)
+                if (iepDto != null)
                 {
+                    var oldIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepDto.Id);
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
@@ -216,7 +218,18 @@ namespace IesSchool.Core.Services
                     mapper.IsDeleted = false;
                     _uow.GetRepository<Iep>().Update(mapper);
                     _uow.SaveChanges();
-
+                    if (oldIep.StudentId != mapper.StudentId)
+                    {
+                        UpdateStudentInfo(mapper);
+                    }
+                    if (oldIep.AcadmicYearId != mapper.AcadmicYearId)
+                    {
+                        UpdateAcademicYearInfo(mapper);
+                    }
+                    if (oldIep.TermId != mapper.TermId)
+                    {
+                        UpdateTermInfo(mapper);
+                    }
                     transaction.Commit();
 
                     iepDto.Id = mapper.Id;
@@ -231,6 +244,129 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+        public void UpdateStudentInfo(Iep mapper)
+        {
+            try
+            {
+                if (mapper != null && mapper.Id > 0)
+                {
+                    var iepParmedicalIds = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == mapper.Id && x.IsItpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepParmedicalIds.Count() > 0)
+                    {
+                        var itpList = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && iepParmedicalIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (itpList.Count() > 0)
+                        {
+                            foreach (var item in itpList)
+                            {
+                                item.StudentId = mapper.StudentId;
+                            }
+                            _uow.GetRepository<Itp>().Update(itpList);
+                            _uow.SaveChanges();
+                        }
+                    }
+                    var iepExtraIds = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == mapper.Id && x.IsIxpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepExtraIds.Count() > 0)
+                    {
+                        var ixpList = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && iepExtraIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (ixpList.Count() > 0)
+                        {
+                            foreach (var item in ixpList)
+                            {
+                                item.StudentId = mapper.StudentId;
+                            }
+                            _uow.GetRepository<Ixp>().Update(ixpList);
+                            _uow.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+        public void UpdateAcademicYearInfo(Iep mapper)
+        {
+            try
+            {
+                if (mapper != null && mapper.Id > 0)
+                {
+                    var iepParmedicalIds = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == mapper.Id && x.IsItpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepParmedicalIds.Count() > 0)
+                    {
+                        var itpList = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && iepParmedicalIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (itpList.Count() > 0)
+                        {
+                            foreach (var item in itpList)
+                            {
+                                item.AcadmicYearId = mapper.AcadmicYearId;
+                            }
+                            _uow.GetRepository<Itp>().Update(itpList);
+                            _uow.SaveChanges();
+                        }
+                    }
+                    var iepExtraIds = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == mapper.Id && x.IsIxpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepExtraIds.Count() > 0)
+                    {
+                        var ixpList = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && iepExtraIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (ixpList.Count() > 0)
+                        {
+                            foreach (var item in ixpList)
+                            {
+                                item.AcadmicYearId = mapper.AcadmicYearId;
+                            }
+                            _uow.GetRepository<Ixp>().Update(ixpList);
+                            _uow.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+        public void UpdateTermInfo(Iep mapper)
+        {
+            try
+            {
+                if (mapper != null && mapper.Id > 0)
+                {
+                    var iepParmedicalIds = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == mapper.Id && x.IsItpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepParmedicalIds.Count() > 0)
+                    {
+                        var itpList = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && iepParmedicalIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (itpList.Count() > 0)
+                        {
+                            foreach (var item in itpList)
+                            {
+                                item.TermId = mapper.TermId;
+                            }
+                            _uow.GetRepository<Itp>().Update(itpList);
+                            _uow.SaveChanges();
+                        }
+                    }
+                    var iepExtraIds = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == mapper.Id && x.IsIxpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepExtraIds.Count() > 0)
+                    {
+                        var ixpList = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && iepExtraIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (ixpList.Count() > 0)
+                        {
+                            foreach (var item in ixpList)
+                            {
+                                item.TermId = mapper.TermId;
+                            }
+                            _uow.GetRepository<Ixp>().Update(ixpList);
+                            _uow.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
             }
         }
         public ResponseDto DeleteIep(int iepId)
@@ -308,16 +444,16 @@ namespace IesSchool.Core.Services
             try
             {
                 decimal iepMasterdPercentage = 0M;
-                if (iepId!=0)
+                if (iepId != 0)
                 {
-                    var iepObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true&& x.IepId== iepId );
-                    if ( iepObjectives.Items.Count()>0)
+                    var iepObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true && x.IepId == iepId);
+                    if (iepObjectives.Items.Count() > 0)
                     {
                         var iepMasterdObjectives = iepObjectives.Items.Where(x => x.IsMasterd == true).ToList();
-                        if (iepMasterdObjectives.Count() >0)
+                        if (iepMasterdObjectives.Count() > 0)
                         {
-                             iepMasterdPercentage = ((decimal)(iepMasterdObjectives.Count()) /((decimal)iepObjectives.Items.Count()))*100;
-                            return Math.Round( iepMasterdPercentage);
+                            iepMasterdPercentage = ((decimal)(iepMasterdObjectives.Count()) / ((decimal)iepObjectives.Items.Count())) * 100;
+                            return Math.Round(iepMasterdPercentage);
                         }
                     }
                 }
@@ -338,13 +474,13 @@ namespace IesSchool.Core.Services
                .Include(s => s.IepAssistants)
                .Include(s => s.IepParamedicalServices)
                .Include(s => s.IepExtraCurriculars)
-               .Include(s => s.Goals.Where(x=> x.IsDeleted!= true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveSkills)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveSkills)
                .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses));
 
                     if (oldIep != null)
                     {
                         oldIep.Id = 0;
-                       // oldIep.TermId = null;
+                        // oldIep.TermId = null;
                         if (oldIep.IepAssistants.Count() > 0)
                         {
                             oldIep.IepAssistants.ToList().ForEach(x => x.Id = 0);
@@ -385,17 +521,17 @@ namespace IesSchool.Core.Services
 
                         var mapper = _mapper.Map<GetIepDto>(oldIep);
 
-                        if (mapper.Id>0 )
+                        if (mapper.Id > 0)
                         {
                             var objectivesToUpdate = mapper.Goals.SelectMany(x => x.Objectives).ToList().Select(x => x.Id).ToArray();
-                            if (objectivesToUpdate.Count()>0)
+                            if (objectivesToUpdate.Count() > 0)
                             {
                                 string numbersToUpdate = string.Join(",", objectivesToUpdate);
                                 var cmd = $"update Objective set Objective.IepId = {mapper.Id} Where Objective.Id IN ({numbersToUpdate})";
                                 _iesContext.Database.ExecuteSqlRaw(cmd);
                             }
                         }
-                            
+
                         return new ResponseDto { Status = 1, Message = " IEP has been Duplicated", Data = mapper };
                     }
                     else
@@ -413,12 +549,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        #endregion
 
+        #region Goals
         public ResponseDto GetGoals()
         {
             try
             {
-                var allGoals = _uow.GetRepository<Goal>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=> s.Strand).Include(s => s.Area), 0, 100000, true);
+                var allGoals = _uow.GetRepository<Goal>().GetList(x => x.IsDeleted != true, null, x => x.Include(s => s.Strand).Include(s => s.Area), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<GetGoalDto>>(allGoals);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -431,7 +569,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (goalId!=0)
+                if (goalId != 0)
                 {
                     var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill));
                     var mapper = _mapper.Map<GetGoalDto>(goal);
@@ -476,7 +614,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (goalDto!=null)
+                if (goalDto != null)
                 {
                     goalDto.IsDeleted = false;
                     goalDto.CreatedOn = DateTime.Now;
@@ -599,7 +737,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (goalId!=0)
+                if (goalId != 0)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from Goals where Id={goalId}";
@@ -618,12 +756,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        #endregion
 
+        #region Objectives
         public ResponseDto GetObjectives()
         {
             try
             {
-                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true, null, x=> x.Include(s=>s.ObjectiveSkills).ThenInclude(s => s.Skill).Include(s => s.ObjectiveEvaluationProcesses).ThenInclude(x=> x.SkillEvaluation), 0, 100000, true);
+                var allObjectives = _uow.GetRepository<Objective>().GetList(x => x.IsDeleted != true, null, x => x.Include(s => s.ObjectiveSkills).ThenInclude(s => s.Skill).Include(s => s.ObjectiveEvaluationProcesses).ThenInclude(x => x.SkillEvaluation), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<GetObjectiveDto>>(allObjectives);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -637,7 +777,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var objective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId && x.IsDeleted != true, null,
-                    x=> x.Include(s=> s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities)
+                    x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities)
                     .Include(s => s.Goal).ThenInclude(s => s.Area)
                     .Include(s => s.Goal).ThenInclude(s => s.Strand));
                 var mapper = _mapper.Map<ObjectiveDto>(objective);
@@ -670,7 +810,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (objectiveDto!=null)
+                if (objectiveDto != null)
                 {
                     objectiveDto.IsDeleted = false;
                     objectiveDto.CreatedOn = DateTime.Now;
@@ -709,7 +849,7 @@ namespace IesSchool.Core.Services
                     _iesContext.Database.ExecuteSqlRaw(cmd);
 
                     var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
-                   // objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
+                    // objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
 
                     var mapper = _mapper.Map<Objective>(objectiveActivitiesDto);
                     mapper.IsDeleted = false;
@@ -746,7 +886,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (objectiveId!=0)
+                if (objectiveId != 0)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from Objective where Id={objectiveId}";
@@ -765,7 +905,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        
+
         public ResponseDto ObjIsMasterd(ObjStatus statusDto)
         {
             try
@@ -795,7 +935,7 @@ namespace IesSchool.Core.Services
             try
             {
                 //// add new Objective
-                if (objective.Id == 0 || objective.Activities != null  || objective.Activities.Any(x => x.Evaluation == 3))
+                if (objective.Id == 0 || objective.Activities != null || objective.Activities.Any(x => x.Evaluation == 3))
                 {
                     int eval = 0;
                     for (int i = 0; i < objective.Activities.Count(); i++)
@@ -803,7 +943,7 @@ namespace IesSchool.Core.Services
                         if (objective.Activities.ToList()[i].Evaluation == 3)
                         {
                             eval++;
-                            if(eval==3)
+                            if (eval == 3)
                                 return true;
                         }
                         else
@@ -821,13 +961,13 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
-       
+
 
         public ResponseDto GetActivities()
         {
             try
             {
-                var allActivities = _uow.GetRepository<Activity>().GetList(null,null,null, 0, 100000, true);
+                var allActivities = _uow.GetRepository<Activity>().GetList(null, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<ActivityDto>>(allActivities);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
@@ -840,7 +980,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var objActivities = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objectiveId, null, null,0, 100000, true);
+                var objActivities = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objectiveId, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<ActivityDto>>(objActivities);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -897,7 +1037,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (activityId>0)
+                if (activityId > 0)
                 {
                     var cmd = $"delete from Activities where Id={activityId}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
@@ -915,6 +1055,9 @@ namespace IesSchool.Core.Services
             }
         }
 
+        #endregion
+
+        #region IepParamedicalService
         public ResponseDto GetIepParamedicalServices()
         {
             try
@@ -927,12 +1070,12 @@ namespace IesSchool.Core.Services
             {
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
-        }   
+        }
         public ResponseDto GetIepParamedicalServiceByIepId(int iepId)
         {
             try
             {
-                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId&& x.IsDeleted!=true,null, x=> x.Include(x=>x.ParamedicalService).Include(x => x.Therapist));
+                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ParamedicalService).Include(x => x.Therapist));
                 var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalService);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -981,7 +1124,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                if (iepParamedicalServiceId>0)
+                if (iepParamedicalServiceId > 0)
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
                     IepParamedicalService iepParamedicalService = _uow.GetRepository<IepParamedicalService>().Single(x => x.Id == iepParamedicalServiceId);
@@ -996,8 +1139,8 @@ namespace IesSchool.Core.Services
                         itp.DeletedOn = DateTime.Now;
                         _uow.GetRepository<Itp>().Update(itp);
 
-                        var itpProgressReport = _uow.GetRepository<ItpProgressReport>().GetList(x => x.Id == itp.Id,null,null,0,100000,true);
-                        if (itpProgressReport!=null)
+                        var itpProgressReport = _uow.GetRepository<ItpProgressReport>().GetList(x => x.Id == itp.Id, null, null, 0, 100000, true);
+                        if (itpProgressReport != null)
                         {
                             foreach (var item in itpProgressReport.Items)
                             {
@@ -1012,14 +1155,15 @@ namespace IesSchool.Core.Services
                     transaction.Commit();
                     return new ResponseDto { Status = 1, Message = "Iep Paramedical Service Deleted Seccessfuly" };
                 }
-                    return new ResponseDto { Status = 0, Message = "null" };
+                return new ResponseDto { Status = 0, Message = "null" };
             }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-
+        #endregion
+        #region IepExtraCurricular
         public ResponseDto GetIepExtraCurriculars()
         {
             try
@@ -1038,7 +1182,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ExtraCurricular).Include(x => x.ExTeacher), 0, 100000, true);
-                var mapper = _mapper.Map < PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
+                var mapper = _mapper.Map<PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
@@ -1068,7 +1212,7 @@ namespace IesSchool.Core.Services
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
-              
+
                 var mapper = _mapper.Map<IepExtraCurricular>(iepExtraCurricularDto);
                 _uow.GetRepository<IepExtraCurricular>().Update(mapper);
 
@@ -1115,15 +1259,17 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        #endregion
 
+        #region IepProgressReport
         public ResponseDto GetIepProgressReportsByIepId(int iepId)
         {
             try
             {
-                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId && x.IsDeleted!=true, null,
+                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId && x.IsDeleted != true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
-                    .Include(x => x.ProgressReportParamedicals.Where(x=> x.IsDeleted!= true)).Include(x => x.ProgressReportStrands), 0, 100000, true);
+                    .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).Include(x => x.ProgressReportStrands), 0, 100000, true);
 
                 var mapper = _mapper.Map<PaginateDto<IepProgressReportDto>>(iepProgressReports);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -1137,12 +1283,12 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId && x.IsDeleted!=true, null, x => x.Include(x => x.Student)
-                .Include(x => x.AcadmicYear).Include(x => x.Term)
-                   .Include(x => x.Teacher)
-                   .Include(x => x.ProgressReportExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                   .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService)
-                   .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
+                var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId && x.IsDeleted != true, null, x => x.Include(x => x.Student)
+                  .Include(x => x.AcadmicYear).Include(x => x.Term)
+                     .Include(x => x.Teacher)
+                     .Include(x => x.ProgressReportExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                     .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService)
+                     .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
                 var mapper = _mapper.Map<IepProgressReportDto>(iepProgressReport);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -1158,7 +1304,7 @@ namespace IesSchool.Core.Services
                 iepProgressReportDto.IsDeleted = false;
                 iepProgressReportDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<IepProgressReport>(iepProgressReportDto);
-                if (mapper.ProgressReportParamedicals!= null && mapper.ProgressReportParamedicals.Count()>0)
+                if (mapper.ProgressReportParamedicals != null && mapper.ProgressReportParamedicals.Count() > 0)
                 {
                     foreach (var item in mapper.ProgressReportParamedicals)
                     {
@@ -1251,7 +1397,7 @@ namespace IesSchool.Core.Services
 
                     if (iep != null)
                     {
-                        
+
                         iepProgressReportDto.StudentCode = iep.Student == null ? "" : iep.Student.Code.ToString();
                         iepProgressReportDto.StudentName = iep.Student == null ? "" : iep.Student.Name;
                         iepProgressReportDto.AcadmicYearName = iep.AcadmicYear == null ? "" : iep.AcadmicYear.Name;
@@ -1274,17 +1420,17 @@ namespace IesSchool.Core.Services
                                 if (ixp != null)
                                 {
                                     ixpComment = ixp.FooterNotes;
-                                    
+
                                 }
 
                                 iepProgressReportDto.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto
                                 {
                                     Id = 0,
                                     ProgressReportId = 0,
-                                    IepextraCurricularId = iep.IepExtraCurriculars.ToList()[i].Id ,
+                                    IepextraCurricularId = iep.IepExtraCurriculars.ToList()[i].Id,
                                     ExtraCurricularId = iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId == null ? 0 : iep.IepExtraCurriculars.ToList()[i].ExtraCurricularId.Value,
-                                    ExtraCurricularName = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name,
-                                    ExtraCurricularNameAr = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr==null? "": iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr,
+                                    ExtraCurricularName = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.Name,
+                                    ExtraCurricularNameAr = iep.IepExtraCurriculars.ToList()[i].ExtraCurricular == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr == null ? "" : iep.IepExtraCurriculars.ToList()[i].ExtraCurricular.NameAr,
                                     Comment = ixpComment
                                 });
                             }
@@ -1295,11 +1441,11 @@ namespace IesSchool.Core.Services
                             for (int i = 0; i < iep.IepParamedicalServices.Count; i++)
                             {
                                 var itp = _uow.GetRepository<Itp>().Single(x => x.Id == iep.IepParamedicalServices.ToList()[i].Id && x.IsDeleted != true, null,
-                                    x=> x.Include(x=> x.ItpProgressReports));
+                                    x => x.Include(x => x.ItpProgressReports));
                                 string itpReportComment = "";
-                                if (itp!=null)
+                                if (itp != null)
                                 {
-                                    if (itp.ItpProgressReports != null&& itp.ItpProgressReports.Count()>0)
+                                    if (itp.ItpProgressReports != null && itp.ItpProgressReports.Count() > 0)
                                     {
                                         var lastReport = itp.ItpProgressReports.OrderByDescending(x => x.CreatedOn).First();
                                         itpReportComment = lastReport.GeneralComment;
@@ -1333,7 +1479,7 @@ namespace IesSchool.Core.Services
                                         Id = 0,
                                         ProgressReportId = 0,
                                         StrandId = iep.Goals.ToList()[i].StrandId == null ? 0 : iep.Goals.ToList()[i].StrandId,
-                                        StrandName = iep.Goals.ToList()[i].Strand == null ? "" : iep.Goals.ToList()[i].Strand.Name==null? "" : iep.Goals.ToList()[i].Strand.Name,
+                                        StrandName = iep.Goals.ToList()[i].Strand == null ? "" : iep.Goals.ToList()[i].Strand.Name == null ? "" : iep.Goals.ToList()[i].Strand.Name,
                                         GoalLongTermNumber = iep.Goals.ToList()[i].LongTermNumber == null ? 0 : iep.Goals.ToList()[i].LongTermNumber,
                                         GoalShortTermNumber = iep.Goals.ToList()[i].ShortTermProgressNumber == null ? 0 : iep.Goals.ToList()[i].ShortTermProgressNumber,
                                         FirstTermPercentage = frsTermPercentage,
@@ -1343,14 +1489,14 @@ namespace IesSchool.Core.Services
                                 }
                                 else if (iep.TermId == 2)
                                 {
-                                    var iepFirstTerm = _uow.GetRepository<Iep>().Single(x => x.StudentId==iep.StudentId && x.IsDeleted != true && x.AcadmicYearId == iep.AcadmicYearId && x.TermId == 1, null, x => x
-                                          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
-                                          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+                                    var iepFirstTerm = _uow.GetRepository<Iep>().Single(x => x.StudentId == iep.StudentId && x.IsDeleted != true && x.AcadmicYearId == iep.AcadmicYearId && x.TermId == 1, null, x => x
+                                            .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+                                            .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
                                        );
-                                    if (iepFirstTerm!=null && iepFirstTerm.Goals.Count>0)
+                                    if (iepFirstTerm != null && iepFirstTerm.Goals.Count > 0)
                                     {
                                         Goal firstTermGoal = iepFirstTerm.Goals.Where(x => x.StrandId == iep.Goals.ToList()[i].StrandId).FirstOrDefault();
-                                        if (firstTermGoal !=null)
+                                        if (firstTermGoal != null)
                                         {
                                             frsTermPercentage = CalculateMasterdObjPercentage(firstTermGoal);
                                         }
@@ -1371,59 +1517,7 @@ namespace IesSchool.Core.Services
                                         Comment = ""
                                     });
                                 }
-                                #region MyRegion
-                                //var goalObjectives = iep.Goals.ToList()[i].Objectives.Where(x => x.IsDeleted != true);
-
-                                //if (goalObjectives.Count() > 0 && iep.TermId == 1)
-                                //{
-                                //    foreach (var objective in goalObjectives)
-                                //    {
-                                //        // to calculate frsTermPercentage Percentage
-                                //        if (objective.IsMasterd == true)
-                                //        {
-                                //            frsTermPercentage = frsTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
-                                //        }
-                                //    }
-                                //}
-                                //else if (goalObjectives.Count() > 0 && iep.TermId == 2)
-                                //{
-                                //    foreach (var objective in goalObjectives)
-                                //    {
-                                //        // to calculate scndTermPercentage Percentage
-                                //        if (objective.IsMasterd == true)
-                                //        {
-                                //            scndTermPercentage = scndTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
-                                //        }
-                                //    }
-                                //    #region FirstTerm
-                                //    var iepFirstTerm = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true && x.AcadmicYearId == iep.AcadmicYearId && x.TermId == 1, null, x => x
-                                //          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
-                                //          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
-                                //       );
-                                //    if (iepFirstTerm != null)
-                                //    {
-                                //        if (iepFirstTerm.Goals.Count() > 0)
-                                //        {
-                                //            for (int j = 0; j < iepFirstTerm.Goals.Count; j++)
-                                //            {
-                                //                var firstTermObjectives = iep.Goals.ToList()[j].Objectives.Where(x => x.IsDeleted != true);
-                                //                if (firstTermObjectives.Count() > 0)
-                                //                {
-                                //                    foreach (var objective in goalObjectives)
-                                //                    {
-                                //                        // to calculate scndTermPercentage Percentage
-                                //                        if (objective.IsMasterd == true)
-                                //                        {
-                                //                            scndTermPercentage = scndTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
-                                //                        }
-                                //                    }
-                                //                }
-                                //            }
-                                //        }
-                                //    }
-                                //    #endregion
-                                //}
-                                #endregion
+                               
                             }
                         }
                     }
@@ -1440,6 +1534,10 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+        #endregion
+
+
+
 
         public  int CalculateMasterdObjPercentage(Goal goal)
         {
@@ -1609,6 +1707,59 @@ namespace IesSchool.Core.Services
 //    {
 //        return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
 //    }
+//}
+
+
+//var goalObjectives = iep.Goals.ToList()[i].Objectives.Where(x => x.IsDeleted != true);
+
+//if (goalObjectives.Count() > 0 && iep.TermId == 1)
+//{
+//    foreach (var objective in goalObjectives)
+//    {
+//        // to calculate frsTermPercentage Percentage
+//        if (objective.IsMasterd == true)
+//        {
+//            frsTermPercentage = frsTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
+//        }
+//    }
+//}
+//else if (goalObjectives.Count() > 0 && iep.TermId == 2)
+//{
+//    foreach (var objective in goalObjectives)
+//    {
+//        // to calculate scndTermPercentage Percentage
+//        if (objective.IsMasterd == true)
+//        {
+//            scndTermPercentage = scndTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
+//        }
+//    }
+//    #region FirstTerm
+//    var iepFirstTerm = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true && x.AcadmicYearId == iep.AcadmicYearId && x.TermId == 1, null, x => x
+//          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+//          .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+//       );
+//    if (iepFirstTerm != null)
+//    {
+//        if (iepFirstTerm.Goals.Count() > 0)
+//        {
+//            for (int j = 0; j < iepFirstTerm.Goals.Count; j++)
+//            {
+//                var firstTermObjectives = iep.Goals.ToList()[j].Objectives.Where(x => x.IsDeleted != true);
+//                if (firstTermObjectives.Count() > 0)
+//                {
+//                    foreach (var objective in goalObjectives)
+//                    {
+//                        // to calculate scndTermPercentage Percentage
+//                        if (objective.IsMasterd == true)
+//                        {
+//                            scndTermPercentage = scndTermPercentage + (objective.ObjectiveNumber == null ? 0 : objective.ObjectiveNumber.Value);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    #endregion
 //}
 #endregion
 
