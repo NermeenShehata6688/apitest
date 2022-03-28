@@ -709,18 +709,8 @@ namespace IesSchool.Core.Services
                     _iesContext.Database.ExecuteSqlRaw(cmd);
 
                     var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
-                    objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
+                   // objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
 
-                    //if (objectiveActivitiesDto.Activities != null)
-                    //{
-                    //    var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
-                    //    _iesContext.Database.ExecuteSqlRaw(cmd);
-                    //    if (objectiveActivitiesDto.Activities != null && objectiveActivitiesDto.Activities.Count() > 2)
-                    //    {
-                    //        var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
-                    //        objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
-                    //    }
-                    //}
                     var mapper = _mapper.Map<Objective>(objectiveActivitiesDto);
                     mapper.IsDeleted = false;
                     _uow.GetRepository<Objective>().Update(mapper);
@@ -1082,7 +1072,7 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<IepExtraCurricular>(iepExtraCurricularDto);
                 _uow.GetRepository<IepExtraCurricular>().Update(mapper);
 
-                var cmd = $"update IXP set  ExTeacherId ={iepExtraCurricularDto.ExTeacherId} Where Id ={iepExtraCurricularDto.Id}";
+                var cmd = $"update IXP set  ExTeacherId ={iepExtraCurricularDto.ExTeacherId},ExtraCurricularId={iepExtraCurricularDto.ExtraCurricularId} Where Id ={iepExtraCurricularDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
 
                 _uow.SaveChanges();

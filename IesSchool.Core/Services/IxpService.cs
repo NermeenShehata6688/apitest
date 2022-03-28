@@ -448,7 +448,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepExtraCurriculars = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.ExTeacherId == teacherId && x.IsIxpCreated != true, null,
+                var iepExtraCurriculars = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.ExTeacherId == teacherId && x.IsIxpCreated != true && x.IsDeleted != true, null,
                  x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
                  .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
                  .Include(x => x.Iep).ThenInclude(x => x.Term)

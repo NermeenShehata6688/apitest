@@ -5233,7 +5233,7 @@ namespace IesSchool.Core.Services
 						lastRow = worksheet.Rows.Length;
 
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
-						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.StudentNotes;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.FooterNotes;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -5569,7 +5569,7 @@ namespace IesSchool.Core.Services
 						lastRow = worksheet.Rows.Length;
 
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
-						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.StudentNotes;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.FooterNotes;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;

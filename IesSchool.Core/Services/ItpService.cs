@@ -681,7 +681,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().GetList(x => x.TherapistId == therapistId && x.IsItpCreated!=true, null,
+                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().GetList(x => x.TherapistId == therapistId && x.IsItpCreated!=true && x.IsDeleted != true, null,
                  x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
                  .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
                  .Include(x => x.Iep).ThenInclude(x => x.Term)
