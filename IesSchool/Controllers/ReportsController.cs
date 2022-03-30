@@ -40,9 +40,9 @@ namespace IesSchool.Controllers
                 var all = _reportService.IepReport(iepId);
                 return all;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
         [HttpGet]

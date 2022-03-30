@@ -431,7 +431,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = iep.Term.Name == null ? "" : iep.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -726,7 +726,7 @@ namespace IesSchool.Core.Services
 						{
 							foreach (var Para in iep.IepParamedicalServices)
 							{
-								worksheet.Range["A" + (lastRow+1) + ":BE" + lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["A" + (lastRow+1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["A" + lastRow + ":AD" + lastRow].Merge();
 								worksheet.Range["A" + lastRow + ":AD" + lastRow].Text = Para.ParamedicalService == null ? "" : Para.ParamedicalService.Name;
 								worksheet.Range["A" + lastRow + ":AD" + lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -1272,8 +1272,8 @@ namespace IesSchool.Core.Services
 						string dateOfBirthName = iepProgressReportDto.StudentBirthDay == null ? "" : iepProgressReportDto.StudentBirthDay;
 						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
 						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
-
-					  worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						//workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
+						worksheet = workbook.Worksheets.Create(studentCodeName + "(" +   acadmicYearName.Replace("/", "-"  )   + "(" + termName + ")");
 					 dataWorksheet = workbook.Worksheets.Create("Data");
 						//IChartShape chart = worksheet.Charts.Add();
 
@@ -1654,7 +1654,9 @@ namespace IesSchool.Core.Services
 						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
 						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
 
-						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						//worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName.Replace("/", "-") + "(" + termName + ")");
+
 						dataWorksheet = workbook.Worksheets.Create("Data");
 						//IChartShape chart = worksheet.Charts.Add();
 
@@ -2077,7 +2079,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = iep.Term.Name == null ? "" : iep.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -3302,7 +3304,7 @@ namespace IesSchool.Core.Services
                         {
                             termName = itp.Term.Name == null ? "" : itp.Term.Name;
                         }
-                        worksheet = workbook.Worksheets.Create(acadmicYearName);
+                        worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
                         #region General
                         //Disable gridlines in the worksheet
                         worksheet.IsGridLinesVisible = true;
@@ -3738,7 +3740,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -4020,7 +4022,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itp.Term.Name == null ? "" : itp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -4467,7 +4469,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -4750,7 +4752,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = ixp.Term.Name == null ? "" : ixp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -5065,7 +5067,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = ixp.Term.Name == null ? "" : ixp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -5758,7 +5760,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = iep.Term.Name == null ? "" : iep.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 						#region General
 						//Disable gridlines in the worksheet
@@ -6354,7 +6356,9 @@ namespace IesSchool.Core.Services
 						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
 						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
 
-						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						//worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName.Replace("/", "-") + "(" + termName + ")");
+
 						dataWorksheet = workbook.Worksheets.Create("Data");
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 
@@ -6795,7 +6799,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itp.Term.Name == null ? "" : itp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 
 						#region General
@@ -7263,7 +7267,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 						#region General
 						//Disable gridlines in the worksheet
@@ -7567,7 +7571,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = ixp.Term.Name == null ? "" : ixp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 
 						#region General
