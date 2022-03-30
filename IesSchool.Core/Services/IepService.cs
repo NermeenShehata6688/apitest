@@ -66,6 +66,8 @@ namespace IesSchool.Core.Services
                     UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
                     AllStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(null, null, null, 0, 1000000, true),
                     AllStudentExtraTeacher = _uow.GetRepository<StudentExtraTeacher>().GetList(null, null, null, 0, 1000000, true),
+                    Setting = _uow.GetRepository<Setting>().Single(),
+
                 };
                 var mapper = _mapper.Map<IepHelper2Dto>(iepHelper);
 
