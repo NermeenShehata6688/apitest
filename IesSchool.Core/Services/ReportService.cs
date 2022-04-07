@@ -431,7 +431,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = iep.Term.Name == null ? "" : iep.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -726,7 +726,7 @@ namespace IesSchool.Core.Services
 						{
 							foreach (var Para in iep.IepParamedicalServices)
 							{
-								worksheet.Range["A" + (lastRow+1) + ":BE" + lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+								worksheet.Range["A" + (lastRow+1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["A" + lastRow + ":AD" + lastRow].Merge();
 								worksheet.Range["A" + lastRow + ":AD" + lastRow].Text = Para.ParamedicalService == null ? "" : Para.ParamedicalService.Name;
 								worksheet.Range["A" + lastRow + ":AD" + lastRow].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -1272,8 +1272,8 @@ namespace IesSchool.Core.Services
 						string dateOfBirthName = iepProgressReportDto.StudentBirthDay == null ? "" : iepProgressReportDto.StudentBirthDay;
 						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
 						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
-
-					  worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						//workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
+						worksheet = workbook.Worksheets.Create(studentCodeName + "(" +   acadmicYearName.Replace("/", "-"  )   + "(" + termName + ")");
 					 dataWorksheet = workbook.Worksheets.Create("Data");
 						//IChartShape chart = worksheet.Charts.Add();
 
@@ -1654,7 +1654,9 @@ namespace IesSchool.Core.Services
 						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
 						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
 
-						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						//worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName.Replace("/", "-") + "(" + termName + ")");
+
 						dataWorksheet = workbook.Worksheets.Create("Data");
 						//IChartShape chart = worksheet.Charts.Add();
 
@@ -2077,7 +2079,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = iep.Term.Name == null ? "" : iep.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -3252,7 +3254,8 @@ namespace IesSchool.Core.Services
                     var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
                         x => x.Include(x => x.Student).ThenInclude(x => x.Department)
                     .Include(x => x.Student).ThenInclude(x => x.Teacher)
-                    .Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+                    .Include(x => x.Therapist)
+					//.Include(x => x.TherapistDepartment)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.HeadOfEducation)
                     .Include(x => x.ParamedicalService)
@@ -3301,7 +3304,7 @@ namespace IesSchool.Core.Services
                         {
                             termName = itp.Term.Name == null ? "" : itp.Term.Name;
                         }
-                        worksheet = workbook.Worksheets.Create(acadmicYearName);
+                        worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
                         #region General
                         //Disable gridlines in the worksheet
                         worksheet.IsGridLinesVisible = true;
@@ -3737,7 +3740,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -3969,7 +3972,8 @@ namespace IesSchool.Core.Services
 					var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
 						x => x.Include(x => x.Student).ThenInclude(x => x.Department)
 					.Include(x => x.Student).ThenInclude(x => x.Teacher)
-					.Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+					.Include(x => x.Therapist)
+					.Include(x => x.TherapistDepartment)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
 					.Include(x => x.ParamedicalService)
@@ -4018,7 +4022,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itp.Term.Name == null ? "" : itp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -4465,7 +4469,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -4706,7 +4710,9 @@ namespace IesSchool.Core.Services
 						.Include(x => x.Student).ThenInclude(x => x.Teacher)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
-					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+					.Include(x => x.IxpExtraCurriculars)
+					.Include(x => x.ExTeacher)
+					.Include(x => x.ExtraCurricular)
 					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
 					);
 
@@ -4746,7 +4752,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = ixp.Term.Name == null ? "" : ixp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -4857,7 +4863,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-							//	worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+							    worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
@@ -4910,7 +4916,7 @@ namespace IesSchool.Core.Services
                         lastRow = worksheet.Rows.Length;
 
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
-						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.StudentNotes;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.FooterNotes;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -4945,17 +4951,17 @@ namespace IesSchool.Core.Services
 						if (ixp.IxpExtraCurriculars.Count() > 0)
 						{
 							lastRow = worksheet.Rows.Length + 1;
-
-							foreach (var extra in ixp.IxpExtraCurriculars)
-							{
-								worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Merge();
-								//worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Text = "Teacher Of :" + extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name; ;
+							var extra = ixp.IxpExtraCurriculars.FirstOrDefault();
+							//foreach (var extra in ixp.IxpExtraCurriculars.FirstOrDefault())
+							//{
+							worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Merge();
+								worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].Text = "Teacher Of :" + ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name; ;
 								worksheet.Range["A" + (lastRow ) + ":J" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 								worksheet.Range["J" + (lastRow )].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
 								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Merge();
-								//worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text =  extra.Teacher == null ? "" : extra.Teacher.Name == null ? "" : extra.Teacher.Name; ;
+								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = ixp.ExTeacher == null ? "" : ixp.ExTeacher.Name == null ? "" : ixp.ExTeacher.Name; ;
 								worksheet.Range["A" + (lastRow) + ":BE" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["Y" + (lastRow )].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
@@ -4972,7 +4978,7 @@ namespace IesSchool.Core.Services
 
 								lastRow++;
 
-							}
+							//}
 						}
 						#endregion
 					}
@@ -5019,7 +5025,9 @@ namespace IesSchool.Core.Services
 						.Include(x => x.Student).ThenInclude(x => x.Teacher)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
-					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+					.Include(x => x.IxpExtraCurriculars)
+					.Include(x => x.ExTeacher)
+					.Include(x => x.ExtraCurricular)
 					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
 					);
 
@@ -5059,7 +5067,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = ixp.Term.Name == null ? "" : ixp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						#region General
 						//Disable gridlines in the worksheet
 						worksheet.IsGridLinesVisible = true;
@@ -5170,7 +5178,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-							//	worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
@@ -5223,7 +5231,7 @@ namespace IesSchool.Core.Services
 						lastRow = worksheet.Rows.Length;
 
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
-						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.StudentNotes;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.FooterNotes;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -5262,13 +5270,13 @@ namespace IesSchool.Core.Services
 							foreach (var extra in ixp.IxpExtraCurriculars)
 							{
 								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Merge();
-								//worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name; ;
+								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name; ;
 								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 								worksheet.Range["J" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
 								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Merge();
-								//worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = extra.Teacher == null ? "" : extra.Teacher.Name == null ? "" : extra.Teacher.Name; ;
+								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = ixp.ExTeacher == null ? "" : ixp.ExTeacher.Name == null ? "" : ixp.ExTeacher.Name; ;
 								worksheet.Range["A" + (lastRow) + ":BE" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["Y" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
@@ -5752,7 +5760,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = iep.Term.Name == null ? "" : iep.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 						#region General
 						//Disable gridlines in the worksheet
@@ -6348,7 +6356,9 @@ namespace IesSchool.Core.Services
 						string studentCodeName = iepProgressReportDto.StudentCode == null ? "" : iepProgressReportDto.StudentCode;
 						string studentDepartmentName = iepProgressReportDto.StudentDepartmentName == null ? "" : iepProgressReportDto.StudentDepartmentName;
 
-						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						//worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName + ")" + "(" + termName + ")");
+						worksheet = workbook.Worksheets.Create(studentCodeName + "(" + acadmicYearName.Replace("/", "-") + "(" + termName + ")");
+
 						dataWorksheet = workbook.Worksheets.Create("Data");
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 
@@ -6739,7 +6749,8 @@ namespace IesSchool.Core.Services
 					var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
 						x => x.Include(x => x.Student).ThenInclude(x => x.Department)
 					.Include(x => x.Student).ThenInclude(x => x.Teacher)
-					.Include(x => x.Therapist).Include(x => x.TherapistDepartment)
+					.Include(x => x.Therapist)
+					.Include(x => x.TherapistDepartment)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
 					.Include(x => x.ParamedicalService)
@@ -6788,7 +6799,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itp.Term.Name == null ? "" : itp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 
 						#region General
@@ -7256,7 +7267,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = itpProgressReport.Term.Name == null ? "" : itpProgressReport.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 						#region General
 						//Disable gridlines in the worksheet
@@ -7517,7 +7528,10 @@ namespace IesSchool.Core.Services
 						.Include(x => x.Student).ThenInclude(x => x.Teacher)
 					.Include(x => x.AcadmicYear).Include(x => x.Term)
 					.Include(x => x.HeadOfEducation)
-					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+					.Include(x => x.IxpExtraCurriculars)
+					.Include(x => x.ExTeacher)
+					.Include(x => x.ExtraCurricular)
+
 					//.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
 					);
 
@@ -7557,7 +7571,7 @@ namespace IesSchool.Core.Services
 						{
 							termName = ixp.Term.Name == null ? "" : ixp.Term.Name;
 						}
-						worksheet = workbook.Worksheets.Create(acadmicYearName);
+						worksheet = workbook.Worksheets.Create(acadmicYearName.Replace("/", "-"));
 						worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
 
 						#region General
@@ -7674,7 +7688,7 @@ namespace IesSchool.Core.Services
 
 
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Merge();
-								//worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name;
+								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].Text = ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name;
 								worksheet.Range["B" + (lastRow + 1) + ":W" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
 								worksheet.Range["X" + (lastRow + 1) + ":AL" + (lastRow + 1)].Merge();
@@ -7728,7 +7742,7 @@ namespace IesSchool.Core.Services
 						lastRow = worksheet.Rows.Length;
 
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Merge();
-						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.StudentNotes;
+						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].Text = ixp.FooterNotes;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["A" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 						worksheet.Range["BE" + (lastRow + 2) + ":BE" + (lastRow + 4)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
@@ -7765,17 +7779,18 @@ namespace IesSchool.Core.Services
 						if (ixp.IxpExtraCurriculars.Count() > 0)
 						{
 							lastRow = worksheet.Rows.Length + 1;
+							var extra = ixp.IxpExtraCurriculars.FirstOrDefault();
 
-							foreach (var extra in ixp.IxpExtraCurriculars)
-							{
-								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Merge();
-								//worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + extra.ExtraCurricular == null ? "" : extra.ExtraCurricular.Name == null ? "" : extra.ExtraCurricular.Name; ;
+							//foreach (var extra in ixp.IxpExtraCurriculars)
+							//{
+							worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Merge();
+								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].Text = "Teacher Of :" + ixp.ExtraCurricular == null ? "" : ixp.ExtraCurricular.Name == null ? "" : ixp.ExtraCurricular.Name; ;
 								worksheet.Range["A" + (lastRow) + ":J" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 								worksheet.Range["J" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
 
 								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Merge();
-								//worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = extra.Teacher == null ? "" : extra.Teacher.Name == null ? "" : extra.Teacher.Name; ;
+								worksheet.Range["K" + (lastRow) + ":Y" + (lastRow)].Text = ixp.ExTeacher == null ? "" : ixp.ExTeacher.Name == null ? "" : ixp.ExTeacher.Name; ;
 								worksheet.Range["A" + (lastRow) + ":BE" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 								worksheet.Range["Y" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
@@ -7793,7 +7808,7 @@ namespace IesSchool.Core.Services
 
 								lastRow++;
 
-							}
+							//}
 						}
 						#endregion
 					}

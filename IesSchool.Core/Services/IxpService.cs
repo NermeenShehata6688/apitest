@@ -56,8 +56,8 @@ namespace IesSchool.Core.Services
                     x => x.Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
-                    //.Include(s => s.IxpExtraCurriculars)
-                    // .ThenInclude(s => s.ExtraCurricular)
+                      .Include(s => s.ExtraCurricular)
+                       .Include(s => s.ExTeacher)
                      , 0, 100000, true);
                 var AllIxps = _mapper.Map<PaginateDto<IxpDto>>(AllIxpsx).Items;
                 if (ixpSearchDto.Student_Id != null)
@@ -70,7 +70,8 @@ namespace IesSchool.Core.Services
                 }
                 if (ixpSearchDto.ExtraCurricularTeacher_Id != null)
                 {
-                    AllIxps = AllIxps.Where(x => x.ExtraCurricularTeacherIds.Contains(ixpSearchDto.ExtraCurricularTeacher_Id == null ? 0 : ixpSearchDto.ExtraCurricularTeacher_Id.Value)).ToList();
+                    AllIxps = AllIxps.Where(x => x.ExTeacherId== ixpSearchDto.ExtraCurricularTeacher_Id).ToList();
+                    //AllIxps = AllIxps.Where(x => x.ExtraCurricularTeacherIds.Contains(ixpSearchDto.ExtraCurricularTeacher_Id == null ? 0 : ixpSearchDto.ExtraCurricularTeacher_Id.Value)).ToList();
                 }
                 if (ixpSearchDto.Term_Id != null)
                 {
@@ -78,7 +79,7 @@ namespace IesSchool.Core.Services
                 }
                 if (ixpSearchDto.ExtraCurricular_Id != null )
                 {
-                    AllIxps = AllIxps.Where(x => x.ExtraCurricularIds.Contains(ixpSearchDto.ExtraCurricular_Id == null ? 0 : ixpSearchDto.ExtraCurricular_Id.Value)).ToList();
+                    AllIxps = AllIxps.Where(x => x.ExtraCurricularId== ixpSearchDto.ExtraCurricular_Id).ToList();
                 }
                 if (ixpSearchDto.Status != null)
                 {
@@ -111,7 +112,7 @@ namespace IesSchool.Core.Services
             {
                 var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
                     x => x
-                    //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                    .Include(x => x.IxpExtraCurriculars)
                     //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
                      .Include(s => s.AcadmicYear)
@@ -130,11 +131,35 @@ namespace IesSchool.Core.Services
             {
                 if (ixpDto != null)
                 {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+
                     ixpDto.IsDeleted = false;
                     ixpDto.CreatedOn = DateTime.Now;
                     var mapper = _mapper.Map<Ixp>(ixpDto);
                     _uow.GetRepository<Ixp>().Add(mapper);
                     _uow.SaveChanges();
+
+                    if (ixpDto.FooterNotes != null)
+                    {
+                        if (mapper.Id>0)
+                        {
+                            var iepProgressExtra = _uow.GetRepository<ProgressReportExtraCurricular>().GetList(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
+
+                            if (iepProgressExtra != null && iepProgressExtra.Items.Count() > 0)
+                            {
+                                var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
+
+                                iepProgressExtraLast.Comment = ixpDto.FooterNotes;
+                                _uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
+                                _uow.SaveChanges();
+                            }
+                        }
+                    }
+
+                    var cmd = $"UPDATE IEP_ExtraCurricular SET IsIxpCreated = 1  Where Id =" + ixpDto.Id;
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    transaction.Commit();
+
                     ixpDto.Id = mapper.Id;
                     return new ResponseDto { Status = 1, Message = "Ixp Added  Seccessfuly", Data = ixpDto };
                 }
@@ -154,7 +179,22 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<Ixp>(ixpDto);
                 _uow.GetRepository<Ixp>().Update(mapper);
                 _uow.SaveChanges();
-                ixpDto.Id = mapper.Id;
+                if (ixpDto.FooterNotes != null)
+                {
+                    if (mapper.Id > 0)
+                    {
+                        var iepProgressExtra = _uow.GetRepository<ProgressReportExtraCurricular>().GetList(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
+
+                        if (iepProgressExtra != null && iepProgressExtra.Items.Count() > 0)
+                        {
+                            var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
+
+                            iepProgressExtraLast.Comment = ixpDto.FooterNotes;
+                            _uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
+                            _uow.SaveChanges();
+                        }
+                    }
+                }
                 ixpDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Ixp Updated Seccessfuly", Data = ixpDto };
             }
@@ -408,7 +448,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepExtraCurriculars = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.ExTeacherId == teacherId && x.IsIxpCreated != true, null,
+                var iepExtraCurriculars = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.ExTeacherId == teacherId && x.IsIxpCreated != true && x.IsDeleted != true, null,
                  x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
                  .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
                  .Include(x => x.Iep).ThenInclude(x => x.Term)

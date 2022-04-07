@@ -32,14 +32,13 @@ namespace IesSchool.Context.Models
         public bool? IsPublished { get; set; }
         public int? ExtraCurricularId { get; set; }
         public int? ExTeacherId { get; set; }
-        public int? IepextraCurricularId { get; set; }
 
         public virtual AcadmicYear? AcadmicYear { get; set; }
         public virtual User? ExTeacher { get; set; }
         public virtual ExtraCurricular? ExtraCurricular { get; set; }
         public virtual User? HeadOfDepartment { get; set; }
         public virtual User? HeadOfEducation { get; set; }
-        public virtual IepExtraCurricular? IepextraCurricular { get; set; }
+        public virtual IepExtraCurricular IdNavigation { get; set; } = null!;
         public virtual Student? Student { get; set; }
         public virtual Term? Term { get; set; }
         public virtual ICollection<IxpExtraCurricular> IxpExtraCurriculars { get; set; }

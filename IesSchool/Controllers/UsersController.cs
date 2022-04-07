@@ -19,7 +19,7 @@ namespace IesSchool.Controllers
             _fileService = fileService;
         }
 
-        [ResponseCache(Duration = 800)]
+      //  [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetUserHelper()
         {
@@ -48,7 +48,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        [ResponseCache(Duration = 1800)]
+        //[ResponseCache(Duration = 1800)]
         public IActionResult GetUsersWithCache([FromQuery] UserSearchDto userSearchDto)
         {
             try
@@ -353,7 +353,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        [ResponseCache(Duration = 1800)]
+      //  [ResponseCache(Duration = 1800)]
         public IActionResult GetAllParentsWithCach([FromQuery] UserSearchDto userSearchDto)
         {
             try

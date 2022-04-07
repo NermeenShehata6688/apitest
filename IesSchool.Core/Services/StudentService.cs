@@ -32,7 +32,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted <> 1");
+                var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted <> 1 OR IsDeleted IS NULL");
 
                 if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {

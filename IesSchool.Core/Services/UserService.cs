@@ -72,7 +72,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allUsers = _uow.GetRepository<VwUser>().Query("select * from Vw_Users where IsDeleted != 1 and IsParent != 1");
+                var allUsers = _uow.GetRepository<VwUser>().Query("select * from Vw_Users where IsDeleted != 1 and IsParent != 1 OR IsParent IS NULL");
 
                 if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
                 {

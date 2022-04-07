@@ -141,7 +141,7 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<Itp>().Add(mapper);
                     _uow.SaveChanges();
 
-                    var cmd = $"UPDATE IEP_ParamedicalService SET IsItpCreated = 1 Where Id ="+ itpDto.IepparamedicalServiceId;
+                    var cmd = $"UPDATE IEP_ParamedicalService SET IsItpCreated = 1 Where Id ="+ itpDto.Id;
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     transaction.Commit();
                     itpDto.Id = mapper.Id;
@@ -522,11 +522,30 @@ namespace IesSchool.Core.Services
         {
             try
             {
+                using var transaction = _iesContext.Database.BeginTransaction();
                 itpProgressReportDto.IsDeleted = false;
                 itpProgressReportDto.CreatedOn = DateTime.Now;
                 var mapper = _mapper.Map<ItpProgressReport>(itpProgressReportDto);
                 _uow.GetRepository<ItpProgressReport>().Add(mapper);
                 _uow.SaveChanges();
+
+
+                if (itpProgressReportDto.GeneralComment!=null)
+                {
+                    var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true);
+          
+                    if (iepProgressParamedical!= null && iepProgressParamedical.Items.Count()>0)
+                    {
+                       var iepProgressParamedicalLast = iepProgressParamedical.Items.OrderByDescending(x => x.CreatedOn).First();
+
+                        iepProgressParamedicalLast.Comment = itpProgressReportDto.GeneralComment;
+                        _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedicalLast);
+                        _uow.SaveChanges();
+                    }
+                }
+
+                transaction.Commit();
+
                 itpProgressReportDto.Id = mapper.Id;
                 return new ResponseDto { Status = 1, Message = "Itp Progress Report Added  Seccessfuly", Data = itpProgressReportDto };
             }
@@ -540,6 +559,21 @@ namespace IesSchool.Core.Services
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
+
+                if (itpProgressReportDto.GeneralComment != null)
+                {
+                    var iepProgressParamedical = _uow.GetRepository<ProgressReportParamedical>().GetList(x => x.IepParamedicalSerciveId == itpProgressReportDto.ItpId && x.IsDeleted != true);
+
+                    if (iepProgressParamedical != null && iepProgressParamedical.Items.Count() > 0)
+                    {
+                        var iepProgressParamedicalLast = iepProgressParamedical.Items.OrderByDescending(x => x.CreatedOn).First();
+
+                        iepProgressParamedicalLast.Comment = itpProgressReportDto.GeneralComment;
+                        _uow.GetRepository<ProgressReportParamedical>().Update(iepProgressParamedicalLast);
+                        _uow.SaveChanges();
+                    }
+                }
+
                 var cmd = $"delete from ITP_ObjectiveProgressReport where ItpProgressReportId={itpProgressReportDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
 
@@ -647,7 +681,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().GetList(x => x.TherapistId == therapistId && x.IsItpCreated!=true, null,
+                var iepParamedicalServices = _uow.GetRepository<IepParamedicalService>().GetList(x => x.TherapistId == therapistId && x.IsItpCreated!=true && x.IsDeleted != true, null,
                  x => x.Include(x => x.Iep).ThenInclude(x => x.Student)
                  .Include(x => x.Iep).ThenInclude(x => x.AcadmicYear)
                  .Include(x => x.Iep).ThenInclude(x => x.Term)

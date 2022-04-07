@@ -10,7 +10,7 @@ namespace IesSchool.Core.Dto
 {
     internal class IepHelper2
     {
-       
+
         public IPaginate<Area> AllAreas { get; set; }
         public IPaginate<Strand> AllStrands { get; set; }
         public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
@@ -20,6 +20,9 @@ namespace IesSchool.Core.Dto
         public IPaginate<User> AllTherapist { get; set; }
         public IPaginate<TherapistParamedicalService> TherapistParamedicalService { get; set; }
         public IPaginate<UserExtraCurricular> UserExtraCurricular { get; set; }
+        public IPaginate<StudentTherapist> AllStudentTherapist { get; set; }
+        public IPaginate<StudentExtraTeacher> AllStudentExtraTeacher { get; set; }
+        public Setting Setting { get; set; }
     }
     public class IepHelper2Dto
     {
@@ -33,5 +36,8 @@ namespace IesSchool.Core.Dto
         public PaginateDto<UserDto> AllTherapist { get; set; }
         public PaginateDto<TherapistParamedicalServiceDto> TherapistParamedicalService { get; set; }
         public PaginateDto<UserExtraCurricularDto> UserExtraCurricular { get; set; }
+        public PaginateDto<StudentTherapistDto> AllStudentTherapist { get; set; }
+        public PaginateDto<StudentExtraTeacherDto> AllStudentExtraTeacher { get; set; }
+        public SettingDto Setting { get; set; }
     }
-    }
+}
