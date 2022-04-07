@@ -56,8 +56,6 @@ namespace IesSchool.Controllers
 
             try
             {
-
-
                 var result = _userManager.Users.ToList();
                 foreach (var item in result)
                 {
@@ -170,7 +168,6 @@ namespace IesSchool.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
             }
-          
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                  _configuration.GetSection("AppSettings:Token").Value));
@@ -187,32 +184,7 @@ namespace IesSchool.Controllers
             return jwt;
         }
       
-        //[HttpPost]
-        //public async Task<object> Register([FromBody]RegisterDto model)
-        //{
-        //    var user = new IdentityUser
-        //    {
-        //        UserName = model.Email,
-        //        Email = model.Email,
-
-        //    };
-
-        //    var result = await _userManager.CreateAsync(user, model.Password);
-
-        //    if (result.Succeeded)
-        //    {
-        //        //var roles =  _userManager.AddToRolesAsync(user, model.Roles);
-        //        var usere = await _userManager.FindByIdAsync(user.Id);
-        //        var roleresult = await _userManager.AddToRolesAsync(usere, model.Roles);
-
-        //        await _signInManager.SignInAsync(user, false);
-        //        return await GenerateJwtToken(model.Email, user);
-        //    }
-
-        //    return new { error = string.Join(",", result.Errors.Select(x=>x.Description)) };
-        //}
-
-
+     
         [HttpPost]
         //[Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -432,6 +404,48 @@ namespace IesSchool.Controllers
                         return Ok(new ResponseDto
                         { Status = 0, Errormessage = "faild To Change Password !!",
                             Data = string.Join(",", updateResult2.Errors.Select(x => x.Description))
+                        });
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    return Ok(new ResponseDto { Data = ex.ToString(), Errormessage = "Password Change Failed" + ex.Message.ToString(), Status = 0 });
+
+                }
+
+            }
+
+
+        }    
+        
+        public async Task<IActionResult> RestPassword([FromBody] RestPasswordModel model)
+
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+
+                try
+                {
+
+                    var userr = _userManager.Users.First(x => x.UserName == model.UserName);
+                string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userr);
+                   IdentityResult updateResult = await _userManager.ResetPasswordAsync(userr, resetToken, model.NewPassword);
+                    if (updateResult.Succeeded)
+                    {
+                        return Ok(new ResponseDto {  Status = 1 ,Message = "Password Rest Succesfully"});
+                    }
+                    else
+                    {
+                        return Ok(new ResponseDto
+                        {
+                            Status = 0, Errormessage = "faild To Rest Password !!",
+                            Data = string.Join(",", updateResult.Errors.Select(x => x.Description))
                         });
                     }
 
