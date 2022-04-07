@@ -216,7 +216,7 @@ namespace IesSchool.Core.Services
                 .Include(x => x.UserAttachments).ThenInclude(x => x.AttachmentType)
                 .Include(x => x.UserAssistants).Include(x => x.TherapistParamedicalServices)
                 .Include(x => x.UserExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
-                .Include(x => x.StudentExtraTeachers)
+                //.Include(x => x.StudentExtraTeachers)
                 .Include(x => x.AspNetUser)
                 .Include(x => x.StudentParents));
                 if (user != null)
@@ -480,8 +480,9 @@ namespace IesSchool.Core.Services
                         $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
                         $"delete from UserAttachment where UserId={userDto.Id}" +
                         $" delete from Student_Therapist where TherapistId={ userDto.Id}" +
-                        $"delete from User_ExtraCurricular where UserId={userDto.Id}" +
-                        $" delete from Student_ExtraTeacher where ExtraTeacherId={ userDto.Id}";
+                        $"delete from User_ExtraCurricular where UserId={userDto.Id}"
+                       // + $" delete from Student_ExtraTeacher where ExtraTeacherId={ userDto.Id}"
+                        ;
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     //change image to binary
                     MemoryStream ms = new MemoryStream();
@@ -557,8 +558,9 @@ namespace IesSchool.Core.Services
                         $"delete from TherapistParamedicalService where UserId={userDto.Id}" +
                         $"delete from UserAttachment where UserId={userDto.Id}" +
                         $" delete from Student_Therapist where TherapistId={ userDto.Id}"+
-                         $"delete from User_ExtraCurricular where UserId={userDto.Id}" +
-                        $" delete from Student_ExtraTeacher where ExtraTeacherId={ userDto.Id}";
+                         $"delete from User_ExtraCurricular where UserId={userDto.Id}"
+                        //+ $" delete from Student_ExtraTeacher where ExtraTeacherId={ userDto.Id}"
+                        ;
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     
                     var mapper = _mapper.Map<User>(userDto);
@@ -618,8 +620,9 @@ namespace IesSchool.Core.Services
                     $"delete from TherapistParamedicalService where UserId={userId}" +
                     $"delete from UserAttachment where UserId={userId}" +
                     $" delete from Student_Therapist where TherapistId={userId}" +
-                     $"delete from User_ExtraCurricular where UserId={userId}" +
-                    $" delete from Student_ExtraTeacher where ExtraTeacherId={ userId}";
+                     $"delete from User_ExtraCurricular where UserId={userId}"
+                    //+ $" delete from Student_ExtraTeacher where ExtraTeacherId={ userId}"
+                    ;
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 User user = _uow.GetRepository<User>().Single(x => x.Id == userId);
                 user.IsDeleted = true;
