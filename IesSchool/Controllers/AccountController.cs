@@ -418,8 +418,8 @@ namespace IesSchool.Controllers
             }
 
 
-        }    
-        
+        }
+        [HttpPost]
         public async Task<IActionResult> RestPassword([FromBody] RestPasswordModel model)
 
         {
