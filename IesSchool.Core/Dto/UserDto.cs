@@ -46,7 +46,7 @@ namespace IesSchool.Core.Dto
         public virtual ICollection<UserAttachmentDto>? UserAttachments { get; set; }
 
         public virtual ICollection<UserExtraCurricularDto>? UserExtraCurriculars { get; set; }
-        public virtual ICollection<StudentExtraTeacherDto>? StudentExtraTeachers { get; set; }
+       // public virtual ICollection<StudentExtraTeacherDto>? StudentExtraTeachers { get; set; }
 
        // public virtual ICollection<StudentParentDto>? StudentParents { get; set; }
 
