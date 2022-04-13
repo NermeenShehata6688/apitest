@@ -118,9 +118,14 @@ namespace IesSchool.Core.Services
                 {
                     allUsers = allUsers.Where(x => x.IsSuspended == userSearchDto.IsSuspended);
                 }
-                if (userSearchDto.DepartmentId != null)
+                //if (userSearchDto.DepartmentId != null)
+                //{
+                //    allUsers = allUsers.Where(x => x.DepartmentId == userSearchDto.DepartmentId);
+                //}
+                if (userSearchDto.DepartmentIdsLst != null)
                 {
-                    allUsers = allUsers.Where(x => x.DepartmentId == userSearchDto.DepartmentId);
+                    //studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value)
+                    allUsers = allUsers.Where(x => userSearchDto.DepartmentIdsLst.Contains( x.DepartmentId.Value == null ? 0 : x.DepartmentId.Value));
                 }
 
                 var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);

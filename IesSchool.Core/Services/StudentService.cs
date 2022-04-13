@@ -33,6 +33,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted <> 1 OR IsDeleted IS NULL");
+                allStudents = allStudents.OrderBy(x => x.Code);
 
                 if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {
