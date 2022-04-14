@@ -20,7 +20,7 @@ namespace IesSchool.Core.Dto
         public bool? IsSuspended { get; set; }
         public int? DepartmentId { get; set; }
        // public int[]? DepartmentIdsLst { get; set; }
-        public string DepartmentIdsLst { get; set; }
+        public string? DepartmentIdsLst { get; set; }
         public int? Index { get; set; }
         public int? PageSize { get; set; }
 
