@@ -7849,7 +7849,7 @@ namespace IesSchool.Core.Services
             }
         }
         #endregion
-        #region Students Reports Excel & PDF
+        #region Students Reports Excel 
         public FileStreamResult StudentReport(StudentSearchDto studentSearchDto)
         {
             try
@@ -8002,7 +8002,7 @@ namespace IesSchool.Core.Services
                             foreach (var item in allStudents)
                             {
                                 lastRow = worksheet.Rows.Length;
-                                worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                               // worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
                                 worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Merge();
                                 worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Text = stdCount.ToString();
@@ -8026,6 +8026,7 @@ namespace IesSchool.Core.Services
                                 worksheet.Range["BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
                                 stdCount++;
                             }
+                            worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
                         }
                         else
@@ -8096,7 +8097,7 @@ namespace IesSchool.Core.Services
                             foreach (var item in allStudents)
                             {
                                 lastRow = worksheet.Rows.Length;
-                                worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                               // worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
                                 worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Merge();
                                 worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Text = stdCount.ToString();
@@ -8126,6 +8127,7 @@ namespace IesSchool.Core.Services
 
                                 stdCount++;
                             }
+                            worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
 
                         }
                         else

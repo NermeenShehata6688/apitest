@@ -124,8 +124,13 @@ namespace IesSchool.Core.Services
                 //}
                 if (userSearchDto.DepartmentIdsLst != null)
                 {
-                    //studentIeps.Contains(x.IepId.Value == null ? 0 : x.IepId.Value)
-                    allUsers = allUsers.Where(x => userSearchDto.DepartmentIdsLst.Contains( x.DepartmentId.Value == null ? 0 : x.DepartmentId.Value));
+                    String[] strArray = userSearchDto.DepartmentIdsLst.Split(",");
+                    int[] intArray = new int[strArray.Length];
+                    for (int i = 0; i < strArray.Length; i++)
+                    {
+                        intArray[i] = int.Parse(strArray[i]);
+                    }
+                    allUsers = allUsers.Where(x => intArray.Contains( x.DepartmentId.Value == null ? 0 : x.DepartmentId.Value));
                 }
 
                 var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);
