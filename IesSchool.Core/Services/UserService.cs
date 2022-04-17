@@ -51,7 +51,7 @@ namespace IesSchool.Core.Services
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllAssistants = _uow.GetRepository  <Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
-                    AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, Code = x.Code }),x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                    AllAttachmentTypes= _uow.GetRepository<AttachmentType>().GetList(null, null, null, 0, 1000000, true),
                    AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true)
             };

@@ -33,7 +33,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted <> 1 OR IsDeleted IS NULL");
-                
+                allStudents = allStudents.OrderBy(x => x.Code);
 
                 if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {
@@ -82,7 +82,6 @@ namespace IesSchool.Core.Services
                 {
                     studentSearchDto.Index += 1;
                 }
-                lstToSend = lstToSend.OrderBy(x => x.Code).ToList();
                 var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstToSend != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstToSend.ToList() };
 
                 //var mapper = new PaginateDto<VwStudentDto> { Count = allStudents.Count(), Items = lstStudentDto != null ? lstStudentDto.Skip(studentSearchDto.Index == null || studentSearchDto.PageSize == null ? 0 : ((studentSearchDto.Index.Value - 1) * studentSearchDto.PageSize.Value)).Take(studentSearchDto.PageSize ??= 20).ToList() : lstStudentDto.ToList() };
