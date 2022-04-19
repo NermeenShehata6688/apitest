@@ -12,6 +12,7 @@ namespace IesSchool.Core.Dto
         public int? NationalityId { get; set; }
         public int? DepartmentId { get; set; }
         public int? TeacherId { get; set; }
+        public int? TherapistId { get; set; }
         public int? CityId { get; set; }
         public int? StateId { get; set; }
         public bool? IsSuspended { get; set; }
