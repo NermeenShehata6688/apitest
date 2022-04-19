@@ -7882,6 +7882,11 @@ namespace IesSchool.Core.Services
                         teacher = _uow.GetRepository<User>().Single(x => x.Id == studentSearchDto.TeacherId, null, x => x.Include(x => x.Department).Include(x => x.UserAssistants).ThenInclude(x => x.Assistant));
                         allStudents = allStudents.Where(x => x.TeacherId == studentSearchDto.TeacherId).ToList();
                     }
+                    if (studentSearchDto.TherapistId != null)
+                    {
+                        var therapistStudents = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == studentSearchDto.TherapistId, null, null, 0, 100000, true).Items.Select(x => x.StudentId).ToArray();
+                        allStudents = allStudents.Where(x => therapistStudents.Contains(x.Id)).ToList();
+                    }
                     if (studentSearchDto.StateId != null)
                     {
                         allStudents = allStudents.Where(x => x.StateId == studentSearchDto.StateId).ToList();
