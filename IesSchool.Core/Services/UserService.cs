@@ -51,7 +51,7 @@ namespace IesSchool.Core.Services
                     AllNationalities = _uow.GetRepository<Country>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllAssistants = _uow.GetRepository  <Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true , x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true),
-                    AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name }),x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
+                    AllStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, Code = x.Code }),x => x.IsDeleted != true, x => x.OrderBy(c => c.Name), null, 0, 1000000, true),
                    AllAttachmentTypes= _uow.GetRepository<AttachmentType>().GetList(null, null, null, 0, 1000000, true),
                    AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(x => x.IsDeleted != true, null, null, 0, 1000000, true)
             };
@@ -118,9 +118,19 @@ namespace IesSchool.Core.Services
                 {
                     allUsers = allUsers.Where(x => x.IsSuspended == userSearchDto.IsSuspended);
                 }
-                if (userSearchDto.DepartmentId != null)
+                //if (userSearchDto.DepartmentId != null)
+                //{
+                //    allUsers = allUsers.Where(x => x.DepartmentId == userSearchDto.DepartmentId);
+                //}
+                if (userSearchDto.DepartmentIdsLst != null)
                 {
-                    allUsers = allUsers.Where(x => x.DepartmentId == userSearchDto.DepartmentId);
+                    String[] strArray = userSearchDto.DepartmentIdsLst.Split(",");
+                    int[] intArray = new int[strArray.Length];
+                    for (int i = 0; i < strArray.Length; i++)
+                    {
+                        intArray[i] = int.Parse(strArray[i]);
+                    }
+                    allUsers = allUsers.Where(x => intArray.Contains( x.DepartmentId.Value == null ? 0 : x.DepartmentId.Value));
                 }
 
                 var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);

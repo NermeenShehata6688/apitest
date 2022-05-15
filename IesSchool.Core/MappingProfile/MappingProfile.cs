@@ -68,7 +68,9 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<VwSkill, VwSkillDto>().ReverseMap();
             #endregion
             #region Student
-            CreateMap<Student, StudentDto>().ReverseMap()
+            CreateMap<Student, StudentDto>()
+             //.ForMember(dist => dist.NationalityName, opt => opt.MapFrom(c => c.Nationality == null ? "" : c.Nationality.Name))
+            .ReverseMap()
            .ForMember(x => x.Department, op => op.Ignore())
            .ForMember(x => x.Nationality, op => op.Ignore());
 
@@ -227,7 +229,7 @@ namespace IesSchool.Core.MappingProfile
 
             .ForMember(dist => dist.TeacherName, opt => opt.MapFrom(c => c.Teacher == null ? "" : c.Teacher.Name))
             .ForMember(dist => dist.StudentDepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department == null ? "" : c.Student.Department.Name))
-            .ForMember(dist => dist.StudentBirthDay, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth.ToString()))
+            .ForMember(dist => dist.StudentBirthDay, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth == null ? "" : c.Student.DateOfBirth.Value.ToShortDateString()))
             .ForMember(dist => dist.StudentCode, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
             .ForMember(dist => dist.StudentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Name))
             .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name))

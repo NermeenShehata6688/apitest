@@ -14,10 +14,12 @@ namespace IesSchool.Controllers
     {
         private IStudentService _studentService;
         private IFileService _ifileService;
-        public StudentsController(IStudentService studentService, IFileService ifileService)
+        private IReportService _iReportService;
+        public StudentsController(IStudentService studentService, IFileService ifileService, IReportService iReportService)
         {
             _studentService = studentService;
             _ifileService = ifileService;
+            _iReportService = iReportService;
         }
         [HttpGet]
         public IActionResult GetStudents([FromQuery]StudentSearchDto studentSearchHelperDto)
@@ -365,6 +367,19 @@ namespace IesSchool.Controllers
             {
                 var all = _studentService.GetStudentHistoricalSkills(studentId);
                 return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public FileStreamResult StudentReport([FromQuery] StudentSearchDto studentSearchDto)
+        {
+            try
+            {
+                var all = _iReportService.StudentReport(studentSearchDto);
+                return all;
             }
             catch (Exception)
             {

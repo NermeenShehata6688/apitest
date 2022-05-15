@@ -108,14 +108,26 @@ builder.Services.AddMvc();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger().UseSwaggerUI(options =>
+//    {
+//        options.DocExpansion(DocExpansion.None);
+//    }); ;
+//    app.UseSwaggerUI();
+//}
+
+if (app.Environment.IsProduction())
 {
-    app.UseSwagger().UseSwaggerUI(options =>
-    {
-        options.DocExpansion(DocExpansion.None);
-    }); ;
-    app.UseSwaggerUI();
+    Console.WriteLine("is production");
+    app.UseSwaggerAuthorized();
+    app.UseSwagger();
+            app.UseSwaggerUI();
+    
+    //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"));
 }
+
+
 app.UseStaticFiles();
 app.UseCors("Iespolice");
 

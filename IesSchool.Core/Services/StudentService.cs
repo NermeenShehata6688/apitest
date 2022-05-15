@@ -33,6 +33,7 @@ namespace IesSchool.Core.Services
             try
             {
                 var allStudents = _uow.GetRepository<VwStudent>().Query("select * from Vw_Students where IsDeleted <> 1 OR IsDeleted IS NULL");
+                allStudents = allStudents.OrderBy(x => x.Code);
 
                 if (!string.IsNullOrEmpty(studentSearchDto.StringSearch))
                 {
@@ -52,6 +53,11 @@ namespace IesSchool.Core.Services
                 if (studentSearchDto.TeacherId != null)
                 {
                     allStudents = allStudents.Where(x => x.TeacherId == studentSearchDto.TeacherId);
+                }
+                if (studentSearchDto.TherapistId != null)
+                {
+                    var therapistStudents = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == studentSearchDto.TherapistId , null, null, 0, 100000, true).Items.Select(x => x.StudentId).ToArray();
+                    allStudents = allStudents.Where(x => therapistStudents.Contains(x.Id));
                 }
                 if (studentSearchDto.StateId != null)
                 {
