@@ -627,7 +627,6 @@ namespace IesSchool.Core.Services
                 User user = _uow.GetRepository<User>().Single(x => x.Id == userId);
                 user.IsDeleted = true;
                 user.DeletedOn = DateTime.Now;
-
                 _uow.GetRepository<User>().Update(user);
                 _uow.SaveChanges();
                 transaction.Commit();

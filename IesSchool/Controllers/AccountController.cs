@@ -295,7 +295,6 @@ namespace IesSchool.Controllers
 
      
 
-        //////////////asssssssssssssdddddddddddddddddddddddd
 
         [HttpGet]
         //[Route("GetAllRoles")]
