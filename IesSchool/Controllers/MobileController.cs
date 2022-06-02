@@ -331,5 +331,18 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        [HttpGet]
+        public ActionResult GetStudentProgressReports(int studentId)
+        {
+            try
+            {
+                var all = _iMobileService.GetStudentProgressReports(studentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

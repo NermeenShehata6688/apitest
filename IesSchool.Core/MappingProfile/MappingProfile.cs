@@ -237,6 +237,8 @@ namespace IesSchool.Core.MappingProfile
             .ForMember(dist => dist.StrandsCount, opt => opt.MapFrom(c => c.ProgressReportStrands.Count()))
             .ForMember(dist => dist.ParamedicalCount, opt => opt.MapFrom(c => c.ProgressReportParamedicals.Count()))
             .ForMember(dist => dist.ExtraCount, opt => opt.MapFrom(c => c.ProgressReportExtraCurriculars.Count()))
+            .ForMember(dist => dist.IepStatus, opt => opt.MapFrom(c => c.Iep == null ? 0 : c.Iep.Status))
+            .ForMember(dist => dist.IsIepPublished, opt => opt.MapFrom(c => c.Iep == null ? false: c.Iep.IsPublished))
                 .ReverseMap()
              .ForMember(x => x.Student, op => op.Ignore())
              .ForMember(x => x.AcadmicYear, op => op.Ignore())

@@ -34,6 +34,7 @@ namespace IesSchool.Core.IServices
         public string ItpProgressReportPdfPreview(int itpProgressReportId);
         public FileStreamResult IxpReportPDF(int ixpId);
         public string IxpReportPdfPreview(int ixpId);
+        public ResponseDto GetStudentProgressReports(int studentId);
 
     }
 }

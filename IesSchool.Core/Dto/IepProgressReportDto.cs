@@ -35,6 +35,9 @@ namespace IesSchool.Core.Dto
         public int? StrandsCount { get; set; }
         public int? ParamedicalCount { get; set; }
         public int? ExtraCount { get; set; }
+        public int? IepStatus { get; set; }
+        public bool? IsIepPublished { get; set; }
+
 
 
         public virtual ICollection<ProgressReportExtraCurricularDto>? ProgressReportExtraCurriculars { get; set; }
