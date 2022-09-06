@@ -1428,6 +1428,82 @@ namespace IesSchool.Core.Services
 
                         lastRow = worksheet.Rows.Length;
                         #endregion
+                        
+                        
+                        #region Images
+                        //Adding a picture
+                        FileStream SysFile = new FileStream("wwwroot/staticFiles/SysLogo.jpeg", FileMode.Open, FileAccess.Read);
+                        IPictureShape SysShape = worksheet.Pictures.AddPicture(4, 48, SysFile, 60, 60);
+
+                        //FileStream CisFile = new FileStream("wwwroot/staticFiles/CisLogo.png", FileMode.Open, FileAccess.Read);
+                        //IPictureShape CisShap = worksheet.Pictures.AddPicture(24, 41, CisFile, 20, 20);
+
+                        //FileStream AutFile = new FileStream("wwwroot/staticFiles/AutLogo.jpg", FileMode.Open, FileAccess.Read);
+                        //IPictureShape AutShap = worksheet.Pictures.AddPicture(23, 57, AutFile, 35, 35);
+
+                        //FileStream AFile = new FileStream("wwwroot/staticFiles/ALogo.jpg", FileMode.Open, FileAccess.Read);
+                        //IPictureShape AShap = worksheet.Pictures.AddPicture(23, 67, AFile, 20, 20);
+                        #endregion
+                        #region StudentInfo
+                        worksheet.Range["AO24:BS26"].Merge();
+                        worksheet.Range["AO24:BS26"].Text = acadmicYearName;
+                        worksheet.Range["AO24:BS26"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AO24:BS24"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AO24:BS24"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AO24:AO41"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AY24:AY41"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["BS24:BS41"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AO27:AY29"].Merge();
+                        worksheet.Range["AO27:AY29"].Text = "Student Name:";
+                        worksheet.Range["AO29:BS29"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AZ27:BS29"].Merge();
+                        worksheet.Range["AZ27:BS29"].Text = studentName;
+
+                        worksheet.Range["AO30:AY32"].Merge();
+                        worksheet.Range["AO30:AY32"].Text = "Date of Birth:";
+                        worksheet.Range["AO30:BS32"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AZ30:BS32"].Merge();
+                        worksheet.Range["AZ30:BS32"].Text = dateOfBirthName;
+
+                        worksheet.Range["AO33:AY35"].Merge();
+                        worksheet.Range["AO33:AY35"].Text = "Ref.No:";
+                        worksheet.Range["AO33:BS35"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AZ33:BS35"].Merge();
+                        worksheet.Range["AZ33:BS35"].Text = studentCodeName;
+
+                        worksheet.Range["AO36:AY38"].Merge();
+                        worksheet.Range["AO36:AY38"].Text = "Department:";
+                        worksheet.Range["AO36:BS38"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AZ36:BS38"].Merge();
+                        worksheet.Range["AZ36:BS38"].Text = studentDepartmentName;
+
+                        worksheet.Range["AO39:AY41"].Merge();
+                        worksheet.Range["AO39:AY41"].Text = "Term:";
+                        worksheet.Range["AO39:BS41"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AZ39:BS41"].Merge();
+                        worksheet.Range["AZ39:BS41"].Text = termName;
+
+                        #endregion
+                        #region OtherImages
+                        //Adding a picture
+                        //FileStream SysFile = new FileStream("wwwroot/staticFiles/SysLogo.jpeg", FileMode.Open, FileAccess.Read);
+                        //IPictureShape SysShape = worksheet.Pictures.AddPicture(4, 48, SysFile, 60, 60);
+
+                        FileStream CisFile = new FileStream("wwwroot/staticFiles/CisLogo.png", FileMode.Open, FileAccess.Read);
+                        IPictureShape CisShap = worksheet.Pictures.AddPicture(44, 41, CisFile, 20, 20);
+
+                        FileStream AutFile = new FileStream("wwwroot/staticFiles/AutLogo.jpg", FileMode.Open, FileAccess.Read);
+                        IPictureShape AutShap = worksheet.Pictures.AddPicture(44, 57, AutFile, 35, 35);
+
+                        FileStream AFile = new FileStream("wwwroot/staticFiles/ALogo.jpg", FileMode.Open, FileAccess.Read);
+                        IPictureShape AShap = worksheet.Pictures.AddPicture(44, 67, AFile, 15, 20);
+                        #endregion
                         #region Chart
 
                         if (iepProgressReportDto.ProgressReportStrands.Count() > 0)
@@ -1490,10 +1566,10 @@ namespace IesSchool.Core.Services
                             chart.PrimaryValueAxis.MinimumValue = 0;
                             chart.PrimaryValueAxis.MajorUnit = 10;
 
-                            chart.TopRow = 2;
+                            chart.TopRow = 55;
                             chart.LeftColumn = 41;
-                            chart.RightColumn = 75;
-                            chart.BottomRow = 27;
+                            chart.RightColumn = 71;
+                            chart.BottomRow = 80;
                             chart.HasTitle = false;
                         }
                         else
@@ -1511,74 +1587,13 @@ namespace IesSchool.Core.Services
                             chart.PrimaryValueAxis.MinimumValue = 0;
                             chart.PrimaryValueAxis.MajorUnit = 10;
 
-                            chart.TopRow = 2;
+                            chart.TopRow = 55;
                             chart.LeftColumn = 41;
-                            chart.RightColumn = 75;
-                            chart.BottomRow = 27;
+                            chart.RightColumn = 71;
+                            chart.BottomRow = 80;
                             chart.HasTitle = false;
                         }
                         #endregion
-                        #region StudentInfo
-                        worksheet.Range["AO30:BV32"].Merge();
-                        worksheet.Range["AO30:BV32"].Text = acadmicYearName;
-                        worksheet.Range["AO30:BV32"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["AO30:BV30"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["AO30:BV30"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["AO30:AO47"].CellStyle.Borders[ExcelBordersIndex.EdgeLeft].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["AY30:AY47"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["BV30:BV47"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
-
-                        worksheet.Range["AO33:AY35"].Merge();
-                        worksheet.Range["AO33:AY35"].Text = "Student Name:";
-                        worksheet.Range["AO35:BV35"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-
-                        worksheet.Range["AZ33:BV35"].Merge();
-                        worksheet.Range["AZ33:BV35"].Text = studentName;
-
-                        worksheet.Range["AO36:AY38"].Merge();
-                        worksheet.Range["AO36:AY38"].Text = "Date of Birth:";
-                        worksheet.Range["AO36:BV38"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-
-                        worksheet.Range["AZ36:BV38"].Merge();
-                        worksheet.Range["AZ36:BV38"].Text = dateOfBirthName;
-
-                        worksheet.Range["AO39:AY41"].Merge();
-                        worksheet.Range["AO39:AY41"].Text = "Ref.No:";
-                        worksheet.Range["AO39:BV41"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-
-                        worksheet.Range["AZ39:BV41"].Merge();
-                        worksheet.Range["AZ39:BV41"].Text = studentCodeName;
-
-                        worksheet.Range["AO42:AY44"].Merge();
-                        worksheet.Range["AO42:AY44"].Text = "Department:";
-                        worksheet.Range["AO42:BV44"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-
-                        worksheet.Range["AZ42:BV44"].Merge();
-                        worksheet.Range["AZ42:BV44"].Text = studentDepartmentName;
-
-                        worksheet.Range["AO45:AY47"].Merge();
-                        worksheet.Range["AO45:AY47"].Text = "Term:";
-                        worksheet.Range["AO45:BV47"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-
-                        worksheet.Range["AZ45:BV47"].Merge();
-                        worksheet.Range["AZ45:BV47"].Text = termName;
-
-                        #endregion
-                        #region Images
-                        //Adding a picture
-                        FileStream SysFile = new FileStream("wwwroot/staticFiles/SysLogo.jpeg", FileMode.Open, FileAccess.Read);
-                        IPictureShape SysShape = worksheet.Pictures.AddPicture(50, 48, SysFile, 60, 60);
-
-                        FileStream CisFile = new FileStream("wwwroot/staticFiles/CisLogo.png", FileMode.Open, FileAccess.Read);
-                        IPictureShape CisShap = worksheet.Pictures.AddPicture(70, 41, CisFile, 20, 20);
-
-                        FileStream AutFile = new FileStream("wwwroot/staticFiles/AutLogo.jpg", FileMode.Open, FileAccess.Read);
-                        IPictureShape AutShap = worksheet.Pictures.AddPicture(69, 57, AutFile, 35, 35);
-
-                        FileStream AFile = new FileStream("wwwroot/staticFiles/ALogo.jpg", FileMode.Open, FileAccess.Read);
-                        IPictureShape AShap = worksheet.Pictures.AddPicture(69, 67, AFile, 20, 20);
-                        #endregion
-
                     }
                     else
                     {
