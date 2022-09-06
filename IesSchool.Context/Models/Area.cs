@@ -21,7 +21,9 @@ namespace IesSchool.Context.Models
         public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
+        public int? ProgramId { get; set; }
 
+        public virtual Program? Program { get; set; }
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<Strand> Strands { get; set; }
     }

@@ -43,6 +43,27 @@ namespace IesSchool.Controllers
             }
         }
 
+        [HttpGet]
+
+        public IActionResult GetAreasGroupByProgram()
+        {
+
+            //var userName22 = User?.Identity?.Name;
+            //var userName2 = User.FindFirstValue(ClaimTypes.Name);
+            //var role = User.FindFirstValue(ClaimTypes.Role);
+
+
+            try
+            {
+                var all = _curriculumService.GetAreasGroupByProgram();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         // GET api/<CurriculumsController>/5
         [HttpGet]
         public IActionResult GetAreaById(int areaId)

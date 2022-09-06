@@ -271,6 +271,11 @@ namespace IesSchool.Context.Models
                 entity.Property(e => e.NameAr)
                     .HasMaxLength(255)
                     .HasColumnName("Name_Ar");
+
+                entity.HasOne(d => d.Program)
+                    .WithMany(p => p.Areas)
+                    .HasForeignKey(d => d.ProgramId)
+                    .HasConstraintName("FK_Area_Program");
             });
 
             modelBuilder.Entity<AspNetRole>(entity =>

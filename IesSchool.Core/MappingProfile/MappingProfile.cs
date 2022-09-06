@@ -39,9 +39,11 @@ namespace IesSchool.Core.MappingProfile
             #region Curriculums
             CreateMap<Area, AreaDto>()
           .ForMember(dist => dist.StrandsCount, opt => opt.MapFrom(c => c.Strands.Count()))
-          .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Strands.ToList().Where(s => s.Skills.Count > 0).Select(s => s.Skills).Sum(d => d.Count))).ReverseMap()
+          .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Strands.ToList().Where(s => s.Skills.Count > 0).Select(s => s.Skills).Sum(d => d.Count)))
+          .ForMember(dist => dist.ProgramName, opt => opt.MapFrom(c => c.Program == null ? "" : c.Program.Name))
+          .ReverseMap()
           .ForMember(x => x.Strands, op => op.Ignore());
-            CreateMap<Area, AreaDetailsDto>().ReverseMap();
+            CreateMap<Area, AreaDetailsDto>() .ReverseMap();
 
             CreateMap<Strand, StrandDto>()
            .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Skills.Count()))

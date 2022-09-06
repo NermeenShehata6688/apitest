@@ -38,6 +38,27 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+
+        public ResponseDto GetAreasGroupByProgram()
+        {
+            try
+            {
+                var allAreas = _uow.GetRepository<Area>().GetList(x => x.IsDeleted != true, x => x.OrderBy(c => c.DisplayOrder), x => x.Include(x => x.Strands.Where(s => s.IsDeleted != true)).ThenInclude(n => n.Skills.Where(s => s.IsDeleted != true)).Include(n => n.Program), 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<AreaDto>>(allAreas);
+                var mapperData = mapper.Items.GroupBy(x => x.ProgramName)
+                                              .OrderByDescending(x => x.Key)
+                                              .Select(std => new
+                                              {
+                                                  ProgramName = std.Key,
+                                                  Areas = std.OrderBy(x => x.Name)
+                                              });
+                return new ResponseDto { Status = 1, Errormessage = "Success", Data = mapperData };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto GetAreaById(int areaId)
         {
             try

@@ -10,6 +10,7 @@ namespace IesSchool.Core.IServices
     public interface ICurriculumService
     {
         public ResponseDto GetAreas();
+        public ResponseDto GetAreasGroupByProgram();
         public ResponseDto GetAreaById(int areaId);
         public ResponseDto AddArea(AreaDto areaDto);
         public ResponseDto EditArea(AreaDto areaDto);

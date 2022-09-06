@@ -21,5 +21,8 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
+        public int? ProgramId { get; set; }
+        public string? ProgramName { get; set; }
+
     }
 }

@@ -8,6 +8,10 @@ namespace IesSchool.Context.Models
 {
     public partial class Program
     {
+        public Program()
+        {
+            Areas = new HashSet<Area>();
+        }
         public int Id { get; set; }
         public string? Name { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -15,5 +19,7 @@ namespace IesSchool.Context.Models
         public bool? IsDeleted { get; set; }
         public string? DeletedBy { get; set; }
         public string? CreatedBy { get; set; }
+
+        public virtual ICollection<Area> Areas { get; set; }
     }
 }
