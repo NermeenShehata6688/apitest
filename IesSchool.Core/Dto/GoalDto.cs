@@ -9,6 +9,7 @@ namespace IesSchool.Core.Dto
     public class GoalDto
     {
         public int Id { get; set; }
+        public int? ProgramId { get; set; }
         public int? AreaId { get; set; }
         public int? StrandId { get; set; }
         public int? SkillId { get; set; }
@@ -23,6 +24,7 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public bool? IsDeleted { get; set; }
         public string? CreatedBy { get; set; }
+        public string? ProgramName { get; set; }
         public string? AreaName { get; set; }
         public string? StrandName { get; set; }
        

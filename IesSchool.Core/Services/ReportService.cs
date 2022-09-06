@@ -873,7 +873,7 @@ namespace IesSchool.Core.Services
                         worksheet.Range["I" + (lastRow + 6) + ":S" + (lastRow + 6)].Text = iepTeacherName;
 
                         worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Merge();
-                        worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Text = "HOD:";
+                        worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Text = "HOD/COR:";
                         worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
                         worksheet.Range["AB" + (lastRow + 6) + ":AL" + (lastRow + 6)].Merge();
@@ -6213,7 +6213,7 @@ namespace IesSchool.Core.Services
                         worksheet.Range["I" + (lastRow + 6) + ":S" + (lastRow + 6)].Text = iepTeacherName;
 
                         worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Merge();
-                        worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Text = "HOD:";
+                        worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].Text = "HOD/COR:";
                         worksheet.Range["T" + (lastRow + 6) + ":AA" + (lastRow + 6)].CellStyle.Color = Color.FromArgb(255, 205, 205);
 
                         worksheet.Range["AB" + (lastRow + 6) + ":AL" + (lastRow + 6)].Merge();

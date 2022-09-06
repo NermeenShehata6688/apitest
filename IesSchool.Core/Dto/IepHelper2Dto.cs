@@ -11,6 +11,7 @@ namespace IesSchool.Core.Dto
     internal class IepHelper2
     {
 
+        public IPaginate<Program> AllPrograms { get; set; }
         public IPaginate<Area> AllAreas { get; set; }
         public IPaginate<Strand> AllStrands { get; set; }
         public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
@@ -26,7 +27,7 @@ namespace IesSchool.Core.Dto
     }
     public class IepHelper2Dto
     {
-
+        public IPaginate<Program> AllPrograms { get; set; }
         public PaginateDto<AreaDto> AllAreas { get; set; }
         public PaginateDto<StrandDto> AllStrands { get; set; }
         public PaginateDto<ParamedicalServiceDto> AllParamedicalServices { get; set; }

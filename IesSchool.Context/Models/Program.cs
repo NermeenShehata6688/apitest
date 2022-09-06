@@ -11,6 +11,7 @@ namespace IesSchool.Context.Models
         public Program()
         {
             Areas = new HashSet<Area>();
+            Goals = new HashSet<Goal>();
         }
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -21,5 +22,6 @@ namespace IesSchool.Context.Models
         public string? CreatedBy { get; set; }
 
         public virtual ICollection<Area> Areas { get; set; }
+        public virtual ICollection<Goal> Goals { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace IesSchool.Core.MappingProfile
           .ForMember(dist => dist.SkillsCount, opt => opt.MapFrom(c => c.Strands.ToList().Where(s => s.Skills.Count > 0).Select(s => s.Skills).Sum(d => d.Count)))
           .ForMember(dist => dist.ProgramName, opt => opt.MapFrom(c => c.Program == null ? "" : c.Program.Name))
           .ReverseMap()
+          .ForMember(x => x.Program, op => op.Ignore())
           .ForMember(x => x.Strands, op => op.Ignore());
             CreateMap<Area, AreaDetailsDto>() .ReverseMap();
 
@@ -190,6 +191,7 @@ namespace IesSchool.Core.MappingProfile
             //.ForMember(dist => dist.HeadOfEducationName, opt => opt.MapFrom(c => c.HeadOfEducationNavigation == null ? "" : c.HeadOfEducationNavigation.Name))
             .ReverseMap()
             .ForMember(x => x.Student, op => op.Ignore())
+            .ForMember(x => x.Student, op => op.Ignore())
             .ForMember(x => x.AcadmicYear, op => op.Ignore())
             .ForMember(x => x.Term, op => op.Ignore());
 
@@ -292,6 +294,7 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Area == null ? "" : c.Area.Name))
              .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Name))
              .ReverseMap()
+             .ForMember(x => x.Program, op => op.Ignore())
              .ForMember(x => x.Area, op => op.Ignore())
              .ForMember(x => x.Strand, op => op.Ignore())
              .ForMember(x => x.Skill, op => op.Ignore());
@@ -300,9 +303,11 @@ namespace IesSchool.Core.MappingProfile
 
 
             CreateMap<Goal, GetGoalDto>()
+            .ForMember(dist => dist.ProgramName, opt => opt.MapFrom(c => c.Program == null ? "" : c.Program.Name))
             .ForMember(dist => dist.AreaName, opt => opt.MapFrom(c => c.Area == null ? "" : c.Area.Name))
             .ForMember(dist => dist.StrandName, opt => opt.MapFrom(c => c.Strand == null ? "" : c.Strand.Name))
             .ReverseMap()
+            .ForMember(x => x.Program, op => op.Ignore())
             .ForMember(x => x.Area, op => op.Ignore())
             .ForMember(x => x.Strand, op => op.Ignore())
             .ForMember(x => x.Skill, op => op.Ignore())

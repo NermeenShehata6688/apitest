@@ -615,6 +615,11 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.AreaId)
                     .HasConstraintName("FK_Goals_Area");
 
+                entity.HasOne(d => d.Program)
+                    .WithMany(p => p.Goals)
+                    .HasForeignKey(d => d.ProgramId)
+                    .HasConstraintName("FK_Goals_Program");
+
                 entity.HasOne(d => d.Iep)
                     .WithMany(p => p.Goals)
                     .HasForeignKey(d => d.Iepid)

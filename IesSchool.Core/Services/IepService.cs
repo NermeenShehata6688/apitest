@@ -55,6 +55,7 @@ namespace IesSchool.Core.Services
             {
                 IepHelper2 iepHelper = new IepHelper2()
                 {
+                    AllPrograms = _uow.GetRepository<Program>().GetList(null, null, null, 0, 1000000, true),
                     AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
                     AllStrands = _uow.GetRepository<Strand>().GetList(null, null, null, 0, 1000000, true),
                     AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
@@ -167,6 +168,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
                .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Strand)
                .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Area)
+               .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Program)
                );
                     var mapper = _mapper.Map<GetIepDto>(iep);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
