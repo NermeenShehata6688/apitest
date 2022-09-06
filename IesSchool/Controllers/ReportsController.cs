@@ -287,6 +287,18 @@ namespace IesSchool.Controllers
         }
         #endregion
 
-
+        [HttpGet]
+        public FileStreamResult TeacherStudentsReport(int teacherId)
+        {
+            try
+            {
+                var all = _reportService.TeacherStudentsReport(teacherId);
+                return all;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

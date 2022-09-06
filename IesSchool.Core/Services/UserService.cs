@@ -156,7 +156,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var teacherAssignedStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DateOfBirth = x.DateOfBirth }),x => x.IsDeleted != true && x.TeacherId == teacherId, x => x.OrderBy(c => c.Name), null, 0, 100000, true);
+                var teacherAssignedStudents = _uow.GetRepository<Student>().GetList((x => new Student { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DateOfBirth = x.DateOfBirth,MinistryNumber=x.MinistryNumber }),x => x.IsDeleted != true && x.TeacherId == teacherId, x => x.OrderBy(c => c.Name), null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<StudentDto>>(teacherAssignedStudents);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }

@@ -8180,7 +8180,186 @@ namespace IesSchool.Core.Services
         }
         #endregion
 
+        public FileStreamResult TeacherStudentsReport(int teacherId)
+        {
+            try
+            {
+                using (ExcelEngine excelEngine = new ExcelEngine())
+                {
+                    IApplication application = excelEngine.Excel;
+                    application.DefaultVersion = ExcelVersion.Excel2016;
+                    int lastRow = 0;
+                    User teacher = new User();
+                    var allStudents = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && x.TeacherId==teacherId, x => x.OrderBy(c => c.Code), x => x.Include(x => x.Nationality), 0, 100000, true).Items;
+                    teacher = _uow.GetRepository<User>().Single(x => x.Id == teacherId, null, x => x.Include(x => x.Department).Include(x => x.UserAssistants).ThenInclude(x => x.Assistant));
 
+
+                    IWorkbook workbook = application.Workbooks.Create(0);
+                    IWorksheet worksheet;
+
+                    worksheet = workbook.Worksheets.Create("Students");
+                    worksheet.PageSetup.Orientation = ExcelPageOrientation.Landscape;
+                    #region General
+                    worksheet.IsGridLinesVisible = true;
+                    worksheet.Range["A1:BE1"].ColumnWidth = 1;
+                    worksheet.Range["A1"].RowHeight = 17;
+
+                    #endregion
+
+                    #region Teacher Info
+                    worksheet.Range["A1:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["BE1:BE3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["AH2:AH3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["AL2:AL3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["J2:J3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["R3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["AS2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["AW2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["R3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["AV2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                    worksheet.Range["AZ2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+
+                    worksheet.Range["A1:BE1"].Merge();
+                    worksheet.Range["A1:BE1"].Text = "IDEAL EDUCATION SCHOOL";
+                    worksheet.Range["A1:BE1"].CellStyle.Color = Color.FromArgb(255, 255, 200);
+
+                    worksheet.Range["A2:J2"].Merge();
+                    worksheet.Range["A2:J2"].Text = "TEACHER:";
+                    worksheet.Range["A2:J2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+                    worksheet.Range["K2:AH2"].Merge();
+                    worksheet.Range["K2:AH2"].Text = teacher.Name ?? "";
+                    worksheet.Range["AI2:AL2"].Merge();
+                    worksheet.Range["AI2:AL2"].Text = "DEPT:";
+                    worksheet.Range["AI2:AL2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+                    worksheet.Range["AM2:AV2"].Merge();
+                    worksheet.Range["AM2:AV2"].Text = teacher.Department == null ? "" : teacher.Department.Name;
+                    worksheet.Range["AW2:AZ2"].Merge();
+                    worksheet.Range["AW2:AZ2"].Text = "RM#:";
+                    worksheet.Range["AW2:AZ2"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+                    worksheet.Range["BA2:BE2"].Merge();
+                    worksheet.Range["BA2:BE2"].Text = teacher.RoomNumber.ToString() ?? "";
+
+                    worksheet.Range["A3:J3"].Merge();
+                    worksheet.Range["A3:J3"].Text = "ASSISTANTS:";
+                    worksheet.Range["A3:J3"].CellStyle.Color = Color.FromArgb(255, 205, 205);
+
+
+                    worksheet.Range["K3:BE3"].Merge();
+                    if (teacher.UserAssistants.Count() > 0)
+                    {
+                        var teacherAss = teacher.UserAssistants.ToList().Select(x => (x.Assistant == null ? "" : x.Assistant.Name)).ToArray();
+                        worksheet.Range["K3:BE3"].Text = string.Join(",", teacherAss);
+                    }
+                    #endregion
+                    #region Students
+                    if (allStudents.Count() > 0)
+                    {
+                        lastRow = worksheet.Rows.Length + 1;
+                        int stdCount = 1;
+
+                        worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Merge();
+                        worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Text = "SN";
+                        worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                        worksheet.Range["B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["C" + (lastRow + 1) + ":G" + (lastRow + 1)].Merge();
+                        worksheet.Range["C" + (lastRow + 1) + ":G" + (lastRow + 1)].Text = "Number";
+                        worksheet.Range["C" + (lastRow + 1) + ":G" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                        worksheet.Range["G" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+                        worksheet.Range["H" + (lastRow + 1) + ":AM" + (lastRow + 1)].Merge();
+                        worksheet.Range["H" + (lastRow + 1) + ":AM" + (lastRow + 1)].Text = "Name";
+                        worksheet.Range["H" + (lastRow + 1) + ":AM" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                        worksheet.Range["AM" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AN" + (lastRow + 1) + ":AV" + (lastRow + 1)].Merge();
+                        worksheet.Range["AN" + (lastRow + 1) + ":AV" + (lastRow + 1)].Text = "DOB";
+                        worksheet.Range["AN" + (lastRow + 1) + ":AV" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                        worksheet.Range["AV" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                        worksheet.Range["AW" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
+                        worksheet.Range["AW" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = "Ministry#";
+                        worksheet.Range["AW" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Color = Color.FromArgb(255, 205, 205);
+                        worksheet.Range["BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                        lastRow = worksheet.Rows.Length;
+
+                        foreach (var item in allStudents)
+                        {
+                            lastRow = worksheet.Rows.Length;
+                            // worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                            worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Merge();
+                            worksheet.Range["A" + (lastRow + 1) + ":B" + (lastRow + 1)].Text = stdCount.ToString();
+                            worksheet.Range["B" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                            worksheet.Range["C" + (lastRow + 1) + ":G" + (lastRow + 1)].Merge();
+                            worksheet.Range["C" + (lastRow + 1) + ":G" + (lastRow + 1)].Text = item.Code == null ? "" : item.Code.ToString();
+                            worksheet.Range["G" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+
+                            worksheet.Range["H" + (lastRow + 1) + ":AM" + (lastRow + 1)].Merge();
+                            worksheet.Range["H" + (lastRow + 1) + ":AM" + (lastRow + 1)].Text = item.Name == null ? "" : item.Name;
+                            worksheet.Range["AM" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                            worksheet.Range["AN" + (lastRow + 1) + ":AV" + (lastRow + 1)].Merge();
+                            worksheet.Range["AN" + (lastRow + 1) + ":AV" + (lastRow + 1)].Text = item.DateOfBirth == null ? "" : item.DateOfBirth.Value.ToShortDateString();
+                            worksheet.Range["AV" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                            worksheet.Range["AW" + (lastRow + 1) + ":BE" + (lastRow + 1)].Merge();
+                            worksheet.Range["AW" + (lastRow + 1) + ":BE" + (lastRow + 1)].Text = item.MinistryNumber == null ? "" : item.MinistryNumber.ToString();
+                            worksheet.Range["BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                            stdCount++;
+                        }
+                        worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+
+                    }
+                    else
+                    {
+                        lastRow = worksheet.Rows.Length + 1;
+                        worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Merge();
+                        worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 3)].Text = "No Students Found";
+                        worksheet.Range["A" + (lastRow + 1) + ":BE" + (lastRow + 1)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["A" + (lastRow + 3) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["BE" + (lastRow + 1) + ":BE" + (lastRow + 3)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+
+                    }
+                    #endregion
+
+                    lastRow = worksheet.Rows.Length;
+                    worksheet.Range["A1:BF" + (lastRow)].WrapText = true;
+                    worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Bold = true;
+                    worksheet.Range["A1:BF" + (lastRow)].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
+                    worksheet.Range["A1:BF" + (lastRow)].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+                    worksheet.Range["A1:BF" + (lastRow)].CellStyle.Font.Size = 9;
+
+
+                    MemoryStream stream = new MemoryStream();
+                    workbook.SaveAs(stream);
+                    stream.Position = 0;
+                    FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
+
+                    fileStreamResult.FileDownloadName = ("TeacherStudentsReport" + ".xlsx");
+
+
+                    return fileStreamResult;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
     }
 }
