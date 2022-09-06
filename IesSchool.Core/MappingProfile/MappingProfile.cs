@@ -32,6 +32,7 @@ namespace IesSchool.Core.MappingProfile
                 .ForMember(x => x.AcadmicYear, op => op.Ignore()); ;
             CreateMap<AttachmentType, AttachmentTypeDto>().ReverseMap();
             CreateMap<WorkCategory, WorkCategoryDto>().ReverseMap();
+            CreateMap<Program, ProgramDto>().ReverseMap();
 
 
             #endregion

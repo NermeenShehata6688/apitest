@@ -38,6 +38,7 @@ namespace IesSchool.Core
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
+            services.AddScoped<IProgramsService, ProgramsService>();
 
             return services; 
         }

@@ -57,6 +57,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<ObjectiveSkill> ObjectiveSkills { get; set; } = null!;
         public virtual DbSet<ParamedicalService> ParamedicalServices { get; set; } = null!;
         public virtual DbSet<Phone> Phones { get; set; } = null!;
+        public virtual DbSet<Program> Programs { get; set; } = null!;
         public virtual DbSet<ProgressReportExtraCurricular> ProgressReportExtraCurriculars { get; set; } = null!;
         public virtual DbSet<ProgressReportParamedical> ProgressReportParamedicals { get; set; } = null!;
         public virtual DbSet<ProgressReportStrand> ProgressReportStrands { get; set; } = null!;
@@ -94,7 +95,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<VwUser> VwUsers { get; set; } = null!;
         public virtual DbSet<WorkCategory> WorkCategories { get; set; } = null!;
         public virtual DbSet<VwSkill> VwSkills { get; set; } = null!;
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -1143,6 +1144,22 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.StudentId)
                     .HasConstraintName("FK_Phone_Students");
             });
+
+            modelBuilder.Entity<Program>(entity =>
+            {
+                entity.ToTable("Program");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(255);
+            });
+
             modelBuilder.Entity<ProgressReportExtraCurricular>(entity =>
             {
                 entity.ToTable("ProgressReportExtraCurricular");
