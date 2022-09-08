@@ -921,6 +921,7 @@ namespace IesSchool.Context.Models
                 entity.HasOne(d => d.ItpGoalObjective)
                     .WithMany(p => p.ItpGoalObjectiveActivities)
                     .HasForeignKey(d => d.ItpGoalObjectiveId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ITP_GoalObjectiveActivity_ITP_GoalObjective");
             });
 

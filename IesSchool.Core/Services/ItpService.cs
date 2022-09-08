@@ -402,18 +402,38 @@ namespace IesSchool.Core.Services
             {
                 if (goalDto != null)
                 {
-                    using var transaction = _iesContext.Database.BeginTransaction();
-                    var cmd = $"delete from ITP_GoalObjective where ItpGoalId={goalDto.Id}";
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    //using var transaction = _iesContext.Database.BeginTransaction();
+                    //var cmd = $"delete from ITP_GoalObjective where ItpGoalId={goalDto.Id}";
+                    //_iesContext.Database.ExecuteSqlRaw(cmd);
 
-                    foreach (var objective in goalDto.ItpGoalObjectives)
-                    {
-                        objective.IsDeleted = false;
-                        objective.CreatedOn = DateTime.Now;
-                    }
+                    //foreach (var objective in goalDto.ItpGoalObjectives)
+                    //{
+                    //    objective.IsDeleted = false;
+                    //    objective.CreatedOn = DateTime.Now;
+                    //}
 
                     var mapper = _mapper.Map<ItpGoal>(goalDto);
                     _uow.GetRepository<ItpGoal>().Update(mapper);
+
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    if (mapper.Id != 0 && mapper.ItpGoalObjectives != null || _iesContext.ItpGoalObjectives.Where(x => x.ItpGoalId == mapper.Id) != null)///count>0
+                    {
+                        if (mapper.ItpGoalObjectives != null)
+                        {
+                            //// delete old Objectives Ids which are not in edited goal
+                            var newObjInt = mapper.ItpGoalObjectives.Select(x => x.Id);
+                            _iesContext.ItpGoalObjectives.RemoveRange(_iesContext.ItpGoalObjectives.Where(x => !newObjInt.Contains(x.Id) && x.ItpGoalId == mapper.Id));
+                            _iesContext.SaveChanges();
+                        }
+                        else
+                        {
+                            _iesContext.ItpGoalObjectives.RemoveRange(_iesContext.ItpGoalObjectives.Where(x => x.ItpGoalId == mapper.Id));
+                            _iesContext.SaveChanges();
+                        }
+                    }
+
+
+
                     _uow.SaveChanges();
                     transaction.Commit();
 

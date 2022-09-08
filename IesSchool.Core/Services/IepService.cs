@@ -526,7 +526,8 @@ namespace IesSchool.Core.Services
                .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
                .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
                .Include(s => s.Strand)
-               .Include(s => s.Area), 0, 100000, true
+               .Include(s => s.Area)
+               .Include(x=>x.Program), 0, 100000, true
                );
                     var mapper = _mapper.Map<PaginateDto<GoalDto>>(goals);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
