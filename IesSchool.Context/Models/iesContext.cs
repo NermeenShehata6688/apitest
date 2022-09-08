@@ -78,6 +78,7 @@ namespace IesSchool.Context.Models
         public virtual DbSet<Itp> Itps { get; set; } = null!;
         public virtual DbSet<ItpGoal> ItpGoals { get; set; } = null!;
         public virtual DbSet<ItpGoalObjective> ItpGoalObjectives { get; set; } = null!;
+        public virtual DbSet<ItpGoalObjectiveActivity> ItpGoalObjectiveActivities { get; set; } = null!;
         public virtual DbSet<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; } = null!;
         public virtual DbSet<ItpProgressReport> ItpProgressReports { get; set; } = null!;
         public virtual DbSet<ItpStrategy> ItpStrategies { get; set; } = null!;
@@ -907,6 +908,22 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.ItpId)
                     .HasConstraintName("FK_ITP_Objective_ITP");
             });
+
+
+            modelBuilder.Entity<ItpGoalObjectiveActivity>(entity =>
+            {
+                entity.ToTable("ITP_GoalObjectiveActivity");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ItpGoalObjective)
+                    .WithMany(p => p.ItpGoalObjectiveActivities)
+                    .HasForeignKey(d => d.ItpGoalObjectiveId)
+                    .HasConstraintName("FK_ITP_GoalObjectiveActivity_ITP_GoalObjective");
+            });
+
             modelBuilder.Entity<ItpObjectiveProgressReport>(entity =>
             {
                 entity.ToTable("ITP_ObjectiveProgressReport");

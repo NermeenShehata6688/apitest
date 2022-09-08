@@ -36,7 +36,12 @@ namespace IesSchool.Core.IServices
         public ResponseDto CreateItpProgressReport(int itpId);
         public ResponseDto GetIepsForTherapist(int therapistId);
         public ResponseDto CreateItp(int iepParamedicalServiceId);
-
+        public ResponseDto GetObjectiveByITPId(int itpId);
+        public ResponseDto DeleteObjective(int objectiveId);
+        public ResponseDto GetObjectiveById(int objectiveId);
+        public ResponseDto EditObjectiveActivities(ItpGoalObjectiveActivitiesDto objectiveActivitiesDto);
+        public ResponseDto GetActivityByObjectiveId(int objectiveId);
+        public ResponseDto DeleteActivity(int activityId);
 
     }
 }

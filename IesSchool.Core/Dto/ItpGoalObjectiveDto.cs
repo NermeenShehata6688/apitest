@@ -20,5 +20,8 @@ namespace IesSchool.Core.Dto
         public DateTime? DeletedOn { get; set; }
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
+
+        public virtual ICollection<ItpGoalObjectiveActivityDto>? ItpGoalObjectiveActivities { get; set; }
+
     }
 }

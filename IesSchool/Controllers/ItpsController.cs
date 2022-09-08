@@ -315,5 +315,90 @@ namespace IesSchool.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetObjectiveByITPId(int itpId)
+        {
+            try
+            {
+                var all = _itpService.GetObjectiveByITPId(itpId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteObjective(int objectiveId)
+        {
+            try
+            {
+                var all = _itpService.DeleteObjective(objectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetObjectiveById(int objectiveId)
+        {
+            try
+            {
+                var all = _itpService.GetObjectiveById(objectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult EditObjectiveActivities(ItpGoalObjectiveActivitiesDto objectiveActivitiesDto)
+        {
+            try
+            {
+                var all = _itpService.EditObjectiveActivities(objectiveActivitiesDto);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetActivityByObjectiveId(int objectiveId)
+        {
+            try
+            {
+                var all = _itpService.GetActivityByObjectiveId(objectiveId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteActivity(int activityId)
+        {
+            try
+            {
+                var all = _itpService.DeleteActivity(activityId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
     }
 }

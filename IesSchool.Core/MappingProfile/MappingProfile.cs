@@ -459,6 +459,11 @@ namespace IesSchool.Core.MappingProfile
             CreateMap<ItpGoalObjective, ItpGoalObjectiveDto>().ReverseMap()
            .ForMember(x => x.Itp, op => op.Ignore());
 
+            CreateMap<ItpGoalObjective, ItpGoalObjectiveActivitiesDto>().ReverseMap();
+
+            CreateMap<ItpGoalObjectiveActivity, ItpGoalObjectiveActivityDto>().ReverseMap()
+           .ForMember(x => x.ItpGoalObjective, op => op.Ignore());
+
             CreateMap<ItpStrategy, ItpStrategyDto>().ReverseMap()
            .ForMember(x => x.Itp, op => op.Ignore())
            .ForMember(x => x.ParamedicalStrategy, op => op.Ignore());

@@ -822,5 +822,142 @@ namespace IesSchool.Core.Services
         //    }
         //}
         #endregion
+
+        public ResponseDto GetObjectiveByITPId(int itpId)
+        {
+            try
+            {
+                var objective = _uow.GetRepository<ItpGoalObjective>().GetList(x => x.ItpId == itpId && x.IsDeleted != true, null,
+                    x => x.Include(s => s.ItpGoalObjectiveActivities), 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<ItpGoalObjectiveDto>>(objective);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+
+        public ResponseDto DeleteObjective(int objectiveId)
+        {
+            try
+            {
+                if (objectiveId != 0)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from ITP_GoalObjective where Id={objectiveId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    transaction.Commit();
+                    return new ResponseDto { Status = 1, Message = "Objective Deleted Seccessfuly" };
+                }
+
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetObjectiveById(int objectiveId)
+        {
+            try
+            {
+                var objective = _uow.GetRepository<ItpGoalObjective>().Single(x => x.Id == objectiveId && x.IsDeleted != true, null,
+                    x => x.Include(s => s.ItpGoalObjectiveActivities));
+                var mapper = _mapper.Map<ItpGoalObjectiveDto>(objective);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+
+        public ResponseDto EditObjectiveActivities(ItpGoalObjectiveActivitiesDto objectiveActivitiesDto)
+        {
+            try
+            {
+                if (objectiveActivitiesDto != null)
+                {
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from ITP_GoalObjectiveActivity where ItpGoalObjectiveId ={objectiveActivitiesDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+
+                    var obj = _mapper.Map<ItpGoalObjective>(objectiveActivitiesDto);
+                    // objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
+
+                    var mapper = _mapper.Map<ItpGoalObjective>(objectiveActivitiesDto);
+                    mapper.IsDeleted = false;
+                    _uow.GetRepository<ItpGoalObjective>().Update(mapper);
+                    _uow.SaveChanges();
+                    objectiveActivitiesDto.Id = mapper.Id;
+                    transaction.Commit();
+
+                    //check if object isMasterd
+                    //var newObjective = _uow.GetRepository<Objective>().Single(x => x.Id == mapper.Id && x.IsDeleted != true, null, x => x.Include(s => s.Activities));
+                    //if (newObjective != null && newObjective.Activities.Count() > 2)
+                    //{
+                    //    newObjective.IsMasterd = ObjectiveIsMasterd(newObjective);
+                    //    if (newObjective.IsMasterd == true)
+                    //    {
+                    //        newObjective.Date = DateTime.Now;
+                    //    }
+                    //    _uow.GetRepository<Objective>().Update(mapper);
+                    //    _uow.SaveChanges();
+                    //}
+                    return new ResponseDto { Status = 1, Message = "Objective Updated Seccessfuly", Data = objectiveActivitiesDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+        public ResponseDto GetActivityByObjectiveId(int objectiveId)
+        {
+            try
+            {
+                var objActivities = _uow.GetRepository<ItpGoalObjectiveActivity>().GetList(x => x.ItpGoalObjectiveId == objectiveId, null, null, 0, 100000, true);
+                var mapper = _mapper.Map<PaginateDto<ItpGoalObjectiveActivityDto>>(objActivities);
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+
+        public ResponseDto DeleteActivity(int activityId)
+        {
+            try
+            {
+                if (activityId > 0)
+                {
+                    var cmd = $"delete from ITP_GoalObjectiveActivity where Id={activityId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    return new ResponseDto { Status = 1, Message = "Activity Deleted Seccessfuly" };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
+
+
     }
 }

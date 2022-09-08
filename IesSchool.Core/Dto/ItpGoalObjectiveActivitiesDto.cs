@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace IesSchool.Context.Models
+namespace IesSchool.Core.Dto
 {
-    public partial class ItpGoalObjective
+    public class ItpGoalObjectiveActivitiesDto
     {
-        public ItpGoalObjective()
-        {
-            ItpGoalObjectiveActivities = new HashSet<ItpGoalObjectiveActivity>();
-            ItpObjectiveProgressReports = new HashSet<ItpObjectiveProgressReport>();
-        }
-
         public int Id { get; set; }
         public int? ItpGoalId { get; set; }
         public int? ItpId { get; set; }
@@ -24,9 +21,7 @@ namespace IesSchool.Context.Models
         public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
 
-        public virtual Itp? Itp { get; set; }
-        public virtual ItpGoal? ItpGoal { get; set; }
-        public virtual ICollection<ItpGoalObjectiveActivity> ItpGoalObjectiveActivities { get; set; }
-        public virtual ICollection<ItpObjectiveProgressReport> ItpObjectiveProgressReports { get; set; }
+        public virtual ICollection<ItpGoalObjectiveActivityDto> ItpGoalObjectiveActivities { get; set; }
+
     }
 }
