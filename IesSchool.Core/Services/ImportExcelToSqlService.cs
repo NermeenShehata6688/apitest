@@ -43,6 +43,7 @@ namespace IesSchool.Core.Services
                                             Id = reader.GetValue(0) == null ? 0 : int.Parse(reader.GetValue(0).ToString()),
                                             Name = reader.GetValue(1) == null ? null : reader.GetValue(1).ToString(),
                                             Code = reader.GetValue(2) == null ? null : int.Parse(reader.GetValue(2).ToString()),
+                                            ProgramId = reader.GetValue(2) == null ? null : int.Parse(reader.GetValue(3).ToString()),
                                         });
                                     }
                                 }
