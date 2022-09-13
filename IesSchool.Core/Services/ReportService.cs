@@ -1307,7 +1307,7 @@ namespace IesSchool.Core.Services
 
                         }
 
-                        if (iepProgressReportDto.ProgressReportExtraCurriculars.Count > 0 && iepProgressReportDto.ProgressReportExtraCurriculars.Count < 5)
+                        if ( iepProgressReportDto.ProgressReportExtraCurriculars.Count < 5)
                         {
                             var count = 5 - iepProgressReportDto.ProgressReportExtraCurriculars.Count;
                             for (int i = 0; i < count; i++)
@@ -1340,10 +1340,10 @@ namespace IesSchool.Core.Services
                         worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
                         worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 
-                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 13)].Merge();
-                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 13)].Text = iepProgressReportDto.OtherComment == null ? "" : iepProgressReportDto.OtherComment;
-                        worksheet.Range["A" + (lastRow + 13) + ":Ah" + (lastRow + 13)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["AH" + (lastRow) + ":AH" + (lastRow + 13)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 11)].Merge();
+                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 11)].Text = iepProgressReportDto.OtherComment == null ? "" : iepProgressReportDto.OtherComment;
+                        worksheet.Range["A" + (lastRow + 11) + ":Ah" + (lastRow + 11)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AH" + (lastRow) + ":AH" + (lastRow + 11)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
                         lastRow = worksheet.Rows.Length;
                         #endregion
@@ -1382,9 +1382,9 @@ namespace IesSchool.Core.Services
                             }
                         }
                         
-                        if(iepProgressReportDto.ProgressReportStrands.Count > 0 && iepProgressReportDto.ProgressReportStrands.Count < 5)
+                        if( iepProgressReportDto.ProgressReportStrands.Count < 5)
                         {
-                            var count = 5 - iepProgressReportDto.ProgressReportExtraCurriculars.Count;
+                            var count = 5 - iepProgressReportDto.ProgressReportStrands.Count;
                             for (int i = 0; i < count; i++)
                             {
                                 worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
@@ -1521,7 +1521,7 @@ namespace IesSchool.Core.Services
                         IPictureShape AShap = worksheet.Pictures.AddPicture(44, 67, AFile, 15, 20);
                         #endregion
                         #region Paramedical
-                        lastRow = 53;
+                        lastRow = 51;
                         worksheet.Range["AO" + (lastRow) + ":BS" + (lastRow)].Merge();
                         worksheet.Range["AO" + (lastRow) + ":BS" + (lastRow)].Text = "Paramedical";
                         worksheet.Range["AO" + (lastRow) + ":BS" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 255, 200);
@@ -1555,7 +1555,7 @@ namespace IesSchool.Core.Services
                                 lastRow = lastRow + 5;
                             }
                         }
-                        if (iepProgressReportDto.ProgressReportParamedicals.Count > 0 && iepProgressReportDto.ProgressReportParamedicals.Count < 3)
+                        if ( iepProgressReportDto.ProgressReportParamedicals.Count < 3)
                         {
                             var count = 3 - iepProgressReportDto.ProgressReportParamedicals.Count;
                             for (int i = 0; i < count; i++)
@@ -6482,7 +6482,7 @@ namespace IesSchool.Core.Services
 
                         }
 
-                        if (iepProgressReportDto.ProgressReportExtraCurriculars.Count > 0 && iepProgressReportDto.ProgressReportExtraCurriculars.Count < 5)
+                        if ( iepProgressReportDto.ProgressReportExtraCurriculars.Count < 5)
                         {
                             var count = 5 - iepProgressReportDto.ProgressReportExtraCurriculars.Count;
                             for (int i = 0; i < count; i++)
@@ -6515,10 +6515,10 @@ namespace IesSchool.Core.Services
                         worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
                         worksheet.Range["A" + (lastRow) + ":AH" + (lastRow)].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
 
-                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 13)].Merge();
-                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 13)].Text = iepProgressReportDto.OtherComment == null ? "" : iepProgressReportDto.OtherComment;
-                        worksheet.Range["A" + (lastRow + 13) + ":Ah" + (lastRow + 13)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-                        worksheet.Range["AH" + (lastRow) + ":AH" + (lastRow + 13)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 12)].Merge();
+                        worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 12)].Text = iepProgressReportDto.OtherComment == null ? "" : iepProgressReportDto.OtherComment;
+                        worksheet.Range["A" + (lastRow + 12) + ":Ah" + (lastRow + 12)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
+                        worksheet.Range["AH" + (lastRow) + ":AH" + (lastRow + 12)].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
                         lastRow = worksheet.Rows.Length;
                         #endregion
@@ -6557,9 +6557,9 @@ namespace IesSchool.Core.Services
                             }
                         }
 
-                        if (iepProgressReportDto.ProgressReportStrands.Count > 0 && iepProgressReportDto.ProgressReportStrands.Count < 5)
+                        if ( iepProgressReportDto.ProgressReportStrands.Count < 5)
                         {
-                            var count = 5 - iepProgressReportDto.ProgressReportExtraCurriculars.Count;
+                            var count = 5 - iepProgressReportDto.ProgressReportStrands.Count;
                             for (int i = 0; i < count; i++)
                             {
                                 worksheet.Range["A" + (lastRow + 1) + ":AH" + (lastRow + 5)].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
@@ -6696,7 +6696,7 @@ namespace IesSchool.Core.Services
                         IPictureShape AShap = worksheet.Pictures.AddPicture(44, 67, AFile, 15, 20);
                         #endregion
                         #region Paramedical
-                        lastRow = 53;
+                        lastRow = 52;
                         worksheet.Range["AO" + (lastRow) + ":BS" + (lastRow)].Merge();
                         worksheet.Range["AO" + (lastRow) + ":BS" + (lastRow)].Text = "Paramedical";
                         worksheet.Range["AO" + (lastRow) + ":BS" + (lastRow)].CellStyle.Color = Color.FromArgb(255, 255, 200);
@@ -6730,7 +6730,7 @@ namespace IesSchool.Core.Services
                                 lastRow = lastRow + 5;
                             }
                         }
-                        if (iepProgressReportDto.ProgressReportParamedicals.Count > 0 && iepProgressReportDto.ProgressReportParamedicals.Count < 3)
+                        if ( iepProgressReportDto.ProgressReportParamedicals.Count < 3)
                         {
                             var count = 3 - iepProgressReportDto.ProgressReportParamedicals.Count;
                             for (int i = 0; i < count; i++)
