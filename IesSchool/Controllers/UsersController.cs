@@ -379,6 +379,21 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public IActionResult IsParentCivilIdExist(string CivilId, int? userId)
+        {
+            try
+            {
+                var all = _userService.IsParentCivilIdExist(CivilId, userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpGet]
         public IActionResult IsParentEmailExist(string Email, int? userId)
         {

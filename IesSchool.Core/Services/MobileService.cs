@@ -56,13 +56,36 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
-        public ResponseDto Login(string UserName, string Password)
+        //public ResponseDto Login(string UserName, string Password)
+        //{
+        //    try
+        //    {
+        //        if (UserName != null && Password != null)
+        //        {
+        //            var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword == Password);
+        //            // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
+        //            if (user != null)
+        //                return new ResponseDto { Status = 1, Message = "LogIn Seccess", Data = user };
+        //            else
+        //                return new ResponseDto { Status = 0, Errormessage = "there is no user founed with this input data" };
+
+        //        }
+        //        return new ResponseDto { Status = 0, Errormessage = "faild to get data" };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ResponseDto { Status = 0, Errormessage = "faild to get data", Data = ex };
+
+        //    }
+        //}
+
+        public ResponseDto Login(string CivilId, string Password)
         {
             try
             {
-                if (UserName != null && Password != null)
+                if (CivilId != null && Password != null)
                 {
-                    var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword == Password);
+                    var user = _uow.GetRepository<User>().Single(x => x.ParentCivilId == CivilId && x.ParentPassword == Password);
                     // var user = _uow.GetRepository<User>().Single(x => x.ParentUserName == UserName && x.ParentPassword.CompareTo( Password)==0 && x.IsSuspended != true);
                     if (user != null)
                         return new ResponseDto { Status = 1, Message = "LogIn Seccess", Data = user };

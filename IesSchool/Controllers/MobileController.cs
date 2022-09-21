@@ -27,13 +27,27 @@ namespace IesSchool.Controllers
             _emailSenderService = emailSenderService;
             _settingService = settingService;
         }
-      
+
+        //[HttpGet]
+        //public IActionResult Login(string UserName, string Password)
+        //{
+        //    try
+        //    {
+        //        var all = _iMobileService.Login(UserName, Password);
+        //        return Ok(all);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+
         [HttpGet]
-        public IActionResult Login(string UserName, string Password)
+        public IActionResult Login(string CivilId, string Password)
         {
             try
             {
-                var all = _iMobileService.Login(UserName, Password);
+                var all = _iMobileService.Login(CivilId, Password);
                 return Ok(all);
             }
             catch (Exception)

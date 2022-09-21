@@ -949,6 +949,30 @@ namespace IesSchool.Core.Services
                 return false;
             }
         }
+
+        public bool IsParentCivilIdExist(string CivilId, int? userId)
+        {
+            try
+            {
+                if (CivilId != null && userId != null)
+                {
+                    var user = _uow.GetRepository<User>().GetList(x => x.ParentCivilId == CivilId && x.Id != userId);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                if (CivilId != null && userId == null)
+                {
+                    var user = _uow.GetRepository<User>().GetList(x => x.ParentCivilId == CivilId);
+                    if (user.Items.Count() > 0)
+                        return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         public bool IsParentEmailExist(string Email, int? userId)
         {
             try

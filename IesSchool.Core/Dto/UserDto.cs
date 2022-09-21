@@ -37,7 +37,7 @@ namespace IesSchool.Core.Dto
         public string? UserPassword { get; set; }
         public int[]? StudentsIdsForParent { get; set; }
         public bool? IsActive { get; set; }
-
+        public string? ParentCivilId { get; set; }
 
 
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
