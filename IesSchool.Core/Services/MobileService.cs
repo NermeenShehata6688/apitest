@@ -218,7 +218,7 @@ namespace IesSchool.Core.Services
                 }
                 else
                 {
-                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true, null, x => x
+                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true, x => x.OrderByDescending(x => x.FromDate), x => x
                       .Include(x => x.EventAttachements.Take(1)), 0, 100000, true);
                     events.Items.ToList().ForEach(x => x.Description = null);
                     mapper = _mapper.Map<PaginateDto<EventMobileDto>>(events);
