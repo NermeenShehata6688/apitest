@@ -900,7 +900,7 @@ namespace IesSchool.Core.Services
                     if (!string.IsNullOrEmpty(userSearchDto.StringSearch))
                     {
                         AllParents = AllParents.Where(x => x.Code.Contains(userSearchDto.StringSearch)
-                       || x.Name.Contains(userSearchDto.StringSearch)).ToList();
+                       || x.Name.Contains(userSearchDto.StringSearch) || (x.ParentCivilId != null?x.ParentCivilId.Contains(userSearchDto.StringSearch):false)).ToList();
 
                     }
                     AllParents.ToList().ForEach(x => x.ImageBinary = null);

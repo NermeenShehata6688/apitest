@@ -192,7 +192,7 @@ namespace IesSchool.Core.Services
                     var studentsIds = _uow.GetRepository<Student>().GetList(x => x.ParentId == getMobileEventsDto.Id && x.IsDeleted != true, null, null, 0, 100000, true).Items.Select(x => x.Id).ToArray();
                     var studentEventIds = _uow.GetRepository<EventStudent>().GetList(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value), null, null, 0, 100000, true).Items.Select(x => x.EventId).ToArray();
 
-                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true && studentEventIds.Contains(x.Id), null, x => x
+                    var events = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true && x.IsPublished == true && studentEventIds.Contains(x.Id), x => x.OrderByDescending(x => x.FromDate), x => x
                        .Include(x => x.EventAttachements.Take(1))
                        //.Include(x => x.EventStudents.Where(x => studentsIds.Contains(x.StudentId.Value == null ? 0 : x.StudentId.Value))).ThenInclude(x => x.EventStudentFiles.Take(1))
                        , 0, 100000, true);

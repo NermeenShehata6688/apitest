@@ -56,7 +56,7 @@ namespace IesSchool.Controllers
             }
         }
 
-        [ResponseCache(Duration = 3600)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetEvents([FromQuery] GetMobileEventsDto getMobileEventsDto)
         {

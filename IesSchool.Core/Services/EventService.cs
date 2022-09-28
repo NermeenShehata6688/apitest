@@ -60,7 +60,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allEvents = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, null, x=> x.Include(x=>x.Department).Include(x => x.EventType), 0, 100000, true);
+                var allEvents = _uow.GetRepository<Event>().GetList(x => x.IsDeleted != true, x=>x.OrderByDescending(x=>x.FromDate), x=> x.Include(x=>x.Department).Include(x => x.EventType), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<EventDto>>(allEvents);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
