@@ -25,13 +25,16 @@ namespace IesSchool.Core.Services
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IHostingEnvironment _hostingEnvironment;
+        private iesContext _iesContext;
 
-        public MobileService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IHostingEnvironment hostingEnvironment)
+
+        public MobileService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IHostingEnvironment hostingEnvironment, iesContext __iesContext)
         {
             _uow = unitOfWork;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _hostingEnvironment = hostingEnvironment;
+             _iesContext= __iesContext;
 
         }
 
@@ -54,6 +57,24 @@ namespace IesSchool.Core.Services
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+        public ResponseDto UpdateParentDeviceToken(int ParentId, string DeviceToken)
+        {
+            try
+            {
+                if (ParentId != null && !string.IsNullOrEmpty(DeviceToken))
+                {
+                    var cmd = $"UPDATE[User] SET DeviceToken=N'{DeviceToken}' where Id={ParentId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                }
+                return new ResponseDto { Status = 1, Message = "success" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = "faild to get data" };
+
             }
         }
         //public ResponseDto Login(string UserName, string Password)

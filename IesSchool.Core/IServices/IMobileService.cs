@@ -13,6 +13,7 @@ namespace IesSchool.Core.IServices
         public bool IsParentExist(string UserName, string Password);
         //public ResponseDto Login(string UserName, string Password);
         public ResponseDto Login(string CivilId, string Password);
+        public ResponseDto UpdateParentDeviceToken(int ParentId, string DeviceToken);
         public ResponseDto GetParentById(int parentId);
         public ResponseDto GetEvents(GetMobileEventsDto getMobileEventsDto);
         public ResponseDto GetEventById(int eventId, int? parentId);

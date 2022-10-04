@@ -56,6 +56,20 @@ namespace IesSchool.Controllers
             }
         }
 
+           [HttpGet]
+        public IActionResult UpdateParentDeviceToken(int ParentId,string DeviceToken )
+        {
+            try
+            {
+                var all = _iMobileService.UpdateParentDeviceToken(ParentId, DeviceToken);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         //[ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetEvents([FromQuery] GetMobileEventsDto getMobileEventsDto)

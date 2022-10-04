@@ -34,5 +34,6 @@ namespace IesSchool.Context.Models
         public bool? Gender { get; set; }
         public string? DepartmentName { get; set; }
         public string? NationalityName { get; set; }
+        public string? DeviceToken { get; set; }
     }
 }

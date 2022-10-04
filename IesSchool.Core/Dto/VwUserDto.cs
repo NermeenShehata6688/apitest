@@ -35,7 +35,7 @@ namespace IesSchool.Core.Dto
         public string? Phone2 { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? BirthDate { get; set; }
-
+        public string? DeviceToken { get; set; }
 
     }
 }
