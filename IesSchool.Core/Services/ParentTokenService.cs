@@ -25,7 +25,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var allParentTokens = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, DeviceToken = x.DeviceToken, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true);
+                var allParentTokens = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, DeviceToken = x.DeviceToken, IsDeleted = x.IsDeleted }), y=> y.IsDeleted!=true, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<UserDto>>(allParentTokens);
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
