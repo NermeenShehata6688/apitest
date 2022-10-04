@@ -66,6 +66,7 @@ namespace IesSchool.Context.Models
         public string? Phone2 { get; set; }
         public bool? IsActive { get; set; }
         public string? ParentCivilId { get; set; }
+        public string? DeviceToken { get; set; }
 
 
         public virtual Department? Department { get; set; }
