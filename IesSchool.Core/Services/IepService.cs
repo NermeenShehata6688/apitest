@@ -313,6 +313,13 @@ namespace IesSchool.Core.Services
                     var mapper = _mapper.Map<Iep>(iep);
                     _uow.GetRepository<Iep>().Update(mapper);
 
+
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from IEP_ParamedicalService where IEPId={iepId}"+
+                              $"delete from IEP_ExtraCurricular where IEPId={iepId}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    transaction.Commit();
+
                     _uow.SaveChanges();
                     return new ResponseDto { Status = 1, Message = "Iep Deleted Seccessfuly" };
                 }
