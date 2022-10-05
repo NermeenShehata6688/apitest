@@ -13,10 +13,12 @@ namespace IesSchool.Controllers
     {        
         private IUserService _userService;
         private IFileService _fileService;
-        public UsersController(IUserService userService, IFileService fileService)
+        private IParentTokenService _parentTokenService;
+        public UsersController(IUserService userService, IFileService fileService, IParentTokenService parentTokenService)
         {
             _userService = userService;
             _fileService = fileService;
+            _parentTokenService = parentTokenService;
         }
 
       //  [ResponseCache(Duration = 800)]
@@ -400,6 +402,33 @@ namespace IesSchool.Controllers
             try
             {
                 var all = _userService.IsParentEmailExist(Email, userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public IActionResult GetParentToken()
+        {
+            try
+            {
+                var all = _parentTokenService.GetParentToken();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetParentTokenByParentId(int parentId)
+        {
+            try
+            {
+                var all = _parentTokenService.GetParentTokenByParentId(parentId);
                 return Ok(all);
             }
             catch (Exception)
