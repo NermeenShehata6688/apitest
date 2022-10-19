@@ -22,7 +22,8 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserAssignedStudentsParents(int userId)
+        [ResponseCache(Duration = 1800)]
+        public IActionResult GetUserAssignedStudentsParents(int userId,int? cash)
         {
             try
             {

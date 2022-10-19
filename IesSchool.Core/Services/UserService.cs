@@ -48,25 +48,30 @@ namespace IesSchool.Core.Services
                 var Parents = new List<User>();
                 var user = _uow.GetRepository<User>().Single(x => x.Id == userId && x.IsDeleted != true, null, null);
                 var ParentsIds = new List<int>();
-                if (user.IsTeacher.Value == true)
-                {
-                    var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && x.TeacherId == userId, null, null).Items.Select(x => x.ParentId.Value).ToList();
-                    ParentsIds.AddRange(Ids);
-                }
-                if (user.IsTherapist.Value == true)
-                {
-                    var StudentsIds = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == userId, null, null).Items.Select(x => x.StudentId);
-                    var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && StudentsIds.Contains(x.Id), null, null).Items.Select(x => x.ParentId.Value).ToList();
-                    ParentsIds.AddRange(Ids);
-                }
-
-                var StudentsParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && ParentsIds.Contains(x.Id), null, null, 0, 100000, true).Items.ToList();
-                Parents.AddRange(StudentsParents);
-                
                 if (user.IsManager.Value == true || user.IsHeadofEducation.Value == true)
                 {
                     var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent == true, null, null).Items.ToList();
                     Parents.AddRange(AllParents);
+                }
+                else
+                {
+                    if (user.IsTeacher.Value == true)
+                    {
+                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && x.TeacherId == userId, null, null).Items.Select(x => x.ParentId.Value).ToList();
+                        ParentsIds.AddRange(Ids);
+                    }
+                    if (user.IsTherapist.Value == true)
+                    {
+                        var StudentsIds = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == userId, null, null).Items.Select(x => x.StudentId);
+                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && StudentsIds.Contains(x.Id), null, null).Items.Select(x => x.ParentId.Value).ToList();
+                        ParentsIds.AddRange(Ids);
+                    }
+
+                    if(ParentsIds.Count()>0)
+                    {
+                        var StudentsParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && ParentsIds.Contains(x.Id), null, null, 0, 100000, true).Items.ToList();
+                        Parents.AddRange(StudentsParents);
+                    }
                 }
 
                 var mapper = _mapper.Map<List<UserDto>>(Parents.DistinctBy(x=>x.Id));
