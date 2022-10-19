@@ -10,6 +10,7 @@ namespace IesSchool.Core.IServices
 {
     public interface IMobileService
     {
+        public ResponseDto GetParentStudentsTeachersOrTherapists(int parentId);
         public bool IsParentExist(string UserName, string Password);
         //public ResponseDto Login(string UserName, string Password);
         public ResponseDto Login(string CivilId, string Password);

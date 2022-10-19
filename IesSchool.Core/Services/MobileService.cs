@@ -39,6 +39,30 @@ namespace IesSchool.Core.Services
         }
 
         #region Parent
+
+        public ResponseDto GetParentStudentsTeachersOrTherapists(int parentId)
+        {
+            try
+            {
+                var parentStudents = _uow.GetRepository<Student>().GetList(x => x.ParentId == parentId && x.IsDeleted != true).Items.ToList();
+                var StudentsIds = parentStudents.Select(x => x.Id).ToList();
+
+                var UserIds = new List<int>();
+                var TeachersIds = parentStudents.Select(x => x.TeacherId.Value).ToList();
+                UserIds.AddRange(TeachersIds);
+                var TherapistIds = _uow.GetRepository<StudentTherapist>().GetList(x => StudentsIds.Contains(x.StudentId.Value), null, null).Items.Select(x => x.TherapistId.Value).ToList();
+                UserIds.AddRange(TherapistIds);
+
+                var StudentsParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && UserIds.Distinct().Contains(x.Id), null, null, 0, 100000, true).Items.ToList();
+                var mapper = _mapper.Map<List<UserDto>>(StudentsParents.DistinctBy(x => x.Id));
+
+                return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public bool IsParentExist(string UserName, string Password)
         {
             try

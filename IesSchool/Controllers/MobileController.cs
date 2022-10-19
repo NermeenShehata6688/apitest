@@ -41,6 +41,20 @@ namespace IesSchool.Controllers
         //        throw;
         //    }
         //}
+        [HttpGet]
+        [ResponseCache(Duration = 1800)]
+        public IActionResult GetParentStudentsTeachersOrTherapists(int ParentId, int? cash)
+        {
+            try
+            {
+                var all = _iMobileService.GetParentStudentsTeachersOrTherapists(ParentId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         [HttpGet]
         public IActionResult Login(string CivilId, string Password)
@@ -56,7 +70,7 @@ namespace IesSchool.Controllers
             }
         }
 
-           [HttpGet]
+        [HttpGet]
         public IActionResult UpdateParentDeviceToken(int ParentId,string DeviceToken )
         {
             try
