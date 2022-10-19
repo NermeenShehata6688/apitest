@@ -21,7 +21,21 @@ namespace IesSchool.Controllers
             _parentTokenService = parentTokenService;
         }
 
-      //  [ResponseCache(Duration = 800)]
+        [HttpGet]
+        public IActionResult GetUserAssignedStudentsParents(int userId)
+        {
+            try
+            {
+                var all = _userService.GetUserAssignedStudentsParents(userId);
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        //  [ResponseCache(Duration = 800)]
         [HttpGet]
         public IActionResult GetUserHelper()
         {
