@@ -144,7 +144,17 @@ namespace IesSchool.Controllers
                     //var userName2 = User.FindFirstValue(ClaimTypes.Name);
                     //var role = User.FindFirstValue(ClaimTypes.Role);
 
-                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath } };
+                    bool IsMangerOrHeadOfEducation = false;
+                    if(User.IsManager??false)
+                    {
+                        IsMangerOrHeadOfEducation = true;
+                    }
+                    else if(User.IsHeadofEducation ?? false)
+                    {
+                        IsMangerOrHeadOfEducation = true;
+                    }
+
+                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath, IsMangerOrHeadOfEducation = IsMangerOrHeadOfEducation ,Name=User.Name} };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
