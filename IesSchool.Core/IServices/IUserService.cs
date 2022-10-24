@@ -11,6 +11,7 @@ namespace IesSchool.Core.IServices
     public interface IUserService
     {
         public ResponseDto GetUserAssignedStudentsParents(int userId);
+        public ResponseDto GetAllUsers();
         public ResponseDto GetUsers(UserSearchDto userSearchDto);
         public ResponseDto GetAllTeachers();
         public ResponseDto GetAllTherapists();

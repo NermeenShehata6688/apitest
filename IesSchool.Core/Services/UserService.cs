@@ -57,13 +57,13 @@ namespace IesSchool.Core.Services
                 {
                     if (user.IsTeacher.HasValue && user.IsTeacher.Value == true)
                     {
-                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && x.TeacherId == userId, null, null).Items.Select(x => x.ParentId.Value).ToList();
+                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && (x.TeacherId.HasValue && x.TeacherId.Value == userId), null, null).Items.Select(x => x.ParentId ?? 0).ToList();
                         ParentsIds.AddRange(Ids);
                     }
                     if (user.IsTherapist.HasValue && user.IsTherapist.Value == true)
                     {
-                        var StudentsIds = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == userId, null, null).Items.Select(x => x.StudentId);
-                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && StudentsIds.Contains(x.Id), null, null).Items.Select(x => x.ParentId.Value).ToList();
+                        var StudentsIds = _uow.GetRepository<StudentTherapist>().GetList(x => (x.TherapistId.HasValue && x.TherapistId.Value == userId), null, null).Items.Select(x => x.StudentId ?? 0);
+                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && StudentsIds.Contains(x.Id), null, null).Items.Select(x => x.ParentId??0).ToList();
                         ParentsIds.AddRange(Ids);
                     }
 
@@ -105,6 +105,21 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
             }
 
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+
+        public ResponseDto GetAllUsers()
+        {
+            try
+            {
+                var allUsers = _uow.GetRepository<VwUser>().Query("select * from Vw_Users where IsDeleted != 1 and IsParent != 1 OR IsParent IS NULL");
+                var lstUserDto = _mapper.Map<List<VwUserDto>>(allUsers);
+                var lstToSend = GetFullPathAndBinary(lstUserDto);
+                return new ResponseDto { Status = 1, Message = "Success", Data = lstToSend };
+            }
             catch (Exception ex)
             {
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };

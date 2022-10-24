@@ -22,7 +22,7 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        [ResponseCache(Duration = 1800)]
+        [ResponseCache(Duration = 500)]
         public IActionResult GetUserAssignedStudentsParents(int userId,int? cash)
         {
             try
@@ -51,6 +51,38 @@ namespace IesSchool.Controllers
             }
         }
         // GET: api/<UsersController>
+
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            try
+            {
+                var all = _userService.GetAllUsers();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        [ResponseCache(Duration = 500)]
+        public IActionResult GetAllUsersWithCache()
+        {
+            try
+            {
+                var all = _userService.GetAllUsers();
+                return Ok(all);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+
         [HttpGet]
         public IActionResult GetUsers([FromQuery] UserSearchDto userSearchDto)
         {
@@ -65,7 +97,7 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        //[ResponseCache(Duration = 1800)]
+        [ResponseCache(Duration = 500)]
         public IActionResult GetUsersWithCache([FromQuery] UserSearchDto userSearchDto)
         {
             try
@@ -78,6 +110,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
+        
         [HttpGet]
         public IActionResult GetAllTeachers()
         {
