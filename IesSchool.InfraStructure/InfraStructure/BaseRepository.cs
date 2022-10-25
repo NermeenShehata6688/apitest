@@ -47,7 +47,7 @@ namespace IesSchool.InfraStructure
         public IPaginate<T> GetList(Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int index = 0,
-            int size = 20, bool disableTracking = true)
+            int size = 10000, bool disableTracking = true)
         {
             IQueryable<T> query = _dbSet;
             if (disableTracking) query = query.AsNoTracking();

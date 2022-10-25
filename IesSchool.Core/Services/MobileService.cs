@@ -50,6 +50,7 @@ namespace IesSchool.Core.Services
                 var UserIds = new List<int>();
                 var TeachersIds = parentStudents.Select(x => x.TeacherId.Value).ToList();
                 UserIds.AddRange(TeachersIds);
+                var Therapist = _uow.GetRepository<StudentTherapist>().GetList(x => StudentsIds.Contains(x.StudentId.Value), null, null).Items.ToList();
                 var TherapistIds = _uow.GetRepository<StudentTherapist>().GetList(x => StudentsIds.Contains(x.StudentId.Value), null, null).Items.Select(x => x.TherapistId.Value).ToList();
                 UserIds.AddRange(TherapistIds);
 

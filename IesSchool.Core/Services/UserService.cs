@@ -50,20 +50,20 @@ namespace IesSchool.Core.Services
                 var ParentsIds = new List<int>();
                 if ((user.IsManager.HasValue && user.IsManager.Value == true) || (user.IsHeadofEducation.HasValue && user.IsHeadofEducation.Value == true))
                 {
-                    var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent == true, null, null).Items.ToList();
+                    var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent == true, null, null, 0, 100000, true).Items.ToList();
                     Parents.AddRange(AllParents);
                 }
                 else
                 {
                     if (user.IsTeacher.HasValue && user.IsTeacher.Value == true)
                     {
-                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && (x.TeacherId.HasValue && x.TeacherId.Value == userId), null, null).Items.Select(x => x.ParentId ?? 0).ToList();
+                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && (x.TeacherId.HasValue && x.TeacherId.Value == userId), null, null, 0, 100000, true).Items.Select(x => x.ParentId ?? 0).ToList();
                         ParentsIds.AddRange(Ids);
                     }
                     if (user.IsTherapist.HasValue && user.IsTherapist.Value == true)
                     {
-                        var StudentsIds = _uow.GetRepository<StudentTherapist>().GetList(x => (x.TherapistId.HasValue && x.TherapistId.Value == userId), null, null).Items.Select(x => x.StudentId ?? 0);
-                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && StudentsIds.Contains(x.Id), null, null).Items.Select(x => x.ParentId??0).ToList();
+                        var StudentsIds = _uow.GetRepository<StudentTherapist>().GetList(x => x.TherapistId == userId, null, null,0, 100000, true).Items.Select(x => x.StudentId.Value);
+                        var Ids = _uow.GetRepository<Student>().GetList(x => x.IsDeleted != true && StudentsIds.Contains(x.Id), null, null,0, 100000, true).Items.Select(x => x.ParentId??0).ToList();
                         ParentsIds.AddRange(Ids);
                     }
 
