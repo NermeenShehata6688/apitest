@@ -54,6 +54,9 @@ namespace IesSchool.Core.Services
                 var TherapistIds = _uow.GetRepository<StudentTherapist>().GetList(x => StudentsIds.Contains(x.StudentId.Value), null, null).Items.Select(x => x.TherapistId.Value).ToList();
                 UserIds.AddRange(TherapistIds);
 
+                //add adminstration user which is id=1
+                UserIds.Add(1);
+
                 var StudentsParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && UserIds.Distinct().Contains(x.Id), null, null, 0, 100000, true).Items.ToList();
                 var mapper = _mapper.Map<List<UserDto>>(StudentsParents.DistinctBy(x => x.Id));
 
