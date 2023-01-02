@@ -39,7 +39,8 @@ namespace IesSchool.Core
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IProgramsService, ProgramsService>(); 
-            services.AddScoped<IParentTokenService, ParentTokenService>(); 
+            services.AddScoped<IParentTokenService, ParentTokenService>();
+            services.AddScoped<ICalendersService, CalendersService>();
 
             return services; 
         }

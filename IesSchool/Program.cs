@@ -13,11 +13,13 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using IesSchool.Middleware;
+using IesSchool.Core.Dapper;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddPersistenceServices(connString);
+SqlHelper.conStr = connString;
 builder.Services.AddApplicationServices();
 builder.Services.ServiceInjection();
 builder.Services.AddControllers();

@@ -4,6 +4,7 @@ using IesSchool.Context.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IesSchool.Context.Migrations
 {
     [DbContext(typeof(iesContext))]
-    partial class iesContextModelSnapshot : ModelSnapshot
+    [Migration("20221228122718_migcalenderalterTables")]
+    partial class migcalenderalterTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

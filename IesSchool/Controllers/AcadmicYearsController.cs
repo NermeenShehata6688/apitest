@@ -18,10 +18,6 @@ namespace IesSchool.Controllers
         {
             _acadmicYearsService = acadmicYearsService;
         }
-
-        /// <summary>
-        /// This is method summary I want displayed
-        /// </summary>
         [HttpGet]
         public IActionResult GetAcadmicYears()
         {
@@ -66,7 +62,7 @@ namespace IesSchool.Controllers
             }
         }
 
-        // PUT api/<AcadmicYearsController>/5
+
         [HttpPut]
         public IActionResult PutAcadmicYear(AcadmicYearDto acadmicYearDto)
         {
@@ -81,7 +77,6 @@ namespace IesSchool.Controllers
             }
         }
 
-        // DELETE api/<AcadmicYearsController>/5
         [HttpDelete]
         public IActionResult DeleteAcadmicYear(int acadmicYearId)
         {

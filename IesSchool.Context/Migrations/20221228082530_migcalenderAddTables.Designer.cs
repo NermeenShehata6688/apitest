@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IesSchool.Context.Migrations
 {
     [DbContext(typeof(iesContext))]
-    [Migration("20211225093311_birthdate")]
-    partial class birthdate
+    [Migration("20221228082530_migcalenderAddTables")]
+    partial class migcalenderAddTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -196,7 +196,12 @@ namespace IesSchool.Context.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Name_Ar");
 
+                    b.Property<int?>("ProgramId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProgramId");
 
                     b.ToTable("Area", (string)null);
                 });
@@ -352,17 +357,24 @@ namespace IesSchool.Context.Migrations
 
             modelBuilder.Entity("IesSchool.Context.Models.AspNetUserRole", b =>
                 {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .HasColumnName("code")
+                        .IsFixedLength();
+
+                    b.HasKey("UserId", "RoleId");
+
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.AspNetUserToken", b =>
@@ -479,6 +491,82 @@ namespace IesSchool.Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AttachmentType", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Calender", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CalenderCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Color")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TitleAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TitleEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CalenderCategoryId");
+
+                    b.ToTable("Calenders");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.CalenderCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("Color")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CalenderCategories");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.City", b =>
@@ -663,6 +751,9 @@ namespace IesSchool.Context.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ToDate")
                         .HasColumnType("datetime");
 
@@ -825,6 +916,21 @@ namespace IesSchool.Context.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -913,6 +1019,12 @@ namespace IesSchool.Context.Migrations
                     b.Property<string>("LongTermGoal")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("LongTermNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProgramId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ShortTermGoal")
                         .HasColumnType("nvarchar(max)");
 
@@ -930,6 +1042,8 @@ namespace IesSchool.Context.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("Iepid");
+
+                    b.HasIndex("ProgramId");
 
                     b.HasIndex("SkillId");
 
@@ -972,7 +1086,7 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("HeadOfDepartment")
                         .HasColumnType("int");
 
-                    b.Property<int>("HeadOfEducation")
+                    b.Property<int?>("HeadOfEducation")
                         .HasColumnType("int");
 
                     b.Property<bool?>("IsDeleted")
@@ -1066,6 +1180,23 @@ namespace IesSchool.Context.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("ExTeacherId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ExtraCurricularId")
                         .HasColumnType("int");
 
@@ -1073,7 +1204,15 @@ namespace IesSchool.Context.Migrations
                         .HasColumnType("int")
                         .HasColumnName("IEPId");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsIxpCreated")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ExTeacherId");
 
                     b.HasIndex("ExtraCurricularId");
 
@@ -1090,11 +1229,34 @@ namespace IesSchool.Context.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
                     b.Property<int?>("Iepid")
                         .HasColumnType("int")
                         .HasColumnName("IEPId");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsItpCreated")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("ParamedicalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TherapistId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1103,7 +1265,601 @@ namespace IesSchool.Context.Migrations
 
                     b.HasIndex("ParamedicalServiceId");
 
+                    b.HasIndex("TherapistId");
+
                     b.ToTable("IEP_ParamedicalService", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IepProgressReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AcadmicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("GeneralComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HeadOfEducationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IepId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OtherComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TermId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcadmicYearId");
+
+                    b.HasIndex("HeadOfEducationId");
+
+                    b.HasIndex("IepId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.HasIndex("TermId");
+
+                    b.ToTable("IepProgressReport", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Itp", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AcadmicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CurrentLevel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateOfPreparation")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("FooterNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HeadOfDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HeadOfEducationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastDateOfReview")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("Others")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParamedicalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("ParentsInvolvedInSettingUpSuggestions")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ParentsMeeting")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ProgressReport")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ReportCard")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("RoomNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TermId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TherapistDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TherapistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcadmicYearId");
+
+                    b.HasIndex("HeadOfDepartmentId");
+
+                    b.HasIndex("HeadOfEducationId");
+
+                    b.HasIndex("ParamedicalServiceId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TermId");
+
+                    b.HasIndex("TherapistDepartmentId");
+
+                    b.HasIndex("TherapistId");
+
+                    b.ToTable("ITP", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Goal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ItpId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItpId");
+
+                    b.ToTable("ITP_Goal", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoalObjective", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("EvaluationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ItpGoalId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItpId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ObjectiveNote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResourcesRequired")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItpGoalId");
+
+                    b.HasIndex("ItpId");
+
+                    b.ToTable("ITP_GoalObjective", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoalObjectiveActivity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Deatils")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Evaluation")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItpGoalObjectiveId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItpGoalObjectiveId");
+
+                    b.ToTable("ITP_GoalObjectiveActivity", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpObjectiveProgressReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ItpObjectiveId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItpProgressReportId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItpObjectiveId");
+
+                    b.HasIndex("ItpProgressReportId");
+
+                    b.ToTable("ITP_ObjectiveProgressReport", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpProgressReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AcadmicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("GeneralComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HeadOfEducationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ItpId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OtherComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParamedicalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TermId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TherapistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcadmicYearId");
+
+                    b.HasIndex("HeadOfEducationId");
+
+                    b.HasIndex("ItpId");
+
+                    b.HasIndex("ParamedicalServiceId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.HasIndex("TermId");
+
+                    b.HasIndex("TherapistId");
+
+                    b.ToTable("ITP_ProgressReport", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpStrategy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("ItpId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParamedicalStrategyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItpId");
+
+                    b.HasIndex("ParamedicalStrategyId");
+
+                    b.ToTable("ITP_Strategy", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Ixp", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AcadmicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DateOfPreparation")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("ExTeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExtraCurricularId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FooterNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HeadOfDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HeadOfEducationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastDateOfReview")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("Others")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ParentsInvolvedInSettingUpSuggestions")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ProgressReport")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TermId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcadmicYearId");
+
+                    b.HasIndex("ExTeacherId");
+
+                    b.HasIndex("ExtraCurricularId");
+
+                    b.HasIndex("HeadOfDepartmentId");
+
+                    b.HasIndex("HeadOfEducationId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TermId");
+
+                    b.ToTable("IXP", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IxpExtraCurricular", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Goal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Indication")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IxpId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Strategy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IxpId");
+
+                    b.ToTable("IXP_ExtraCurricular", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.LogComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("IepId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LogDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IepId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LogComment", (string)null);
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Objective", b =>
@@ -1254,6 +2010,42 @@ namespace IesSchool.Context.Migrations
                     b.ToTable("ParamedicalService", (string)null);
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.ParamedicalStrategy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParamedicalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StrategyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParamedicalServiceId");
+
+                    b.ToTable("Paramedical_Strategy", (string)null);
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.Phone", b =>
                 {
                     b.Property<int>("Id")
@@ -1279,6 +2071,170 @@ namespace IesSchool.Context.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Phone", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Program", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Program", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ProgressReportExtraCurricular", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExtraCurricularId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IepextraCurricularId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ProgressReportId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExtraCurricularId");
+
+                    b.HasIndex("IepextraCurricularId");
+
+                    b.HasIndex("ProgressReportId");
+
+                    b.ToTable("ProgressReportExtraCurricular", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ProgressReportParamedical", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("IepParamedicalSerciveId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParamedicalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProgressReportId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IepParamedicalSerciveId");
+
+                    b.HasIndex("ParamedicalServiceId");
+
+                    b.HasIndex("ProgressReportId");
+
+                    b.ToTable("ProgressReportParamedical", (string)null);
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ProgressReportStrand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FirstTermPercentage")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GoalLongTermNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GoalShortTermNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProgressReportId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SecondTermPercentage")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StrandId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProgressReportId");
+
+                    b.HasIndex("StrandId");
+
+                    b.ToTable("ProgressReportStrand", (string)null);
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Religion", b =>
@@ -1312,6 +2268,9 @@ namespace IesSchool.Context.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AboutUs")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CurrentTermId")
                         .HasColumnType("int");
@@ -1375,6 +2334,9 @@ namespace IesSchool.Context.Migrations
                     b.Property<string>("NameAr")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Name_Ar");
+
+                    b.Property<int?>("SkillNumber")
+                        .HasColumnType("int");
 
                     b.Property<int?>("StrandId")
                         .HasColumnType("int");
@@ -1577,8 +2539,8 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("CityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CivilId")
-                        .HasColumnType("int");
+                    b.Property<string>("CivilId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Code")
                         .HasColumnType("int");
@@ -1700,8 +2662,8 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PassportNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PassportNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentNotes")
                         .HasColumnType("nvarchar(max)");
@@ -1725,8 +2687,8 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TermType")
-                        .HasColumnType("int");
+                    b.Property<string>("TermType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1741,6 +2703,10 @@ namespace IesSchool.Context.Migrations
                     b.HasIndex("MotherNationalityId");
 
                     b.HasIndex("NationalityId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("ReligionId");
 
                     b.HasIndex("StateId");
 
@@ -1802,6 +2768,29 @@ namespace IesSchool.Context.Migrations
                     b.ToTable("StudentAttachmentBinary", (string)null);
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.StudentExtraTeacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("ExtraTeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExtraTeacherId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Student_ExtraTeacher", (string)null);
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.StudentHistoricalSkill", b =>
                 {
                     b.Property<int>("Id")
@@ -1851,10 +2840,7 @@ namespace IesSchool.Context.Migrations
             modelBuilder.Entity("IesSchool.Context.Models.Term", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("AcadmicYearId")
                         .HasColumnType("int");
@@ -1945,6 +2931,9 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("DepartmentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("DeviceToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -1958,6 +2947,9 @@ namespace IesSchool.Context.Migrations
 
                     b.Property<byte[]>("ImageBinary")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
@@ -1993,6 +2985,9 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("NationalityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ParentCivilId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ParentPassword")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
@@ -2000,6 +2995,14 @@ namespace IesSchool.Context.Migrations
                     b.Property<string>("ParentUserName")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Phone1")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Phone2")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("RoomNumber")
                         .HasColumnType("int");
@@ -2085,6 +3088,29 @@ namespace IesSchool.Context.Migrations
                     b.ToTable("UserAttachmentBinary", (string)null);
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.UserExtraCurricular", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("ExtraCurricularId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExtraCurricularId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("User_ExtraCurricular", (string)null);
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.VwAssistant", b =>
                 {
                     b.Property<DateTime?>("BirthDay")
@@ -2158,11 +3184,18 @@ namespace IesSchool.Context.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int?>("AcadmicYear_Id")
+                        .HasColumnType("int")
+                        .HasColumnName("AcadmicYear_Id");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("DateOfPreparation")
@@ -2182,13 +3215,17 @@ namespace IesSchool.Context.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int?>("Department_Id")
+                        .HasColumnType("int")
+                        .HasColumnName("Department_Id");
+
                     b.Property<string>("FooterNotes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("HeadOfDepartment")
                         .HasColumnType("int");
 
-                    b.Property<int>("HeadOfEducation")
+                    b.Property<int?>("HeadOfEducation")
                         .HasColumnType("int");
 
                     b.Property<int>("Id")
@@ -2241,12 +3278,20 @@ namespace IesSchool.Context.Migrations
                     b.Property<string>("StudentNotes")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Student_Id")
+                        .HasColumnType("int")
+                        .HasColumnName("Student_Id");
+
                     b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<string>("TeacherName")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("Teacher_Id")
+                        .HasColumnType("int")
+                        .HasColumnName("Teacher_Id");
 
                     b.Property<int>("TermId")
                         .HasColumnType("int");
@@ -2255,7 +3300,75 @@ namespace IesSchool.Context.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int?>("Term_Id")
+                        .HasColumnType("int")
+                        .HasColumnName("Term_Id");
+
                     b.ToView("Vw_Ieps");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.VwSkill", b =>
+                {
+                    b.Property<string>("AreaName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("AreaNameAr")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Level")
+                        .HasColumnType("int")
+                        .HasColumnName("level");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameAr")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Name_Ar");
+
+                    b.Property<int?>("SkillNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StrandId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StrandName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("StrandNameAr")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.ToView("VW_Skills");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.VwStudent", b =>
@@ -2291,8 +3404,8 @@ namespace IesSchool.Context.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("CivilId")
-                        .HasColumnType("int");
+                    b.Property<string>("CivilId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Code")
                         .HasColumnType("int");
@@ -2422,14 +3535,20 @@ namespace IesSchool.Context.Migrations
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PassportNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PassportNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentNotes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ReligionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ReligionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReligionNameAr")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("StateId")
                         .HasColumnType("int");
@@ -2455,8 +3574,8 @@ namespace IesSchool.Context.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("TermType")
-                        .HasColumnType("int");
+                    b.Property<string>("TermType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.ToView("Vw_Students");
                 });
@@ -2487,6 +3606,9 @@ namespace IesSchool.Context.Migrations
                     b.Property<string>("DepartmentName")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("DeviceToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(255)
@@ -2625,6 +3747,16 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.Area", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.Program", "Program")
+                        .WithMany("Areas")
+                        .HasForeignKey("ProgramId")
+                        .HasConstraintName("FK_Area_Program");
+
+                    b.Navigation("Program");
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.AspNetRoleClaim", b =>
                 {
                     b.HasOne("IesSchool.Context.Models.AspNetRole", "Role")
@@ -2714,6 +3846,15 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Nationality");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Calender", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.CalenderCategory", "CalenderCategory")
+                        .WithMany("Calenders")
+                        .HasForeignKey("CalenderCategoryId");
+
+                    b.Navigation("CalenderCategory");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.City", b =>
@@ -2837,6 +3978,11 @@ namespace IesSchool.Context.Migrations
                         .HasForeignKey("Iepid")
                         .HasConstraintName("FK_Goals_IEP");
 
+                    b.HasOne("IesSchool.Context.Models.Program", "Program")
+                        .WithMany("Goals")
+                        .HasForeignKey("ProgramId")
+                        .HasConstraintName("FK_Goals_Program");
+
                     b.HasOne("IesSchool.Context.Models.Skill", "Skill")
                         .WithMany("Goals")
                         .HasForeignKey("SkillId")
@@ -2850,6 +3996,8 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Iep");
+
+                    b.Navigation("Program");
 
                     b.Navigation("Skill");
 
@@ -2872,7 +4020,6 @@ namespace IesSchool.Context.Migrations
                     b.HasOne("IesSchool.Context.Models.User", "HeadOfEducationNavigation")
                         .WithMany("IepHeadOfEducationNavigations")
                         .HasForeignKey("HeadOfEducation")
-                        .IsRequired()
                         .HasConstraintName("FK_IEP_HeadOfEducationUser");
 
                     b.HasOne("IesSchool.Context.Models.Student", "Student")
@@ -2924,6 +4071,11 @@ namespace IesSchool.Context.Migrations
 
             modelBuilder.Entity("IesSchool.Context.Models.IepExtraCurricular", b =>
                 {
+                    b.HasOne("IesSchool.Context.Models.User", "ExTeacher")
+                        .WithMany("IepExtraCurriculars")
+                        .HasForeignKey("ExTeacherId")
+                        .HasConstraintName("FK_IEP_ExtraCurricular_User");
+
                     b.HasOne("IesSchool.Context.Models.ExtraCurricular", "ExtraCurricular")
                         .WithMany("IepExtraCurriculars")
                         .HasForeignKey("ExtraCurricularId")
@@ -2933,6 +4085,8 @@ namespace IesSchool.Context.Migrations
                         .WithMany("IepExtraCurriculars")
                         .HasForeignKey("Iepid")
                         .HasConstraintName("FK_IEP_ExtraCurricular_IEP");
+
+                    b.Navigation("ExTeacher");
 
                     b.Navigation("ExtraCurricular");
 
@@ -2951,9 +4105,353 @@ namespace IesSchool.Context.Migrations
                         .HasForeignKey("ParamedicalServiceId")
                         .HasConstraintName("FK_IEP_ParamedicalService_ParamedicalService");
 
+                    b.HasOne("IesSchool.Context.Models.User", "Therapist")
+                        .WithMany("IepParamedicalServices")
+                        .HasForeignKey("TherapistId")
+                        .HasConstraintName("FK_IEP_ParamedicalService_Therapist");
+
                     b.Navigation("Iep");
 
                     b.Navigation("ParamedicalService");
+
+                    b.Navigation("Therapist");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IepProgressReport", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.AcadmicYear", "AcadmicYear")
+                        .WithMany("IepProgressReports")
+                        .HasForeignKey("AcadmicYearId")
+                        .HasConstraintName("FK_IepProgressReport_AcadmicYears");
+
+                    b.HasOne("IesSchool.Context.Models.User", "HeadOfEducation")
+                        .WithMany("IepProgressReportHeadOfEducations")
+                        .HasForeignKey("HeadOfEducationId")
+                        .HasConstraintName("FK_IepProgressReport_HeadOfEducation");
+
+                    b.HasOne("IesSchool.Context.Models.Iep", "Iep")
+                        .WithMany("IepProgressReports")
+                        .HasForeignKey("IepId")
+                        .HasConstraintName("FK_IepProgressReport_IEP");
+
+                    b.HasOne("IesSchool.Context.Models.Student", "Student")
+                        .WithMany("IepProgressReports")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_IepProgressReport_Students");
+
+                    b.HasOne("IesSchool.Context.Models.User", "Teacher")
+                        .WithMany("IepProgressReportTeachers")
+                        .HasForeignKey("TeacherId")
+                        .HasConstraintName("FK_IepProgressReport_Teacher");
+
+                    b.HasOne("IesSchool.Context.Models.Term", "Term")
+                        .WithMany("IepProgressReports")
+                        .HasForeignKey("TermId")
+                        .HasConstraintName("FK_IepProgressReport_Term");
+
+                    b.Navigation("AcadmicYear");
+
+                    b.Navigation("HeadOfEducation");
+
+                    b.Navigation("Iep");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+
+                    b.Navigation("Term");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Itp", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.AcadmicYear", "AcadmicYear")
+                        .WithMany("Itps")
+                        .HasForeignKey("AcadmicYearId")
+                        .HasConstraintName("FK_ITP_AcadmicYears");
+
+                    b.HasOne("IesSchool.Context.Models.User", "HeadOfDepartment")
+                        .WithMany("ItpHeadOfDepartments")
+                        .HasForeignKey("HeadOfDepartmentId")
+                        .HasConstraintName("FK_ITP_HeadOfDepartment");
+
+                    b.HasOne("IesSchool.Context.Models.User", "HeadOfEducation")
+                        .WithMany("ItpHeadOfEducations")
+                        .HasForeignKey("HeadOfEducationId")
+                        .HasConstraintName("FK_ITP_HeadOfEducation");
+
+                    b.HasOne("IesSchool.Context.Models.IepParamedicalService", "IdNavigation")
+                        .WithOne("Itp")
+                        .HasForeignKey("IesSchool.Context.Models.Itp", "Id")
+                        .IsRequired()
+                        .HasConstraintName("FK_ITP_IEP_ParamedicalService");
+
+                    b.HasOne("IesSchool.Context.Models.ParamedicalService", "ParamedicalService")
+                        .WithMany("Itps")
+                        .HasForeignKey("ParamedicalServiceId")
+                        .HasConstraintName("FK_ITP_ParamedicalService");
+
+                    b.HasOne("IesSchool.Context.Models.Student", "Student")
+                        .WithMany("Itps")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_ITP_Students");
+
+                    b.HasOne("IesSchool.Context.Models.Term", "Term")
+                        .WithMany("Itps")
+                        .HasForeignKey("TermId")
+                        .HasConstraintName("FK_ITP_Term");
+
+                    b.HasOne("IesSchool.Context.Models.Department", "TherapistDepartment")
+                        .WithMany("Itps")
+                        .HasForeignKey("TherapistDepartmentId")
+                        .HasConstraintName("FK_ITP_Department");
+
+                    b.HasOne("IesSchool.Context.Models.User", "Therapist")
+                        .WithMany("ItpTherapists")
+                        .HasForeignKey("TherapistId")
+                        .HasConstraintName("FK_ITP_Therapist");
+
+                    b.Navigation("AcadmicYear");
+
+                    b.Navigation("HeadOfDepartment");
+
+                    b.Navigation("HeadOfEducation");
+
+                    b.Navigation("IdNavigation");
+
+                    b.Navigation("ParamedicalService");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Term");
+
+                    b.Navigation("Therapist");
+
+                    b.Navigation("TherapistDepartment");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoal", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.Itp", "Itp")
+                        .WithMany("ItpGoals")
+                        .HasForeignKey("ItpId")
+                        .HasConstraintName("FK_ITP_Goal_ITP_Goal");
+
+                    b.Navigation("Itp");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoalObjective", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.ItpGoal", "ItpGoal")
+                        .WithMany("ItpGoalObjectives")
+                        .HasForeignKey("ItpGoalId")
+                        .HasConstraintName("FK_ITP_GoalObjective_ITP_Goal");
+
+                    b.HasOne("IesSchool.Context.Models.Itp", "Itp")
+                        .WithMany("ItpGoalObjectives")
+                        .HasForeignKey("ItpId")
+                        .HasConstraintName("FK_ITP_Objective_ITP");
+
+                    b.Navigation("Itp");
+
+                    b.Navigation("ItpGoal");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoalObjectiveActivity", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.ItpGoalObjective", "ItpGoalObjective")
+                        .WithMany("ItpGoalObjectiveActivities")
+                        .HasForeignKey("ItpGoalObjectiveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_ITP_GoalObjectiveActivity_ITP_GoalObjective");
+
+                    b.Navigation("ItpGoalObjective");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpObjectiveProgressReport", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.ItpGoalObjective", "ItpObjective")
+                        .WithMany("ItpObjectiveProgressReports")
+                        .HasForeignKey("ItpObjectiveId")
+                        .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_Objective");
+
+                    b.HasOne("IesSchool.Context.Models.ItpProgressReport", "ItpProgressReport")
+                        .WithMany("ItpObjectiveProgressReports")
+                        .HasForeignKey("ItpProgressReportId")
+                        .HasConstraintName("FK_ITP_ObjectiveProgressReport_ITP_ProgressReport");
+
+                    b.Navigation("ItpObjective");
+
+                    b.Navigation("ItpProgressReport");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpProgressReport", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.AcadmicYear", "AcadmicYear")
+                        .WithMany("ItpProgressReports")
+                        .HasForeignKey("AcadmicYearId")
+                        .HasConstraintName("FK_ITP_ProgressReport_AcadmicYears");
+
+                    b.HasOne("IesSchool.Context.Models.User", "HeadOfEducation")
+                        .WithMany("ItpProgressReportHeadOfEducations")
+                        .HasForeignKey("HeadOfEducationId")
+                        .HasConstraintName("FK_ITP_ProgressReport_HeadOfEducation");
+
+                    b.HasOne("IesSchool.Context.Models.Itp", "Itp")
+                        .WithMany("ItpProgressReports")
+                        .HasForeignKey("ItpId")
+                        .HasConstraintName("FK_ITP_ProgressReport_ITP");
+
+                    b.HasOne("IesSchool.Context.Models.ParamedicalService", "ParamedicalService")
+                        .WithMany("ItpProgressReports")
+                        .HasForeignKey("ParamedicalServiceId")
+                        .HasConstraintName("FK_ITP_ProgressReport_ParamedicalService");
+
+                    b.HasOne("IesSchool.Context.Models.Student", "Student")
+                        .WithMany("ItpProgressReports")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_ITP_ProgressReport_Students");
+
+                    b.HasOne("IesSchool.Context.Models.User", "Teacher")
+                        .WithMany("ItpProgressReportTeachers")
+                        .HasForeignKey("TeacherId")
+                        .HasConstraintName("FK_ITP_ProgressReport_Teacher");
+
+                    b.HasOne("IesSchool.Context.Models.Term", "Term")
+                        .WithMany("ItpProgressReports")
+                        .HasForeignKey("TermId")
+                        .HasConstraintName("FK_ITP_ProgressReport_Term");
+
+                    b.HasOne("IesSchool.Context.Models.User", "Therapist")
+                        .WithMany("ItpProgressReportTherapists")
+                        .HasForeignKey("TherapistId")
+                        .HasConstraintName("FK_ITP_ProgressReport_Therapist");
+
+                    b.Navigation("AcadmicYear");
+
+                    b.Navigation("HeadOfEducation");
+
+                    b.Navigation("Itp");
+
+                    b.Navigation("ParamedicalService");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+
+                    b.Navigation("Term");
+
+                    b.Navigation("Therapist");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpStrategy", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.Itp", "Itp")
+                        .WithMany("ItpStrategies")
+                        .HasForeignKey("ItpId")
+                        .HasConstraintName("FK_ITP_Strategy_ITP");
+
+                    b.HasOne("IesSchool.Context.Models.ParamedicalStrategy", "ParamedicalStrategy")
+                        .WithMany("ItpStrategies")
+                        .HasForeignKey("ParamedicalStrategyId")
+                        .HasConstraintName("FK_ITP_Strategy_Paramedical_Strategy");
+
+                    b.Navigation("Itp");
+
+                    b.Navigation("ParamedicalStrategy");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Ixp", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.AcadmicYear", "AcadmicYear")
+                        .WithMany("Ixps")
+                        .HasForeignKey("AcadmicYearId")
+                        .HasConstraintName("FK_IXP_AcadmicYears");
+
+                    b.HasOne("IesSchool.Context.Models.User", "ExTeacher")
+                        .WithMany("IxpExTeachers")
+                        .HasForeignKey("ExTeacherId")
+                        .HasConstraintName("FK_IXP_ExTeacher");
+
+                    b.HasOne("IesSchool.Context.Models.ExtraCurricular", "ExtraCurricular")
+                        .WithMany("Ixps")
+                        .HasForeignKey("ExtraCurricularId")
+                        .HasConstraintName("FK_IXP_ExtraCurricular");
+
+                    b.HasOne("IesSchool.Context.Models.User", "HeadOfDepartment")
+                        .WithMany("IxpHeadOfDepartments")
+                        .HasForeignKey("HeadOfDepartmentId")
+                        .HasConstraintName("FK_IXP_HeadOfDepartment");
+
+                    b.HasOne("IesSchool.Context.Models.User", "HeadOfEducation")
+                        .WithMany("IxpHeadOfEducations")
+                        .HasForeignKey("HeadOfEducationId")
+                        .HasConstraintName("FK_IXP_HeadOfEducation");
+
+                    b.HasOne("IesSchool.Context.Models.IepExtraCurricular", "IdNavigation")
+                        .WithOne("Ixp")
+                        .HasForeignKey("IesSchool.Context.Models.Ixp", "Id")
+                        .IsRequired()
+                        .HasConstraintName("FK_IXP_IEP_ExtraCurricular1");
+
+                    b.HasOne("IesSchool.Context.Models.Student", "Student")
+                        .WithMany("Ixps")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_IXP_Students");
+
+                    b.HasOne("IesSchool.Context.Models.Term", "Term")
+                        .WithMany("Ixps")
+                        .HasForeignKey("TermId")
+                        .HasConstraintName("FK_IXP_Term");
+
+                    b.Navigation("AcadmicYear");
+
+                    b.Navigation("ExTeacher");
+
+                    b.Navigation("ExtraCurricular");
+
+                    b.Navigation("HeadOfDepartment");
+
+                    b.Navigation("HeadOfEducation");
+
+                    b.Navigation("IdNavigation");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Term");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IxpExtraCurricular", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.Ixp", "Ixp")
+                        .WithMany("IxpExtraCurriculars")
+                        .HasForeignKey("IxpId")
+                        .HasConstraintName("FK_IXP_ExtraCurricular_IXP");
+
+                    b.Navigation("Ixp");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.LogComment", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.Iep", "Iep")
+                        .WithMany("LogComments")
+                        .HasForeignKey("IepId")
+                        .HasConstraintName("FK_LogComment_IEP");
+
+                    b.HasOne("IesSchool.Context.Models.Student", "Student")
+                        .WithMany("LogComments")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_LogComment_Students");
+
+                    b.HasOne("IesSchool.Context.Models.User", "User")
+                        .WithMany("LogComments")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_LogComment_User");
+
+                    b.Navigation("Iep");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Objective", b =>
@@ -3003,6 +4501,16 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("Skill");
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.ParamedicalStrategy", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.ParamedicalService", "ParamedicalService")
+                        .WithMany("ParamedicalStrategies")
+                        .HasForeignKey("ParamedicalServiceId")
+                        .HasConstraintName("FK_Para_Strategy_ParamedicalService");
+
+                    b.Navigation("ParamedicalService");
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.Phone", b =>
                 {
                     b.HasOne("IesSchool.Context.Models.Student", "Student")
@@ -3011,6 +4519,70 @@ namespace IesSchool.Context.Migrations
                         .HasConstraintName("FK_Phone_Students");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ProgressReportExtraCurricular", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.ExtraCurricular", "ExtraCurricular")
+                        .WithMany("ProgressReportExtraCurriculars")
+                        .HasForeignKey("ExtraCurricularId")
+                        .HasConstraintName("FK_ProgressReportExtraCurricular_ExtraCurricular");
+
+                    b.HasOne("IesSchool.Context.Models.IepExtraCurricular", "IepextraCurricular")
+                        .WithMany("ProgressReportExtraCurriculars")
+                        .HasForeignKey("IepextraCurricularId");
+
+                    b.HasOne("IesSchool.Context.Models.IepProgressReport", "ProgressReport")
+                        .WithMany("ProgressReportExtraCurriculars")
+                        .HasForeignKey("ProgressReportId")
+                        .HasConstraintName("FK_ProgressReportExtraCurricular_IepProgressReport");
+
+                    b.Navigation("ExtraCurricular");
+
+                    b.Navigation("IepextraCurricular");
+
+                    b.Navigation("ProgressReport");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ProgressReportParamedical", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.IepParamedicalService", "IepParamedicalSercive")
+                        .WithMany("ProgressReportParamedicals")
+                        .HasForeignKey("IepParamedicalSerciveId")
+                        .HasConstraintName("FK_ProgressReportParamedical_IEP_ParamedicalService");
+
+                    b.HasOne("IesSchool.Context.Models.ParamedicalService", "ParamedicalService")
+                        .WithMany("ProgressReportParamedicals")
+                        .HasForeignKey("ParamedicalServiceId")
+                        .HasConstraintName("FK_ProgressReportParamedical_ParamedicalService");
+
+                    b.HasOne("IesSchool.Context.Models.IepProgressReport", "ProgressReport")
+                        .WithMany("ProgressReportParamedicals")
+                        .HasForeignKey("ProgressReportId")
+                        .HasConstraintName("FK_ProgressReportParamedical_IepProgressReport");
+
+                    b.Navigation("IepParamedicalSercive");
+
+                    b.Navigation("ParamedicalService");
+
+                    b.Navigation("ProgressReport");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ProgressReportStrand", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.IepProgressReport", "ProgressReport")
+                        .WithMany("ProgressReportStrands")
+                        .HasForeignKey("ProgressReportId")
+                        .HasConstraintName("FK_ProgressReportStrand_IepProgressReport");
+
+                    b.HasOne("IesSchool.Context.Models.Strand", "Strand")
+                        .WithMany("ProgressReportStrands")
+                        .HasForeignKey("StrandId")
+                        .HasConstraintName("FK_ProgressReportStrand_Strand");
+
+                    b.Navigation("ProgressReport");
+
+                    b.Navigation("Strand");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Setting", b =>
@@ -3109,13 +4681,23 @@ namespace IesSchool.Context.Migrations
                         .HasForeignKey("NationalityId")
                         .HasConstraintName("FK_Students_Nationality");
 
+                    b.HasOne("IesSchool.Context.Models.User", "Parent")
+                        .WithMany("StudentParents")
+                        .HasForeignKey("ParentId")
+                        .HasConstraintName("FK_Students_Parent");
+
+                    b.HasOne("IesSchool.Context.Models.Religion", "Religion")
+                        .WithMany("Students")
+                        .HasForeignKey("ReligionId")
+                        .HasConstraintName("FK_Students_Religion");
+
                     b.HasOne("IesSchool.Context.Models.State", "State")
                         .WithMany("Students")
                         .HasForeignKey("StateId")
                         .HasConstraintName("FK_Students_State");
 
                     b.HasOne("IesSchool.Context.Models.User", "Teacher")
-                        .WithMany("Students")
+                        .WithMany("StudentTeachers")
                         .HasForeignKey("TeacherId")
                         .HasConstraintName("FK_Students_Teacher");
 
@@ -3130,6 +4712,10 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("MotherNationality");
 
                     b.Navigation("Nationality");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Religion");
 
                     b.Navigation("State");
 
@@ -3162,6 +4748,23 @@ namespace IesSchool.Context.Migrations
                         .HasConstraintName("FK_StudentAttachmentBinary_StudentAttachment");
 
                     b.Navigation("IdNavigation");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.StudentExtraTeacher", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.User", "ExtraTeacher")
+                        .WithMany("StudentExtraTeachers")
+                        .HasForeignKey("ExtraTeacherId")
+                        .HasConstraintName("FK_Student_ExtraTeacher_User");
+
+                    b.HasOne("IesSchool.Context.Models.Student", "Student")
+                        .WithMany("StudentExtraTeachers")
+                        .HasForeignKey("StudentId")
+                        .HasConstraintName("FK_Student_ExtraTeacher_Students");
+
+                    b.Navigation("ExtraTeacher");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.StudentHistoricalSkill", b =>
@@ -3202,8 +4805,7 @@ namespace IesSchool.Context.Migrations
                 {
                     b.HasOne("IesSchool.Context.Models.AcadmicYear", "AcadmicYear")
                         .WithMany("Terms")
-                        .HasForeignKey("AcadmicYearId")
-                        .HasConstraintName("FK_Term_AcadmicYears");
+                        .HasForeignKey("AcadmicYearId");
 
                     b.Navigation("AcadmicYear");
                 });
@@ -3287,9 +4889,34 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("IdNavigation");
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.UserExtraCurricular", b =>
+                {
+                    b.HasOne("IesSchool.Context.Models.ExtraCurricular", "ExtraCurricular")
+                        .WithMany("UserExtraCurriculars")
+                        .HasForeignKey("ExtraCurricularId")
+                        .HasConstraintName("FK_User_ExtraCurricular_User_ExtraCurricular");
+
+                    b.HasOne("IesSchool.Context.Models.User", "User")
+                        .WithMany("UserExtraCurriculars")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_User_ExtraCurricular_User");
+
+                    b.Navigation("ExtraCurricular");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.AcadmicYear", b =>
                 {
+                    b.Navigation("IepProgressReports");
+
                     b.Navigation("Ieps");
+
+                    b.Navigation("ItpProgressReports");
+
+                    b.Navigation("Itps");
+
+                    b.Navigation("Ixps");
 
                     b.Navigation("Settings");
 
@@ -3340,6 +4967,11 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("UserAttachments");
                 });
 
+            modelBuilder.Entity("IesSchool.Context.Models.CalenderCategory", b =>
+                {
+                    b.Navigation("Calenders");
+                });
+
             modelBuilder.Entity("IesSchool.Context.Models.City", b =>
                 {
                     b.Navigation("Students");
@@ -3367,6 +4999,8 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("Assistants");
 
                     b.Navigation("Events");
+
+                    b.Navigation("Itps");
 
                     b.Navigation("SkillAlowedDepartments");
 
@@ -3409,6 +5043,12 @@ namespace IesSchool.Context.Migrations
             modelBuilder.Entity("IesSchool.Context.Models.ExtraCurricular", b =>
                 {
                     b.Navigation("IepExtraCurriculars");
+
+                    b.Navigation("Ixps");
+
+                    b.Navigation("ProgressReportExtraCurriculars");
+
+                    b.Navigation("UserExtraCurriculars");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Goal", b =>
@@ -3425,6 +5065,68 @@ namespace IesSchool.Context.Migrations
                     b.Navigation("IepExtraCurriculars");
 
                     b.Navigation("IepParamedicalServices");
+
+                    b.Navigation("IepProgressReports");
+
+                    b.Navigation("LogComments");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IepExtraCurricular", b =>
+                {
+                    b.Navigation("Ixp")
+                        .IsRequired();
+
+                    b.Navigation("ProgressReportExtraCurriculars");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IepParamedicalService", b =>
+                {
+                    b.Navigation("Itp")
+                        .IsRequired();
+
+                    b.Navigation("ProgressReportParamedicals");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.IepProgressReport", b =>
+                {
+                    b.Navigation("ProgressReportExtraCurriculars");
+
+                    b.Navigation("ProgressReportParamedicals");
+
+                    b.Navigation("ProgressReportStrands");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Itp", b =>
+                {
+                    b.Navigation("ItpGoalObjectives");
+
+                    b.Navigation("ItpGoals");
+
+                    b.Navigation("ItpProgressReports");
+
+                    b.Navigation("ItpStrategies");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoal", b =>
+                {
+                    b.Navigation("ItpGoalObjectives");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpGoalObjective", b =>
+                {
+                    b.Navigation("ItpGoalObjectiveActivities");
+
+                    b.Navigation("ItpObjectiveProgressReports");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ItpProgressReport", b =>
+                {
+                    b.Navigation("ItpObjectiveProgressReports");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Ixp", b =>
+                {
+                    b.Navigation("IxpExtraCurriculars");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Objective", b =>
@@ -3440,7 +5142,32 @@ namespace IesSchool.Context.Migrations
                 {
                     b.Navigation("IepParamedicalServices");
 
+                    b.Navigation("ItpProgressReports");
+
+                    b.Navigation("Itps");
+
+                    b.Navigation("ParamedicalStrategies");
+
+                    b.Navigation("ProgressReportParamedicals");
+
                     b.Navigation("TherapistParamedicalServices");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.ParamedicalStrategy", b =>
+                {
+                    b.Navigation("ItpStrategies");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Program", b =>
+                {
+                    b.Navigation("Areas");
+
+                    b.Navigation("Goals");
+                });
+
+            modelBuilder.Entity("IesSchool.Context.Models.Religion", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.Skill", b =>
@@ -3470,6 +5197,8 @@ namespace IesSchool.Context.Migrations
                 {
                     b.Navigation("Goals");
 
+                    b.Navigation("ProgressReportStrands");
+
                     b.Navigation("Skills");
                 });
 
@@ -3477,11 +5206,23 @@ namespace IesSchool.Context.Migrations
                 {
                     b.Navigation("EventStudents");
 
+                    b.Navigation("IepProgressReports");
+
                     b.Navigation("Ieps");
+
+                    b.Navigation("ItpProgressReports");
+
+                    b.Navigation("Itps");
+
+                    b.Navigation("Ixps");
+
+                    b.Navigation("LogComments");
 
                     b.Navigation("Phones");
 
                     b.Navigation("StudentAttachments");
+
+                    b.Navigation("StudentExtraTeachers");
 
                     b.Navigation("StudentHistoricalSkills");
 
@@ -3496,7 +5237,15 @@ namespace IesSchool.Context.Migrations
 
             modelBuilder.Entity("IesSchool.Context.Models.Term", b =>
                 {
+                    b.Navigation("IepProgressReports");
+
                     b.Navigation("Ieps");
+
+                    b.Navigation("ItpProgressReports");
+
+                    b.Navigation("Itps");
+
+                    b.Navigation("Ixps");
 
                     b.Navigation("Settings");
                 });
@@ -3508,21 +5257,55 @@ namespace IesSchool.Context.Migrations
 
                     b.Navigation("EventTeachers");
 
+                    b.Navigation("IepExtraCurriculars");
+
                     b.Navigation("IepHeadOfDepartmentNavigations");
 
                     b.Navigation("IepHeadOfEducationNavigations");
 
+                    b.Navigation("IepParamedicalServices");
+
+                    b.Navigation("IepProgressReportHeadOfEducations");
+
+                    b.Navigation("IepProgressReportTeachers");
+
                     b.Navigation("IepTeachers");
 
-                    b.Navigation("StudentTherapists");
+                    b.Navigation("ItpHeadOfDepartments");
 
-                    b.Navigation("Students");
+                    b.Navigation("ItpHeadOfEducations");
+
+                    b.Navigation("ItpProgressReportHeadOfEducations");
+
+                    b.Navigation("ItpProgressReportTeachers");
+
+                    b.Navigation("ItpProgressReportTherapists");
+
+                    b.Navigation("ItpTherapists");
+
+                    b.Navigation("IxpExTeachers");
+
+                    b.Navigation("IxpHeadOfDepartments");
+
+                    b.Navigation("IxpHeadOfEducations");
+
+                    b.Navigation("LogComments");
+
+                    b.Navigation("StudentExtraTeachers");
+
+                    b.Navigation("StudentParents");
+
+                    b.Navigation("StudentTeachers");
+
+                    b.Navigation("StudentTherapists");
 
                     b.Navigation("TherapistParamedicalServices");
 
                     b.Navigation("UserAssistants");
 
                     b.Navigation("UserAttachments");
+
+                    b.Navigation("UserExtraCurriculars");
                 });
 
             modelBuilder.Entity("IesSchool.Context.Models.UserAttachment", b =>

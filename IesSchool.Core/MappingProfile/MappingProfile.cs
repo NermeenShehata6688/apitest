@@ -570,6 +570,12 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(dist => dist.StudentCount, opt => opt.MapFrom(c => c.Students == null ? 0 : c.Students.Count()));
             #endregion
 
+            #region Calender
+            CreateMap<Calender, CalenderDto>().ReverseMap();
+            CreateMap<CalenderCategory, CalenderCategoryDto>().ReverseMap();
+            #endregion
+
+
         }
     }
 }

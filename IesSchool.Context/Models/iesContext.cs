@@ -18,6 +18,8 @@ namespace IesSchool.Context.Models
         {       
         }
 
+        public virtual DbSet<Calender> Calenders { get; set; } = null!;
+        public virtual DbSet<CalenderCategory> CalenderCategories { get; set; } = null!;
         public virtual DbSet<AcadmicYear> AcadmicYears { get; set; } = null!;
         public virtual DbSet<Activity> Activities { get; set; } = null!;
         public virtual DbSet<ApplicationGroup> ApplicationGroups { get; set; } = null!;
