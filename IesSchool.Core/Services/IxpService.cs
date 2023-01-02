@@ -177,7 +177,7 @@ namespace IesSchool.Core.Services
             if (ixpDto != null)
             {
                 var mapper = _mapper.Map<Ixp>(ixpDto);
-                _uow.GetRepository<Ixp>().Update(mapper);
+                _uow.GetRepositoryAsync<Ixp>().UpdateAsync(mapper);
                 _uow.SaveChanges();
                 if (ixpDto.FooterNotes != null)
                 {
