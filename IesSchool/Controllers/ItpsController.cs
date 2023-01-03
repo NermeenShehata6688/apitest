@@ -16,13 +16,14 @@ namespace IesSchool.Controllers
             _itpService = itpService;
         }
 
-       // [ResponseCache(Duration = 800)]
+        [ResponseCache(Duration = 1000)]
         [HttpGet]
-        public IActionResult GetItpsHelper()
+        public async Task<IActionResult> GetItpsHelper()
         {
             try
             {
-                var all = _itpService.GetItpsHelper();
+                //var all = _itpService.GetItpsHelper(); 
+                var all =await _itpService.GetItpsHelperDapper(); 
                 return Ok(all);
             }
             catch (Exception)

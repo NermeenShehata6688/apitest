@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Dapper;
 using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using Microsoft.EntityFrameworkCore;
+using Olsys.Business.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,24 +25,99 @@ namespace IesSchool.Core.Services
             _mapper = mapper;
             _iesContext = iesContext;
         }
+        public async Task<ResponseDto> GetItpsHelperDapper()
+        {
+            try
+            {
+                ItpHelper itpHelper = new ItpHelper();
+                using (System.Data.IDbConnection dbConnection = ConnectionManager.GetConnection())
+                {
+                    dbConnection.Open();
+
+                    var AllDepartments =( await dbConnection.QueryAsync<Department>(SqlGeneralBuilder.Select_All_Department())).OrderBy(x => x.DisplayOrder).ToList();
+                    itpHelper.AllDepartments = new PaginateDto<Department>
+                    {
+                        Items = AllDepartments,
+                        Count = AllDepartments.Count()
+                    };
+                    var allStudents = (await dbConnection.QueryAsync<VwStudent>(SqlGeneralBuilder.Select_All_Students())).ToList();
+                    itpHelper.AllStudents = new PaginateDto<VwStudent>
+                    {
+                        Items = allStudents,
+                        Count = allStudents.Count()
+                    };
+                    var allAcadmicYears =( await dbConnection.QueryAsync<AcadmicYear>(SqlGeneralBuilder.Select_All_AcadimicYears())).ToList();
+                    itpHelper.AllAcadmicYears = new PaginateDto<AcadmicYear>
+                    {
+                        Items = allAcadmicYears,
+                        Count = allAcadmicYears.Count()
+                    };
+
+                    var allTerms = (await dbConnection.QueryAsync<Term>(SqlGeneralBuilder.Select_AllTerms())).ToList();
+                    itpHelper.AllTerms = new PaginateDto<Term>
+                    {
+                        Items = allTerms,
+                        Count = allTerms.Count()
+                    };
+
+                    var AllTherapist =( await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllTherapists())).ToList();
+                    itpHelper.AllTherapist = new PaginateDto<User>
+                    {
+                        Items = AllTherapist,
+                        Count = AllTherapist.Count()
+                    };
+
+                    var AllHeadOfEducations =(await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllHeadOfEducation())).ToList();
+                    itpHelper.AllHeadOfEducations = new PaginateDto<User>
+                    {
+                        Items = AllHeadOfEducations,
+                        Count = AllHeadOfEducations.Count()
+                    };
+
+                    var AllParamedicalServices = (await dbConnection.QueryAsync<ParamedicalService>(SqlGeneralBuilder.Select_All_ParamedicalServices())).ToList();
+                    itpHelper.AllParamedicalServices = new PaginateDto<ParamedicalService>
+                    {
+                        Items = AllParamedicalServices,
+                        Count = AllParamedicalServices.Count()
+                    };
+
+                    var TherapistParamedicalService =( await dbConnection.QueryAsync<TherapistParamedicalService>(SqlGeneralBuilder.Select_All_TherapistParamedicalServices())).ToList();
+                    itpHelper.TherapistParamedicalService = new PaginateDto<TherapistParamedicalService>
+                    {
+                        Items = TherapistParamedicalService,
+                        Count = TherapistParamedicalService.Count()
+                    };
+                    dbConnection.Close();
+
+                }
+
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = itpHelper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
         public ResponseDto GetItpsHelper()
         {
             try
             {
-                ItpHelper itpHelper = new ItpHelper()
-                {
-                    AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DepartmentId = x.DepartmentId, DateOfBirth = x.DateOfBirth, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
-                    AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
-                    AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
-                    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
-                    AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-                    TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-                };
-                var mapper = _mapper.Map<ItpHelperDto>(itpHelper);
+                ItpHelper itpHelper = new ItpHelper();
+                //ItpHelper itpHelper = new ItpHelper()
+                //{
+                //    AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
+                //    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DepartmentId = x.DepartmentId, DateOfBirth = x.DateOfBirth, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
+                //    AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
+                //    AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
+                //    AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
+                //    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
+                //    AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
+                //    TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
+                //};
+                //var mapper = _mapper.Map<ItpHelperDto>(itpHelper);
 
-                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+                return new ResponseDto { Status = 1, Message = "Success", Data = itpHelper };
             }
             catch (Exception ex)
             {

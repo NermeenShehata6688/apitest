@@ -20,13 +20,14 @@ namespace IesSchool.Controllers
         }
         // [admin(Duration = 800)]
 
-       // [ResponseCache(Duration = 800)]
+       [ResponseCache(Duration = 1000)]
         [HttpGet]
         public IActionResult GetIepsHelper()
         {
             try
             {
-                var all = _iepService.GetIepsHelper();    
+                //var all = _iepService.GetIepsHelper(); 
+                var all = _iepService.GetIepHelperDapper(); 
                 return Ok(all);
             }
             catch (Exception)
@@ -34,13 +35,14 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        // [ResponseCache(Duration = 800)]
+        [ResponseCache(Duration = 1000)]
         [HttpGet]
         public IActionResult GetIepsHelper2()
         {
             try
             {
-                var all = _iepService.GetIepsHelper2();
+                var all = _iepService.GetIepsHelper2Dapper();
+                //var all = _iepService.GetIepsHelper2();
                 return Ok(all);
             }
             catch (Exception)
@@ -62,13 +64,15 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        // GET api/<IepsController>/5
+        [ResponseCache(Duration = 1000)]
         [HttpGet]
-        public IActionResult GetIepById(int iepId)
+        public async Task<IActionResult> GetIepById(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepById(iepId);
+                //var all = _iepService.GetIepById(iepId);
+                var all =await  _iepService.GetIepByIdDapper(iepId);
+
                 return Ok(all);
             }
             catch (Exception)

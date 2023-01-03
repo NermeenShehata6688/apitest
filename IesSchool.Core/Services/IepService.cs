@@ -33,20 +33,21 @@ namespace IesSchool.Core.Services
             try
             {
 
-                var ress=GetIepHelperDapper();
+                var ress = GetIepHelperDapper();
 
-                IepHelper iepHelper = new IepHelper()
-                {
-                    //AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
-                    AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
-                    AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber, IsDeleted = x.IsDeleted }), x => x.IsTeacher == true, null, null, 0, 1000000, true),
-                    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }), null, null, null, 0, 1000000, true),
-                    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
-                    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
-                    Setting = _uow.GetRepository<Setting>().Single(),
-                };
+                IepHelper iepHelper = new IepHelper();
+                //IepHelper iepHelper = new IepHelper()
+                //{
+                //    //AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
+                //    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
+                //    AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
+                //    AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
+                //    AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber, IsDeleted = x.IsDeleted }), x => x.IsTeacher == true, null, null, 0, 1000000, true),
+                //    AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }), null, null, null, 0, 1000000, true),
+                //    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
+                //    AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
+                //    Setting = _uow.GetRepository<Setting>().Single(),
+                //};
 
 
                 var mapper = _mapper.Map<IepHelperDto>(iepHelper);
@@ -59,64 +60,208 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public IepHelper GetIepHelperDapper()
+        public ResponseDto GetIepHelperDapper()
         {
             IepHelper iepHelper = new IepHelper();
             using (IDbConnection dbConnection = ConnectionManager.GetConnection())
             {
                 dbConnection.Open();
                 var allDepartment = dbConnection.Query<Department>(SqlGeneralBuilder.Select_All_Department()).OrderBy(x => x.DisplayOrder).ToList();
-                iepHelper.AllDepartments = new PaginateDto<Department> 
+                iepHelper.AllDepartments = new PaginateDto<Department>
                 {
-                      Items = allDepartment,
-                         Count = allDepartment.Count()
+                    Items = allDepartment,
+                    Count = allDepartment.Count()
                 };
 
 
                 var allStudents = dbConnection.Query<VwStudent>(SqlGeneralBuilder.Select_All_Students()).ToList();
+                iepHelper.AllStudents = new PaginateDto<VwStudent>
+                {
+                    Items = allStudents,
+                    Count = allStudents.Count()
+                };
 
-                        iepHelper.AllStudents = new PaginateDto<VwStudent> 
-                        {
-                              Items = allStudents,
-                                 Count = allStudents.Count()
-                        }; 
+                var allAcadmicYears = dbConnection.Query<AcadmicYear>(SqlGeneralBuilder.Select_All_AcadimicYears()).ToList();
+                iepHelper.AllAcadmicYears = new PaginateDto<AcadmicYear>
+                {
+                    Items = allAcadmicYears,
+                    Count = allAcadmicYears.Count()
+                };
 
-              
-                    //AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, TeacherId = x.TeacherId, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
-                    //AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
-                    //AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    //AllTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, RoomNumber = x.RoomNumber, IsDeleted = x.IsDeleted }), x => x.IsTeacher == true, null, null, 0, 1000000, true),
-                    //AllAssistants = _uow.GetRepository<Assistant>().GetList((x => new Assistant { Id = x.Id, Name = x.Name }), null, null, null, 0, 1000000, true),
-                    //AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
-                    //AllTeacherAssistants = _uow.GetRepository<UserAssistant>().GetList(null, null, x => x.Include(x => x.Assistant), 0, 1000000, true),
-                    //Setting = _uow.GetRepository<Setting>().Single(),
-                return iepHelper;
+                var allTerms = dbConnection.Query<Term>(SqlGeneralBuilder.Select_AllTerms()).ToList();
+                iepHelper.AllTerms = new PaginateDto<Term>
+                {
+                    Items = allTerms,
+                    Count = allTerms.Count()
+                };
+                
+                var allTeachers = dbConnection.Query<User>(SqlGeneralBuilder.Select_AllUsers()).ToList();
+                iepHelper.AllTeachers = new PaginateDto<User>
+                {
+                    Items =allTeachers,
+                    Count = allTeachers.Count()
+                };
+
+                var allAssistants = dbConnection.Query<Assistant>(SqlGeneralBuilder.Select_AllAssistant()).ToList();
+                iepHelper.AllAssistants = new PaginateDto<Assistant>
+                {
+                    Items = allAssistants,
+                    Count = allAssistants.Count()
+                };
+
+                var allHeadOfEducations = dbConnection.Query<User>(SqlGeneralBuilder.Select_AllHeadOfEducation()).ToList();
+                iepHelper.AllHeadOfEducations = new PaginateDto<User>
+                {
+                    Items = allHeadOfEducations,
+                    Count = allHeadOfEducations.Count()
+                };
+
+                var allTeacherAssistants = dbConnection.Query<UserAssistant>(SqlGeneralBuilder.Select_AllUserAssistant()).ToList();
+                iepHelper.AllTeacherAssistants = new PaginateDto<UserAssistant>
+                {
+                    Items = allTeacherAssistants,
+                    Count = allTeacherAssistants.Count()
+                };
+
+                var setting = dbConnection.Query<Setting>(SqlGeneralBuilder.Select_Setting()).ToList();
+                iepHelper.Setting = setting.FirstOrDefault();
+                dbConnection.Close();
+                //var mapper = _mapper.Map<IepHelperDto>(iepHelper);
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = iepHelper };
             }
         }
         public ResponseDto GetIepsHelper2()
         {
             try
             {
-                IepHelper2 iepHelper = new IepHelper2()
-                {
-                    AllPrograms = _uow.GetRepository<Program>().GetList(null, null, null, 0, 1000000, true),
-                    AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
-                    AllStrands = _uow.GetRepository<Strand>().GetList(null, null, null, 0, 1000000, true),
-                    AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-                    AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
-                    AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(null, null, null, 0, 1000000, true),
-                    AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
-                    AllExtraCurricularsTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
-                    TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
-                    UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
-                    AllStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(null, null, null, 0, 1000000, true),
-                    AllStudentExtraTeacher = _uow.GetRepository<StudentExtraTeacher>().GetList(null, null, null, 0, 1000000, true),
-                    Setting = _uow.GetRepository<Setting>().Single(),
+                IepHelper2 iepHelper = new IepHelper2();
+                //IepHelper2 iepHelper = new IepHelper2()
+                //{
+                //    AllPrograms = _uow.GetRepository<Program>().GetList(null, null, null, 0, 1000000, true),
+                //    AllAreas = _uow.GetRepository<Area>().GetList(null, null, null, 0, 1000000, true),
+                //    AllStrands = _uow.GetRepository<Strand>().GetList(null, null, null, 0, 1000000, true),
+                //    AllParamedicalServices = _uow.GetRepository<ParamedicalService>().GetList(null, null, null, 0, 1000000, true),
+                //    AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                //    AllSkillEvaluations = _uow.GetRepository<SkillEvaluation>().GetList(null, null, null, 0, 1000000, true),
+                //    AllTherapist = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsTherapist == true, null, null, 0, 1000000, true),
+                //    AllExtraCurricularsTeachers = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
+                //    TherapistParamedicalService = _uow.GetRepository<TherapistParamedicalService>().GetList(null, null, null, 0, 1000000, true),
+                //    UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                //    AllStudentTherapist = _uow.GetRepository<StudentTherapist>().GetList(null, null, null, 0, 1000000, true),
+                //    AllStudentExtraTeacher = _uow.GetRepository<StudentExtraTeacher>().GetList(null, null, null, 0, 1000000, true),
+                //    Setting = _uow.GetRepository<Setting>().Single(),
 
-                };
+                //};
                 var mapper = _mapper.Map<IepHelper2Dto>(iepHelper);
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public ResponseDto GetIepsHelper2Dapper()
+        {
+            try
+            {
+
+
+                IepHelper2 iepHelper = new IepHelper2();
+                using (IDbConnection dbConnection = ConnectionManager.GetConnection())
+                {
+                    dbConnection.Open();
+                    var allPrograms = dbConnection.Query<Program>(SqlGeneralBuilder.Select_All_Programs()).ToList();
+                    iepHelper.AllPrograms = new PaginateDto<Program>
+                    {
+                        Items = allPrograms,
+                        Count = allPrograms.Count()
+                    };
+
+                    var allAreas = dbConnection.Query<Area>(SqlGeneralBuilder.Select_All_Areas()).ToList();
+                    iepHelper.AllAreas = new PaginateDto<Area>
+                    {
+                        Items = allAreas,
+                        Count = allAreas.Count()
+                    };
+
+                    var AllStrands = dbConnection.Query<Strand>(SqlGeneralBuilder.Select_All_Strands()).ToList();
+                    iepHelper.AllStrands = new PaginateDto<Strand>
+                    {
+                        Items = AllStrands,
+                        Count = AllStrands.Count()
+                    };
+
+                    var AllParamedicalServices = dbConnection.Query<ParamedicalService>(SqlGeneralBuilder.Select_All_ParamedicalServices()).ToList();
+                    iepHelper.AllParamedicalServices = new PaginateDto<ParamedicalService>
+                    {
+                        Items = AllParamedicalServices,
+                        Count = AllParamedicalServices.Count()
+                    };
+
+                    var AllExtraCurriculars = dbConnection.Query<ExtraCurricular>(SqlGeneralBuilder.Select_All_ExtraCurriculars()).ToList();
+                    iepHelper.AllExtraCurriculars = new PaginateDto<ExtraCurricular>
+                    {
+                        Items = AllExtraCurriculars,
+                        Count = AllExtraCurriculars.Count()
+                    };
+
+                    var AllSkillEvaluations = dbConnection.Query<SkillEvaluation>(SqlGeneralBuilder.Select_All_SkillEvaluations()).ToList();
+                    iepHelper.AllSkillEvaluations = new PaginateDto<SkillEvaluation>
+                    {
+                        Items = AllSkillEvaluations,
+                        Count = AllSkillEvaluations.Count()
+                    };
+
+                    var AllTherapist = dbConnection.Query<User>(SqlGeneralBuilder.Select_AllTherapists()).ToList();
+                    iepHelper.AllTherapist = new PaginateDto<User>
+                    {
+                        Items = AllTherapist,
+                        Count = AllTherapist.Count()
+                    };
+
+                    var AllExtraCurricularsTeachers = dbConnection.Query<User>(SqlGeneralBuilder.Select_AllExtraCurricularsTeacher()).ToList();
+                    iepHelper.AllExtraCurricularsTeachers = new PaginateDto<User>
+                    {
+                        Items = AllExtraCurricularsTeachers,
+                        Count = AllExtraCurricularsTeachers.Count()
+                    };
+                    var TherapistParamedicalService = dbConnection.Query<TherapistParamedicalService>(SqlGeneralBuilder.Select_All_TherapistParamedicalServices()).ToList();
+                    iepHelper.TherapistParamedicalService = new PaginateDto<TherapistParamedicalService>
+                    {
+                        Items = TherapistParamedicalService,
+                        Count = TherapistParamedicalService.Count()
+                    };
+
+                    var UserExtraCurricular = dbConnection.Query<UserExtraCurricular>(SqlGeneralBuilder.Select_All_UserExtraCurriculars()).ToList();
+                    iepHelper.UserExtraCurricular = new PaginateDto<UserExtraCurricular>
+                    {
+                        Items = UserExtraCurricular,
+                        Count = UserExtraCurricular.Count()
+                    };
+
+                    var AllStudentTherapist = dbConnection.Query<StudentTherapist>(SqlGeneralBuilder.Select_All_StudentTherapists()).ToList();
+                    iepHelper.AllStudentTherapist = new PaginateDto<StudentTherapist>
+                    {
+                        Items = AllStudentTherapist,
+                        Count = AllStudentTherapist.Count()
+                    };
+
+                    var AllStudentExtraTeacher = dbConnection.Query<StudentExtraTeacher>(SqlGeneralBuilder.Select_All_StudentExtraTeachers()).ToList();
+                    iepHelper.AllStudentExtraTeacher = new PaginateDto<StudentExtraTeacher>
+                    {
+                        Items = AllStudentExtraTeacher,
+                        Count = AllStudentExtraTeacher.Count()
+                    };
+                    var setting = dbConnection.Query<Setting>(SqlGeneralBuilder.Select_Setting()).ToList();
+                    iepHelper.Setting = setting.FirstOrDefault();
+                    dbConnection.Close();
+
+
+                }
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = iepHelper };
             }
             catch (Exception ex)
             {
@@ -190,14 +335,50 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIepById(int iepId)
+
+        public async Task<ResponseDto> GetIepByIdDapper(int iepId)
+        {
+            try
+            {
+                if (iepId != 0)
+                {
+                   
+                  var iep =await _iesContext.Ieps.Where(x => x.Id == iepId).Include(x => x.IepAssistants).ThenInclude(x => x.Assistant)
+                             .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
+                           .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Therapist)
+                           .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
+                           .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExTeacher)
+                           .Include(s => s.Student).ThenInclude(s => s.Department)
+                           .Include(s => s.AcadmicYear)
+                           .Include(s => s.Term)
+                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
+                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Strand)
+                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Area)
+                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Program).FirstOrDefaultAsync();
+                        var mapper = _mapper.Map<GetIepDto>(iep);
+                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+
+
+                }
+                else
+                {
+                    return new ResponseDto { Status = 0, Message = " null" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public  ResponseDto  GetIepById(int iepId)
         {
             try
             {
                 if (iepId != 0)
                 {
                     var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
-               .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
+                    .Include(s => s.IepAssistants).ThenInclude(s => s.Assistant)
                .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
                .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Therapist)
                .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
@@ -267,7 +448,7 @@ namespace IesSchool.Core.Services
                     _uow.GetRepository<Iep>().Update(mapper);
                     _uow.SaveChanges();
                     transaction.Commit();
-                    if (oldIep.StudentId != mapper.StudentId || oldIep.AcadmicYearId != mapper.AcadmicYearId|| oldIep.TermId != mapper.TermId)
+                    if (oldIep.StudentId != mapper.StudentId || oldIep.AcadmicYearId != mapper.AcadmicYearId || oldIep.TermId != mapper.TermId)
                     {
                         UpdateIepInfo(mapper);
                     }
@@ -344,7 +525,7 @@ namespace IesSchool.Core.Services
                 return;
             }
         }
-       
+
         public ResponseDto DeleteIep(int iepId)
         {
             try
@@ -359,7 +540,7 @@ namespace IesSchool.Core.Services
 
 
                     using var transaction = _iesContext.Database.BeginTransaction();
-                    var cmd = $"delete from IEP_ParamedicalService where IEPId={iepId}"+
+                    var cmd = $"delete from IEP_ParamedicalService where IEPId={iepId}" +
                               $"delete from IEP_ExtraCurricular where IEPId={iepId}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                     transaction.Commit();
@@ -578,7 +759,7 @@ namespace IesSchool.Core.Services
                .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
                .Include(s => s.Strand)
                .Include(s => s.Area)
-               .Include(x=>x.Program), 0, 100000, true
+               .Include(x => x.Program), 0, 100000, true
                );
                     var mapper = _mapper.Map<PaginateDto<GoalDto>>(goals);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
@@ -1521,7 +1702,7 @@ namespace IesSchool.Core.Services
                                         Comment = ""
                                     });
                                 }
-                               
+
                             }
                         }
                     }
@@ -1627,7 +1808,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var objectiveSkills = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId == objectiveId,null,null, 0, 100000, true).Items.Select(x=> x.SkillId).ToArray();
+                var objectiveSkills = _uow.GetRepository<ObjectiveSkill>().GetList(x => x.ObjectiveId == objectiveId, null, null, 0, 100000, true).Items.Select(x => x.SkillId).ToArray();
                 var Skills = _uow.GetRepository<Skill>().GetList(x => objectiveSkills.Contains(x.Id), null, null, 0, 100000, true);
 
                 var mapper = _mapper.Map<PaginateDto<SkillDto>>(Skills);

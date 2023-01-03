@@ -10,10 +10,15 @@ namespace IesSchool.Core.IServices
 {
     public interface IIepService
     {
+        #region Dapper
+        public ResponseDto GetIepHelperDapper();
+        public ResponseDto GetIepsHelper2Dapper();
+        #endregion
         public ResponseDto GetIepsHelper();
         public ResponseDto GetIepsHelper2();
         public ResponseDto GetIeps(IepSearchDto iepSearchDto);
         public ResponseDto GetIepById(int iepId);
+        public  Task<ResponseDto> GetIepByIdDapper(int iepId);
         public ResponseDto AddIep(IepDto iepDto);
         public ResponseDto EditIep(IepDto iepDto); 
         public ResponseDto DeleteIep(int iepId);

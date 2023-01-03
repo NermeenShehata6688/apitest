@@ -11,14 +11,14 @@ namespace IesSchool.Core.Dto
     public class IepHelper
     {
         public PaginateDto<VwStudent> AllStudents { get; set; }
-        public IPaginate<AcadmicYear> AllAcadmicYears { get; set; }
-        public IPaginate<Term> AllTerms { get; set; }
-        public IPaginate<User> AllTeachers { get; set; }
-        public IPaginate<Assistant> AllAssistants { get; set; }
-        public IPaginate<User> AllHeadOfEducations { get; set; }
+        public PaginateDto<AcadmicYear> AllAcadmicYears { get; set; }
+        public PaginateDto<Term> AllTerms { get; set; }
+        public PaginateDto<User> AllTeachers { get; set; }
+        public PaginateDto<Assistant> AllAssistants { get; set; }
+        public PaginateDto<User> AllHeadOfEducations { get; set; }
         public PaginateDto<Department> AllDepartments { get; set; }
        
-        public IPaginate<UserAssistant> AllTeacherAssistants { get; set; }
+        public PaginateDto<UserAssistant> AllTeacherAssistants { get; set; }
         public Setting Setting { get; set; }
 
 

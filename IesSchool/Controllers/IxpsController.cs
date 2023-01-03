@@ -15,13 +15,14 @@ namespace IesSchool.Controllers
             _ixpService = ixpService;
         }
 
-      // [ResponseCache(Duration = 800)]
+       [ResponseCache(Duration = 1000)]
         [HttpGet]
-        public IActionResult GetIxpsHelper()
+        public async Task<IActionResult> GetIxpsHelper()
         {
             try
             {
-                var all = _ixpService.GetIxpsHelper();
+                var all =await _ixpService.GetIxpsHelperDapper();
+                //var all = _ixpService.GetIxpsHelper();
                 return Ok(all);
             }
             catch (Exception)

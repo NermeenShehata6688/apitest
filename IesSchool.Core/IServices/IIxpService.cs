@@ -9,11 +9,15 @@ namespace IesSchool.Core.IServices
 {
     public interface IIxpService
     {
+        #region Dapper
+        public  Task<ResponseDto> GetIxpsHelperDapper();
+
+        #endregion
         public ResponseDto GetIxpsHelper();
         public ResponseDto GetIxps(IxpSearchDto ixpSearchDto);
         public ResponseDto GetIxpById(int ixpId);
         public ResponseDto AddIxp(IxpDto ixpDto);
-        public ResponseDto EditIxp(IxpDto ixpDto);
+        public  Task<ResponseDto> EditIxp(IxpDto ixpDto);
         public ResponseDto DeleteIxp(int ixpId);
         public ResponseDto IxpStatus(StatusDto statusDto);
         public ResponseDto IxpIsPublished(IsPuplishedDto isPuplishedDto);

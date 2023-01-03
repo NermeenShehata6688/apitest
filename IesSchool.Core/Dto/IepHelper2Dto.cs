@@ -11,18 +11,18 @@ namespace IesSchool.Core.Dto
     internal class IepHelper2
     {
 
-        public IPaginate<Program> AllPrograms { get; set; }
-        public IPaginate<Area> AllAreas { get; set; }
-        public IPaginate<Strand> AllStrands { get; set; }
-        public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
-        public IPaginate<ExtraCurricular> AllExtraCurriculars { get; set; }
-        public IPaginate<User> AllExtraCurricularsTeachers { get; set; }
-        public IPaginate<SkillEvaluation> AllSkillEvaluations { get; set; }
-        public IPaginate<User> AllTherapist { get; set; }
-        public IPaginate<TherapistParamedicalService> TherapistParamedicalService { get; set; }
-        public IPaginate<UserExtraCurricular> UserExtraCurricular { get; set; }
-        public IPaginate<StudentTherapist> AllStudentTherapist { get; set; }
-        public IPaginate<StudentExtraTeacher> AllStudentExtraTeacher { get; set; }
+        public PaginateDto<Program> AllPrograms { get; set; }
+        public PaginateDto<Area> AllAreas { get; set; }
+        public PaginateDto<Strand> AllStrands { get; set; }
+        public PaginateDto<ParamedicalService> AllParamedicalServices { get; set; }
+        public PaginateDto<ExtraCurricular> AllExtraCurriculars { get; set; }
+        public PaginateDto<User> AllExtraCurricularsTeachers { get; set; }
+        public PaginateDto<SkillEvaluation> AllSkillEvaluations { get; set; }
+        public PaginateDto<User> AllTherapist { get; set; }
+        public PaginateDto<TherapistParamedicalService> TherapistParamedicalService { get; set; }
+        public PaginateDto<UserExtraCurricular> UserExtraCurricular { get; set; }
+        public PaginateDto<StudentTherapist> AllStudentTherapist { get; set; }
+        public PaginateDto<StudentExtraTeacher> AllStudentExtraTeacher { get; set; }
         public Setting Setting { get; set; }
     }
     public class IepHelper2Dto

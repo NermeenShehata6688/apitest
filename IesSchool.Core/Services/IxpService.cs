@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Dapper;
 using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
 using IesSchool.InfraStructure;
 using Microsoft.EntityFrameworkCore;
+using Olsys.Business.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,20 +30,92 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                IxpHelper ixpHelper = new IxpHelper()
-                {
-                    AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
-                    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DepartmentId = x.DepartmentId, DateOfBirth = x.DateOfBirth, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
-                    AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
-                    AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
-                    AllExTeacher = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
-                    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
-                    AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
-                    UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
-                };
-                var mapper = _mapper.Map<IxpHelperDto>(ixpHelper);
+                IxpHelper ixpHelper = new IxpHelper();
+                //IxpHelper ixpHelper = new IxpHelper()
+                //{
+                //    AllDepartments = _uow.GetRepository<Department>().GetList(null, x => x.OrderBy(c => c.DisplayOrder), null, 0, 100000, true),
+                //    AllStudents = _uow.GetRepository<VwStudent>().GetList((x => new VwStudent { Id = x.Id, Name = x.Name, NameAr = x.NameAr, Code = x.Code, DepartmentId = x.DepartmentId, DateOfBirth = x.DateOfBirth, IsDeleted = x.IsDeleted }), null, null, null, 0, 100000, true),
+                //    AllAcadmicYears = _uow.GetRepository<AcadmicYear>().GetList(null, null, null, 0, 1000000, true),
+                //    AllTerms = _uow.GetRepository<Term>().GetList(null, null, null, 0, 1000000, true),
+                //    AllExTeacher = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, DepartmentId = x.DepartmentId, IsDeleted = x.IsDeleted }), x => x.IsExtraCurricular == true, null, null, 0, 1000000, true),
+                //    AllHeadOfEducations = _uow.GetRepository<User>().GetList((x => new User { Id = x.Id, Name = x.Name, IsDeleted = x.IsDeleted }), x => x.IsHeadofEducation == true, null, null, 0, 1000000, true),
+                //    AllExtraCurriculars = _uow.GetRepository<ExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                //    UserExtraCurricular = _uow.GetRepository<UserExtraCurricular>().GetList(null, null, null, 0, 1000000, true),
+                //};
+                //var mapper = _mapper.Map<IxpHelperDto>(ixpHelper);
 
-                return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+                return new ResponseDto { Status = 1, Message = "Success", Data = ixpHelper };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+        public async Task<ResponseDto> GetIxpsHelperDapper()
+        {
+            try
+            {
+                IxpHelper ixpHelper = new IxpHelper();
+                using (System.Data.IDbConnection dbConnection = ConnectionManager.GetConnection())
+                {
+                    dbConnection.Open();
+
+                    var AllDepartments = await dbConnection.QueryAsync<Department>(SqlGeneralBuilder.Select_All_Department());
+                    ixpHelper.AllDepartments = new PaginateDto<Department>
+                    {
+                        Items = AllDepartments.OrderBy(x => x.DisplayOrder).ToList(),
+                        Count = AllDepartments.Count()
+                    };
+
+                    var allStudents =await dbConnection.QueryAsync<VwStudent>(SqlGeneralBuilder.Select_All_Students());
+                    ixpHelper.AllStudents = new PaginateDto<VwStudent>
+                    {
+                        Items = allStudents.ToList(),
+                        Count = allStudents.Count()
+                    };
+                    var allAcadmicYears =await dbConnection.QueryAsync<AcadmicYear>(SqlGeneralBuilder.Select_All_AcadimicYears());
+                    ixpHelper.AllAcadmicYears = new PaginateDto<AcadmicYear>
+                    {
+                        Items = allAcadmicYears.ToList(),
+                        Count = allAcadmicYears.Count()
+                    };
+
+                    var allTerms =await dbConnection.QueryAsync<Term>(SqlGeneralBuilder.Select_AllTerms());
+                    ixpHelper.AllTerms = new PaginateDto<Term>
+                    {
+                        Items = allTerms.ToList(),
+                        Count = allTerms.Count()
+                    };
+
+                    var AllExTeacher = (await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllExtraCurricularsTeacher())).ToList();
+                    ixpHelper.AllExTeacher = new PaginateDto<User>
+                    {
+                        Items = AllExTeacher,
+                        Count = AllExTeacher.Count()
+                    };
+                    var AllHeadOfEducations = (await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllHeadOfEducation())).ToList();
+                    ixpHelper.AllHeadOfEducations = new PaginateDto<User>
+                    {
+                        Items = AllHeadOfEducations,
+                        Count = AllHeadOfEducations.Count()
+                    };
+                    var AllExtraCurriculars = (await dbConnection.QueryAsync<ExtraCurricular>(SqlGeneralBuilder.Select_All_ExtraCurriculars())).ToList();
+                    ixpHelper.AllExtraCurriculars = new PaginateDto<ExtraCurricular>
+                    {
+                        Items = AllExtraCurriculars,
+                        Count = AllExtraCurriculars.Count()
+                    };
+                    var UserExtraCurricular = (await dbConnection.QueryAsync<UserExtraCurricular>(SqlGeneralBuilder.Select_All_UserExtraCurriculars())).ToList();
+                    ixpHelper.UserExtraCurricular = new PaginateDto<UserExtraCurricular>
+                    {
+                        Items = UserExtraCurricular,
+                        Count = UserExtraCurricular.Count()
+                    };
+                    dbConnection.Close();
+
+                }
+
+                return new ResponseDto { Status = 1, Message = "Success", Data = ixpHelper };
             }
             catch (Exception ex)
             {
@@ -172,7 +246,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditIxp(IxpDto ixpDto)
+        public async Task<ResponseDto> EditIxp(IxpDto ixpDto)
         {
             if (ixpDto != null)
             {
@@ -183,7 +257,7 @@ namespace IesSchool.Core.Services
                 {
                     if (mapper.Id > 0)
                     {
-                        var iepProgressExtra = _uow.GetRepository<ProgressReportExtraCurricular>().GetList(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
+                        var iepProgressExtra =await _uow.GetRepositoryAsync<ProgressReportExtraCurricular>().GetListAsync(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
 
                         if (iepProgressExtra != null && iepProgressExtra.Items.Count() > 0)
                         {

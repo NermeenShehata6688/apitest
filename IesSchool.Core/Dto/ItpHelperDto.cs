@@ -10,14 +10,14 @@ namespace IesSchool.Core.Dto
 {
     public class ItpHelper
     {
-        public IPaginate<VwStudent> AllStudents { get; set; }
-        public IPaginate<ParamedicalService> AllParamedicalServices { get; set; }
-        public IPaginate<User> AllTherapist { get; set; }
-        public IPaginate<AcadmicYear> AllAcadmicYears { get; set; }
-        public IPaginate<Term> AllTerms { get; set; }
-        public IPaginate<User> AllHeadOfEducations { get; set; }
-        public IPaginate<TherapistParamedicalService> TherapistParamedicalService { get; set; }
-        public IPaginate<Department> AllDepartments { get; set; }
+        public PaginateDto<VwStudent> AllStudents { get; set; }
+        public PaginateDto<ParamedicalService> AllParamedicalServices { get; set; }
+        public PaginateDto<User> AllTherapist { get; set; }
+        public PaginateDto<AcadmicYear> AllAcadmicYears { get; set; }
+        public PaginateDto<Term> AllTerms { get; set; }
+        public PaginateDto<User> AllHeadOfEducations { get; set; }
+        public PaginateDto<TherapistParamedicalService> TherapistParamedicalService { get; set; }
+        public PaginateDto<Department> AllDepartments { get; set; }
     }
     public class ItpHelperDto
     {

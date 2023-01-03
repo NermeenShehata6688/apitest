@@ -9,6 +9,10 @@ namespace IesSchool.Core.IServices
 {
     public interface IItpService
     {
+        #region Dapper
+        public Task<ResponseDto> GetItpsHelperDapper();
+
+        #endregion
         public ResponseDto GetItpsHelper();
         public ResponseDto GetItps(ItpSearchDto itpSearchDto);
         public ResponseDto GetItpById(int itpId);

@@ -21,6 +21,112 @@ namespace Olsys.Business.Data
             string sql = @"SELECT Vw_Students.* FROM Vw_Students ";
             return sql;
         }
+        public static string Select_All_AcadimicYears()
+        {
+            string sql = @"SELECT AcadmicYears.* FROM AcadmicYears ";
+            return sql;
+        }
+        public static string Select_AllTerms()
+        {
+            string sql = @"SELECT Term.* FROM Term ";
+            return sql;
+        }
+        public static string Select_AllUsers()
+        {
+            string sql = @"SELECT [User] .* FROM  [User] where IsTeacher =1";
+            return sql;
+        }
+        public static string Select_AllAssistant()
+        {
+            string sql = @"SELECT Assistant .* FROM  Assistant";
+            return sql;
+        }
+        public static string Select_AllHeadOfEducation()
+        {
+            string sql = @"SELECT [User] .* FROM  [User] where IsHeadofEducation  =1";
+            return sql;
+        }
+        public static string Select_AllUserAssistant()
+        {
+            string sql = @"SELECT User_Assistant .* FROM  User_Assistant
+                           LEFT OUTER Join Assistant on Assistant.Id = User_Assistant.AssistantId";
+            return sql;
+        }
+        public static string Select_Setting()
+        {
+            string sql = @"SELECT Setting .* FROM  Setting";
+            return sql;
+        }
+        #endregion
+
+        #region IepHelper2
+        public static string Select_All_Programs()
+        {
+            string sql = @"SELECT Program .* FROM  Program  ";
+            return sql;
+        }
+        public static string Select_All_Areas()
+        {
+            string sql = @"SELECT Area .* FROM  Area ";
+            return sql;
+        }
+        public static string Select_All_Strands()
+        {
+            string sql = @"SELECT Strand .* FROM  Strand ";
+            return sql;
+        }
+        public static string Select_All_ParamedicalServices()
+        {
+            string sql = @"SELECT ParamedicalService .* FROM  ParamedicalService ";
+            return sql;
+        }
+
+        public static string Select_All_ExtraCurriculars()
+        {
+            string sql = @"SELECT ExtraCurricular .* FROM  ExtraCurricular ";
+            return sql;
+        }
+
+        public static string Select_All_SkillEvaluations()
+        {
+            string sql = @"SELECT SkillEvaluation .* FROM  SkillEvaluation ";
+            return sql;
+        }
+
+        public static string Select_AllTherapists()
+        {
+            string sql = @"SELECT [User] .* FROM  [User] where IsTherapist  =1";
+            return sql;
+        }
+        public static string Select_AllExtraCurricularsTeacher()
+        {
+            string sql = @"SELECT [User] .* FROM  [User] where IsExtraCurricular  =1";
+            return sql;
+        }
+        public static string Select_All_TherapistParamedicalServices()
+        {
+            string sql = @"SELECT TherapistParamedicalService .* FROM  TherapistParamedicalService ";
+            return sql;
+        }
+
+        public static string Select_All_UserExtraCurriculars()
+        {
+            string sql = @"SELECT User_ExtraCurricular .* FROM  User_ExtraCurricular ";
+            return sql;
+        }
+        public static string Select_All_StudentTherapists() 
+        {
+            string sql = @"SELECT Student_Therapist .* FROM  Student_Therapist ";
+            return sql;
+        }
+        public static string Select_All_StudentExtraTeachers()
+        {
+            string sql = @"SELECT Student_ExtraTeacher .* FROM  Student_ExtraTeacher ";
+            return sql;
+        }
+        #endregion
+        #region ItpHelper
+       
         #endregion
 
         #region ShoppingDetails

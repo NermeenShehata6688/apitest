@@ -11,14 +11,14 @@ namespace IesSchool.Core.Dto
 
     public class IxpHelper
     {
-        public IPaginate<VwStudent> AllStudents { get; set; }
-        public IPaginate<ExtraCurricular> AllExtraCurriculars { get; set; }
-        public IPaginate<User> AllExTeacher { get; set; }
-        public IPaginate<AcadmicYear> AllAcadmicYears { get; set; }
-        public IPaginate<Term> AllTerms { get; set; }
-        public IPaginate<User> AllHeadOfEducations { get; set; }
-        public IPaginate<Department> AllDepartments { get; set; }
-        public IPaginate<UserExtraCurricular> UserExtraCurricular { get; set; }
+        public PaginateDto<VwStudent> AllStudents { get; set; }
+        public PaginateDto<ExtraCurricular> AllExtraCurriculars { get; set; }
+        public PaginateDto<User> AllExTeacher { get; set; }
+        public PaginateDto<AcadmicYear> AllAcadmicYears { get; set; }
+        public PaginateDto<Term> AllTerms { get; set; }
+        public PaginateDto<User> AllHeadOfEducations { get; set; }
+        public PaginateDto<Department> AllDepartments { get; set; }
+        public PaginateDto<UserExtraCurricular> UserExtraCurricular { get; set; }
     }
 
     public class IxpHelperDto
