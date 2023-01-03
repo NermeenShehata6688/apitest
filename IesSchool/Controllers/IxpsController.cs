@@ -76,11 +76,11 @@ namespace IesSchool.Controllers
 
         // PUT api/<IxpsController>/5
         [HttpPut]
-        public IActionResult PutIxp(IxpDto ixpDto)
+        public async Task<IActionResult> PutIxp(IxpDto ixpDto)
         {
             try
             {
-                var all = _ixpService.EditIxp(ixpDto);
+                var all =await _ixpService.EditIxp(ixpDto);
                 return Ok(all);
             }
             catch (Exception)

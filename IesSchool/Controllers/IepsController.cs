@@ -100,7 +100,8 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _iepService.EditIep(iepDto);
+                var all = _iepService.EditIepLight(iepDto);
+                //var all = _iepService.EditIep(iepDto);
                 return Ok(all);
             }
             catch (Exception)

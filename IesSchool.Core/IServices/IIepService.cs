@@ -21,6 +21,8 @@ namespace IesSchool.Core.IServices
         public  Task<ResponseDto> GetIepByIdDapper(int iepId);
         public ResponseDto AddIep(IepDto iepDto);
         public ResponseDto EditIep(IepDto iepDto); 
+        public ResponseDto EditIepLight(IepDto iepDto); 
+
         public ResponseDto DeleteIep(int iepId);
         public ResponseDto IepStatus(StatusDto statusDto); 
         public ResponseDto IepIsPublished(IsPuplishedDto isPuplishedDto);

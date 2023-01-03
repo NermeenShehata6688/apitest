@@ -480,6 +480,107 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
+        public void UpdateIepInfoLight(Iep mapper)
+        {
+            try
+            {
+                if (mapper != null && mapper.Id > 0)
+                {
+                    var iepParmedicalIds = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == mapper.Id && x.IsItpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepParmedicalIds.Count() > 0)
+                    {
+                        var itpList = _uow.GetRepository<Itp>().GetList(x => x.IsDeleted != true && iepParmedicalIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (itpList.Count() > 0)
+                        {
+                            foreach (var item in itpList)
+                            {
+                                item.StudentId = mapper.StudentId;
+                                item.AcadmicYearId = mapper.AcadmicYearId;
+                                item.TermId = mapper.TermId;
+                            }
+                            //_uow.GetRepository<Itp>().Update(itpList);
+                            //_uow.SaveChanges();
+
+                            _iesContext.Itps.UpdateRange(itpList);
+                            _iesContext.SaveChanges();
+                        }
+                    }
+                    var iepExtraIds = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == mapper.Id && x.IsIxpCreated == true && x.IsDeleted != true, null, null, 0, 1000, true).Items.Select(x => x.Id).ToArray();
+                    if (iepExtraIds.Count() > 0)
+                    {
+                        var ixpList = _uow.GetRepository<Ixp>().GetList(x => x.IsDeleted != true && iepExtraIds.Contains(x.Id), null, null, 0, 1000, true).Items;
+                        if (ixpList.Count() > 0)
+                        {
+                            foreach (var item in ixpList)
+                            {
+                                item.StudentId = mapper.StudentId;
+                                item.AcadmicYearId = mapper.AcadmicYearId;
+                                item.TermId = mapper.TermId;
+                            }
+                            //_uow.GetRepository<Ixp>().Update(ixpList);
+                            //_uow.SaveChanges();
+
+                            _iesContext.Ixps.UpdateRange(ixpList);
+                            _iesContext.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }      
+        public ResponseDto EditIepLight(IepDto iepDto)
+        {
+            try
+            {
+                if (iepDto != null)
+                {
+                    var oldIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepDto.Id);
+                    using var transaction = _iesContext.Database.BeginTransaction();
+                    var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    var mapper = _mapper.Map<Iep>(iepDto);
+                    mapper.IsDeleted = false;
+                    //_uow.GetRepository<Iep>().Update(mapper);
+                    //_uow.SaveChanges();
+
+                    _iesContext.Ieps.Update(mapper);
+                    _iesContext.SaveChanges();
+                    transaction.Commit();
+                    if (oldIep.StudentId != mapper.StudentId || oldIep.AcadmicYearId != mapper.AcadmicYearId || oldIep.TermId != mapper.TermId)
+                    {
+                        UpdateIepInfo(mapper);
+                    }
+                    //if (oldIep.StudentId != mapper.StudentId)
+                    //{
+                    //    UpdateStudentInfo(mapper);
+                    //}
+                    //if (oldIep.AcadmicYearId != mapper.AcadmicYearId)
+                    //{
+                    //    UpdateAcademicYearInfo(mapper);
+                    //}
+                    //if (oldIep.TermId != mapper.TermId)
+                    //{
+                    //    UpdateTermInfo(mapper);
+                    //}
+
+
+                    iepDto.Id = mapper.Id;
+                    return new ResponseDto { Status = 1, Message = "Iep Updated Seccessfuly", Data = iepDto };
+                }
+                else
+                {
+                    return new ResponseDto { Status = 1, Message = "null" };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
+            }
+        }
         public void UpdateIepInfo(Iep mapper)
         {
             try

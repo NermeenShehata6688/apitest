@@ -251,8 +251,12 @@ namespace IesSchool.Core.Services
             if (ixpDto != null)
             {
                 var mapper = _mapper.Map<Ixp>(ixpDto);
-                _uow.GetRepositoryAsync<Ixp>().UpdateAsync(mapper);
-                _uow.SaveChanges();
+
+
+                _iesContext.Ixps.Update(mapper);
+                _iesContext.SaveChanges();
+                //_uow.GetRepositoryAsync<Ixp>().UpdateAsync(mapper);
+                //_uow.SaveChanges();
                 if (ixpDto.FooterNotes != null)
                 {
                     if (mapper.Id > 0)
@@ -264,8 +268,10 @@ namespace IesSchool.Core.Services
                             var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
 
                             iepProgressExtraLast.Comment = ixpDto.FooterNotes;
-                            _uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
-                            _uow.SaveChanges();
+                            _iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
+                            _iesContext.SaveChanges();
+                            //_uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
+                            //_uow.SaveChanges();
                         }
                     }
                 }
