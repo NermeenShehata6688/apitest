@@ -11,10 +11,12 @@ namespace IesSchool.Core.Services
 
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public CalendersService(IUnitOfWork unitOfWork, IMapper mapper)
+        private iesContext _iesContext;
+        public CalendersService(IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext)
         {
             _uow = unitOfWork;
             _mapper = mapper;
+            _iesContext = iesContext;
         }
         public ResponseDto GetCalenders()
         {
@@ -74,8 +76,8 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                _uow.GetRepository<Calender>().Delete(id);
-                _uow.SaveChanges();
+                _iesContext.Calenders.Remove(_iesContext.Calenders.FirstOrDefault(x => x.Id == id)!);
+                _iesContext.SaveChanges();
                 return new ResponseDto { Status = 1, Message = "Calender Deleted Seccessfuly" };
             }
             catch (Exception ex)
