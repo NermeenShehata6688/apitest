@@ -168,6 +168,16 @@ namespace IesSchool.Core.MappingProfile
 
             #endregion
             #region IEP
+            CreateMap<Iep, IepDto2>().ReverseMap()
+          .ForMember(x => x.Student, op => op.Ignore())
+            .ForMember(x => x.Teacher, op => op.Ignore())
+            .ForMember(x => x.AcadmicYear, op => op.Ignore())
+            .ForMember(x => x.Term, op => op.Ignore())
+            .ForMember(x => x.HeadOfDepartmentNavigation, op => op.Ignore())
+            .ForMember(x => x.HeadOfEducationNavigation, op => op.Ignore())
+          .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+
             CreateMap<Iep, IepDto>().ReverseMap()
            .ForMember(x => x.Student, op => op.Ignore())
              .ForMember(x => x.Teacher, op => op.Ignore())

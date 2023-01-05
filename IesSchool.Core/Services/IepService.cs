@@ -1571,10 +1571,71 @@ namespace IesSchool.Core.Services
                 var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId && x.IsDeleted != true, null, x => x.Include(x => x.Student)
                   .Include(x => x.AcadmicYear).Include(x => x.Term)
                      .Include(x => x.Teacher)
-                     .Include(x => x.ProgressReportExtraCurriculars).ThenInclude(x => x.ExtraCurricular)
+                     .Include(x => x.ProgressReportExtraCurriculars.Where(x=> x.IsDeleted!=true)).ThenInclude(x => x.ExtraCurricular)
                      .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService)
                      .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
+
                 var mapper = _mapper.Map<IepProgressReportDto>(iepProgressReport);
+
+                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepProgressReport.IepId && x.IsDeleted != true, null, x => x
+                .Include(x => x.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(x=> x.ExtraCurricular)
+                .Include(x => x.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService));
+                var iepMapper = _mapper.Map<IepDto2>(iep);
+
+
+
+                if (iepMapper != null)
+                {
+                    if (iepMapper.IepExtraCurriculars != null  && iepProgressReport.ProgressReportExtraCurriculars != null)
+                    {
+                        if (iepMapper.IepExtraCurriculars.Count > iepProgressReport.ProgressReportExtraCurriculars.Count)
+                        {
+                            foreach (var iepExtraCurriculars in iepMapper.IepExtraCurriculars)
+                            {
+                                if (!iepProgressReport.ProgressReportExtraCurriculars.Any( x=> x.ExtraCurricularId == iepExtraCurriculars.ExtraCurricularId))
+                                {
+
+                                    mapper.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto
+                                    {
+                                        Id = 0,
+                                        ProgressReportId = iepProgressReport.Id,
+                                        IepextraCurricularId = iepExtraCurriculars.Id,
+                                        ExtraCurricularId = iepExtraCurriculars.ExtraCurricularId,
+                                        ExtraCurricularName = iepExtraCurriculars.ExtraCurricularName,
+                                        Comment = ""
+                                    }); 
+                                }
+                            }
+                        }
+                    }
+
+                    if (iepMapper.IepParamedicalServices != null && iepProgressReport.ProgressReportParamedicals != null)
+                    {
+                        if (iepMapper.IepParamedicalServices.Count > iepProgressReport.ProgressReportParamedicals.Count)
+                        {
+                            foreach (var iepParamedicalServices in iepMapper.IepParamedicalServices)
+                            {
+                                if (!iepProgressReport.ProgressReportParamedicals.Any(x => x.ParamedicalServiceId == iepParamedicalServices.ParamedicalServiceId))
+                                {
+
+                                    mapper.ProgressReportParamedicals.Add(new ProgressReportParamedicalDto
+                                    {
+                                        Id = 0,
+                                        ProgressReportId = iepProgressReport.Id,
+                                        IepParamedicalSerciveId = iepParamedicalServices.Id,
+                                        ParamedicalServiceId = iepParamedicalServices.ParamedicalServiceId,
+                                        ParamedicalServiceName = iepParamedicalServices.ParamedicalServiceName,
+                                        Comment = ""
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+
+
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
             catch (Exception ex)
