@@ -83,9 +83,22 @@ namespace IesSchool.Controllers
                 var all =await _ixpService.EditIxp(ixpDto);
                 return Ok(all);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
+            }
+        } 
+        [HttpPut]
+        public async Task<IActionResult> UpdateIxpComent(IxpDto ixpDto)
+        {
+            try
+            {
+                var all =await _ixpService.UpdateIxpComent(ixpDto);
+                return Ok(all);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

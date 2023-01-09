@@ -12,7 +12,8 @@ namespace RealEstate.Context
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services , string conection)
         {
             services.AddDbContext<iesContext>(options =>
-                options.UseSqlServer(conection)); 
+                options.UseSqlServer(conection, options => options.CommandTimeout(180))
+                 ); 
             services.AddDbContext<iesIdentityContext>(options =>
                 options.UseSqlServer(conection));
 

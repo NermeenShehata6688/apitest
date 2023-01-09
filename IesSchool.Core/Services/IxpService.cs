@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace IesSchool.Core.Services
 {
@@ -248,13 +249,15 @@ namespace IesSchool.Core.Services
         }
         public async Task<ResponseDto> EditIxp(IxpDto ixpDto)
         {
+
             if (ixpDto != null)
             {
                 var mapper = _mapper.Map<Ixp>(ixpDto);
 
 
-                _iesContext.Ixps.Update(mapper);
-                _iesContext.SaveChanges();
+                 _iesContext.Ixps.Update(mapper);
+                // _iesContext.Entry(mapper).State = EntityState.Modified;
+                await _iesContext.SaveChangesAsync();
                 //_uow.GetRepositoryAsync<Ixp>().UpdateAsync(mapper);
                 //_uow.SaveChanges();
                 if (ixpDto.FooterNotes != null)
@@ -268,14 +271,57 @@ namespace IesSchool.Core.Services
                             var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
 
                             iepProgressExtraLast.Comment = ixpDto.FooterNotes;
-                            _iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
-                            _iesContext.SaveChanges();
+                           _iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
+                            await _iesContext.SaveChangesAsync();
                             //_uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
                             //_uow.SaveChanges();
                         }
                     }
                 }
                 ixpDto.Id = mapper.Id;
+                return new ResponseDto { Status = 1, Message = "Ixp Updated Seccessfuly", Data = ixpDto };
+            }
+            else
+            {
+                return new ResponseDto { Status = 1, Message = "null" };
+            }
+
+        }
+        public async Task<ResponseDto> UpdateIxpComent(IxpDto ixpDto)
+        {
+            if (ixpDto != null)
+            {
+                var mapper = _mapper.Map<Ixp>(ixpDto);
+
+                using var transaction = _iesContext.Database.BeginTransaction();
+                var cmd = $"UPDATE IXP SET FooterNotes ='{mapper.FooterNotes}' where Id={mapper.Id}";
+                _iesContext.Database.ExecuteSqlRaw(cmd);
+
+               
+
+                //_iesContext.Ixps.Update(mapper);
+                //await _iesContext.SaveChangesAsync();
+               
+                if (ixpDto.FooterNotes != null)
+                {
+                    if (mapper.Id > 0)
+                    {
+                        var iepProgressExtra = await _uow.GetRepositoryAsync<ProgressReportExtraCurricular>().GetListAsync(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
+
+                        if (iepProgressExtra != null && iepProgressExtra.Items.Count() > 0)
+                        {
+                            var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
+                            //iepProgressExtraLast.Comment = ixpDto.FooterNotes;
+                            //_iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
+                            //await _iesContext.SaveChangesAsync();
+                            var cmd2 = $"UPDATE ProgressReportExtraCurricular SET Comment ='{mapper.FooterNotes}' where Id={iepProgressExtraLast.Id}";
+                            _iesContext.Database.ExecuteSqlRaw(cmd2);
+
+                        }
+                    }
+                }
+                ixpDto.Id = mapper.Id;
+                transaction.Commit();
                 return new ResponseDto { Status = 1, Message = "Ixp Updated Seccessfuly", Data = ixpDto };
             }
             else

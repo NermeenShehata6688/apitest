@@ -18,6 +18,7 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetIxpById(int ixpId);
         public ResponseDto AddIxp(IxpDto ixpDto);
         public  Task<ResponseDto> EditIxp(IxpDto ixpDto);
+        public  Task<ResponseDto> UpdateIxpComent(IxpDto ixpDto);
         public ResponseDto DeleteIxp(int ixpId);
         public ResponseDto IxpStatus(StatusDto statusDto);
         public ResponseDto IxpIsPublished(IsPuplishedDto isPuplishedDto);
