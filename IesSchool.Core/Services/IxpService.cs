@@ -123,7 +123,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIxps(IxpSearchDto ixpSearchDto)
+        public ResponseDto GetIxpslate(IxpSearchDto ixpSearchDto)
         {
             try
             {
@@ -146,7 +146,6 @@ namespace IesSchool.Core.Services
                 if (ixpSearchDto.ExtraCurricularTeacher_Id != null)
                 {
                     AllIxps = AllIxps.Where(x => x.ExTeacherId== ixpSearchDto.ExtraCurricularTeacher_Id).ToList();
-                    //AllIxps = AllIxps.Where(x => x.ExtraCurricularTeacherIds.Contains(ixpSearchDto.ExtraCurricularTeacher_Id == null ? 0 : ixpSearchDto.ExtraCurricularTeacher_Id.Value)).ToList();
                 }
                 if (ixpSearchDto.Term_Id != null)
                 {
@@ -181,6 +180,72 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
+
+        public async Task<ResponseDto>  GetIxps(IxpSearchDto ixpSearchDto)
+        {
+            try
+            {
+                using (System.Data.IDbConnection dbConnection = ConnectionManager.GetConnection())
+                {
+                    dbConnection.Open();
+
+                    var AllIxps = await dbConnection.QueryAsync<VwIxp>("select * from Vw_Ixp where IsDeleted != 1");
+                        var  AllIxpsCount = AllIxps.Count();
+                    if (ixpSearchDto.Student_Id != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.StudentId == ixpSearchDto.Student_Id);
+                    }
+                    if (ixpSearchDto.AcadmicYear_Id != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.AcadmicYearId == ixpSearchDto.AcadmicYear_Id);
+                    }
+                    if (ixpSearchDto.ExtraCurricularTeacher_Id != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.ExTeacherId == ixpSearchDto.ExtraCurricularTeacher_Id);
+                    }
+                    if (ixpSearchDto.Term_Id != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.TermId == ixpSearchDto.Term_Id);
+                    }
+                    if (ixpSearchDto.ExtraCurricular_Id != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.ExtraCurricularId == ixpSearchDto.ExtraCurricular_Id);
+                    }
+                    if (ixpSearchDto.Status != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.Status == ixpSearchDto.Status);
+                    }
+                    if (ixpSearchDto.IsPublished != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.IsPublished == ixpSearchDto.IsPublished);
+                    }
+                    if (ixpSearchDto.Index == null || ixpSearchDto.Index == 0)
+                    {
+                        ixpSearchDto.Index = 0;
+                    }
+                    else
+                    {
+                        ixpSearchDto.Index += 1;
+                    }
+                    var listOfIxps = AllIxps.Skip(ixpSearchDto.Index == 0 || ixpSearchDto.Index == null || ixpSearchDto.PageSize == null ? 0 : ((ixpSearchDto.Index.Value - 1) * ixpSearchDto.PageSize.Value)).Take(ixpSearchDto.PageSize ??= 20).ToList();
+                    var mapper = new PaginateDto<VwIxp> { Count = AllIxpsCount, Items = listOfIxps };
+                    dbConnection.Close();
+
+                    return new ResponseDto { Status = 1, Message = "Success", Data = mapper };
+
+                }
+
+                //var AllIxps =  _uow.GetRepository<VwIxp>().Query("select * from Vw_Ixp where IsDeleted != 1");
+
+               
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
+            }
+        }
+
+
         public ResponseDto GetIxpById(int ixpId)
         {
             try

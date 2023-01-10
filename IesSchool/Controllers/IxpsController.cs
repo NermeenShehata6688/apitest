@@ -32,11 +32,11 @@ namespace IesSchool.Controllers
         }
         // GET: api/<IxpsController>
         [HttpGet]
-        public IActionResult GetIxps([FromQuery] IxpSearchDto ixpSearchDto)
+        public async Task<IActionResult> GetIxps([FromQuery] IxpSearchDto ixpSearchDto)
         {
             try
             {
-                var all = _ixpService.GetIxps(ixpSearchDto);
+                var all =await _ixpService.GetIxps(ixpSearchDto);
                 return Ok(all);
             }
             catch (Exception)

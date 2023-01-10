@@ -15,7 +15,7 @@ namespace IesSchool.Context.Models
 
         public iesContext(DbContextOptions<iesContext> options)
             : base(options)
-        {       
+        {
         }
 
         public virtual DbSet<Calender> Calenders { get; set; } = null!;
@@ -98,7 +98,8 @@ namespace IesSchool.Context.Models
         public virtual DbSet<VwUser> VwUsers { get; set; } = null!;
         public virtual DbSet<WorkCategory> WorkCategories { get; set; } = null!;
         public virtual DbSet<VwSkill> VwSkills { get; set; } = null!;
-        
+        public virtual DbSet<VwIxp> VwIxps { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -175,13 +176,45 @@ namespace IesSchool.Context.Models
 
                 entity.Property(e => e.DeletedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Level).HasColumnName("level"); 
+                entity.Property(e => e.Level).HasColumnName("level");
                 //entity.Property(e => e.SkillNumber).HasColumnName("level"); 
                 entity.Property(e => e.NameAr).HasColumnName("Name_Ar");
 
                 entity.Property(e => e.StrandName).HasMaxLength(255);
 
                 entity.Property(e => e.StrandNameAr).HasMaxLength(255);
+            });
+            modelBuilder.Entity<VwIxp>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("Vw_Ixp");
+
+                entity.Property(e => e.AcadmicYearsName).HasMaxLength(255);
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(500);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DateOfPreparation).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.DeletedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DepartmentName).HasMaxLength(255);
+
+                entity.Property(e => e.LastDateOfReview).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(500);
+
+                entity.Property(e => e.NameAr).HasMaxLength(500);
+
+                entity.Property(e => e.TermName).HasMaxLength(255);
+
+                entity.Property(e => e.UserCode).HasMaxLength(255);
+
+                entity.Property(e => e.UserNamea).HasMaxLength(1000);
             });
             modelBuilder.Entity<AcadmicYear>(entity =>
             {
@@ -809,7 +842,7 @@ namespace IesSchool.Context.Models
                     .HasForeignKey(d => d.TermId)
                     .HasConstraintName("FK_IepProgressReport_Term");
 
-               
+
             });
             modelBuilder.Entity<Itp>(entity =>
             {
@@ -1868,4 +1901,4 @@ namespace IesSchool.Context.Models
         {
         }
     }
-    }
+}
