@@ -94,11 +94,11 @@ namespace IesSchool.Core.Services
                     Items = allTerms,
                     Count = allTerms.Count()
                 };
-                
+
                 var allTeachers = dbConnection.Query<User>(SqlGeneralBuilder.Select_AllUsers()).ToList();
                 iepHelper.AllTeachers = new PaginateDto<User>
                 {
-                    Items =allTeachers,
+                    Items = allTeachers,
                     Count = allTeachers.Count()
                 };
 
@@ -342,22 +342,22 @@ namespace IesSchool.Core.Services
             {
                 if (iepId != 0)
                 {
-                   
-                  var iep =await _iesContext.Ieps.Where(x => x.Id == iepId).Include(x => x.IepAssistants).ThenInclude(x => x.Assistant)
-                             .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
-                           .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Therapist)
-                           .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
-                           .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExTeacher)
-                           .Include(s => s.Student).ThenInclude(s => s.Department)
-                           .Include(s => s.AcadmicYear)
-                           .Include(s => s.Term)
-                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
-                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
-                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Strand)
-                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Area)
-                           .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Program).FirstOrDefaultAsync();
-                        var mapper = _mapper.Map<GetIepDto>(iep);
-                        return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
+
+                    var iep = await _iesContext.Ieps.Where(x => x.Id == iepId).Include(x => x.IepAssistants).ThenInclude(x => x.Assistant)
+                               .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
+                             .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Therapist)
+                             .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
+                             .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExTeacher)
+                             .Include(s => s.Student).ThenInclude(s => s.Department)
+                             .Include(s => s.AcadmicYear)
+                             .Include(s => s.Term)
+                             .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+                             .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
+                             .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Strand)
+                             .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Area)
+                             .Include(s => s.Goals.Where(x => x.IsDeleted != true)).ThenInclude(s => s.Program).FirstOrDefaultAsync();
+                    var mapper = _mapper.Map<GetIepDto>(iep);
+                    return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
 
 
                 }
@@ -371,7 +371,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public  ResponseDto  GetIepById(int iepId)
+        public ResponseDto GetIepById(int iepId)
         {
             try
             {
@@ -408,7 +408,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddIep(IepDto iepDto)
+        public async Task<ResponseDto> AddIep(IepDto iepDto)
         {
             try
             {
@@ -417,7 +417,7 @@ namespace IesSchool.Core.Services
                     iepDto.IsDeleted = false;
                     iepDto.CreatedOn = DateTime.Now;
                     var mapper = _mapper.Map<Iep>(iepDto);
-                    _uow.GetRepository<Iep>().Add(mapper);
+                    await _uow.GetRepositoryAsync<Iep>().AddAsync(mapper);
                     _uow.SaveChanges();
                     iepDto.Id = mapper.Id;
                     return new ResponseDto { Status = 1, Message = "Iep Added  Seccessfuly", Data = iepDto };
@@ -442,7 +442,7 @@ namespace IesSchool.Core.Services
                     var oldIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepDto.Id);
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    _iesContext.Database.ExecuteSqlRawAsync(cmd);
                     var mapper = _mapper.Map<Iep>(iepDto);
                     mapper.IsDeleted = false;
                     _uow.GetRepository<Iep>().Update(mapper);
@@ -530,25 +530,24 @@ namespace IesSchool.Core.Services
             {
                 return;
             }
-        }      
-        public ResponseDto EditIepLight(IepDto iepDto)
+        }
+        public async Task<ResponseDto> EditIepLight(IepDto iepDto)
         {
             try
             {
                 if (iepDto != null)
                 {
-                    var oldIep = _uow.GetRepository<Iep>().Single(x => x.Id == iepDto.Id);
-                    using var transaction = _iesContext.Database.BeginTransaction();
-                    var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
+
                     var mapper = _mapper.Map<Iep>(iepDto);
                     mapper.IsDeleted = false;
-                    //_uow.GetRepository<Iep>().Update(mapper);
-                    //_uow.SaveChanges();
 
                     _iesContext.Ieps.Update(mapper);
                     _iesContext.SaveChanges();
-                    transaction.Commit();
+                    var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
+                  await  _iesContext.Database.ExecuteSqlRawAsync(cmd);
+
+                    var oldIep =await _uow.GetRepositoryAsync<Iep>().SingleAsync(x => x.Id == iepDto.Id);
+
                     if (oldIep.StudentId != mapper.StudentId || oldIep.AcadmicYearId != mapper.AcadmicYearId || oldIep.TermId != mapper.TermId)
                     {
                         UpdateIepInfo(mapper);
@@ -565,8 +564,6 @@ namespace IesSchool.Core.Services
                     //{
                     //    UpdateTermInfo(mapper);
                     //}
-
-
                     iepDto.Id = mapper.Id;
                     return new ResponseDto { Status = 1, Message = "Iep Updated Seccessfuly", Data = iepDto };
                 }
@@ -627,26 +624,25 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public ResponseDto DeleteIep(int iepId)
+        public async Task<ResponseDto> DeleteIep(int iepId)
         {
             try
             {
                 if (iepId > 0)
                 {
-                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId);
+                    var iep =await _uow.GetRepositoryAsync<Iep>().SingleAsync(x => x.Id == iepId);
                     iep.IsDeleted = true;
                     iep.DeletedOn = DateTime.Now;
-                    var mapper = _mapper.Map<Iep>(iep);
-                    _uow.GetRepository<Iep>().Update(mapper);
-
-
-                    using var transaction = _iesContext.Database.BeginTransaction();
-                    var cmd = $"delete from IEP_ParamedicalService where IEPId={iepId}" +
-                              $"delete from IEP_ExtraCurricular where IEPId={iepId}";
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
-                    transaction.Commit();
-
+                    //var mapper = _mapper.Map<Iep>(iep);
+                    _uow.GetRepositoryAsync<Iep>().UpdateAsync(iep);
                     _uow.SaveChanges();
+
+                   // using var transaction = _iesContext.Database.BeginTransaction();
+                   // var cmd = $"delete from IEP_ParamedicalService where IEPId={iepId}" +
+                   //           $"delete from IEP_ExtraCurricular where IEPId={iepId}";
+                   // await  _iesContext.Database.ExecuteSqlRawAsync(cmd);
+                   //await transaction.CommitAsync();
+
                     return new ResponseDto { Status = 1, Message = "Iep Deleted Seccessfuly" };
                 }
                 else
@@ -829,13 +825,13 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetGoalById(int goalId)
+        public async Task<ResponseDto> GetGoalById(int goalId)
         {
             try
             {
                 if (goalId != 0)
                 {
-                    var goal = _uow.GetRepository<Goal>().Single(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill));
+                    var goal =await _uow.GetRepositoryAsync<Goal>().SingleAsync(x => x.Id == goalId && x.IsDeleted != true, null, x => x.Include(s => s.Objectives.Where(s => s.IsDeleted != true)).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation).Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill));
                     var mapper = _mapper.Map<GetGoalDto>(goal);
                     return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
                 }
@@ -849,14 +845,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetGoalByIepId(int iepId)
+        public async Task<ResponseDto> GetGoalByIepId(int iepId)
         {
             try
             {
                 if (iepId != 0)
                 {
-                    var goals = _uow.GetRepository<Goal>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x
-               .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
+                    var goals =await _uow.GetRepositoryAsync<Goal>().GetListAsync(x => x.Iepid == iepId && x.IsDeleted != true, null,
+                x => x.Include(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills).ThenInclude(s => s.Skill)
                .Include(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses).ThenInclude(s => s.SkillEvaluation)
                .Include(s => s.Strand)
                .Include(s => s.Area)
@@ -917,7 +913,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditGoal(GoalDto goalDto)
+        public async Task<ResponseDto> EditGoal(GoalDto goalDto)
         {
             try
             {
@@ -934,7 +930,7 @@ namespace IesSchool.Core.Services
                             //// delete old Objectives Ids which are not in edited goal
                             var newObjInt = mapper.Objectives.Select(x => x.Id);
                             _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => !newObjInt.Contains(x.Id) && x.GoalId == mapper.Id));
-                            _iesContext.SaveChanges();
+                            await _iesContext.SaveChangesAsync();
                             var oldObjAfterDel = _iesContext.Objectives.Where(x => x.GoalId == mapper.Id).ToList();
                             if (oldObjAfterDel.Count() > 0)
                             {
@@ -944,7 +940,7 @@ namespace IesSchool.Core.Services
                                     {
                                         var listofobskills = _iesContext.ObjectiveSkills.Where(x => x.ObjectiveId == newObj.Id);
                                         _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
-                                        _iesContext.SaveChanges();
+                                        await _iesContext.SaveChangesAsync();
                                     }
                                     if ((newObj.ObjectiveSkills != null || newObj.ObjectiveSkills.Count != 0) && newObj.Id != 0)  /// deit obj  and edit all skills
                                     {
@@ -953,14 +949,14 @@ namespace IesSchool.Core.Services
                                         {
                                             var listofobskills = _iesContext.ObjectiveSkills.Where(x => !newObjSkillsInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
                                             _iesContext.ObjectiveSkills.RemoveRange(listofobskills);
-                                            _iesContext.SaveChanges();
+                                            await _iesContext.SaveChangesAsync();
                                         }
                                     }
                                     if ((newObj.ObjectiveEvaluationProcesses == null || newObj.ObjectiveEvaluationProcesses.Count == 0) && newObj.Id != 0)  /// deit obj  and delete all Evaluation
                                     {
                                         var lisObEvaluationProcesses = _iesContext.ObjectiveEvaluationProcesses.Where(x => x.ObjectiveId == newObj.Id).ToList();
                                         _iesContext.ObjectiveEvaluationProcesses.RemoveRange(lisObEvaluationProcesses);
-                                        _iesContext.SaveChanges();
+                                        await _iesContext.SaveChangesAsync();
                                     }
                                     if ((newObj.ObjectiveEvaluationProcesses != null || newObj.ObjectiveEvaluationProcesses.Count() != 0) && newObj.Id != 0)  /// deit obj  and edit all Evaluation
                                     {
@@ -969,7 +965,7 @@ namespace IesSchool.Core.Services
                                         {
                                             var listofEvaluations = _iesContext.ObjectiveEvaluationProcesses.Where(x => !newObjEvalProcessesInt.Contains(x.Id) && x.ObjectiveId == newObj.Id).ToList();
                                             _iesContext.ObjectiveEvaluationProcesses.RemoveRange(listofEvaluations);
-                                            _iesContext.SaveChanges();
+                                            await _iesContext.SaveChangesAsync();
                                         }
                                     }
                                 }
@@ -978,7 +974,7 @@ namespace IesSchool.Core.Services
                         else
                         {
                             _iesContext.Objectives.RemoveRange(_iesContext.Objectives.Where(x => x.GoalId == mapper.Id));
-                            _iesContext.SaveChanges();
+                            await _iesContext.SaveChangesAsync();
                         }
                     }
                     //_uow.GetRepositoryAsync<Goal>().UpdateAsync(mapper);
@@ -1036,12 +1032,12 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetObjectiveById(int objectiveId)
+        public async Task<ResponseDto> GetObjectiveById(int objectiveId)
         {
             try
             {
-                var objective = _uow.GetRepository<Objective>().Single(x => x.Id == objectiveId && x.IsDeleted != true, null,
-                    x => x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities)
+                var objective = await _uow.GetRepositoryAsync<Objective>().SingleAsync(x => x.Id == objectiveId && x.IsDeleted != true, null,
+                    x =>x.Include(s => s.ObjectiveEvaluationProcesses).Include(s => s.ObjectiveSkills).Include(s => s.Activities)
                     .Include(s => s.Goal).ThenInclude(s => s.Area)
                     .Include(s => s.Goal).ThenInclude(s => s.Strand));
                 var mapper = _mapper.Map<ObjectiveDto>(objective);
@@ -1052,14 +1048,14 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetObjectiveByIEPId(int iepId)
+        public async Task<ResponseDto> GetObjectiveByIEPId(int iepId)
         {
             try
             {
-                var objective = _uow.GetRepository<Objective>().GetList(x => x.IepId == iepId && x.IsDeleted != true, null,
+                var objective = await _uow.GetRepositoryAsync<Objective>().GetListAsync(x => x.IepId == iepId && x.IsDeleted != true, null,
                     x => x.Include(s => s.ObjectiveEvaluationProcesses)
                     .Include(s => s.ObjectiveSkills)
-                    .Include(s => s.Activities)
+                    //.Include(s => s.Activities)
                     .Include(s => s.Goal).ThenInclude(s => s.Strand)
                      .Include(s => s.Goal).ThenInclude(s => s.Area), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<IepObjectiveDto>>(objective);
@@ -1102,7 +1098,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditObjectiveActivities(ObjectiveActivitiesDto objectiveActivitiesDto)
+        public async Task<ResponseDto> EditObjectiveActivities(ObjectiveActivitiesDto objectiveActivitiesDto)
         {
             try
             {
@@ -1110,15 +1106,19 @@ namespace IesSchool.Core.Services
                 {
                     using var transaction = _iesContext.Database.BeginTransaction();
                     var cmd = $"delete from Activities where ObjectiveId ={objectiveActivitiesDto.Id}";
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    await _iesContext.Database.ExecuteSqlRawAsync(cmd);
 
                     var obj = _mapper.Map<Objective>(objectiveActivitiesDto);
                     // objectiveActivitiesDto.IsMasterd = ObjectiveIsMasterd(obj);
 
                     var mapper = _mapper.Map<Objective>(objectiveActivitiesDto);
                     mapper.IsDeleted = false;
-                    _uow.GetRepository<Objective>().Update(mapper);
-                    _uow.SaveChanges();
+
+                    _iesContext.Objectives.UpdateRange(mapper);
+                    _iesContext.SaveChanges();
+
+                    //_uow.GetRepository<Objective>().Update(mapper);
+                    //_uow.SaveChanges();
                     objectiveActivitiesDto.Id = mapper.Id;
                     transaction.Commit();
 
@@ -1236,11 +1236,11 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetActivityByObjectiveId(int objectiveId)
+        public async Task<ResponseDto> GetActivityByObjectiveId(int objectiveId)
         {
             try
             {
-                var objActivities = _uow.GetRepository<Activity>().GetList(x => x.ObjectiveId == objectiveId, null, null, 0, 100000, true);
+                var objActivities = await _uow.GetRepositoryAsync<Activity>().GetListAsync(x => x.ObjectiveId == objectiveId, null, null, 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<ActivityDto>>(objActivities);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -1357,11 +1357,11 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIepParamedicalServiceByIepId(int iepId)
+        public async Task<ResponseDto> GetIepParamedicalServiceByIepId(int iepId)
         {
             try
             {
-                var iepParamedicalService = _uow.GetRepository<IepParamedicalService>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ParamedicalService).Include(x => x.Therapist));
+                var iepParamedicalService =await _uow.GetRepositoryAsync<IepParamedicalService>().GetListAsync(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ParamedicalService).Include(x => x.Therapist));
                 var mapper = _mapper.Map<PaginateDto<IepParamedicalServiceDto>>(iepParamedicalService);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -1387,14 +1387,19 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto)
+        public async Task<ResponseDto> EditIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto)
         {
             try
             {
                 using var transaction = _iesContext.Database.BeginTransaction();
                 var mapper = _mapper.Map<IepParamedicalService>(iepParamedicalServiceDto);
-                _uow.GetRepository<IepParamedicalService>().Update(mapper);
-                _uow.SaveChanges();
+
+
+                _iesContext.IepParamedicalServices.Update(mapper);
+                await _iesContext.SaveChangesAsync();
+
+                //_uow.GetRepository<IepParamedicalService>().Update(mapper);
+                //_uow.SaveChanges();
                 var cmd = $"update ITP set ParamedicalServiceId ={iepParamedicalServiceDto.ParamedicalServiceId} , TherapistId ={iepParamedicalServiceDto.TherapistId},TherapistDepartmentId={iepParamedicalServiceDto.TherapistDepartmentId} Where Id ={iepParamedicalServiceDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
                 transaction.Commit();
@@ -1463,11 +1468,11 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIepExtraCurricularByIepId(int iepId)
+        public async Task< ResponseDto> GetIepExtraCurricularByIepId(int iepId)
         {
             try
             {
-                var iepExtraCurricular = _uow.GetRepository<IepExtraCurricular>().GetList(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ExtraCurricular).Include(x => x.ExTeacher), 0, 100000, true);
+                var iepExtraCurricular =await _uow.GetRepositoryAsync<IepExtraCurricular>().GetListAsync(x => x.Iepid == iepId && x.IsDeleted != true, null, x => x.Include(x => x.ExtraCurricular).Include(x => x.ExTeacher), 0, 100000, true);
                 var mapper = _mapper.Map<PaginateDto<IepExtraCurricularDto>>(iepExtraCurricular);
                 return new ResponseDto { Status = 1, Message = " Seccess", Data = mapper };
             }
@@ -1493,7 +1498,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
+        public async Task<ResponseDto> EditIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
         {
             try
             {
@@ -1504,7 +1509,6 @@ namespace IesSchool.Core.Services
 
                 var cmd = $"update IXP set  ExTeacherId ={iepExtraCurricularDto.ExTeacherId},ExtraCurricularId={iepExtraCurricularDto.ExtraCurricularId} Where Id ={iepExtraCurricularDto.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
-
                 _uow.SaveChanges();
                 transaction.Commit();
                 iepExtraCurricularDto.Id = mapper.Id;
@@ -1547,11 +1551,11 @@ namespace IesSchool.Core.Services
         }
         #endregion
         #region IepProgressReport
-        public ResponseDto GetIepProgressReportsByIepId(int iepId)
+        public async Task<ResponseDto> GetIepProgressReportsByIepId(int iepId)
         {
             try
             {
-                var iepProgressReports = _uow.GetRepository<IepProgressReport>().GetList(x => x.IepId == iepId && x.IsDeleted != true, null,
+                var iepProgressReports = await _uow.GetRepositoryAsync<IepProgressReport>().GetListAsync(x => x.IepId == iepId && x.IsDeleted != true, null,
                     x => x.Include(x => x.Student).Include(x => x.AcadmicYear).Include(x => x.Term)
                     .Include(x => x.Teacher).Include(x => x.ProgressReportExtraCurriculars)
                     .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).Include(x => x.ProgressReportStrands), 0, 100000, true);
@@ -1564,35 +1568,35 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto GetIepProgressReportById(int iepProgressReportId)
+        public async Task<ResponseDto> GetIepProgressReportById(int iepProgressReportId)
         {
             try
             {
-                var iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId && x.IsDeleted != true, null, x => x.Include(x => x.Student)
-                  .Include(x => x.AcadmicYear).Include(x => x.Term)
-                     .Include(x => x.Teacher)
-                     .Include(x => x.ProgressReportExtraCurriculars.Where(x=> x.IsDeleted!=true)).ThenInclude(x => x.ExtraCurricular)
-                     .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService)
-                     .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
+                var iepProgressReport = await _uow.GetRepositoryAsync<IepProgressReport>().SingleAsync(x => x.Id == iepProgressReportId && x.IsDeleted != true, null, x => x.Include(x => x.Student)
+                   .Include(x => x.AcadmicYear).Include(x => x.Term)
+                      .Include(x => x.Teacher)
+                      .Include(x => x.ProgressReportExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ExtraCurricular)
+                      .Include(x => x.ProgressReportParamedicals.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService)
+                      .Include(x => x.ProgressReportStrands).ThenInclude(x => x.Strand));
 
                 var mapper = _mapper.Map<IepProgressReportDto>(iepProgressReport);
 
-                var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepProgressReport.IepId && x.IsDeleted != true, null, x => x
-                .Include(x => x.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(x=> x.ExtraCurricular)
-                .Include(x => x.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService));
+                var iep = await _uow.GetRepositoryAsync<Iep>().SingleAsync(x => x.Id == iepProgressReport.IepId && x.IsDeleted != true, null, x => x
+                 .Include(x => x.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ExtraCurricular)
+                 .Include(x => x.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(x => x.ParamedicalService));
                 var iepMapper = _mapper.Map<IepDto2>(iep);
 
 
 
                 if (iepMapper != null)
                 {
-                    if (iepMapper.IepExtraCurriculars != null  && iepProgressReport.ProgressReportExtraCurriculars != null)
+                    if (iepMapper.IepExtraCurriculars != null && iepProgressReport.ProgressReportExtraCurriculars != null)
                     {
                         if (iepMapper.IepExtraCurriculars.Count > iepProgressReport.ProgressReportExtraCurriculars.Count)
                         {
                             foreach (var iepExtraCurriculars in iepMapper.IepExtraCurriculars)
                             {
-                                if (!iepProgressReport.ProgressReportExtraCurriculars.Any( x=> x.ExtraCurricularId == iepExtraCurriculars.ExtraCurricularId))
+                                if (!iepProgressReport.ProgressReportExtraCurriculars.Any(x => x.ExtraCurricularId == iepExtraCurriculars.ExtraCurricularId))
                                 {
 
                                     mapper.ProgressReportExtraCurriculars.Add(new ProgressReportExtraCurricularDto
@@ -1603,7 +1607,7 @@ namespace IesSchool.Core.Services
                                         ExtraCurricularId = iepExtraCurriculars.ExtraCurricularId,
                                         ExtraCurricularName = iepExtraCurriculars.ExtraCurricularName,
                                         Comment = ""
-                                    }); 
+                                    });
                                 }
                             }
                         }
@@ -1676,7 +1680,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto EditIepProgressReport(IepProgressReportDto iepProgressReportDto)
+        public async Task<ResponseDto> EditIepProgressReport(IepProgressReportDto iepProgressReportDto)
         {
             try
             {
@@ -1684,11 +1688,15 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from ProgressReportExtraCurricular where ProgressReportId={iepProgressReportDto.Id}" +
                     $"delete from ProgressReportParamedical where ProgressReportId={iepProgressReportDto.Id}" +
                     $"delete from ProgressReportStrand where ProgressReportId={iepProgressReportDto.Id}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
+                await _iesContext.Database.ExecuteSqlRawAsync(cmd);
 
                 var mapper = _mapper.Map<IepProgressReport>(iepProgressReportDto);
-                _uow.GetRepository<IepProgressReport>().Update(mapper);
-                _uow.SaveChanges();
+
+
+                _iesContext.IepProgressReports.Update(mapper);
+                _iesContext.SaveChanges();
+                //_uow.GetRepository<IepProgressReport>().Update(mapper);
+                //_uow.SaveChanges();
                 transaction.Commit();
 
                 return new ResponseDto { Status = 1, Message = "Iep Progress Report Updated Seccessfuly", Data = iepProgressReportDto };
@@ -1698,7 +1706,7 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto DeleteIepProgressReport(int iepProgressReportId)
+        public async Task<ResponseDto> DeleteIepProgressReport(int iepProgressReportId)
         {
             try
             {
@@ -1706,15 +1714,20 @@ namespace IesSchool.Core.Services
                 var cmd = $"delete from ProgressReportExtraCurricular where ProgressReportId={iepProgressReportId}" +
                     $"delete from ProgressReportParamedical where ProgressReportId={iepProgressReportId}" +
                     $"delete from ProgressReportStrand where ProgressReportId={iepProgressReportId}";
-                _iesContext.Database.ExecuteSqlRaw(cmd);
+                await _iesContext.Database.ExecuteSqlRawAsync(cmd);
 
                 IepProgressReport iepProgressReport = _uow.GetRepository<IepProgressReport>().Single(x => x.Id == iepProgressReportId);
                 iepProgressReport.IsDeleted = true;
                 iepProgressReport.DeletedOn = DateTime.Now;
 
                 var mapper = _mapper.Map<IepProgressReport>(iepProgressReport);
-                _uow.GetRepository<IepProgressReport>().Update(mapper);
-                _uow.SaveChanges();
+
+
+                _iesContext.IepProgressReports.Update(mapper);
+                _iesContext.SaveChanges();
+
+                //_uow.GetRepository<IepProgressReport>().Update(mapper);
+                //_uow.SaveChanges();
                 transaction.Commit();
                 return new ResponseDto { Status = 1, Message = "Iep Progress Report Deleted Seccessfuly" };
             }
@@ -1723,21 +1736,21 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = ex.Message, Data = ex };
             }
         }
-        public ResponseDto CreateIepProgressReport(int iepId)
+        public async Task<ResponseDto> CreateIepProgressReport(int iepId)
         {
             try
             {
                 if (iepId > 0)
                 {
-                    var iep = _uow.GetRepository<Iep>().Single(x => x.Id == iepId && x.IsDeleted != true, null, x => x
-               .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
-               .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
-               .Include(s => s.Student)
-               .Include(s => s.AcadmicYear)
-               .Include(s => s.Term)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
-               .Include(s => s.Goals).ThenInclude(s => s.Strand)
-               .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
+                    var iep = await _uow.GetRepositoryAsync<Iep>().SingleAsync(x => x.Id == iepId && x.IsDeleted != true, null, x => x
+                .Include(s => s.IepParamedicalServices.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ParamedicalService)
+                .Include(s => s.IepExtraCurriculars.Where(x => x.IsDeleted != true)).ThenInclude(s => s.ExtraCurricular)
+                .Include(s => s.Student)
+                .Include(s => s.AcadmicYear)
+                .Include(s => s.Term)
+                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveSkills)
+                .Include(s => s.Goals).ThenInclude(s => s.Strand)
+                .Include(s => s.Goals).ThenInclude(s => s.Objectives).ThenInclude(s => s.ObjectiveEvaluationProcesses)
                );
                     IepProgressReportDto iepProgressReportDto = new IepProgressReportDto();
 
@@ -1762,7 +1775,7 @@ namespace IesSchool.Core.Services
                             iepProgressReportDto.ProgressReportExtraCurriculars = new List<ProgressReportExtraCurricularDto>();
                             for (int i = 0; i < iep.IepExtraCurriculars.Count; i++)
                             {
-                                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == iep.IepExtraCurriculars.ToList()[i].Id && x.IsDeleted != true);
+                                var ixp = await _uow.GetRepositoryAsync<Ixp>().SingleAsync(x => x.Id == iep.IepExtraCurriculars.ToList()[i].Id && x.IsDeleted != true);
                                 string ixpComment = "";
                                 if (ixp != null)
                                 {

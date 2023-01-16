@@ -16,8 +16,8 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetIxpsHelper();
         public ResponseDto GetIxpslate(IxpSearchDto ixpSearchDto);
         public Task<ResponseDto> GetIxps(IxpSearchDto ixpSearchDto);
-        public ResponseDto GetIxpById(int ixpId);
-        public ResponseDto AddIxp(IxpDto ixpDto);
+        public Task<ResponseDto> GetIxpById(int ixpId);
+        public Task<ResponseDto> AddIxp(IxpDto ixpDto);
         public  Task<ResponseDto> EditIxp(IxpDto ixpDto);
         public  Task<ResponseDto> UpdateIxpComent(IxpDto ixpDto);
         public ResponseDto DeleteIxp(int ixpId);

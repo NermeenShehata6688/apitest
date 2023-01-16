@@ -15,13 +15,13 @@ namespace IesSchool.Controllers
             _ixpService = ixpService;
         }
 
-       [ResponseCache(Duration = 1000)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
         public async Task<IActionResult> GetIxpsHelper()
         {
             try
             {
-                var all =await _ixpService.GetIxpsHelperDapper();
+                var all = await _ixpService.GetIxpsHelperDapper();
                 //var all = _ixpService.GetIxpsHelper();
                 return Ok(all);
             }
@@ -36,7 +36,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all =await _ixpService.GetIxps(ixpSearchDto);
+                var all = await _ixpService.GetIxps(ixpSearchDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -46,11 +46,11 @@ namespace IesSchool.Controllers
         }
         // GET api/<IxpsController>/5
         [HttpGet]
-        public IActionResult GetIxpById(int ixpId)
+        public async Task<IActionResult> GetIxpById(int ixpId)
         {
             try
             {
-                var all = _ixpService.GetIxpById(ixpId);
+                var all = await _ixpService.GetIxpById(ixpId);
                 return Ok(all);
             }
             catch (Exception)
@@ -61,11 +61,11 @@ namespace IesSchool.Controllers
 
         // POST api/<IxpsController>
         [HttpPost]
-        public IActionResult PostIxp(IxpDto ixpDto)
+        public async Task<IActionResult> PostIxp(IxpDto ixpDto)
         {
             try
             {
-                var all = _ixpService.AddIxp(ixpDto);
+                var all = await _ixpService.AddIxp(ixpDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -80,20 +80,20 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all =await _ixpService.EditIxp(ixpDto);
+                var all = await _ixpService.EditIxp(ixpDto);
                 return Ok(all);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-        } 
+        }
         [HttpPut]
         public async Task<IActionResult> UpdateIxpComent(IxpDto ixpDto)
         {
             try
             {
-                var all =await _ixpService.UpdateIxpComent(ixpDto);
+                var all = await _ixpService.UpdateIxpComent(ixpDto);
                 return Ok(all);
             }
             catch (Exception ex)

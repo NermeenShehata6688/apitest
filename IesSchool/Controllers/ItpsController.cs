@@ -16,7 +16,7 @@ namespace IesSchool.Controllers
             _itpService = itpService;
         }
 
-        [ResponseCache(Duration = 1000)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
         public async Task<IActionResult> GetItpsHelper()
         {
