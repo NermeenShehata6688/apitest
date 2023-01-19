@@ -24,6 +24,7 @@ namespace IesSchool.Core.IServices
         public Task<ResponseDto> AddUser2( UserDto userDto);
         public ResponseDto EditUser(IFormFile file, UserDto userDto);
         public ResponseDto EditUser2(UserDto userDto);
+        public ResponseDto  UpdateUserDeviceToken(string userName, string devicetoken);
         public ResponseDto DeleteUser(int userId);
 
         public ResponseDto GetUserAttachmentByUserId(int userId);

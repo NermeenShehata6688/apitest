@@ -5,6 +5,7 @@ using IesSchool.Core.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,10 +19,10 @@ namespace IesSchool.Controllers
 
     public class AccountController : Controller
     {
-        private readonly SignInManager<IdentityUser<int>> _signInManager;
-        private readonly UserManager<IdentityUser<int>> _userManager;
+        private readonly SignInManager<AspNetUser> _signInManager;
+        private readonly UserManager<AspNetUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly RoleManager<AspNetRole> _roleManager;
         private readonly IUserApplicationGroupService _iaplicationGroupService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
@@ -29,9 +30,9 @@ namespace IesSchool.Controllers
 
         public AccountController(
         IUserApplicationGroupService iaplicationGroupService,
-            UserManager<IdentityUser<int>> userManager,
-            SignInManager<IdentityUser<int>> signInManager,
-            RoleManager<IdentityRole<int>> roleManager,
+            UserManager<AspNetUser> userManager,
+            SignInManager<AspNetUser> signInManager,
+            RoleManager<AspNetRole> roleManager,
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor
             , IMapper mapper
@@ -154,7 +155,7 @@ namespace IesSchool.Controllers
                         IsMangerOrHeadOfEducation = true;
                     }
 
-                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath, IsMangerOrHeadOfEducation = IsMangerOrHeadOfEducation ,Name=User.Name} };
+                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath, IsMangerOrHeadOfEducation = IsMangerOrHeadOfEducation ,Name=User.Name,DeviceToken= appUser.DeviceToken } };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
@@ -222,7 +223,7 @@ namespace IesSchool.Controllers
                     //    UserName = model.UserName
                     //};
 
-                    var user = new IdentityUser<int>
+                    var user = new AspNetUser
                     {
                         UserName = model.UserName,
                         Id = model.Id
@@ -282,6 +283,18 @@ namespace IesSchool.Controllers
         }
 
 
+
+
+
+        [HttpGet]
+        public IActionResult UpdateUserDeviceToken(string userName, string deviceToken)
+        {
+            var user = _userService.UpdateUserDeviceToken(userName, deviceToken);
+            return Ok(user);
+        }
+
+
+
         //[HttpPost]
         //public async Task<object> Delete([FromBody]RegisterDto model)
         //{
@@ -303,7 +316,7 @@ namespace IesSchool.Controllers
         //    return new { error = "Invalid Username or Password" };
         //}
 
-     
+
 
 
         [HttpGet]
@@ -669,7 +682,7 @@ namespace IesSchool.Controllers
 
         }
 
-
+       
         //[HttpPost]
         //public async Task<IActionResult> ResetPassword(PasswordResetDto passwordResetDto)
         //{

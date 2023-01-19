@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace IesSchool.Context.Models
 {
-    public partial class AspNetRole
+    public partial class AspNetRole : IdentityRole<int>
     {
         public AspNetRole()
         {
