@@ -20,14 +20,14 @@ namespace IesSchool.Controllers
         }
         // [admin(Duration = 800)]
 
-       [ResponseCache(Duration = 1000)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetIepsHelper()
         {
             try
             {
                 //var all = _iepService.GetIepsHelper(); 
-                var all = _iepService.GetIepHelperDapper(); 
+                var all = _iepService.GetIepHelperDapper();
                 return Ok(all);
             }
             catch (Exception)
@@ -35,7 +35,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [ResponseCache(Duration = 1000)]
+        //[ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetIepsHelper2()
         {
@@ -64,14 +64,14 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        [ResponseCache(Duration = 1000)]
+        //[ResponseCache(Duration = 1000)]
         [HttpGet]
         public async Task<IActionResult> GetIepById(int iepId)
         {
             try
             {
                 //var all = _iepService.GetIepById(iepId);
-                var all =await  _iepService.GetIepByIdDapper(iepId);
+                var all = await _iepService.GetIepByIdDapper(iepId);
 
                 return Ok(all);
             }
@@ -82,11 +82,11 @@ namespace IesSchool.Controllers
         }
         // POST api/<IepsController>
         [HttpPost]
-        public IActionResult PostIep(IepDto iepDto)
+        public async Task<IActionResult> PostIep(IepDto iepDto)
         {
             try
             {
-                var all = _iepService.AddIep(iepDto);
+                var all = await _iepService.AddIep(iepDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -96,11 +96,11 @@ namespace IesSchool.Controllers
         }
         // PUT api/<IepsController>/5
         [HttpPut]
-        public IActionResult PutIep(IepDto iepDto)
+        public async Task<IActionResult> PutIep(IepDto iepDto)
         {
             try
             {
-                var all = _iepService.EditIepLight(iepDto);
+                var all =await _iepService.EditIepLight(iepDto);
                 //var all = _iepService.EditIep(iepDto);
                 return Ok(all);
             }
@@ -111,11 +111,11 @@ namespace IesSchool.Controllers
         }
         // DELETE api/<IepsController>/5
         [HttpDelete]
-        public IActionResult DeleteIep(int iepId)
+        public async Task<IActionResult> DeleteIep(int iepId)
         {
             try
             {
-                var all = _iepService.DeleteIep(iepId);
+                var all =await _iepService.DeleteIep(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -193,11 +193,11 @@ namespace IesSchool.Controllers
 
         // GET api/<IepsController>/5
         [HttpGet]
-        public IActionResult GetGoalById(int goalId)
+        public async Task<IActionResult> GetGoalById(int goalId)
         {
             try
             {
-                var all = _iepService.GetGoalById(goalId);
+                var all =await _iepService.GetGoalById(goalId);
                 return Ok(all);
             }
             catch (Exception)
@@ -206,11 +206,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetGoalsByIepId(int iepId)
+        public async Task<IActionResult> GetGoalsByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetGoalByIepId(iepId);
+                var all =await    _iepService.GetGoalByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -235,12 +235,12 @@ namespace IesSchool.Controllers
         }
 
         // PUT api/<IepsController>/5
-        [HttpPut]   
-        public IActionResult PutGoal(GoalDto goalDto)
+        [HttpPut]
+        public async Task<IActionResult> PutGoal(GoalDto goalDto)
         {
             try
             {
-                var all = _iepService.EditGoal(goalDto);
+                var all = await _iepService.EditGoal(goalDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -278,11 +278,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetObjectiveById(int objectiveId)
+        public async Task<IActionResult> GetObjectiveById(int objectiveId)
         {
             try
             {
-                var all = _iepService.GetObjectiveById(objectiveId);
+                var all = await _iepService.GetObjectiveById(objectiveId);
                 return Ok(all);
             }
             catch (Exception)
@@ -291,11 +291,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetObjectiveByIEPId(int iepId)
+        public async Task<IActionResult> GetObjectiveByIEPId(int iepId)
         {
             try
             {
-                var all = _iepService.GetObjectiveByIEPId(iepId);
+                var all = await _iepService.GetObjectiveByIEPId(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -319,11 +319,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditObjectiveActivities(ObjectiveActivitiesDto objectiveActivitiesDto)
+        public async Task<IActionResult> EditObjectiveActivities(ObjectiveActivitiesDto objectiveActivitiesDto)
         {
             try
             {
-                var all = _iepService.EditObjectiveActivities(objectiveActivitiesDto);
+                var all = await _iepService.EditObjectiveActivities(objectiveActivitiesDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -399,11 +399,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetActivityByObjectiveId(int objectiveId)
+        public async Task<IActionResult> GetActivityByObjectiveId(int objectiveId)
         {
             try
             {
-                var all = _iepService.GetActivityByObjectiveId(objectiveId);
+                var all = await _iepService.GetActivityByObjectiveId(objectiveId);
                 return Ok(all);
             }
             catch (Exception)
@@ -453,13 +453,13 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        
+
         [HttpGet]
-        public IActionResult GetIepParamedicalServiceByIepId(int iepId)
+        public async Task<IActionResult> GetIepParamedicalServiceByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepParamedicalServiceByIepId(iepId);
+                var all = await _iepService.GetIepParamedicalServiceByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -482,11 +482,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult PutIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto)
+        public async Task<IActionResult> PutIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto)
         {
             try
             {
-                var all = _iepService.EditIepParamedicalService(iepParamedicalServiceDto);
+                var all = await _iepService.EditIepParamedicalService(iepParamedicalServiceDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -510,11 +510,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetIepExtraCurricularByIepId(int iepId)
+        public async Task<IActionResult> GetIepExtraCurricularByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepExtraCurricularByIepId(iepId);
+                var all = await _iepService.GetIepExtraCurricularByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -537,11 +537,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult PutIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
+        public async Task<IActionResult> PutIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto)
         {
             try
             {
-                var all = _iepService.EditIepExtraCurricular(iepExtraCurricularDto);
+                var all = await _iepService.EditIepExtraCurricular(iepExtraCurricularDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -565,11 +565,11 @@ namespace IesSchool.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetIepProgressReportsByIepId(int iepId)
+        public async Task<IActionResult> GetIepProgressReportsByIepId(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepProgressReportsByIepId(iepId);
+                var all = await _iepService.GetIepProgressReportsByIepId(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -578,11 +578,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetIepProgressReportById(int iepId)
+        public async Task<IActionResult> GetIepProgressReportById(int iepId)
         {
             try
             {
-                var all = _iepService.GetIepProgressReportById(iepId);
+                var all = await _iepService.GetIepProgressReportById(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -604,11 +604,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpPut]
-        public IActionResult PutIepProgressReport(IepProgressReportDto iepProgressReportDto)
+        public async Task<IActionResult> PutIepProgressReport(IepProgressReportDto iepProgressReportDto)
         {
             try
             {
-                var all = _iepService.EditIepProgressReport(iepProgressReportDto);
+                var all = await _iepService.EditIepProgressReport(iepProgressReportDto);
                 return Ok(all);
             }
             catch (Exception)
@@ -617,11 +617,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpDelete]
-        public IActionResult DeleteIepProgressReport(int iepProgressReportId)
+        public async Task<IActionResult> DeleteIepProgressReport(int iepProgressReportId)
         {
             try
             {
-                var all = _iepService.DeleteIepProgressReport(iepProgressReportId);
+                var all = await _iepService.DeleteIepProgressReport(iepProgressReportId);
                 return Ok(all);
             }
             catch (Exception)
@@ -630,11 +630,11 @@ namespace IesSchool.Controllers
             }
         }
         [HttpGet]
-        public IActionResult CreateIepProgressReport(int iepId)
+        public async Task<IActionResult> CreateIepProgressReport(int iepId)
         {
             try
             {
-                var all = _iepService.CreateIepProgressReport(iepId);
+                var all = await _iepService.CreateIepProgressReport(iepId);
                 return Ok(all);
             }
             catch (Exception)
@@ -714,7 +714,7 @@ namespace IesSchool.Controllers
         {
             try
             {
-                var all = _iepService.GetSkillsByObjectiveId( objectiveId);
+                var all = _iepService.GetSkillsByObjectiveId(objectiveId);
                 return Ok(all);
             }
             catch (Exception)

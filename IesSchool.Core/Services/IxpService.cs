@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+
 using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace IesSchool.Core.Services
@@ -244,12 +246,11 @@ namespace IesSchool.Core.Services
             }
         }
 
-
-        public ResponseDto GetIxpById(int ixpId)
+        public async Task<ResponseDto>  GetIxpById(int ixpId)
         {
             try
             {
-                var ixp = _uow.GetRepository<Ixp>().Single(x => x.Id == ixpId && x.IsDeleted != true, null,
+                var ixp =await _uow.GetRepositoryAsync<Ixp>().SingleAsync(x => x.Id == ixpId && x.IsDeleted != true, null,
                     x => x
                     .Include(x => x.IxpExtraCurriculars)
                     //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
@@ -264,19 +265,21 @@ namespace IesSchool.Core.Services
                 return new ResponseDto { Status = 0, Errormessage = " Error", Data = ex };
             }
         }
-        public ResponseDto AddIxp(IxpDto ixpDto)
+        public async Task<ResponseDto> AddIxp(IxpDto ixpDto)
         {
             try
             {
                 if (ixpDto != null)
                 {
-                    using var transaction = _iesContext.Database.BeginTransaction();
+                    using var transaction =  _iesContext.Database.BeginTransaction();
 
                     ixpDto.IsDeleted = false;
                     ixpDto.CreatedOn = DateTime.Now;
                     var mapper = _mapper.Map<Ixp>(ixpDto);
-                    _uow.GetRepository<Ixp>().Add(mapper);
-                    _uow.SaveChanges();
+                    //await _uow.GetRepositoryAsync<Ixp>().AddAsync(mapper);
+                    // _uow.SaveChanges();
+                    _iesContext.Ixps.AddAsync(mapper);
+                    await _iesContext.SaveChangesAsync();
 
                     if (ixpDto.FooterNotes != null)
                     {
@@ -289,14 +292,18 @@ namespace IesSchool.Core.Services
                                 var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
 
                                 iepProgressExtraLast.Comment = ixpDto.FooterNotes;
-                                _uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
-                                _uow.SaveChanges();
+                                //_uow.GetRepositoryAsync<ProgressReportExtraCurricular>().UpdateAsync(iepProgressExtraLast);
+                                //_uow.SaveChanges();
+
+                                _iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
+                                await _iesContext.SaveChangesAsync();
                             }
                         }
                     }
 
                     var cmd = $"UPDATE IEP_ExtraCurricular SET IsIxpCreated = 1  Where Id =" + ixpDto.Id;
-                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                    //_iesContext.Database.ExecuteSqlRaw(cmd);
+                    await _iesContext.Database.ExecuteSqlRawAsync(cmd);
                     transaction.Commit();
 
                     ixpDto.Id = mapper.Id;

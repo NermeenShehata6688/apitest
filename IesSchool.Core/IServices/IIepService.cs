@@ -18,29 +18,29 @@ namespace IesSchool.Core.IServices
         public ResponseDto GetIepsHelper2();
         public ResponseDto GetIeps(IepSearchDto iepSearchDto);
         public ResponseDto GetIepById(int iepId);
-        public  Task<ResponseDto> GetIepByIdDapper(int iepId);
-        public ResponseDto AddIep(IepDto iepDto);
-        public ResponseDto EditIep(IepDto iepDto); 
-        public ResponseDto EditIepLight(IepDto iepDto); 
+        public Task<ResponseDto> GetIepByIdDapper(int iepId);
+        public Task<ResponseDto> AddIep(IepDto iepDto);
+        public ResponseDto EditIep(IepDto iepDto);
+        public Task<ResponseDto> EditIepLight(IepDto iepDto);
 
-        public ResponseDto DeleteIep(int iepId);
-        public ResponseDto IepStatus(StatusDto statusDto); 
+        public Task<ResponseDto> DeleteIep(int iepId);
+        public ResponseDto IepStatus(StatusDto statusDto);
         public ResponseDto IepIsPublished(IsPuplishedDto isPuplishedDto);
         public decimal IepObjectiveMasterdPercentage(int iepId);
         public ResponseDto DuplicateIEP(int iepId);
 
         public ResponseDto GetGoals();
-        public ResponseDto GetGoalById(int goalId);
-        public ResponseDto GetGoalByIepId(int iepId);
+        public Task<ResponseDto> GetGoalById(int goalId);
+        public Task<ResponseDto> GetGoalByIepId(int iepId);
         public ResponseDto AddGoal(GoalDto goalDto);
-        public ResponseDto EditGoal(GoalDto goalDto);
+        public Task<ResponseDto> EditGoal(GoalDto goalDto);
         public ResponseDto DeleteGoal(int goalId);
 
-        public ResponseDto GetObjectives(); 
-        public ResponseDto GetObjectiveById(int objectiveId);
-        public ResponseDto GetObjectiveByIEPId(int iepId);
+        public ResponseDto GetObjectives();
+        public Task<ResponseDto> GetObjectiveById(int objectiveId);
+        public Task<ResponseDto> GetObjectiveByIEPId(int iepId);
         public ResponseDto AddObjective(ObjectiveDto objectiveDto);
-        public ResponseDto EditObjectiveActivities(ObjectiveActivitiesDto objectiveDto);
+        public Task<ResponseDto> EditObjectiveActivities(ObjectiveActivitiesDto objectiveDto);
         public ResponseDto DeleteObjective(int objectiveId);
 
         //public ResponseDto ObjIsMasterd(int objId, bool IsMasterd);
@@ -49,30 +49,30 @@ namespace IesSchool.Core.IServices
         public bool ObjectiveIsMasterd(Objective objective);
 
         public ResponseDto GetActivities();
-        public ResponseDto GetActivityByObjectiveId(int objectiveId);
+        public Task<ResponseDto> GetActivityByObjectiveId(int objectiveId);
         public ResponseDto AddActivity(ActivityDto activityDto);
         public ResponseDto EditActivity(ActivityDto activityDto);
         public ResponseDto DeleteActivity(int activityId);
 
         public ResponseDto GetIepParamedicalServices();
-        public ResponseDto GetIepParamedicalServiceByIepId(int iepId);
+        public Task<ResponseDto> GetIepParamedicalServiceByIepId(int iepId);
         public ResponseDto AddIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto);
-        public ResponseDto EditIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto);
+        public Task<ResponseDto> EditIepParamedicalService(IepParamedicalServiceDto iepParamedicalServiceDto);
         public ResponseDto DeleteIepParamedicalService(int iepParamedicalServiceId);
 
-        public ResponseDto GetIepExtraCurriculars(); 
-        public ResponseDto GetIepExtraCurricularByIepId(int iepId);
+        public ResponseDto GetIepExtraCurriculars();
+        public Task<ResponseDto> GetIepExtraCurricularByIepId(int iepId);
         public ResponseDto AddIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
-        public ResponseDto EditIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
+        public Task<ResponseDto> EditIepExtraCurricular(IepExtraCurricularDto iepExtraCurricularDto);
         public ResponseDto DeleteIepExtraCurricular(int iepExtraCurricularId);
 
 
-        public ResponseDto GetIepProgressReportsByIepId(int iepId);
-        public ResponseDto GetIepProgressReportById(int iepProgressReportId);
+        public Task<ResponseDto> GetIepProgressReportsByIepId(int iepId);
+        public Task<ResponseDto> GetIepProgressReportById(int iepProgressReportId);
         public ResponseDto AddIepProgressReport(IepProgressReportDto iepProgressReportDto);
-        public ResponseDto EditIepProgressReport(IepProgressReportDto iepProgressReportDto);
-        public ResponseDto DeleteIepProgressReport(int iepProgressReportId);
-        public ResponseDto CreateIepProgressReport(int iepId);
+        public Task<ResponseDto> EditIepProgressReport(IepProgressReportDto iepProgressReportDto);
+        public Task<ResponseDto> DeleteIepProgressReport(int iepProgressReportId);
+        public Task<ResponseDto> CreateIepProgressReport(int iepId);
         //public ResponseDto SyncData(int iepId);
         public ResponseDto GetProgressReportParamedicalByUserId(int userId);
         public ResponseDto GetProgressReportParamedicalById(int progressReportParamedicalId);
