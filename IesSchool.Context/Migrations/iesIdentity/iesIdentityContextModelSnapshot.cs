@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace IesSchool.Context.Migrations
+namespace IesSchool.Context.Migrations.iesIdentity
 {
     [DbContext(typeof(iesContext))]
-    partial class iesContextModelSnapshot : ModelSnapshot
+    partial class iesIdentityContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

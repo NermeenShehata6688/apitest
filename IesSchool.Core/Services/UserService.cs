@@ -22,11 +22,13 @@ namespace IesSchool.Core.Services
         
 
 
-        private readonly UserManager<IdentityUser<int>> _userManager;
+        //private readonly UserManager<IdentityUser<int>> _userManager;
+        private readonly UserManager<AspNetUser> _userManager;
+
 
         private IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserService(UserManager<IdentityUser<int>> userManage,
+        public UserService(UserManager<AspNetUser> userManage,
             IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext,
             IFileService ifileService, IHostingEnvironment hostingEnvironment, 
             IHttpContextAccessor httpContextAccessor
@@ -427,7 +429,7 @@ namespace IesSchool.Core.Services
                     transaction.Commit();
                     if (userDto.IsParent != true)
                     {
-                        var user = new IdentityUser<int>
+                        var user = new AspNetUser
                         {
                             UserName = userDto.UserName,
                             Email = userDto.Email,
@@ -500,7 +502,7 @@ namespace IesSchool.Core.Services
                     transaction.Commit();
                     if (userDto.IsParent!=true)
                     {
-                        var user = new IdentityUser<int>
+                        var user = new AspNetUser
                         {
                             UserName = userDto.UserName,
                             Email = userDto.Email,
@@ -1127,6 +1129,24 @@ namespace IesSchool.Core.Services
                 return allUserAttachement; ;
             }
         }
-      
+        public ResponseDto UpdateUserDeviceToken(int id, string DeviceToken)
+        {
+            try
+            {
+                if (id>0 && !string.IsNullOrEmpty(DeviceToken))
+                {
+                    var cmd = $"UPDATE [dbo].[User] SET DeviceToken=N'{DeviceToken}' where Id={id}";
+                    _iesContext.Database.ExecuteSqlRaw(cmd);
+                }
+                return new ResponseDto { Status = 1, Message = "success" };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto { Status = 0, Errormessage = "faild to get data" };
+
+            }
+        }
+
     }
 }

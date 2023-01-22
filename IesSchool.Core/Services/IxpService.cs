@@ -192,7 +192,6 @@ namespace IesSchool.Core.Services
                     dbConnection.Open();
 
                     var AllIxps = await dbConnection.QueryAsync<VwIxp>("select * from Vw_Ixp where IsDeleted != 1");
-                        var  AllIxpsCount = AllIxps.Count();
                     if (ixpSearchDto.Student_Id != null)
                     {
                         AllIxps = AllIxps.Where(x => x.StudentId == ixpSearchDto.Student_Id);
@@ -230,7 +229,7 @@ namespace IesSchool.Core.Services
                         ixpSearchDto.Index += 1;
                     }
                     var listOfIxps = AllIxps.Skip(ixpSearchDto.Index == 0 || ixpSearchDto.Index == null || ixpSearchDto.PageSize == null ? 0 : ((ixpSearchDto.Index.Value - 1) * ixpSearchDto.PageSize.Value)).Take(ixpSearchDto.PageSize ??= 20).ToList();
-                    var mapper = new PaginateDto<VwIxp> { Count = AllIxpsCount, Items = listOfIxps };
+                    var mapper = new PaginateDto<VwIxp> { Count = _iesContext.VwIxps.Where(x => x.IsDeleted != true).Count(), Items = listOfIxps };
                     dbConnection.Close();
 
                     return new ResponseDto { Status = 1, Message = "Success", Data = mapper };

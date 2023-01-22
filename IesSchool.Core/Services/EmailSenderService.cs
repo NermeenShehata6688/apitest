@@ -22,11 +22,11 @@ namespace IesSchool.Core.Services
     public class EmailSenderService : IEmailSenderService
     {
         private readonly IConfiguration _config;
-        private readonly UserManager<IdentityUser<int>> _userManager;
+        private readonly UserManager<AspNetUser> _userManager;
         private readonly IUnitOfWork _uow;
         private iesContext _iesContext;
 
-        public EmailSenderService(IConfiguration config, UserManager<IdentityUser<int>> userManage, IUnitOfWork unitOfWork, iesContext iesContext)
+        public EmailSenderService(IConfiguration config, UserManager<AspNetUser> userManage, IUnitOfWork unitOfWork, iesContext iesContext)
         {
             _config = config;
             _userManager = userManage;
