@@ -13,6 +13,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<VwStudent> AllStudents { get; set; }
         public PaginateDto<ParamedicalService> AllParamedicalServices { get; set; }
         public PaginateDto<User> AllTherapist { get; set; }
+        public PaginateDto<User> AllTheachers { get; set; }
         public PaginateDto<AcadmicYear> AllAcadmicYears { get; set; }
         public PaginateDto<Term> AllTerms { get; set; }
         public PaginateDto<User> AllHeadOfEducations { get; set; }
@@ -24,6 +25,7 @@ namespace IesSchool.Core.Dto
         public PaginateDto<VwStudentDto> AllStudents { get; set; }
         public PaginateDto<ParamedicalServiceDto> AllParamedicalServices { get; set; }
         public PaginateDto<UserDto> AllTherapist { get; set; }
+        public PaginateDto<UserDto> AllTheachers { get; set; }
         public PaginateDto<AcadmicYearDto> AllAcadmicYears { get; set; }
         public PaginateDto<TermDto> AllTerms { get; set; }
         public PaginateDto<UserDto> AllHeadOfEducations { get; set; }
