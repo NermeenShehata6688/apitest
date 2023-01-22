@@ -1129,13 +1129,13 @@ namespace IesSchool.Core.Services
                 return allUserAttachement; ;
             }
         }
-        public ResponseDto UpdateUserDeviceToken(string userName, string DeviceToken)
+        public ResponseDto UpdateUserDeviceToken(int id, string DeviceToken)
         {
             try
             {
-                if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(DeviceToken))
+                if (id>0 && !string.IsNullOrEmpty(DeviceToken))
                 {
-                    var cmd = $"UPDATE AspNetUsers SET DeviceToken=N'{DeviceToken}' where UserName='{userName}'";
+                    var cmd = $"UPDATE [dbo].[User] SET DeviceToken=N'{DeviceToken}' where Id={id}";
                     _iesContext.Database.ExecuteSqlRaw(cmd);
                 }
                 return new ResponseDto { Status = 1, Message = "success" };

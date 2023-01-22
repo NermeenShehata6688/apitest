@@ -155,7 +155,7 @@ namespace IesSchool.Controllers
                         IsMangerOrHeadOfEducation = true;
                     }
 
-                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath, IsMangerOrHeadOfEducation = IsMangerOrHeadOfEducation ,Name=User.Name,DeviceToken= appUser.DeviceToken } };
+                    return new ResponseDto {Status=1, Data = new{ roles = roles , token= token2,Id= appUser.Id, UserName = appUser.UserName, img=User.FullPath, IsMangerOrHeadOfEducation = IsMangerOrHeadOfEducation ,Name=User.Name,DeviceToken= User.DeviceToken } };
                 }
                 return new ResponseDto  { Errormessage = "Invalid Username or Password", Status = 0 };
             }
@@ -287,9 +287,9 @@ namespace IesSchool.Controllers
 
 
         [HttpGet]
-        public IActionResult UpdateUserDeviceToken(string userName, string deviceToken)
+        public IActionResult UpdateUserDeviceToken(int id, string deviceToken)
         {
-            var user = _userService.UpdateUserDeviceToken(userName, deviceToken);
+            var user = _userService.UpdateUserDeviceToken(id, deviceToken);
             return Ok(user);
         }
 
