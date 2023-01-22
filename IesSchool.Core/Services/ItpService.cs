@@ -134,10 +134,15 @@ namespace IesSchool.Core.Services
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)
                      .Include(s => s.ParamedicalService), 0, 100000, true);
+             
                 var AllItps = _mapper.Map<PaginateDto<ItpDto>>(AllItpsx).Items;
                 if (itpSearchDto.Student_Id != null)
                 {
                     AllItps = AllItps.Where(x => x.StudentId == itpSearchDto.Student_Id).ToList();
+                }
+                if (itpSearchDto.Teacher_Id != null)
+                {
+                    AllItps = AllItps.Where(x => x.Student.TeacherId == itpSearchDto.Teacher_Id).ToList();
                 }
                 if (itpSearchDto.AcadmicYear_Id != null)
                 {
