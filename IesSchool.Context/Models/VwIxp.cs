@@ -43,5 +43,6 @@ namespace IesSchool.Context.Models
         public int? UserIdJ { get; set; }
         public string? UserCode { get; set; }
         public string? UserNamea { get; set; }
+        public int? StudentsTeacherId { get; set; }
     }
 }

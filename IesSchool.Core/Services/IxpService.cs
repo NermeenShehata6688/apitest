@@ -70,20 +70,20 @@ namespace IesSchool.Core.Services
                         Count = AllDepartments.Count()
                     };
 
-                    var allStudents =await dbConnection.QueryAsync<VwStudent>(SqlGeneralBuilder.Select_All_Students());
+                    var allStudents = await dbConnection.QueryAsync<VwStudent>(SqlGeneralBuilder.Select_All_Students());
                     ixpHelper.AllStudents = new PaginateDto<VwStudent>
                     {
                         Items = allStudents.ToList(),
                         Count = allStudents.Count()
                     };
-                    var allAcadmicYears =await dbConnection.QueryAsync<AcadmicYear>(SqlGeneralBuilder.Select_All_AcadimicYears());
+                    var allAcadmicYears = await dbConnection.QueryAsync<AcadmicYear>(SqlGeneralBuilder.Select_All_AcadimicYears());
                     ixpHelper.AllAcadmicYears = new PaginateDto<AcadmicYear>
                     {
                         Items = allAcadmicYears.ToList(),
                         Count = allAcadmicYears.Count()
                     };
 
-                    var allTerms =await dbConnection.QueryAsync<Term>(SqlGeneralBuilder.Select_AllTerms());
+                    var allTerms = await dbConnection.QueryAsync<Term>(SqlGeneralBuilder.Select_AllTerms());
                     ixpHelper.AllTerms = new PaginateDto<Term>
                     {
                         Items = allTerms.ToList(),
@@ -96,6 +96,14 @@ namespace IesSchool.Core.Services
                         Items = AllExTeacher,
                         Count = AllExTeacher.Count()
                     };
+
+                    var AllStudentTeachers = (await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllTeachers())).ToList();
+                    ixpHelper.AllStudentTeachers = new PaginateDto<User>
+                    {
+                        Items = AllStudentTeachers,
+                        Count = AllStudentTeachers.Count()
+                    };
+
                     var AllHeadOfEducations = (await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllHeadOfEducation())).ToList();
                     ixpHelper.AllHeadOfEducations = new PaginateDto<User>
                     {
@@ -147,15 +155,15 @@ namespace IesSchool.Core.Services
                 }
                 if (ixpSearchDto.ExtraCurricularTeacher_Id != null)
                 {
-                    AllIxps = AllIxps.Where(x => x.ExTeacherId== ixpSearchDto.ExtraCurricularTeacher_Id).ToList();
+                    AllIxps = AllIxps.Where(x => x.ExTeacherId == ixpSearchDto.ExtraCurricularTeacher_Id).ToList();
                 }
                 if (ixpSearchDto.Term_Id != null)
                 {
                     AllIxps = AllIxps.Where(x => x.TermId == ixpSearchDto.Term_Id).ToList();
                 }
-                if (ixpSearchDto.ExtraCurricular_Id != null )
+                if (ixpSearchDto.ExtraCurricular_Id != null)
                 {
-                    AllIxps = AllIxps.Where(x => x.ExtraCurricularId== ixpSearchDto.ExtraCurricular_Id).ToList();
+                    AllIxps = AllIxps.Where(x => x.ExtraCurricularId == ixpSearchDto.ExtraCurricular_Id).ToList();
                 }
                 if (ixpSearchDto.Status != null)
                 {
@@ -183,7 +191,7 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public async Task<ResponseDto>  GetIxps(IxpSearchDto ixpSearchDto)
+        public async Task<ResponseDto> GetIxps(IxpSearchDto ixpSearchDto)
         {
             try
             {
@@ -195,6 +203,10 @@ namespace IesSchool.Core.Services
                     if (ixpSearchDto.Student_Id != null)
                     {
                         AllIxps = AllIxps.Where(x => x.StudentId == ixpSearchDto.Student_Id);
+                    }
+                    if (ixpSearchDto.Teacher_Id != null)
+                    {
+                        AllIxps = AllIxps.Where(x => x.StudentsTeacherId == ixpSearchDto.Teacher_Id);
                     }
                     if (ixpSearchDto.AcadmicYear_Id != null)
                     {
@@ -238,7 +250,7 @@ namespace IesSchool.Core.Services
 
                 //var AllIxps =  _uow.GetRepository<VwIxp>().Query("select * from Vw_Ixp where IsDeleted != 1");
 
-               
+
             }
             catch (Exception ex)
             {
@@ -246,15 +258,15 @@ namespace IesSchool.Core.Services
             }
         }
 
-        public async Task<ResponseDto>  GetIxpById(int ixpId)
+        public async Task<ResponseDto> GetIxpById(int ixpId)
         {
             try
             {
-                var ixp =await _uow.GetRepositoryAsync<Ixp>().SingleAsync(x => x.Id == ixpId && x.IsDeleted != true, null,
+                var ixp = await _uow.GetRepositoryAsync<Ixp>().SingleAsync(x => x.Id == ixpId && x.IsDeleted != true, null,
                     x => x
                     .Include(x => x.IxpExtraCurriculars)
-                    //.Include(x => x.IxpExtraCurriculars).ThenInclude(x => x.Teacher)
                      .Include(s => s.Student).ThenInclude(s => s.Department)
+                     .Include(s => s.Student).ThenInclude(s => s.Teacher)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term));
                 var mapper = _mapper.Map<IxpDto>(ixp);
@@ -271,7 +283,7 @@ namespace IesSchool.Core.Services
             {
                 if (ixpDto != null)
                 {
-                    using var transaction =  _iesContext.Database.BeginTransaction();
+                    using var transaction = _iesContext.Database.BeginTransaction();
 
                     ixpDto.IsDeleted = false;
                     ixpDto.CreatedOn = DateTime.Now;
@@ -283,7 +295,7 @@ namespace IesSchool.Core.Services
 
                     if (ixpDto.FooterNotes != null)
                     {
-                        if (mapper.Id>0)
+                        if (mapper.Id > 0)
                         {
                             var iepProgressExtra = _uow.GetRepository<ProgressReportExtraCurricular>().GetList(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
 
@@ -326,7 +338,7 @@ namespace IesSchool.Core.Services
                 var mapper = _mapper.Map<Ixp>(ixpDto);
 
 
-                 _iesContext.Ixps.Update(mapper);
+                _iesContext.Ixps.Update(mapper);
                 // _iesContext.Entry(mapper).State = EntityState.Modified;
                 await _iesContext.SaveChangesAsync();
                 //_uow.GetRepositoryAsync<Ixp>().UpdateAsync(mapper);
@@ -335,14 +347,14 @@ namespace IesSchool.Core.Services
                 {
                     if (mapper.Id > 0)
                     {
-                        var iepProgressExtra =await _uow.GetRepositoryAsync<ProgressReportExtraCurricular>().GetListAsync(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
+                        var iepProgressExtra = await _uow.GetRepositoryAsync<ProgressReportExtraCurricular>().GetListAsync(x => x.IepextraCurricularId == mapper.Id && x.IsDeleted != true);
 
                         if (iepProgressExtra != null && iepProgressExtra.Items.Count() > 0)
                         {
                             var iepProgressExtraLast = iepProgressExtra.Items.OrderByDescending(x => x.CreatedOn).First();
 
                             iepProgressExtraLast.Comment = ixpDto.FooterNotes;
-                           _iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
+                            _iesContext.ProgressReportExtraCurriculars.Update(iepProgressExtraLast);
                             await _iesContext.SaveChangesAsync();
                             //_uow.GetRepository<ProgressReportExtraCurricular>().Update(iepProgressExtraLast);
                             //_uow.SaveChanges();
@@ -368,11 +380,11 @@ namespace IesSchool.Core.Services
                 var cmd = $"UPDATE IXP SET FooterNotes ='{mapper.FooterNotes}' where Id={mapper.Id}";
                 _iesContext.Database.ExecuteSqlRaw(cmd);
 
-               
+
 
                 //_iesContext.Ixps.Update(mapper);
                 //await _iesContext.SaveChangesAsync();
-               
+
                 if (ixpDto.FooterNotes != null)
                 {
                     if (mapper.Id > 0)
@@ -533,7 +545,7 @@ namespace IesSchool.Core.Services
         {
             try
             {
-                var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().GetList(x => x.IxpId == ixpId,null,
+                var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().GetList(x => x.IxpId == ixpId, null,
                     //x=> x.Include(x => x.ExtraCurricular)
                     //.Include(x => x.Teacher)
                     null
@@ -553,7 +565,7 @@ namespace IesSchool.Core.Services
             {
                 if (ixpExtraCurricularId != 0)
                 {
-                    var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().Single(x => x.Id == ixpExtraCurricularId , null, null
+                    var ixpExtraCurricular = _uow.GetRepository<IxpExtraCurricular>().Single(x => x.Id == ixpExtraCurricularId, null, null
                         //x => x.Include(s => s.ExtraCurricular).Include(s => s.Teacher)
                         );
                     var mapper = _mapper.Map<IxpExtraCurricularDto>(ixpExtraCurricular);
@@ -575,7 +587,7 @@ namespace IesSchool.Core.Services
             {
                 if (ixpExtraCurricularDto != null)
                 {
-                      
+
                     var mapper = _mapper.Map<IxpExtraCurricular>(ixpExtraCurricularDto);
                     _uow.GetRepository<IxpExtraCurricular>().Add(mapper);
                     _uow.SaveChanges();
@@ -598,7 +610,7 @@ namespace IesSchool.Core.Services
             {
                 if (ixpExtraCurricularDto != null)
                 {
-                   
+
                     var mapper = _mapper.Map<IxpExtraCurricular>(ixpExtraCurricularDto);
                     _uow.GetRepository<IxpExtraCurricular>().Update(mapper);
                     _uow.SaveChanges();

@@ -203,6 +203,7 @@ namespace IesSchool.Core.Services
                 var itp = _uow.GetRepository<Itp>().Single(x => x.Id == itpId && x.IsDeleted != true, null,
                     x => x.Include(x => x.ItpGoals.Where(s => s.IsDeleted != true)).ThenInclude(x => x.ItpGoalObjectives.Where(s => s.IsDeleted != true))
                      .Include(s => s.Student).ThenInclude(s => s.Department)
+                     .Include(s => s.Student).ThenInclude(s => s.Teacher)
                      .Include(s => s.Therapist)
                      .Include(s => s.AcadmicYear)
                      .Include(s => s.Term)

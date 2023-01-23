@@ -58,10 +58,10 @@ namespace IesSchool.Controllers
             try
             {
                 var result = _userManager.Users.ToList();
-                foreach (var item in result)
-                {
-                    var asd = _userManager.GetRolesAsync(item);
-                }
+                //foreach (var item in result)
+                //{
+                //    var asd = _userManager.GetRolesAsync(item);
+                //}
                 var usersrole = result.Select(x => new
                 {
                     Id = x.Id,

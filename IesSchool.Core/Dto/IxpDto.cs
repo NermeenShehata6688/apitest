@@ -43,6 +43,7 @@ namespace IesSchool.Core.Dto
         //public int[]? ExtraCurricularIds { get; set; }
         public string? ExtraCurricularName { get; set; }
         public string? ExtraCurricularTeacherName { get; set; }
+        public string? StudentTeacherName { get; set; }
 
 
         public virtual ICollection<IxpExtraCurricularDto>? IxpExtraCurriculars { get; set; }

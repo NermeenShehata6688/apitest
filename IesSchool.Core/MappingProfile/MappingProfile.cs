@@ -446,6 +446,7 @@ namespace IesSchool.Core.MappingProfile
            .ForMember(dist => dist.TherapistName, opt => opt.MapFrom(c => c.Therapist == null ? "" : c.Therapist.Name == null ? "" : c.Therapist.Name))
            .ForMember(dist => dist.AcadmicYearName, opt => opt.MapFrom(c => c.AcadmicYear == null ? "" : c.AcadmicYear.Name == null ? "" : c.AcadmicYear.Name))
            .ForMember(dist => dist.TermName, opt => opt.MapFrom(c => c.Term == null ? "" : c.Term.Name == null ? "" : c.Term.Name))
+           .ForMember(dist => dist.StudentTeacherName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Teacher == null ? "" : c.Student.Teacher.Name))
 
             .ForMember(dist => dist.StudentCodeName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Code.ToString()))
             .ForMember(dist => dist.StudentBirthdayName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth == null ? "" : c.Student.DateOfBirth.Value.ToShortDateString()))
@@ -538,6 +539,7 @@ namespace IesSchool.Core.MappingProfile
              .ForMember(dist => dist.StudentBirthdayName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.DateOfBirth == null ? "" : c.Student.DateOfBirth.Value.ToShortDateString()))
              .ForMember(dist => dist.DepartmentName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Department == null ? "" : c.Student.Department.Name))
              .ForMember(dist => dist.HeadOfEducationName, opt => opt.MapFrom(c => c.HeadOfEducation == null ? "" : c.HeadOfEducation.Name))
+             .ForMember(dist => dist.StudentTeacherName, opt => opt.MapFrom(c => c.Student == null ? "" : c.Student.Teacher == null ?"": c.Student.Teacher.Name))
             .ReverseMap()
 
              .ForMember(x => x.Student, op => op.Ignore())

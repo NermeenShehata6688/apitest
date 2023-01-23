@@ -48,6 +48,7 @@ namespace IesSchool.Core.Dto
         public string? DepartmentName { get; set; }
         public string? TeacherName { get; set; }
         public string? HeadOfEducationName { get; set; }
+        public string? StudentTeacherName { get; set; }
 
         public virtual StudentDto? Student { get; set; }
         public virtual ICollection<ItpGoalDto>? ItpGoals { get; set; }
