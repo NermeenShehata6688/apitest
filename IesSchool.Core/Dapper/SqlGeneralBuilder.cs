@@ -98,6 +98,12 @@ namespace Olsys.Business.Data
             string sql = @"SELECT [User] .* FROM  [User] where IsTherapist  =1";
             return sql;
         }
+
+        public static string Select_AllTeachers()
+        {
+            string sql = @"SELECT [User] .* FROM  [User] where IsTeacher  =1";
+            return sql;
+        }
         public static string Select_AllExtraCurricularsTeacher()
         {
             string sql = @"SELECT [User] .* FROM  [User] where IsExtraCurricular  =1";

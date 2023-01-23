@@ -67,6 +67,13 @@ namespace IesSchool.Core.Services
                         Count = AllTherapist.Count()
                     };
 
+                    var AllTeachers = (await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllTeachers())).ToList();
+                    itpHelper.AllTheachers = new PaginateDto<User>
+                    {
+                        Items = AllTeachers,
+                        Count = AllTeachers.Count()
+                    };
+
                     var AllHeadOfEducations =(await dbConnection.QueryAsync<User>(SqlGeneralBuilder.Select_AllHeadOfEducation())).ToList();
                     itpHelper.AllHeadOfEducations = new PaginateDto<User>
                     {
