@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IesSchool.Context.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,7 +49,7 @@ namespace IesSchool.Core.Dto
         public string? TeacherName { get; set; }
         public string? HeadOfEducationName { get; set; }
 
-
+        public virtual StudentDto? Student { get; set; }
         public virtual ICollection<ItpGoalDto>? ItpGoals { get; set; }
         public virtual ICollection<ItpProgressReportDto>? ItpProgressReports { get; set; }
 

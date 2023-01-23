@@ -12,6 +12,7 @@ namespace IesSchool.Core.Dto
         public int? Status { get; set; }
         public bool? IsPublished { get; set; }
         public int? Student_Id { get; set; }
+        public int? Teacher_Id { get; set; }
         public int? AcadmicYear_Id { get; set; }
         public int? Term_Id { get; set; }
         public int? Therapist_Id { get; set; }
