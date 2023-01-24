@@ -52,7 +52,7 @@ namespace IesSchool.Core.Services
                 var ParentsIds = new List<int>();
                 if ((user.IsManager.HasValue && user.IsManager.Value == true) || (user.IsHeadofEducation.HasValue && user.IsHeadofEducation.Value == true))
                 {
-                    var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent == true, null, null, 0, 100000, true).Items.ToList();
+                    var AllParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && x.IsParent == true, null, x => x.Include(x => x.StudentParents), 0, 100000, true).Items.ToList();
                     Parents.AddRange(AllParents);
                 }
                 else
@@ -71,7 +71,7 @@ namespace IesSchool.Core.Services
 
                     if(ParentsIds.Count()>0)
                     {
-                        var StudentsParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && ParentsIds.Contains(x.Id), null, null, 0, 100000, true).Items.ToList();
+                        var StudentsParents = _uow.GetRepository<User>().GetList(x => x.IsDeleted != true && ParentsIds.Contains(x.Id), null, x=> x.Include(x=> x.StudentParents), 0, 100000, true).Items.ToList();
                         Parents.AddRange(StudentsParents);
                     }
                 }

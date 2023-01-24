@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 namespace IesSchool.Context.Models
 {
-    public partial class AspNetUserRole  :IdentityUserRole<int>
+    public partial class AspNetUserRole  
+        :IdentityUserRole<int>
     {
         //public int UserId { get; set; }
         //public int RoleId { get; set; }

@@ -2,6 +2,7 @@
 using IesSchool.Context.Models;
 using IesSchool.Core.Dto;
 using IesSchool.Core.IServices;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static IesSchool.Core.Dto.MembershipDto;
 
@@ -12,12 +13,13 @@ namespace IesSchool.Core.Services
 
         public iesContext _context { get; }
         private readonly IMapper _mapper;
-
-        public UserApplicationGroupService(iesContext context, IMapper mapper)
+        private readonly UserManager<AspNetUser> _userManager;
+        public UserApplicationGroupService(iesContext context, IMapper mapper,
+           UserManager<AspNetUser> userManager)
         {
             _context = context;
             _mapper = mapper;
-
+            _userManager = userManager;
         }
 
 
@@ -57,9 +59,9 @@ namespace IesSchool.Core.Services
 
 
         }
-        public ResponseDto AddGroupToUser(int[] groupIds, int userid)
+        public async Task<ResponseDto> AddGroupToUser(int[] groupIds, int userid)
         {
-        
+
 
             using (var context = _context.Database.BeginTransaction())
             {
@@ -72,24 +74,67 @@ namespace IesSchool.Core.Services
                     });
 
                 }
-                var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
-                if (roles != null)
-                {
-                    foreach (var role in roles)
-                    {
-                        _context.AspNetUserRoles.Add(new AspNetUserRole
-                        {
-                            RoleId = role.Id,
-                            UserId = userid,
-                        });
-                    }
-                }
                 _context.SaveChanges();
-
                 context.Commit();
-                return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
+         
+                try
+                {
+                    var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
+                    var user = await _userManager.FindByIdAsync(userid.ToString());
+                    await _userManager.AddToRolesAsync(user, roles.Select(x => x.Id.ToString()));
+                }
+                catch (Exception ex)
+                {
 
+                    throw ex;
+                }
             }
+       
+            //var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
+            //if (roles != null)
+            //{
+            //    foreach (var role in roles)
+            //    {
+            //        //_context.AspNetUserRoles.Add(new AspNetUserRole
+            //        //{
+            //        //    RoleId = role.Id,
+            //        //    UserId = userid,
+            //        //});
+            //        // string cmd = $"INSERT INTO [dbo].[AspNetUserRoles] VALUES ('{userid}', '{role.Id}')";
+            //        //_ = _context.Database.ExecuteSqlRaw(cmd);
+            //        var user = await _userManager.FindByIdAsync(userid.ToString());
+            //       await _userManager.AddToRolesAsync(user, roles.Select(x => x.Id.ToString()));
+            //    }
+
+            //}
+
+            //var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
+            //using (var context2 = _context.Database.BeginTransaction())
+            //{
+            //    if (roles != null)
+            //    {
+            //        foreach (var role in roles)
+            //        {
+            //            //_context.AspNetUserRoles.Add(new AspNetUserRole
+            //            //{
+            //            //    RoleId = role.Id,
+            //            //    UserId = userid,
+            //            //});
+            //           // string cmd = $"INSERT INTO [dbo].[AspNetUserRoles] VALUES ('{userid}', '{role.Id}')";
+            //           //_ = _context.Database.ExecuteSqlRaw(cmd);
+            //            var user =await _userManager.FindByIdAsync(userid.ToString());
+            //            _userManager.AddToRolesAsync(user, roles.Select(x => x.Id.ToString()));
+            //        }
+
+            //    }
+            //    context2.Commit();
+
+            //}}
+
+
+
+            return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
+
 
         }
         [Obsolete]
@@ -214,11 +259,13 @@ namespace IesSchool.Core.Services
                         {
                             foreach (var role in roles)
                             {
-                                _context.AspNetUserRoles.Add(new AspNetUserRole
-                                {
-                                    RoleId = role,
-                                    UserId = item.ApplicationUserId,
-                                });
+                                ////assssssssssssssssssssssss
+                                //_context.AspNetUserRoles.Add(new AspNetUserRole
+                                //{
+                                //    RoleId = role,
+                                //    UserId = item.ApplicationUserId,
+                                //});
+
                             }
                         }
                     }
@@ -237,8 +284,14 @@ namespace IesSchool.Core.Services
 
         public ResponseDto DeleteGroupFromUser(int userId)
         {
-            var cmd = $"delete from ApplicationUserGroup where ApplicationUserId='{userId}'; delete from AspNetUserRoles where UserId ='{userId}' ";
-           _ = _context.Database.ExecuteSqlRaw(cmd);
+            using (var context = _context.Database.BeginTransaction())
+            {
+                var cmd = $"delete from ApplicationUserGroup where ApplicationUserId='{userId}'; delete from AspNetUserRoles where UserId ='{userId}' ";
+             _ = _context.Database.ExecuteSqlRaw(cmd);
+            _ = _context.SaveChanges();
+            context.Commit();
+
+        }
             return new ResponseDto { Status = 1, Message = "Group Added  Seccessfuly" };
 
         }

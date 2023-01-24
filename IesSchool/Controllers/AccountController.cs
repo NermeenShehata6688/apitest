@@ -233,7 +233,7 @@ namespace IesSchool.Controllers
 
                     if (result.Succeeded)
                     {
-                        _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+                      await  _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
                         return Ok(new ResponseDto { Status = 1, Message = "Registered  Seccessfuly!" });
                     }
                     if (!result.Succeeded)
@@ -348,6 +348,7 @@ namespace IesSchool.Controllers
 
         [HttpPost]
         //[Route("EditUser")]
+
         public async Task<IActionResult> EditUser(RegisterModel model)
         {
             if (!ModelState.IsValid)
@@ -364,25 +365,16 @@ namespace IesSchool.Controllers
                     if (user!=null)
                     {
 
-                  //  var user = await _userManager.FindByIdAsync(model.Id. );
-                    //user.FullName = model.FullName;
-                    //user.UserName = model.UserName;
-                    //user.Email = model.Email;
-
-                    //if (!string.IsNullOrEmpty(model.Password))
-                    //{
-                    //    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                    //    var resetpassword = await _userManager.ResetPasswordAsync(user, token, model.Password);
-                    //}
                     _iaplicationGroupService.DeleteGroupFromUser(user.Id);
-                    _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+                     await _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
 
-                    //var userq = await _userManager.UpdateAsync(user);
+                        //var userq = await _userManager.UpdateAsync(user);
 
-                    //var userRoles = await userManager.GetRolesAsync(user);
-                    //await userManager.RemoveFromRolesAsync(user, userRoles);
-                    //await userManager.AddToRolesAsync(user, model.Roles);
+                        //var userRoles = await userManager.GetRolesAsync(user);
+                        //await userManager.RemoveFromRolesAsync(user,
+                        //
+                        //);
+                        //await userManager.AddToRolesAsync(user, model.Roles);
                     return Ok(new ResponseDto { Message = "Updated Successfully", Data = user, Status = 1 });
                     }
                     else
@@ -556,7 +548,7 @@ namespace IesSchool.Controllers
                     var resetpassword = await _userManager.ResetPasswordAsync(user, token, model.Password);
                 }
                 _iaplicationGroupService.DeleteGroupFromUser(user.Id);
-                _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
+            await    _iaplicationGroupService.AddGroupToUser(model.Roles.Select(x => x.Id).ToArray(), user.Id);
 
                 var result = await _userManager.UpdateAsync(user);
 
@@ -675,10 +667,10 @@ namespace IesSchool.Controllers
         }
 
         [HttpPost]
-        public void AddGroupToUser(int[] groups, int user)
+        public async void AddGroupToUser(int[] groups, int user)
         {
 
-            _iaplicationGroupService.AddGroupToUser(groups, user);
+           await _iaplicationGroupService.AddGroupToUser(groups, user);
 
         }
 

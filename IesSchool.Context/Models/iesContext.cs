@@ -28,7 +28,7 @@ namespace IesSchool.Context.Models
         //public virtual DbSet<AspNetUser> AspNetUsers { get; set; } = null!;
         //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; } = null!;
         //public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; } = null!;
-           public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
+        //public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
         //public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Assistant> Assistants { get; set; } = null!;
         public virtual DbSet<AttachmentType> AttachmentTypes { get; set; } = null!;

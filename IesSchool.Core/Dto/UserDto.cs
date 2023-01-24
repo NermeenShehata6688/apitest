@@ -39,6 +39,7 @@ namespace IesSchool.Core.Dto
         public bool? IsActive { get; set; }
         public string? ParentCivilId { get; set; }
         public string? DeviceToken { get; set; }
+        public string? StudentsNames { get; set; }
 
         public virtual ICollection<UserAssistantDto>? UserAssistants { get; set; }
         public virtual ICollection<StudentTherapistDto>? StudentTherapists { get; set; }

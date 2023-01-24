@@ -8,7 +8,7 @@ namespace IesSchool.Core.IServices
     {
         ResponseDto DeleteRoleFromGroup(int roleId, int groupId);
         ResponseDto AddRoleToGroup(int[] roleId, int groupId);
-        ResponseDto AddGroupToUser(int[] groupIds, int userid);
+         Task<ResponseDto> AddGroupToUser(int[] groupIds, int userid);
         ResponseDto DeleteGroup(int id);
         IEnumerable<ApplicationGroupDto> GetGroups();
         ApplicationGroup FindGroup(int id);
