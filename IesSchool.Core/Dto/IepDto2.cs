@@ -34,6 +34,7 @@ namespace IesSchool.Core.Dto
         public bool? IsPublished { get; set; }
         public virtual ICollection<IepExtraCurricularDto>? IepExtraCurriculars { get; set; }
         public virtual ICollection<IepParamedicalServiceDto>? IepParamedicalServices { get; set; }
+        public virtual ICollection<GoalDto>? Goals { get; set; }
 
 
     }
