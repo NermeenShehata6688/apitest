@@ -638,11 +638,11 @@ namespace IesSchool.Core.Services
                     {
                         if (iep.IepExtraCurriculars.Count() > 0)
                         {
-                            return new ResponseDto { Status = 0, Message = "Iep can not be deleted, it has IXPs Related" };
+                            return new ResponseDto { Status = 0, Message = "Iep can not be deleted,when it has IXPs Related" };
                         }
                         if (iep.IepParamedicalServices.Count() > 0)
                         {
-                            return new ResponseDto { Status = 0, Message = "Iep can not be deleted, it has ITPs Related" };
+                            return new ResponseDto { Status = 0, Message = "Iep can not be deleted,when it has ITPs Related" };
                         }
                     }
                     iep.IsDeleted = true;

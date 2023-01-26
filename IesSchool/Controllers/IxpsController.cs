@@ -15,7 +15,7 @@ namespace IesSchool.Controllers
             _ixpService = ixpService;
         }
 
-        //[ResponseCache(Duration = 3600)]
+       [ResponseCache(Duration = 3600)]
         [HttpGet]
         public async Task<IActionResult> GetIxpsHelper()
         {

@@ -20,7 +20,7 @@ namespace IesSchool.Controllers
         }
         // [admin(Duration = 800)]
 
-        //[ResponseCache(Duration = 3600)]
+        [ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetIepsHelper()
         {
@@ -35,7 +35,7 @@ namespace IesSchool.Controllers
                 throw;
             }
         }
-        //[ResponseCache(Duration = 3600)]
+        [ResponseCache(Duration = 3600)]
         [HttpGet]
         public IActionResult GetIepsHelper2()
         {
