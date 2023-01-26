@@ -60,7 +60,8 @@ builder.Services.AddSwaggerGen(options => {
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-builder.Services.AddIdentity<AspNetUser, AspNetRole>(config =>
+//builder.Services.AddIdentity<AspNetUser, AspNetRole>(config =>
+builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(config =>
 {
     config.SignIn.RequireConfirmedEmail = false;
     config.User.RequireUniqueEmail = false;
@@ -71,8 +72,8 @@ builder.Services.AddIdentity<AspNetUser, AspNetRole>(config =>
     config.Password.RequireLowercase = false;
     config.Password.RequireNonAlphanumeric = false;
     config.Password.RequireUppercase = false;
-//}).AddEntityFrameworkStores<iesIdentityContext>()
-}).AddEntityFrameworkStores<iesContext>()
+}).AddEntityFrameworkStores<iesIdentityContext>()
+//}).AddEntityFrameworkStores<iesContext>()
              .AddDefaultTokenProviders();
 
 

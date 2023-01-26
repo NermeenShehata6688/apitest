@@ -13,9 +13,10 @@ namespace IesSchool.Core.Services
 
         public iesContext _context { get; }
         private readonly IMapper _mapper;
-        private readonly UserManager<AspNetUser> _userManager;
-        public UserApplicationGroupService(iesContext context, IMapper mapper,
-           UserManager<AspNetUser> userManager)
+        private readonly UserManager<IdentityUser<int>> _userManager;
+        public UserApplicationGroupService(
+            iesContext context, IMapper mapper,
+           UserManager<IdentityUser<int>> userManager)
         {
             _context = context;
             _mapper = mapper;
@@ -74,39 +75,25 @@ namespace IesSchool.Core.Services
                     });
 
                 }
+                var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
+                if (roles != null)
+                {
+                    foreach (var role in roles)
+                    {
+                        _context.AspNetUserRoles.Add(new AspNetUserRole
+                        {
+                            RoleId = role.Id,
+                            UserId = userid,
+                        });
+                    }
+
+                }
                 _context.SaveChanges();
                 context.Commit();
          
-                try
-                {
-                    var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
-                    var user = await _userManager.FindByIdAsync(userid.ToString());
-                    await _userManager.AddToRolesAsync(user, roles.Select(x => x.Id.ToString()));
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
             }
        
-            //var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
-            //if (roles != null)
-            //{
-            //    foreach (var role in roles)
-            //    {
-            //        //_context.AspNetUserRoles.Add(new AspNetUserRole
-            //        //{
-            //        //    RoleId = role.Id,
-            //        //    UserId = userid,
-            //        //});
-            //        // string cmd = $"INSERT INTO [dbo].[AspNetUserRoles] VALUES ('{userid}', '{role.Id}')";
-            //        //_ = _context.Database.ExecuteSqlRaw(cmd);
-            //        var user = await _userManager.FindByIdAsync(userid.ToString());
-            //       await _userManager.AddToRolesAsync(user, roles.Select(x => x.Id.ToString()));
-            //    }
-
-            //}
+            
 
             //var roles = _context.ApplicationGroupRoles.Where(x => groupIds.Contains(x.ApplicationGroupId)).Select(s => s.ApplicationRole).Distinct();
             //using (var context2 = _context.Database.BeginTransaction())
@@ -259,12 +246,12 @@ namespace IesSchool.Core.Services
                         {
                             foreach (var role in roles)
                             {
-                                ////assssssssssssssssssssssss
-                                //_context.AspNetUserRoles.Add(new AspNetUserRole
-                                //{
-                                //    RoleId = role,
-                                //    UserId = item.ApplicationUserId,
-                                //});
+                                //assssssssssssssssssssssss
+                                _context.AspNetUserRoles.Add(new AspNetUserRole
+                                {
+                                    RoleId = role,
+                                    UserId = item.ApplicationUserId,
+                                });
 
                             }
                         }

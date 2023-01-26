@@ -13,9 +13,9 @@ namespace RealEstate.Context
         {
             services.AddDbContext<iesContext>(options =>
                 options.UseSqlServer(conection, options => options.CommandTimeout(180))
-                 ); 
-            //services.AddDbContext<iesIdentityContext>(options =>
-            //    options.UseSqlServer(conection));
+                 );
+            services.AddDbContext<iesIdentityContext>(options =>
+                options.UseSqlServer(conection));
 
             //services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             //services.AddScoped(typeof(IPostRepository), typeof(PostRepository));

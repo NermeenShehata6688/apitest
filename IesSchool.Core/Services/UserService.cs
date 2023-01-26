@@ -23,12 +23,12 @@ namespace IesSchool.Core.Services
 
 
         //private readonly UserManager<IdentityUser<int>> _userManager;
-        private readonly UserManager<AspNetUser> _userManager;
+        private readonly UserManager<IdentityUser<int>> _userManager;
 
 
         private IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserService(UserManager<AspNetUser> userManage,
+        public UserService(UserManager<IdentityUser<int>> userManage,
             IUnitOfWork unitOfWork, IMapper mapper, iesContext iesContext,
             IFileService ifileService, IHostingEnvironment hostingEnvironment, 
             IHttpContextAccessor httpContextAccessor
@@ -429,7 +429,7 @@ namespace IesSchool.Core.Services
                     transaction.Commit();
                     if (userDto.IsParent != true)
                     {
-                        var user = new AspNetUser
+                        var user = new IdentityUser<int>
                         {
                             UserName = userDto.UserName,
                             Email = userDto.Email,
@@ -502,7 +502,7 @@ namespace IesSchool.Core.Services
                     transaction.Commit();
                     if (userDto.IsParent!=true)
                     {
-                        var user = new AspNetUser
+                        var user = new IdentityUser<int>
                         {
                             UserName = userDto.UserName,
                             Email = userDto.Email,

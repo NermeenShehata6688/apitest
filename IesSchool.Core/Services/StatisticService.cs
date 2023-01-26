@@ -80,14 +80,14 @@ namespace IesSchool.Core.Services
 
                 }
                      
-                var acadmic = _uow.GetRepository<AcadmicYear>().GetList(x => x.IsDeleted != true, null, x=> x
-                .Include(x => x.Ieps.Where(x=> x.IsDeleted!=true)).Include(x => x.Itps.Where(x => x.IsDeleted != true)).Include(x => x.Ixps.Where(x => x.IsDeleted != true)), 0, 100000, true);
-                if (acadmic!= null && acadmic.Items.Count()>0)
-                {
-                    statisticDto.AcadmicYearChartDto = _mapper.Map<PaginateDto<AcadmicYearChartDto>>(acadmic);
-                    statisticDto.AcadmicYearChartDto.Items = statisticDto.AcadmicYearChartDto.Items.TakeLast(4).ToList();
+                //var acadmic = _uow.GetRepository<AcadmicYear>().GetList(x => x.IsDeleted != true, null, x=> x
+                //.Include(x => x.Ieps.Where(x=> x.IsDeleted!=true)).Include(x => x.Itps.Where(x => x.IsDeleted != true)).Include(x => x.Ixps.Where(x => x.IsDeleted != true)), 0, 100000, true);
+                //if (acadmic!= null && acadmic.Items.Count()>0)
+                //{
+                //    statisticDto.AcadmicYearChartDto = _mapper.Map<PaginateDto<AcadmicYearChartDto>>(acadmic);
+                //    statisticDto.AcadmicYearChartDto.Items = statisticDto.AcadmicYearChartDto.Items.TakeLast(4).ToList();
                     
-                }
+                //}
 
                 return new ResponseDto { Status = 1, Message = "Success", Data = statisticDto };
             }

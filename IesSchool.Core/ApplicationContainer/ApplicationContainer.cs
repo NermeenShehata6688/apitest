@@ -5,6 +5,7 @@ using IesSchool.Core.Services;
 using IesSchool.InfraStructure;
 using IesSchool.InfraStructure.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
@@ -19,7 +20,8 @@ namespace IesSchool.Core
 
             services.AddDbContext<iesContext>().AddUnitOfWork<iesContext>();
 
-
+ 
+            //services.AddDbContext<iesIdentityContext>() ;
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {

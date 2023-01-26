@@ -16,13 +16,12 @@ namespace IesSchool.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-
     public class AccountController : Controller
     {
-        private readonly SignInManager<AspNetUser> _signInManager;
-        private readonly UserManager<AspNetUser> _userManager;
+        private readonly SignInManager<IdentityUser<int>> _signInManager;
+        private readonly UserManager<IdentityUser<int>> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly RoleManager<AspNetRole> _roleManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IUserApplicationGroupService _iaplicationGroupService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
@@ -30,9 +29,9 @@ namespace IesSchool.Controllers
 
         public AccountController(
         IUserApplicationGroupService iaplicationGroupService,
-            UserManager<AspNetUser> userManager,
-            SignInManager<AspNetUser> signInManager,
-            RoleManager<AspNetRole> roleManager,
+            UserManager<IdentityUser<int>> userManager,
+            SignInManager<IdentityUser<int>> signInManager,
+            RoleManager<IdentityRole<int>> roleManager,
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor
             , IMapper mapper
@@ -223,7 +222,7 @@ namespace IesSchool.Controllers
                     //    UserName = model.UserName
                     //};
 
-                    var user = new AspNetUser
+                    var user = new IdentityUser<int>
                     {
                         UserName = model.UserName,
                         Id = model.Id

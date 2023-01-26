@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 namespace IesSchool.Context.Models
 {
-    public partial class iesContext  :IdentityDbContext<AspNetUser, AspNetRole, int>
+    public partial class iesContext  :DbContext
     {
       
 
@@ -23,13 +23,13 @@ namespace IesSchool.Context.Models
         public virtual DbSet<ApplicationGroupRole> ApplicationGroupRoles { get; set; } = null!;
         public virtual DbSet<ApplicationUserGroup> ApplicationUserGroups { get; set; } = null!;
         public virtual DbSet<Area> Areas { get; set; } = null!;
-        //public virtual DbSet<AspNetRole> AspNetRoles { get; set; } = null!;
-        //public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; } = null!;
-        //public virtual DbSet<AspNetUser> AspNetUsers { get; set; } = null!;
-        //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; } = null!;
-        //public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; } = null!;
-        //public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
-        //public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; } = null!;
+        public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; } = null!;
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; } = null!;
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; } = null!;
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; } = null!;
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; } = null!;
+        public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Assistant> Assistants { get; set; } = null!;
         public virtual DbSet<AttachmentType> AttachmentTypes { get; set; } = null!;
         public virtual DbSet<City> Cities { get; set; } = null!;
@@ -101,24 +101,24 @@ namespace IesSchool.Context.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<AspNetUserRole>(entity =>
-            //{
-            //    entity.HasKey(e => new { e.UserId, e.RoleId });
-            //    entity.ToTable("AspNetUserRoles");
-            //    entity.Property(e => e.Code)
-            //        .HasMaxLength(10)
-            //        .IsUnicode(false)
-            //        .HasColumnName("code")
-            //        .IsFixedLength();
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+                entity.ToTable("AspNetUserRoles");
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("code")
+                    .IsFixedLength();
 
-            //    //entity.HasOne(d => d.Role)
-            //    //    .WithMany(p => p.AspNetUserRoles)
-            //    //    .HasForeignKey(d => d.RoleId);
+                //entity.HasOne(d => d.Role)
+                //    .WithMany(p => p.AspNetUserRoles)
+                //    .HasForeignKey(d => d.RoleId);
 
-            //    //entity.HasOne(d => d.User)
-            //    //    .WithMany(p => p.AspNetUserRoles)
-            //    //    .HasForeignKey(d => d.UserId);
-            //});
+                //entity.HasOne(d => d.User)
+                //    .WithMany(p => p.AspNetUserRoles)
+                //    .HasForeignKey(d => d.UserId);
+            });
             modelBuilder.Entity<LogComment>(entity =>
             {
                 entity.ToTable("LogComment");
@@ -303,31 +303,31 @@ namespace IesSchool.Context.Models
                     .HasConstraintName("FK_Area_Program");
             });
 
-            //modelBuilder.Entity<AspNetRole>(entity =>
-            //{
-            //    entity.Property(e => e.Name).HasMaxLength(256);
+            modelBuilder.Entity<AspNetRole>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(256);
 
-            //    entity.Property(e => e.NormalizedName).HasMaxLength(256);
-            //});
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
 
-            //modelBuilder.Entity<AspNetRoleClaim>(entity =>
-            //{
-            //    entity.HasOne(d => d.Role)
-            //        .WithMany(p => p.AspNetRoleClaims)
-            //        .HasForeignKey(d => d.RoleId);
-            //});
+            modelBuilder.Entity<AspNetRoleClaim>(entity =>
+            {
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetRoleClaims)
+                    .HasForeignKey(d => d.RoleId);
+            });
 
             modelBuilder.Entity<AspNetUser>(entity =>
             {
-                //entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
-                //entity.Property(e => e.Email).HasMaxLength(256);
+                entity.Property(e => e.Email).HasMaxLength(256);
 
-                //entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
 
-                //entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
-                //entity.Property(e => e.UserName).HasMaxLength(256);
+                entity.Property(e => e.UserName).HasMaxLength(256);
 
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.AspNetUser)
@@ -336,21 +336,21 @@ namespace IesSchool.Context.Models
                     .HasConstraintName("FK_AspNetUsers_User");
             });
 
-            //modelBuilder.Entity<AspNetUserClaim>(entity =>
-            //{
-            //    entity.HasOne(d => d.User)
-            //        .WithMany(p => p.AspNetUserClaims)
-            //        .HasForeignKey(d => d.UserId);
-            //});
+            modelBuilder.Entity<AspNetUserClaim>(entity =>
+            {
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
 
-            //modelBuilder.Entity<AspNetUserLogin>(entity =>
-            //{
-            //    entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+            modelBuilder.Entity<AspNetUserLogin>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
-            //    entity.HasOne(d => d.User)
-            //        .WithMany(p => p.AspNetUserLogins)
-            //        .HasForeignKey(d => d.UserId);
-            //});
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
 
             //modelBuilder.Entity<AspNetUserRole>(entity =>
             //{
@@ -1871,23 +1871,23 @@ namespace IesSchool.Context.Models
                 entity.Property(e => e.NameAr).HasMaxLength(1000);
             });
 
-            //OnModelCreatingPartial(modelBuilder);
+            OnModelCreatingPartial(modelBuilder);
         }
 
-        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-    } 
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    }
 
 
 
-    //public partial class iesIdentityContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
-    //{
-    //    public iesIdentityContext()
-    //    {
-    //    }
+    public partial class iesIdentityContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    {
+        public iesIdentityContext()
+        {
+        }
 
-    //    public iesIdentityContext(DbContextOptions<iesIdentityContext> options)
-    //        : base(options)
-    //    {
-    //    }
-    //}
+        public iesIdentityContext(DbContextOptions<iesIdentityContext> options)
+            : base(options)
+        {
+        }
+    }
 }

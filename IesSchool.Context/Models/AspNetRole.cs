@@ -5,7 +5,8 @@ using System.Text.Json.Serialization;
 
 namespace IesSchool.Context.Models
 {
-    public partial class AspNetRole : IdentityRole<int>
+    public partial class AspNetRole
+        //: IdentityRole<int>
     {
         public AspNetRole()
         {
