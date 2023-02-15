@@ -537,14 +537,15 @@ namespace IesSchool.Core.Services
             {
                 if (iepDto != null)
                 {
+                    var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
+                    await _iesContext.Database.ExecuteSqlRawAsync(cmd); 
 
                     var mapper = _mapper.Map<Iep>(iepDto);
                     mapper.IsDeleted = false;
 
                     _iesContext.Ieps.Update(mapper);
                     _iesContext.SaveChanges();
-                    var cmd = $"delete from IepAssistant where IEPId={iepDto.Id}";
-                    await _iesContext.Database.ExecuteSqlRawAsync(cmd);
+                    
 
                     var oldIep = await _uow.GetRepositoryAsync<Iep>().SingleAsync(x => x.Id == iepDto.Id);
 
